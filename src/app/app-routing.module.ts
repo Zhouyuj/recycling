@@ -10,7 +10,8 @@ const ROUTER_CONFIG: Routes = [
     { path: '', pathMatch: 'full', redirectTo: '/login' },
     {
         path: 'login',
-        loadChildren: './login/login.module#LoginModule'
+        loadChildren: './login/login.module#LoginModule',
+        data: { title: '登录' },
     },
     {
         path: 'manage',

@@ -3,17 +3,25 @@
  */
 
 import { NgModule } from '@angular/core';
+/* 第三方 */
 import { RebirthHttpModule } from 'rebirth-http';
-import { RebirthNGModule } from 'rebirth-ng';
+
+/* 自定义 */
+import { SharedModule } from '../shared/shared.module';
 import { HeaderComponent } from './components/header/header.component';
+import { InterceptorServices } from './services/interceptors/interceptors.service';
+import { TitleService } from './services/title/title.service';
 
 @NgModule({
     imports: [
         RebirthHttpModule,
-        RebirthNGModule.forRoot()
+        SharedModule,
     ],
     exports: [ HeaderComponent ],
-    providers: [],
+    providers: [
+        InterceptorServices,
+        TitleService,
+    ],
     declarations: [ HeaderComponent ],
 })
 export class CoreModule {

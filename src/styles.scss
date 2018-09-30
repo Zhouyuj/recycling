@@ -14,7 +14,7 @@ img {border:0; vertical-align:middle; }  /*  去掉图片低测默认的3像素�
 table { border-collapse:collapse; }
 body {
     font:12px/150% Arial,Verdana,"\5b8b\4f53";
-    color:#666;
+    //color:#666;
     background:#fff
 }
 .clearfix:before,.clearfix:after {  /*清楚浮动*/
@@ -65,11 +65,13 @@ body {
     min-width: 1440px;
     min-height: 780px;
 }
-
-$color1: lightpink;
-html {
-  body {
-    background-color: $color1;
-  }
-}
 /* ---- body end ---- */
+
+/* ngx-datatable */
+@import '../node_modules/@swimlane/ngx-datatable/release/index.css';
+@import '../node_modules/@swimlane/ngx-datatable/release/themes/material.css';
+@import '../node_modules/@swimlane/ngx-datatable/release/themes/bootstrap.css';
+@import '../node_modules/@swimlane/ngx-datatable/release/assets/icons.css';
+
+/* font-awesome */
+@import "../node_modules/font-awesome/css/font-awesome.min.css";

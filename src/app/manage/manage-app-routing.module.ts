@@ -4,11 +4,25 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ManageAppComponent } from './manage-app/manage-app.component';
+import { StaffInfoComponent } from './base-info-management/staff-info/staff-info.component';
+import { VehicleInfoComponent } from './base-info-management/vehicle-info/vehicle-info.component';
+import { CustomersInfoComponent } from './base-info-management/customers-info/customers-info.component';
 
 const ROUTER_CONFIG: Routes = [
     {
-        path: '', component: ManageAppComponent,
-    }
+        path    : '', component: ManageAppComponent,
+        children: [
+            {
+                path: 'staff', component: StaffInfoComponent, data: { title: '人员管理' },
+            },
+            {
+                path: 'vehicle', component: VehicleInfoComponent, data: { title: '车辆管理' },
+            },
+            {
+                path: 'customer', component: CustomersInfoComponent, data: { title: '收运单位管理' },
+            },
+        ],
+    },
 ];
 
 @NgModule({
@@ -19,4 +33,5 @@ const ROUTER_CONFIG: Routes = [
         RouterModule
     ],
 })
-export class ManageAppRoutingModule {}
+export class ManageAppRoutingModule {
+}

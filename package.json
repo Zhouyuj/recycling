@@ -24,6 +24,7 @@
     "@swimlane/ngx-datatable": "^13.1.0",
     "bootstrap": "^3.3.7",
     "core-js": "^2.5.4",
+    "font-awesome": "^4.7.0",
     "rebirth-http": "^6.0.2",
     "rebirth-ng": "^6.0.3",
     "rxjs": "^6.0.0",

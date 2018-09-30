@@ -1,0 +1,47 @@
+<div class="wrap">
+    <div class="left">
+        <ngx-datatable #dataTable class="material striped"
+                       [messages]="list_options.localizationMessage"
+                       [rows]="list_options.rows"
+                       [columnMode]="'force'"
+                       [headerHeight]="45"
+                       [rowHeight]="40"
+                       [footerHeight]="40"
+                       [scrollbarH]="true"
+                       [selected]="list_options.selectedRows"
+                       [selectionType]="'multi'"
+                       [limit]="13"
+        >
+            <ngx-datatable-column name="姓名" prop="name"></ngx-datatable-column>
+            <ngx-datatable-column name="工号" prop="staffId"></ngx-datatable-column>
+            <ngx-datatable-column name="岗位" prop="position"></ngx-datatable-column>
+            <ngx-datatable-column name="系统角色" prop="sysId"></ngx-datatable-column>
+            <ngx-datatable-column name="系统账号" prop="sysAccount"></ngx-datatable-column>
+            <ngx-datatable-column name="系统密码" prop="sysPwd"></ngx-datatable-column>
+            <ngx-datatable-column name="身份证号" prop="identification"></ngx-datatable-column>
+            <ngx-datatable-column name="家庭住址" prop="address"></ngx-datatable-column>
+            <ngx-datatable-column name="联系电话" prop="phone"></ngx-datatable-column>
+            <ngx-datatable-column name="紧急联系人" prop="urgentPerson"></ngx-datatable-column>
+            <ngx-datatable-column name="紧急联系人电话" prop="urgentPhone"></ngx-datatable-column>
+            <ngx-datatable-column name="邮箱" prop="email"></ngx-datatable-column>
+            <ngx-datatable-column name="备注" prop="remark"></ngx-datatable-column>
+        </ngx-datatable>
+    </div>
+    <div class="right">
+        <div class="button-group">
+            <button class="btn btn-default" (click)="onAdd()">新增</button>
+            <button class="btn btn-default" (click)="onEdit()">编辑</button>
+            <button class="btn btn-default" (click)="onDel()">删除</button>
+            <button class="btn btn-default" (click)="onExp()">导出</button>
+        </div>
+        <div class="selected-column">
+            <h4>已选 <small>({{list_options.selectedRows?.length}})</small></h4>
+            <ul>
+                <li *ngFor='let sel of list_options.selectedRows'>
+                    {{sel.name}}
+                </li>
+                <li *ngIf="!list_options.selectedRows?.length">未选择</li>
+            </ul>
+        </div>
+    </div>
+</div>
