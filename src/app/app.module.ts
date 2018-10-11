@@ -11,20 +11,33 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './app.component';
 
+/* antd start */
+import { NgZorroAntdModule, NZ_I18N, zh_CN } from 'ng-zorro-antd';
+/** 配置 angular i18n **/
+import { registerLocaleData } from '@angular/common';
+import zh from '@angular/common/locales/zh';
+registerLocaleData(zh);
+/* antd end */
+
 @NgModule({
     declarations: [
         AppComponent,
     ],
-    imports: [
+    imports     : [
         BrowserModule,
         CoreModule,
         SharedModule,
         AppRoutingModule,
         RebirthNGModule.forRoot(),
         BrowserAnimationsModule,
+    /** 导入 ng-zorro-antd 模块 **/
+        NgZorroAntdModule,
     ],
-    providers: [],
-    bootstrap: [ AppComponent ],
+    providers   : [
+    /** 配置 ng-zorro-antd 国际化 **/
+        { provide: NZ_I18N, useValue: zh_CN },
+    ],
+    bootstrap   : [ AppComponent ],
 })
 export class AppModule {
 }

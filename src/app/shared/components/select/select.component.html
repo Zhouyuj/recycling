@@ -1,0 +1,11 @@
+<select
+        [(ngModel)]="selected_option"
+        name="system_roles"
+        class="form-control"
+        style="font-size: 1.2rem; margin-top: -6px;"
+        (change)="onSelectFilter($event)">
+    <option disabled>{{title}}</option>
+    <option *ngFor="let option of options" [ngValue]="option.id">
+        {{ option.name }}
+    </option>
+</select>

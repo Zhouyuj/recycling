@@ -18,7 +18,12 @@
             <ngx-datatable-column name="岗位" prop="position"></ngx-datatable-column>
             <ngx-datatable-column name="系统角色" prop="sysId">
                 <ng-template let-column="column" ngx-datatable-header-template>
-                    <select (change)="onSelectFilter($event)" name="system_roles" ngModel class="form-control" style="margin-top: -6px;">
+                    <select
+                            ngModel
+                            name="system_roles"
+                            class="form-control"
+                            style="font-size: 1.2rem; margin-top: -6px;"
+                            (change)="onSelectFilter($event)">
                         <option value="" disabled>系统角色</option>
                         <option *ngFor="let role of selected_system_roles_options" [ngValue]="selected_system_role">
                             {{ role.name }}

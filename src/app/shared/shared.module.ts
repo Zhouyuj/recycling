@@ -8,29 +8,40 @@ import { FormsModule } from '@angular/forms';
 /* 第三方 */
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { RebirthNGModule } from 'rebirth-ng';
+import { NgZorroAntdModule } from 'ng-zorro-antd';
 /* 自定义 */
 import { LoadingService } from './services/loading/loading.service';
 
 import { LoadingComponent } from './components/loading/loading.component';
+import { SelectComponent } from './components/select/select.component';
+import { BreadcrumbsComponent } from './components/breadcrumbs/breadcrumbs.component';
 //import { NotifyComponent } from './components/notify/notify.component';
 
 @NgModule({
-    imports: [
+    imports     : [
         CommonModule,
         FormsModule,
         NgxDatatableModule,
         RebirthNGModule,
+        NgZorroAntdModule,
     ],
-    exports: [
+    exports     : [
         CommonModule,
         FormsModule,
         NgxDatatableModule,
         RebirthNGModule,
         //NotifyComponent,
         LoadingComponent,
+        SelectComponent,
+        BreadcrumbsComponent,
     ],
-    declarations: [ LoadingComponent ],
-    providers: [ LoadingService ],
+    declarations: [
+        //NotifyComponent,
+        LoadingComponent,
+        SelectComponent,
+        BreadcrumbsComponent,
+    ],
+    providers   : [ LoadingService ],
 })
 export class SharedModule {
 }

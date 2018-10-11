@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { filter, map } from 'rxjs/operators';
-import {mergeMap} from 'rxjs/internal/operators/mergeMap';
+import { mergeMap } from 'rxjs/internal/operators/mergeMap';
 
 @Injectable({
     providedIn: 'root'
@@ -35,7 +35,7 @@ export class TitleService {
             filter(event => event instanceof NavigationEnd),
             map(event =>  this.activatedRoute),
             map(route => {
-                while(route.firstChild) {
+                while (route.firstChild) {
                     route = route.firstChild;
                 }
                 return route;

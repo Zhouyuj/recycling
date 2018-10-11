@@ -16,6 +16,9 @@ import { CustomersInfoService } from './customers-info.service';
         {
             provide: CustomersInfoService, useClass: CustomersInfoMockService
         }
+    ],
+    entryComponents: [
+        CustomersInfoFormComponent,
     ]
 })
 export class CustomersInfoModule {
