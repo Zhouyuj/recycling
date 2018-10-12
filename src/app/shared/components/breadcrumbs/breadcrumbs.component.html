@@ -1,14 +1,14 @@
 <div class="breadcrumbs">
     <nz-breadcrumb nzSeparator=">">
-        <span>当前路径</span>
         <nz-breadcrumb-item>
-            Home
+            <i class="anticon anticon-home"></i>
+            <a [routerLink]="['./']">首页</a>
         </nz-breadcrumb-item>
         <nz-breadcrumb-item>
-            <a>Application List</a>
+            <span>基础信息</span>
         </nz-breadcrumb-item>
         <nz-breadcrumb-item>
-            An Application
+            <a [routerLink]="['/manage/staff']">人员信息</a>
         </nz-breadcrumb-item>
     </nz-breadcrumb>
 </div>

@@ -1,16 +1,53 @@
 <div class="wrap">
-    <div class="left">
+    <!-- 表格操作 -->
+    <div class="table-operations">
+
+        <div nz-row nzGutter="16">
+            <div nz-col class="gutter-row" nzSpan="6" nzOffset="14">
+                <div class="table-search">
+                    <nz-input-group nzSearch nzSize="default" [nzSuffix]="suffixButton">
+                        <input type="text" nz-input placeholder="键入关键字搜索" (keyup)='updateFilter($event)'>
+                    </nz-input-group>
+                    <ng-template #suffixButton>
+                        <button nz-button nzType="default" nzSize="default" nzSearch>搜索</button>
+                    </ng-template>
+                </div>
+            </div>
+            <div nz-col class="gutter-row" nzSpan="4">
+                <div class="table-CUDE">
+                    <button nz-button nzType="default" nzShape="circle" (click)="onAdd()">
+                        <i class="anticon anticon-plus-circle-o"></i>
+                    </button>
+                    &nbsp;
+                    <button nz-button nzType="default" nzShape="circle" (click)="onEdit($event)">
+                        <i class="anticon anticon-edit"></i>
+                    </button>
+                    &nbsp;
+                    <button nz-button nzType="default" nzShape="circle" (click)="onDel($event)">
+                        <i class="anticon anticon-minus-circle-o"></i>
+                    </button>
+                    &nbsp;
+                    <button nz-button nzType="default" nzShape="circle" (click)="onExp()">
+                        <i class="anticon anticon-file-excel"></i>
+                    </button>
+                    &nbsp;
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 表格内容 -->
+    <div class="table-content">
         <ngx-datatable #dataTable class="material striped"
                        [messages]="list_options.localizationMessage"
                        [rows]="list_options.rows"
                        [columnMode]="'force'"
-                       [headerHeight]="45"
+                       [headerHeight]="60"
                        [rowHeight]="40"
                        [footerHeight]="40"
                        [scrollbarH]="true"
                        [selected]="list_options.selectedRows"
                        [selectionType]="'multi'"
-                       [limit]="13"
+                       [limit]="12"
                        (select)="onSelect($event)"
                        (page)="onPage($event)"
         >
@@ -18,17 +55,11 @@
             <ngx-datatable-column name="工号" prop="staffId"></ngx-datatable-column>
             <ngx-datatable-column name="岗位" prop="position">
                 <ng-template let-column="column" ngx-datatable-header-template>
-                    <!--<app-select
+                    <app-select
                             [title]="'岗位'"
                             [options]="selected_system_positions_options"
-                            (selectedEmitter)="onSelectEmitter($event)"
-                    ></app-select>-->
-                    <nz-select style="width: 120px;" [(ngModel)]="selectedValue" nzAllowClear nzPlaceHolder="Choose">
-                        <nz-option nzValue="jack" nzLabel="Jack"></nz-option>
-                        <nz-option nzValue="lucy" nzLabel="Lucy"></nz-option>
-                        <nz-option nzValue="disabled" nzLabel="Disabled" nzDisabled></nz-option>
-                    </nz-select>
-
+                            (selectedEmitter)="onSelectEmitter($event)">
+                    </app-select>
                 </ng-template>
             </ngx-datatable-column>
             <ngx-datatable-column name="系统角色" prop="sysId">
@@ -50,28 +81,5 @@
             <ngx-datatable-column name="邮箱" prop="email"></ngx-datatable-column>
             <ngx-datatable-column name="备注" prop="remark"></ngx-datatable-column>
         </ngx-datatable>
-    </div>
-    <div class="right">
-        <div class="input-group">
-            <input type='text' class="form-control" placeholder='输入关键字' (keyup)='updateFilter($event)'/>
-            <span class="input-group-btn">
-                <button class="btn btn-default" type="button">搜索</button>
-            </span>
-        </div>
-        <div class="button-group">
-            <button nz-button nzType="primary" (click)="onAdd()">新增</button>
-            <button class="btn btn-default" (click)="onEdit($event)">编辑</button>
-            <button class="btn btn-default" (click)="onDel($event)">删除</button>
-            <button class="btn btn-default" (click)="onExp()">导出</button>
-        </div>
-        <div class="selected-column">
-            <h4>已选 <small>({{list_options.selectedRows?.length}})</small></h4>
-            <ul>
-                <li *ngFor='let sel of list_options.selectedRows'>
-                    {{sel.name}}
-                </li>
-                <li *ngIf="!list_options.selectedRows?.length">未选择</li>
-            </ul>
-        </div>
     </div>
 </div>

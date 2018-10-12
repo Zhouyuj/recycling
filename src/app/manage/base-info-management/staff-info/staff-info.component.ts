@@ -25,34 +25,34 @@ export class StaffInfoComponent implements OnInit {
     public selected_system_roles_options = [
         {
             id  : 0,
-            name: '角色-全选',
+            name: '全选',
         },
         {
             id  : 1,
-            name: '角色-系统管理员',
+            name: '系统管理员',
         },
         {
             id  : 2,
-            name: '角色-司机',
+            name: '司机',
         },
         {
             id  : 3,
-            name: '角色-中控',
+            name: '中控',
         },
     ];
     public selected_system_position = null;
     public selected_system_positions_options = [
         {
             id: 0,
-            name: '岗位-全选',
+            name: '全选',
         },
         {
             id: 1,
-            name: '岗位-司机',
+            name: '司机',
         },
         {
             id: 2,
-            name: '岗位-辅助工',
+            name: '辅助工',
         },
     ];
 

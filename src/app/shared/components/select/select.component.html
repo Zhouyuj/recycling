@@ -1,11 +1,15 @@
-<select
-        [(ngModel)]="selected_option"
-        name="system_roles"
-        class="form-control"
-        style="font-size: 1.2rem; margin-top: -6px;"
-        (change)="onSelectFilter($event)">
-    <option disabled>{{title}}</option>
-    <option *ngFor="let option of options" [ngValue]="option.id">
-        {{ option.name }}
-    </option>
-</select>
+<p id="select-title">{{title}}</p>
+
+<nz-select id="anti-select"
+           nzPlaceHolder="{{selected_option}}"
+           [(ngModel)]="selected_option"
+           [nzSize]="'small'"
+           [nzDropdownMatchSelectWidth]="false"
+           (ngModelChange)="onSelectFilter($event)">
+
+    <nz-option *ngFor="let option of options"
+               nzValue="{{option.id}}"
+               nzLabel="{{option.name}}">
+    </nz-option>
+
+</nz-select>
