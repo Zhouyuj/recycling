@@ -1,3 +1,28 @@
-.header_comp {
-    font-size: 1.4rem;
+.logo {
+    width: 100%;
+    height: 56px;
+    padding: 2px 5px;
+}
+
+/* 覆盖 antd */
+#nav-menu {
+    ul li {
+        .icon-box {
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            padding-left: 10px;
+        }
+        .menu-title {
+            height: 24px;
+            line-height: 24px;
+            text-align: center;
+        }
+    }
+}
+
+#personal-menu {
+    display: flex;
+    //align-content: center;
+    justify-content: center;
 }

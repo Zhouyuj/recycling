@@ -30,6 +30,7 @@ import { BreadcrumbsComponent } from './components/breadcrumbs/breadcrumbs.compo
         FormsModule,
         NgxDatatableModule,
         RebirthNGModule,
+        NgZorroAntdModule,
         //NotifyComponent,
         LoadingComponent,
         SelectComponent,

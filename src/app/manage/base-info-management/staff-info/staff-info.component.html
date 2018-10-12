@@ -18,11 +18,17 @@
             <ngx-datatable-column name="工号" prop="staffId"></ngx-datatable-column>
             <ngx-datatable-column name="岗位" prop="position">
                 <ng-template let-column="column" ngx-datatable-header-template>
-                    <app-select
+                    <!--<app-select
                             [title]="'岗位'"
                             [options]="selected_system_positions_options"
                             (selectedEmitter)="onSelectEmitter($event)"
-                    ></app-select>
+                    ></app-select>-->
+                    <nz-select style="width: 120px;" [(ngModel)]="selectedValue" nzAllowClear nzPlaceHolder="Choose">
+                        <nz-option nzValue="jack" nzLabel="Jack"></nz-option>
+                        <nz-option nzValue="lucy" nzLabel="Lucy"></nz-option>
+                        <nz-option nzValue="disabled" nzLabel="Disabled" nzDisabled></nz-option>
+                    </nz-select>
+
                 </ng-template>
             </ngx-datatable-column>
             <ngx-datatable-column name="系统角色" prop="sysId">

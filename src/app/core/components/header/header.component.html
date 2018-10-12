@@ -1,1 +1,169 @@
-<re-menu-bar [menuOptions]="menus" [cssClass]="cssClass"></re-menu-bar>
+<div nz-row>
+    <div nz-col nzSpan="3"><!-- logo -->
+        <div class="logo">
+            <!--<img src="../../../../assets/images/newlogo_small.png" alt="LOGO">-->
+        </div>
+    </div>
+
+    <div nz-col nzSpan="16" id="nav-menu"><!-- nav-menu -->
+        <ul nz-menu [nzMode]="'horizontal'">
+            <li nz-menu-item>
+                <div class="icon-box">
+                    <i class="anticon anticon-desktop"></i>
+                </div>
+                <p class="menu-title">实时监控</p>
+            </li>
+            <li nz-menu-item>
+                <div class="icon-box">
+                    <i class="anticon anticon-file-ppt"></i>
+                </div>
+                <p class="menu-title">方案管理</p>
+            </li>
+            <li nz-submenu>
+                <div class="icon-box" title>
+                    <i class="anticon anticon-idcard"></i>
+                </div>
+                <p class="menu-title" title>基础信息</p>
+                <ul>
+                    <li nz-menu-group>
+                        <span nz-menu-item title>人员信息</span>
+                    </li>
+                    <li nz-menu-group>
+                        <span nz-menu-item title>车辆信息</span>
+                    </li>
+                    <li nz-menu-group>
+                        <span nz-menu-item title>收集点管理</span>
+                    </li>
+                </ul>
+            </li>
+            <li nz-submenu>
+                <div class="icon-box" title>
+                    <i class="anticon anticon-car"></i>
+                </div>
+                <p class="menu-title" title>车队管理</p>
+                <ul>
+                    <li nz-menu-group>
+                        <span nz-menu-item title>人员信息</span>
+                    </li>
+                    <li nz-menu-group>
+                        <span nz-menu-item title>车辆信息</span>
+                    </li>
+                    <li nz-menu-group>
+                        <span nz-menu-item title>收集点管理</span>
+                    </li>
+                </ul>
+            </li>
+            <li nz-submenu>
+                <div class="icon-box" title>
+                    <i class="anticon anticon-profile"></i>
+                </div>
+                <p class="menu-title" title>历史记录</p>
+                <ul>
+                    <li nz-menu-group>
+                        <span nz-menu-item title>人员信息</span>
+                    </li>
+                    <li nz-menu-group>
+                        <span nz-menu-item title>车辆信息</span>
+                    </li>
+                    <li nz-menu-group>
+                        <span nz-menu-item title>收集点管理</span>
+                    </li>
+                </ul>
+            </li>
+            <li nz-submenu>
+                <div class="icon-box" title>
+                    <i class="anticon anticon-table"></i>
+                </div>
+                <p class="menu-title" title>数据统计</p>
+                <ul>
+                    <li nz-menu-group>
+                        <span nz-menu-item title>人员信息</span>
+                    </li>
+                    <li nz-menu-group>
+                        <span nz-menu-item title>车辆信息</span>
+                    </li>
+                    <li nz-menu-group>
+                        <span nz-menu-item title>收集点管理</span>
+                    </li>
+                </ul>
+            </li>
+            <li nz-submenu>
+                <div class="icon-box" title>
+                    <i class="anticon anticon-safety"></i>
+                </div>
+                <p class="menu-title" title>排查管理</p>
+                <ul>
+                    <li nz-menu-group>
+                        <span nz-menu-item title>人员信息</span>
+                    </li>
+                    <li nz-menu-group>
+                        <span nz-menu-item title>车辆信息</span>
+                    </li>
+                    <li nz-menu-group>
+                        <span nz-menu-item title>收集点管理</span>
+                    </li>
+                </ul>
+            </li>
+            <li nz-submenu>
+                <div class="icon-box" title>
+                    <i class="anticon anticon-switcher"></i>
+                </div>
+                <p class="menu-title" title>卡管理</p>
+                <ul>
+                    <li nz-menu-group>
+                        <span nz-menu-item title>人员信息</span>
+                    </li>
+                    <li nz-menu-group>
+                        <span nz-menu-item title>车辆信息</span>
+                    </li>
+                    <li nz-menu-group>
+                        <span nz-menu-item title>收集点管理</span>
+                    </li>
+                </ul>
+            </li>
+            <li nz-submenu>
+                <div class="icon-box" title>
+                    <i class="anticon anticon-pay-circle-o"></i>
+                </div>
+                <p class="menu-title" title>签约管理</p>
+                <ul>
+                    <li nz-menu-group>
+                        <span nz-menu-item title>人员信息</span>
+                    </li>
+                    <li nz-menu-group>
+                        <span nz-menu-item title>车辆信息</span>
+                    </li>
+                    <li nz-menu-group>
+                        <span nz-menu-item title>收集点管理</span>
+                    </li>
+                </ul>
+            </li>
+            <li nz-submenu>
+                <div class="icon-box" title>
+                    <i class="anticon anticon-setting"></i>
+                </div>
+                <p class="menu-title" title>系统设置</p>
+                <ul>
+                    <li nz-menu-group>
+                        <span nz-menu-item title>人员信息</span>
+                    </li>
+                    <li nz-menu-group>
+                        <span nz-menu-item title>车辆信息</span>
+                    </li>
+                    <li nz-menu-group>
+                        <span nz-menu-item title>收集点管理</span>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <div nz-col nzSpan="5" id="personal-menu"><!-- personal-menu -->
+        <!-- 小铃铛 -->
+
+        <!-- welcome -->
+        <!-- logout -->
+    </div>
+</div>
+<!-- 面包屑导航 -->
+<app-breadcrumbs></app-breadcrumbs>
