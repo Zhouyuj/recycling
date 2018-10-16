@@ -16,23 +16,30 @@ import { NzDrawerRef } from 'ng-zorro-antd';
 })
 export class StaffInfoFormComponent implements OnInit {
 
+    validateForm: FormGroup;
 
     constructor(private fb: FormBuilder,
                 private drawerRef: NzDrawerRef<string>) {
     }
 
-    onSubmit() {
+    ngOnInit(): void {
+        this.validateForm = this.fb.group({
+            username         : [ null, [ Validators.required ] ],
+            gender           : [ null, [ Validators.required ] ],
+            statusId         : [ null, [ Validators.required ] ],
+            password         : [ null, [ Validators.required ] ],
+            position         : [ null, [ Validators.required ] ],
+            hireDate         : [ null, [ Validators.required ] ],
+            systemRole       : [ null, [ Validators.required ] ],
+            personalId       : [ null, [ Validators.required ] ],
+            phoneNumberPrefix: [ '+86' ],
+            phoneNumber      : [ null, [ Validators.required ] ],
+            mobile           : [ null, [ Validators.required ] ],
+            email            : [ null, [ Validators.email ] ],
+            checkPassword    : [ null, [ Validators.required, this.confirmationValidator ] ],
+            nickname         : [ null, [ Validators.required ] ],
+        });
     }
-
-    onCancel() {
-    }
-
-    close(): void {
-        this.drawerRef.close(this.value);
-    }
-
-
-    validateForm: FormGroup;
 
     submitForm(): void {
         for (const i in this.validateForm.controls) {
@@ -54,22 +61,11 @@ export class StaffInfoFormComponent implements OnInit {
         }
     }
 
-    getCaptcha(e: MouseEvent): void {
-        e.preventDefault();
+    /**
+     * 日期选择器 change 事件
+     * @param result
+     */
+    onHireDateChange(result: Date): void {
+        console.log(result);
     }
-
-    ngOnInit(): void {
-        this.validateForm = this.fb.group({
-            email            : [ null, [ Validators.email ] ],
-            password         : [ null, [ Validators.required ] ],
-            checkPassword    : [ null, [ Validators.required, this.confirmationValidator ] ],
-            nickname         : [ null, [ Validators.required ] ],
-            phoneNumberPrefix: [ '+86' ],
-            phoneNumber      : [ null, [ Validators.required ] ],
-            website          : [ null, [ Validators.required ] ],
-            captcha          : [ null, [ Validators.required ] ],
-            agree            : [ false ]
-        });
-    }
-
 }

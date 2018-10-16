@@ -1,8 +1,9 @@
-import { Component, OnInit, EventEmitter, ComponentFactoryResolver } from '@angular/core';
-import { Modal, ModalService } from 'rebirth-ng';
+import { Component, OnInit, EventEmitter } from '@angular/core';
 
 import { CustomersInfoService } from './customers-info.service';
 import { CustomersInfoFormComponent } from './customers-info-form/customers-info-form.component';
+
+import { NzDrawerService } from 'ng-zorro-antd';
 
 @Component({
     selector   : 'app-customers-info',
@@ -43,22 +44,21 @@ export class CustomersInfoComponent implements OnInit {
     public selected_system_position = null;
     public selected_system_positions_options = [
         {
-            id: 0,
+            id  : 0,
             name: '全选',
         },
         {
-            id: 1,
+            id  : 1,
             name: '司机',
         },
         {
-            id: 2,
+            id  : 2,
             name: '辅助工',
         },
     ];
 
     constructor(private customersInfoService: CustomersInfoService,
-                private modalService: ModalService,
-                private componentFactoryResolver: ComponentFactoryResolver) {
+                private drawerService: NzDrawerService) {
     }
 
     ngOnInit() {
@@ -69,12 +69,12 @@ export class CustomersInfoComponent implements OnInit {
 
     onAdd() {
         console.log('add');
-        this.openModal();
+        this.onOpenForm();
     }
 
     onEdit($e) {
         console.log('edit', this.list_options.selectedRows);
-        this.openModal();
+        this.onOpenForm();
     }
 
     onDel($e) {
@@ -97,11 +97,9 @@ export class CustomersInfoComponent implements OnInit {
         let requestParams = ''; // 拼接过滤的条件
         switch ($e.type) {
             case '岗位':
-                console.log($e.type);
                 console.log($e.id);
                 break;
             case '系统角色':
-                console.log($e.type);
                 break;
             default:
                 break;
@@ -120,20 +118,29 @@ export class CustomersInfoComponent implements OnInit {
         // 分页接口
     }
 
+    /**
+     * 抽屉组件
+     * form 表单
+     */
+    onOpenForm(): void {
+        const drawerRef = this.drawerService.create<CustomersInfoFormComponent, { value: string }, string>({
+            nzTitle        : '添加',
+            nzContent      : CustomersInfoFormComponent,
+            nzContentParams: {
+                value: this.value
+            },
+            nzWidth        : '45%',
+        });
 
-    openModal() {
-        this.modalService.open<string>({
-                component               : CustomersInfoFormComponent,
-                componentFactoryResolver: this.componentFactoryResolver,
-                resolve                 : {
-                    text: 'I am from resolve data!'
-                }
-            })
-            .subscribe(data => {
-                console.log('Rebirth Modal -> Get ok with result:', data);
-            }, error => {
-                console.error('Rebirth Modal -> Get cancel with result:', error);
-            });
+        drawerRef.afterOpen.subscribe(() => {
+            console.log('Drawer(Component) open');
+        });
+
+        drawerRef.afterClose.subscribe(data => {
+            console.log(data);
+            if (typeof data === 'string') {
+                this.value = data;
+            }
+        });
     }
-
 }

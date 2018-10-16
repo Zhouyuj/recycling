@@ -4,6 +4,8 @@ import { Modal, ModalService } from 'rebirth-ng';
 import { VehicleInfoFormComponent } from './vehicle-info-form/vehicle-info-form.component';
 import { VehicleInfoService } from './vehicle-info.service';
 
+import { NzDrawerService } from 'ng-zorro-antd';
+
 @Component({
     selector: 'app-vehicle-info',
     templateUrl: './vehicle-info.component.html',
@@ -57,8 +59,7 @@ export class VehicleInfoComponent implements OnInit {
     ];
 
     constructor(private vehicleInfoService: VehicleInfoService,
-                private modalService: ModalService,
-                private componentFactoryResolver: ComponentFactoryResolver) {
+                private drawerService: NzDrawerService) {
     }
 
     ngOnInit() {
@@ -69,12 +70,12 @@ export class VehicleInfoComponent implements OnInit {
 
     onAdd() {
         console.log('add');
-        this.openModal();
+        this.onOpenForm();
     }
 
     onEdit($e) {
         console.log('edit', this.list_options.selectedRows);
-        this.openModal();
+        this.onOpenForm();
     }
 
     onDel($e) {
@@ -118,19 +119,29 @@ export class VehicleInfoComponent implements OnInit {
         // 分页接口
     }
 
-    openModal() {
-        this.modalService.open<string>({
-                component: VehicleInfoFormComponent,
-                componentFactoryResolver: this.componentFactoryResolver,
-                resolve: {
-                    text: 'I am from resolve data!'
-                }
-            })
-            .subscribe(data => {
-                console.log('Rebirth Modal -> Get ok with result:', data);
-            }, error => {
-                console.error('Rebirth Modal -> Get cancel with result:', error);
-            });
-    }
+    /**
+     * 抽屉组件
+     * form 表单
+     */
+    onOpenForm(): void {
+        const drawerRef = this.drawerService.create<VehicleInfoFormComponent, { value: string }, string>({
+            nzTitle: '添加',
+            nzContent: VehicleInfoFormComponent,
+            nzContentParams: {
+                value: this.value
+            },
+            nzWidth: '45%',
+        });
 
+        drawerRef.afterOpen.subscribe(() => {
+            console.log('Drawer(Component) open');
+        });
+
+        drawerRef.afterClose.subscribe(data => {
+            console.log(data);
+            if (typeof data === 'string') {
+                this.value = data;
+            }
+        });
+    }
 }

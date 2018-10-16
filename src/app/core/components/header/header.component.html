@@ -1,10 +1,10 @@
 <div id="header-comp">
     <div nz-row>
-        <div nz-col nzSpan="3"><!-- logo -->
+        <!--<div nz-col nzSpan="3">&lt;!&ndash; logo &ndash;&gt;
             <div class="logo">
-                <!--<img src="../../../../assets/images/newlogo_small.png" alt="LOGO">-->
+                &lt;!&ndash;<img src="../../../../assets/images/newlogo_small.png" alt="LOGO">&ndash;&gt;
             </div>
-        </div>
+        </div>-->
 
         <div nz-col nzSpan="16" id="nav-menu"><!-- nav-menu -->
             <ul nz-menu [nzMode]="'horizontal'">
@@ -159,11 +159,28 @@
             </ul>
         </div>
 
-        <div nz-col nzSpan="5" id="personal-menu"><!-- personal-menu -->
+        <div nz-col nzSpan="8" id="personal-menu" nz-row ><!-- personal-menu -->
             <!-- 小铃铛 -->
-
+            <div nz-col nzSpan="4">
+                <div class="personal-menu-item">
+                    <div class="bell">
+                        <i class="anticon anticon-bell"></i>
+                        <nz-tag [nzColor]="'red'" class="bell-total">12</nz-tag>
+                    </div>
+                </div>
+            </div>
             <!-- welcome -->
+            <div nz-col nzSpan="9">
+                <div class="personal-menu-item">
+                    <i class="anticon anticon-smile-o"></i> 欢迎您,张敬轩
+                </div>
+            </div>
             <!-- logout -->
+            <div nz-col nzSpan="5">
+                <div class="personal-menu-item">
+                    <i class="anticon anticon-logout"></i> 退出
+                </div>
+            </div>
         </div>
     </div>
 

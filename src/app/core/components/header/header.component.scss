@@ -28,7 +28,33 @@
 }
 
 #personal-menu {
+    height: 56px;
+    border: 0;
+    border-bottom: 1px solid #e8e8e8;
+    box-shadow: none;
+    box-sizing: border-box;
     display: flex;
-    //align-content: center;
+    align-content: center;
     justify-content: center;
+
+    .personal-menu-item {
+        position: relative;
+        line-height: 56px;
+        text-align: center;
+        .bell {
+            i {
+                font-size: 1.7rem;
+            }
+            min-width: 50px;
+            position: relative;
+            .bell-total {
+                position: absolute;
+                top: -15px;
+                right: -5px;
+            }
+        }
+        i {
+            font-size: 1.5rem;
+        }
+    }
 }
