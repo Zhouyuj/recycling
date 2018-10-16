@@ -16,7 +16,7 @@ export class CustomersInfoComponent implements OnInit {
         selectedRows       : [],
         localizationMessage: {
             emptyMessage   : '未找到任何数据！',
-            totalMessage   : '条记录',
+            totalMessage   : '条记录  可配合使用CTRL与SHIFT进行多选',
             selectedMessage: '已选中',
         },
     };
@@ -38,6 +38,21 @@ export class CustomersInfoComponent implements OnInit {
         {
             id  : 3,
             name: '中控',
+        },
+    ];
+    public selected_system_position = null;
+    public selected_system_positions_options = [
+        {
+            id: 0,
+            name: '全选',
+        },
+        {
+            id: 1,
+            name: '司机',
+        },
+        {
+            id: 2,
+            name: '辅助工',
         },
     ];
 
@@ -77,6 +92,34 @@ export class CustomersInfoComponent implements OnInit {
     onSelectFilter($e) {
         console.log($e);
     }
+
+    onSelectEmitter($e) {
+        let requestParams = ''; // 拼接过滤的条件
+        switch ($e.type) {
+            case '岗位':
+                console.log($e.type);
+                console.log($e.id);
+                break;
+            case '系统角色':
+                console.log($e.type);
+                break;
+            default:
+                break;
+        }
+    }
+
+    onUpdateFilter($e) {
+        console.log($e);
+    }
+
+    onPage($e) {
+        console.log($e);
+    }
+
+    asyncGetDataByPage() {
+        // 分页接口
+    }
+
 
     openModal() {
         this.modalService.open<string>({

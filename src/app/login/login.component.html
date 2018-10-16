@@ -5,37 +5,43 @@
     </div>
     <div class="body">
         <div class="container_wrapper">
-            <div class="login_pictures">
-                <div class="logo"></div>
-                <div class="full_name"></div>
-                <div class="english_slogan">Internet of Things . Internet of Thinks</div>
-            </div>
             <div class="login_container">
+                <div class="login_logo">
+                    <img src="../../assets/images/newlogo_small.png" alt="LOGO" class="logo-left">
+                    <img src="../../assets/images/zhangzhou-logo.png" alt="LOGO" class="logo-right">
+                </div>
                 <div class="login_content">
-                    <form class="form-horizontal" id="login_form">
-                        <h5 class="login_title">用户登录</h5>
-                        <div class="login_inputs">
-                            <div class="form-group">
-                                <label for="username" class="col-sm-3 control-label login_label">用户名</label>
-                                <div class="col-sm-9">
-                                    <input type="text" class="form-control" id="username" placeholder="请输入用户名">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="password" class="col-sm-3 control-label login_label">密 码</label>
-                                <div class="col-sm-9">
-                                    <input type="text" class="form-control" id="password" placeholder="请输入密码">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <p class="help-block col-sm-9 col-sm-offset-3 login_tips">抱歉, 您的用户名或密码不正确</p>
-                            </div>
-                        </div>
-                        <button type="button" class="btn btn-primary login_btn">登 录</button>
+                    <h4>登录</h4>
+                    <form nz-form [formGroup]="validateForm" class="login-form" (ngSubmit)="submitForm()">
+                        <nz-form-item>
+                            <nz-form-control>
+                                <nz-input-group nzPrefixIcon="anticon anticon-user">
+                                    <input type="text" nz-input formControlName="userName" placeholder="请输入您的用户名">
+                                </nz-input-group>
+                                <nz-form-explain *ngIf="validateForm.get('userName').dirty && validateForm.get('userName').errors">用户名不正确</nz-form-explain>
+                            </nz-form-control>
+                        </nz-form-item>
+                        <nz-form-item>
+                            <nz-form-control>
+                                <nz-input-group nzPrefixIcon="anticon anticon-lock">
+                                    <input type="password" nz-input formControlName="password" placeholder="请输入您的密码">
+                                </nz-input-group>
+                                <nz-form-explain *ngIf="validateForm.get('password').dirty && validateForm.get('password').errors">密码不正确</nz-form-explain>
+                            </nz-form-control>
+                        </nz-form-item>
+                        <nz-form-item>
+                            <nz-form-control>
+                                <!--<label nz-checkbox formControlName="remember">
+                                    <span>记住我</span>
+                                </label>-->
+                                <button nz-button class="login-form-button" [nzType]="'primary'">登录</button>
+                            </nz-form-control>
+                        </nz-form-item>
                     </form>
                 </div>
             </div>
         </div>
         <div class="slogan"></div>
+        <p class="Locision">© 2013-2018 Locision.com 版权所有</p>
     </div>
 </div>

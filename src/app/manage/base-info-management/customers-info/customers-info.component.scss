@@ -1,38 +1,20 @@
 .wrap {
     width: 100%;
     height: 100%;
-    display: flex;
 }
 
-.left {
-    flex: 9;
-}
-
-.right {
-    flex: 1;
-    padding-left: 1rem;
-    display: flex;
-    flex-direction: column;
-    .button-group {
-        display: flex;
-        flex-direction: column;
-        button {
-            margin-bottom: 1rem;
-            outline: none;
-        }
+.table-operations {
+    position: relative;
+    z-index: 13;
+    padding-bottom: 8px;
+    [nz-button] {
     }
-    .selected-column {
-        text-align: center;
-        margin: 10px 0 0 0;
-        padding: 1rem;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        h4 {
-            font-size: 1.4rem;
-            font-weight: bold;
-        }
-        li {
-            padding: 3px 5px;
-        }
+
+    .table-search {
+        text-align: right;
+    }
+
+    .table-CUDE { /* 增删改导出 */
+        text-align: right;
     }
 }

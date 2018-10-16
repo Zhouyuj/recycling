@@ -4,7 +4,7 @@
 
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 /* 第三方 */
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
@@ -22,6 +22,7 @@ import { BreadcrumbsComponent } from './components/breadcrumbs/breadcrumbs.compo
     imports     : [
         CommonModule,
         FormsModule,
+        ReactiveFormsModule,
         RouterModule,
         NgxDatatableModule,
         RebirthNGModule,
@@ -30,6 +31,7 @@ import { BreadcrumbsComponent } from './components/breadcrumbs/breadcrumbs.compo
     exports     : [
         CommonModule,
         FormsModule,
+        ReactiveFormsModule,
         RouterModule,
         NgxDatatableModule,
         RebirthNGModule,

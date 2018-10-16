@@ -1,8 +1,9 @@
-import { Component, OnInit, EventEmitter, ComponentFactoryResolver } from '@angular/core';
-import { Modal, ModalService } from 'rebirth-ng';
+import { Component, OnInit, EventEmitter } from '@angular/core';
 
 import { StaffInfoService } from './staff-info.service';
 import { StaffInfoFormComponent } from './staff-info-form/staff-info-form.component';
+
+import { NzDrawerService } from 'ng-zorro-antd';
 
 @Component({
     selector   : 'app-staff-info',
@@ -57,8 +58,7 @@ export class StaffInfoComponent implements OnInit {
     ];
 
     constructor(private staffInfoService: StaffInfoService,
-                private modalService: ModalService,
-                private componentFactoryResolver: ComponentFactoryResolver) {
+                private drawerService: NzDrawerService) {
     }
 
     ngOnInit() {
@@ -69,12 +69,12 @@ export class StaffInfoComponent implements OnInit {
 
     onAdd() {
         console.log('add');
-        this.openModal();
+        this.onOpenForm();
     }
 
     onEdit($e) {
         console.log('edit', this.list_options.selectedRows);
-        this.openModal();
+        this.onOpenForm();
     }
 
     onDel($e) {
@@ -118,19 +118,29 @@ export class StaffInfoComponent implements OnInit {
         // 分页接口
     }
 
-    openModal() {
-        this.modalService.open<string>({
-                component               : StaffInfoFormComponent,
-                componentFactoryResolver: this.componentFactoryResolver,
-                resolve                 : {
-                    text: 'I am from resolve data!'
-                }
-            })
-            .subscribe(data => {
-                console.log('Rebirth Modal -> Get ok with result:', data);
-            }, error => {
-                console.error('Rebirth Modal -> Get cancel with result:', error);
-            });
-    }
+    /**
+     * 抽屉组件
+     * form 表单
+     */
+    onOpenForm(): void {
+        const drawerRef = this.drawerService.create<StaffInfoFormComponent, { value: string }, string>({
+            nzTitle: '添加',
+            nzContent: StaffInfoFormComponent,
+            nzContentParams: {
+                value: this.value
+            },
+            nzWidth: '45%',
+        });
 
+        drawerRef.afterOpen.subscribe(() => {
+            console.log('Drawer(Component) open');
+        });
+
+        drawerRef.afterClose.subscribe(data => {
+            console.log(data);
+            if (typeof data === 'string') {
+                this.value = data;
+            }
+        });
+    }
 }
