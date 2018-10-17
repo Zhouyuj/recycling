@@ -1,5 +1,5 @@
 <div id="form">
-    <form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()">
+    <form nz-form [formGroup]="validateForm" (ngSubmit)="onSubmitForm()">
         <nz-divider [nzText]="basicTemplate">
             <ng-template #basicTemplate>
                 <span style="color: #83bf46;">基础信息</span>
@@ -9,27 +9,28 @@
         <nz-form-item>
             <nz-form-label [nzSm]="3" [nzXs]="24" nzRequired nzFor="username">用户名</nz-form-label>
             <nz-form-control [nzSm]="7" [nzXs]="24">
-                <input nz-input formControlName="username" id="username">
-                <nz-form-explain *ngIf="validateForm.get('username').dirty && validateForm.get('username').errors">不对诶</nz-form-explain>
+                <input nz-input formControlName="username" id="username" placeHolder="请输入您的用户名">
+                <nz-form-explain *ngIf="validateForm.get('username').dirty && validateForm.get('username').errors">请输入正确的用户名</nz-form-explain>
             </nz-form-control>
             <nz-form-label [nzSm]="3" [nzXs]="24" nzOffset="2" nzRequired nzFor="gender">性别</nz-form-label>
-            <nz-form-control [nzSm]="7" [nzXs]="24">
-                <nz-radio-group [nzButtonStyle]="'solid'" formControlName="gender" id="gender">
+            <nz-form-control [nzSm]="9" [nzXs]="24">
+                <nz-radio-group [nzButtonStyle]="'solid'" nzRequired formControlName="gender" id="gender">
                     <label nz-radio-button nzValue="0">女</label>
                     <label nz-radio-button nzValue="1">男</label>
                 </nz-radio-group>
+                <nz-form-explain *ngIf="validateForm.get('gender').dirty && validateForm.get('gender').errors">请选择您的性别</nz-form-explain>
             </nz-form-control>
         </nz-form-item>
 
         <nz-form-item>
             <nz-form-label [nzSm]="3" [nzXs]="24" nzRequired nzFor="statusId">工号</nz-form-label>
             <nz-form-control [nzSm]="7" [nzXs]="24">
-                <input nz-input formControlName="statusId" id="statusId">
-                <nz-form-explain *ngIf="validateForm.get('statusId').dirty && validateForm.get('statusId').errors">不对诶</nz-form-explain>
+                <input nz-input formControlName="statusId" id="statusId" placeHolder="请输入您的工号">
+                <nz-form-explain *ngIf="validateForm.get('statusId').dirty && validateForm.get('statusId').errors">请输入正确的工号</nz-form-explain>
             </nz-form-control>
             <nz-form-label [nzSm]="3" [nzXs]="24" nzOffset="2" nzFor="password" nzRequired>密码</nz-form-label>
-            <nz-form-control [nzSm]="7" [nzXs]="24">
-                <input nz-input type="password" id="password" formControlName="password" (ngModelChange)="updateConfirmValidator()">
+            <nz-form-control [nzSm]="9" [nzXs]="24">
+                <input nz-input type="password" id="password" formControlName="password" (ngModelChange)="updateConfirmValidator()"  placeHolder="请输入您的密码">
                 <nz-form-explain *ngIf="validateForm.get('password').dirty && validateForm.get('password').errors">请输入您的密码</nz-form-explain>
             </nz-form-control>
         </nz-form-item>
@@ -50,14 +51,14 @@
 
             <nz-form-label [nzSm]="3" [nzXs]="24" nzOffset="2" nzRequired nzFor="hireDate">入职时间</nz-form-label>
             <nz-form-control [nzSm]="9" [nzXs]="24">
-                <nz-date-picker formControlName="hireDate" (ngModelChange)="onHireDateChange($event)" nzShowTime></nz-date-picker>
+                <nz-date-picker formControlName="hireDate" (ngModelChange)="onHireDateChange($event)" [nzFormat]="yyyy-MM-dd"></nz-date-picker>
             </nz-form-control>
         </nz-form-item>
 
         <nz-form-item>
             <nz-form-label [nzSm]="4" [nzXs]="24" nzRequired nzFor="systemRole">系统角色</nz-form-label>
             <nz-form-control [nzSm]="18" [nzXs]="24">
-                <nz-select formControlName="systemRole" [nzSize]="size" nzMode="multiple" nzPlaceHolder="请选择">
+                <nz-select formControlName="systemRole" [nzSize]="size" nzMode="multiple" nzPlaceHolder="请选择角色">
                     <nz-option nzLabel="系统管理员" nzValue="0"></nz-option>
                     <nz-option nzLabel="司机" nzValue="1"></nz-option>
                     <nz-option nzLabel="中控人员" nzValue="2"></nz-option>
@@ -73,40 +74,68 @@
             </ng-template>
         </nz-divider>
         <nz-form-item>
-            <nz-form-label [nzSm]="3" [nzXs]="24" nzRequired nzFor="personalId">身份证</nz-form-label>
+            <nz-form-label [nzSm]="3" [nzXs]="24" nzFor="personalId">身份证</nz-form-label>
             <nz-form-control [nzSm]="7" [nzXs]="24">
-                <input nz-input formControlName="personalId" id="personalId">
-                <nz-form-explain *ngIf="validateForm.get('personalId').dirty && validateForm.get('personalId').errors">不对诶</nz-form-explain>
+                <input nz-input formControlName="personalId" id="personalId"  placeHolder="请输入您的身份证号">
+                <nz-form-explain *ngIf="validateForm.get('personalId').dirty && validateForm.get('personalId').errors">请输入正确的身份证号</nz-form-explain>
             </nz-form-control>
-            <nz-form-label [nzSm]="3" [nzXs]="24" nzOffset="2" nzRequired nzFor="phoneNumber">固话</nz-form-label>
+            <nz-form-label [nzSm]="3" [nzXs]="24" nzFor="phoneNumber">固话</nz-form-label>
             <nz-form-control [nzSm]="9" [nzXs]="24" [nzValidateStatus]="validateForm.controls['phoneNumber']">
-                <input formControlName="phoneNumber" id="'phoneNumber'" nz-input>
-                <nz-form-explain *ngIf="validateForm.get('phoneNumber').dirty && validateForm.get('phoneNumber').errors">Please input your phone number!</nz-form-explain>
+                <input formControlName="phoneNumber" id="'phoneNumber'" nz-input placeHolder="请输入您的固话号码">
+                <nz-form-explain *ngIf="validateForm.get('phoneNumber').dirty && validateForm.get('phoneNumber').errors">请输入您正确的固话号码</nz-form-explain>
             </nz-form-control>
         </nz-form-item>
 
-        <!--<nz-form-item>
+        <nz-form-item>
             <nz-form-label [nzSm]="3" [nzXs]="24" nzRequired nzFor="mobile">移动电话</nz-form-label>
             <nz-form-control [nzSm]="7" [nzXs]="24" [nzValidateStatus]="validateForm.controls['mobile']">
-                <nz-input-group [nzAddOnBefore]="addOnBeforeTemplate">
-                    <ng-template #addOnBeforeTemplate>
-                        <nz-select formControlName="phoneNumberPrefix">
-                            <nz-option nzLabel="+86" nzValue="+86"></nz-option>
-                            <nz-option nzLabel="+87" nzValue="+87"></nz-option>
-                        </nz-select>
-                    </ng-template>
-                    <input formControlName="mobile" id="'mobile'" nz-input>
-                </nz-input-group>
-                <nz-form-explain *ngIf="validateForm.get('mobile').dirty && validateForm.get('mobile').errors">Please input your phone number!</nz-form-explain>
+                    <input formControlName="mobile" id="'mobile'" nz-input placeHolder="请输入您的移动电话号码">
+                <nz-form-explain *ngIf="validateForm.get('mobile').dirty && validateForm.get('mobile').errors">请输入您正确的手机号码</nz-form-explain>
             </nz-form-control>
-            <nz-form-label [nzSm]="3" [nzXs]="24" nzOffset="2" nzRequired nzFor="">身份证</nz-form-label>
+            <nz-form-label [nzSm]="3" [nzXs]="24" nzFor="address">家庭地址</nz-form-label>
+            <nz-form-control [nzSm]="11" [nzXs]="24" [nzValidateStatus]="validateForm.controls['address']">
+                <app-cascader formGroupName="address" (changesEmitter)="onAddressChange($event)"></app-cascader>
+            </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+            <nz-form-label [nzSm]="3" [nzXs]="24" nzFor="homeAddress">详细地址</nz-form-label>
+            <nz-form-control [nzSm]="21" [nzXs]="24">
+                <input formControlName="homeAddress" id="'homeAddress'" nz-input placeHolder="请输入您的详细地址">
+            </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+            <nz-form-label [nzSm]="3" [nzXs]="24" nzFor="emergencyPerson">紧急联系人</nz-form-label>
+            <nz-form-control [nzSm]="7" [nzXs]="24" [nzValidateStatus]="validateForm.controls['emergencyPerson']">
+                <input formControlName="emergencyPerson" id="'emergencyPerson'" nz-input placeHolder="请输入您的紧急联系人姓名">
+                <nz-form-explain *ngIf="validateForm.get('emergencyPerson').dirty && validateForm.get('emergencyPerson').errors">请输入您正确的联系人姓名</nz-form-explain>
+            </nz-form-control>
+            <nz-form-label [nzSm]="3" [nzXs]="24" nzFor="emergencyContact">联系人电话</nz-form-label>
+            <nz-form-control [nzSm]="11" [nzXs]="24" [nzValidateStatus]="validateForm.controls['emergencyContact']">
+                <input formControlName="emergencyContact" id="'emergencyContact'" nz-input placeHolder="请输入您的紧急联系人联系方式">
+            </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+            <nz-form-label [nzSm]="3" [nzXs]="24" nzFor="email">邮箱</nz-form-label>
             <nz-form-control [nzSm]="7" [nzXs]="24">
-                <input nz-input formControlName="" id="">
-                <nz-form-explain *ngIf="validateForm.get('').dirty && validateForm.get('').errors">不对诶</nz-form-explain>
+                <input nz-input formControlName="email" id="email" placeHolder="请输入您的邮箱地址">
+                <nz-form-explain *ngIf="validateForm.get('email').dirty && validateForm.get('email').errors">格式不对</nz-form-explain>
             </nz-form-control>
-        </nz-form-item>-->
+
+            <nz-form-label [nzSm]="3" [nzXs]="24" nzFor="remark">备注</nz-form-label>
+            <nz-form-control [nzSm]="9" [nzXs]="24">
+                <input nz-input formControlName="remark" id="remark" placeHolder="如有需要请备注">
+            </nz-form-control>
+        </nz-form-item>
+
+        <nz-divider></nz-divider>
+        <nz-form-item nz-row>
+            <nz-form-control [nzSpan]="3" nzOffset="20">
+                <button nz-button nzType="primary" style="width: 100%;">确认</button>
+            </nz-form-control>
+        </nz-form-item>
     </form>
 
 </div><!-- div.form end -->
-
-{{this.validateForm.value | json}}

@@ -16,6 +16,7 @@ import { LoadingService } from './services/loading/loading.service';
 import { LoadingComponent } from './components/loading/loading.component';
 import { SelectComponent } from './components/select/select.component';
 import { BreadcrumbsComponent } from './components/breadcrumbs/breadcrumbs.component';
+import { CascaderComponent } from './components/cascader/cascader.component';
 //import { NotifyComponent } from './components/notify/notify.component';
 
 @NgModule({
@@ -40,12 +41,14 @@ import { BreadcrumbsComponent } from './components/breadcrumbs/breadcrumbs.compo
         LoadingComponent,
         SelectComponent,
         BreadcrumbsComponent,
+        CascaderComponent,
     ],
     declarations: [
         //NotifyComponent,
         LoadingComponent,
         SelectComponent,
         BreadcrumbsComponent,
+        CascaderComponent,
     ],
     providers   : [ LoadingService ],
 })

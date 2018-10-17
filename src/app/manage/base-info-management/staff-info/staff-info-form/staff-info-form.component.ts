@@ -23,42 +23,42 @@ export class StaffInfoFormComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        /** form config **/
         this.validateForm = this.fb.group({
-            username         : [ null, [ Validators.required ] ],
-            gender           : [ null, [ Validators.required ] ],
-            statusId         : [ null, [ Validators.required ] ],
-            password         : [ null, [ Validators.required ] ],
-            position         : [ null, [ Validators.required ] ],
-            hireDate         : [ null, [ Validators.required ] ],
-            systemRole       : [ null, [ Validators.required ] ],
-            personalId       : [ null, [ Validators.required ] ],
-            phoneNumberPrefix: [ '+86' ],
-            phoneNumber      : [ null, [ Validators.required ] ],
-            mobile           : [ null, [ Validators.required ] ],
-            email            : [ null, [ Validators.email ] ],
-            checkPassword    : [ null, [ Validators.required, this.confirmationValidator ] ],
-            nickname         : [ null, [ Validators.required ] ],
+            username        : [ null, [ Validators.required ] ],
+            gender          : [ null, [ Validators.required ] ],
+            statusId        : [ null, [ Validators.required ] ],
+            password        : [ null, [ Validators.required ] ],
+            position        : [ null, [ Validators.required ] ],
+            hireDate        : [ null, [ Validators.required ] ],
+            systemRole      : [ null, [ Validators.required ] ],
+            personalId      : [ null, [ Validators.required ] ],
+            mobile          : [ null, [ Validators.required ] ],
+            phoneNumber     : [ null ],
+            address         : this.fb.group({
+                province: [ null ],
+                city    : [ null ],
+                region  : [ null ],
+            }),
+            homeAddress     : [ null ],
+            emergencyPerson : [ null ],
+            emergencyContact: [ null ],
+            email           : [ null, [ Validators.email ] ],
+            remark          : [ null ],
         });
     }
 
-    submitForm(): void {
+    onSubmitForm(): void {
         for (const i in this.validateForm.controls) {
             this.validateForm.controls[ i ].markAsDirty();
             this.validateForm.controls[ i ].updateValueAndValidity();
         }
+        console.log(this.validateForm.value);
     }
 
     updateConfirmValidator(): void {
         /** wait for refresh value */
-        Promise.resolve().then(() => this.validateForm.controls.checkPassword.updateValueAndValidity());
-    }
-
-    confirmationValidator = (control: FormControl): { [s: string]: boolean } => {
-        if (!control.value) {
-            return { required: true };
-        } else if (control.value !== this.validateForm.controls.password.value) {
-            return { confirm: true, error: true };
-        }
+        //Promise.resolve().then(() => this.validateForm.controls.checkPassword.updateValueAndValidity());
     }
 
     /**
@@ -67,5 +67,20 @@ export class StaffInfoFormComponent implements OnInit {
      */
     onHireDateChange(result: Date): void {
         console.log(result);
+    }
+
+    /**
+     * 级联组件
+     * @param $e
+     */
+    onAddressChange($e: any): void {
+        console.log($e);
+        this.validateForm.patchValue({
+            address: {
+                province: $e[ 0 ] || '',    // 省
+                city    : $e[ 1 ] || '',    // 市
+                region  : $e[ 2 ] || '',    // 区
+            }
+        });
     }
 }

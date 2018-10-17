@@ -129,7 +129,7 @@ export class StaffInfoComponent implements OnInit {
             nzContentParams: {
                 value: this.value
             },
-            nzWidth: '50%',
+            nzWidth: '55%',
         });
 
         drawerRef.afterOpen.subscribe(() => {
