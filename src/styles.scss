@@ -70,7 +70,7 @@ body {
 /* ---- body end ---- */
 
 /* angular 官网中介绍不需在index中导入,在此导入bootstrap即可 */
-@import url('https://unpkg.com/bootstrap@3.3.7/dist/css/bootstrap.min.css');
+//@import url('https://unpkg.com/bootstrap@3.3.7/dist/css/bootstrap.min.css');
 
 /* ngx-datatable */
 @import '../node_modules/@swimlane/ngx-datatable/release/index.css';

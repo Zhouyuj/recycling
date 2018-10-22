@@ -19,7 +19,7 @@ export class StaffInfoFormComponent implements OnInit {
     validateForm: FormGroup;
 
     constructor(private fb: FormBuilder,
-                private drawerRef: NzDrawerRef<string>) {
+                private drawerRef: NzDrawerRef<any>) {
     }
 
     ngOnInit(): void {
@@ -32,7 +32,7 @@ export class StaffInfoFormComponent implements OnInit {
             position        : [ null, [ Validators.required ] ],
             hireDate        : [ null, [ Validators.required ] ],
             systemRole      : [ null, [ Validators.required ] ],
-            personalId      : [ null, [ Validators.required ] ],
+            personalId      : [ null, [ Validators.pattern(/([A-z]|[0-9]){18}/) || null ] ],
             mobile          : [ null, [ Validators.required ] ],
             phoneNumber     : [ null ],
             address         : this.fb.group({
@@ -82,5 +82,10 @@ export class StaffInfoFormComponent implements OnInit {
                 region  : $e[ 2 ] || '',    // 区
             }
         });
+    }
+
+    onClose(): void {
+        //this.drawerRef.close();
+        console.log(this.validateForm);
     }
 }

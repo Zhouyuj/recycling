@@ -1,93 +1,178 @@
-<form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()">
-    <nz-form-item>
-        <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="email">E-mail</nz-form-label>
-        <nz-form-control [nzSm]="14" [nzXs]="24">
-            <input nz-input formControlName="email" id="email">
-            <nz-form-explain *ngIf="validateForm.get('email').dirty && validateForm.get('email').errors">The input is not valid E-mail!</nz-form-explain>
-        </nz-form-control>
-    </nz-form-item>
-    <nz-form-item>
-        <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="password" nzRequired>Password</nz-form-label>
-        <nz-form-control [nzSm]="14" [nzXs]="24">
-            <input nz-input type="password" id="password" formControlName="password" (ngModelChange)="updateConfirmValidator()">
-            <nz-form-explain *ngIf="validateForm.get('password').dirty && validateForm.get('password').errors">Please input your password!</nz-form-explain>
-        </nz-form-control>
-    </nz-form-item>
-    <nz-form-item>
-        <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="checkPassword" nzRequired>Confirm Password</nz-form-label>
-        <nz-form-control [nzSm]="14" [nzXs]="24">
-            <input nz-input type="password" formControlName="checkPassword" id="checkPassword">
-            <nz-form-explain *ngIf="validateForm.get('checkPassword').dirty && validateForm.get('checkPassword').errors">
-                <ng-container *ngIf="validateForm.get('checkPassword').hasError('required')">
-                    Please confirm your password!
-                </ng-container>
-                <ng-container *ngIf="validateForm.get('checkPassword').hasError('confirm')">
-                    Two passwords that you enter is inconsistent!
-                </ng-container>
-            </nz-form-explain>
-        </nz-form-control>
-    </nz-form-item>
-    <nz-form-item>
-        <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="nickname" nzRequired>
-          <span>
-            Nickname
-            <nz-tooltip nzTitle="What do you want other to call you">
-                <i nz-tooltip class="anticon anticon-question-circle-o"></i>
-            </nz-tooltip>
-          </span>
-        </nz-form-label>
-        <nz-form-control [nzSm]="14" [nzXs]="24">
-            <input nz-input id="nickname" formControlName="nickname">
-            <nz-form-explain *ngIf="validateForm.get('nickname').dirty && validateForm.get('nickname').errors">Please input your nickname!</nz-form-explain>
-        </nz-form-control>
-    </nz-form-item>
-    <nz-form-item>
-        <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="phoneNumber" nzRequired>Phone Number</nz-form-label>
-        <nz-form-control [nzSm]="14" [nzXs]="24" [nzValidateStatus]="validateForm.controls['phoneNumber']">
-            <nz-input-group [nzAddOnBefore]="addOnBeforeTemplate">
-                <ng-template #addOnBeforeTemplate>
-                    <nz-select formControlName="phoneNumberPrefix" style="width: 70px;">
-                        <nz-option nzLabel="+86" nzValue="+86"></nz-option>
-                        <nz-option nzLabel="+87" nzValue="+87"></nz-option>
-                    </nz-select>
-                </ng-template>
-                <input formControlName="phoneNumber" id="'phoneNumber'" nz-input>
-            </nz-input-group>
-            <nz-form-explain *ngIf="validateForm.get('phoneNumber').dirty && validateForm.get('phoneNumber').errors">Please input your phone number!</nz-form-explain>
-        </nz-form-control>
-    </nz-form-item>
-    <nz-form-item>
-        <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="website" nzRequired>Website</nz-form-label>
-        <nz-form-control [nzSm]="14" [nzXs]="24">
-            <input nz-input id="website" formControlName="website" placeholder="website">
-            <nz-form-explain *ngIf="validateForm.get('website').dirty && validateForm.get('website').errors">Please input website!</nz-form-explain>
-        </nz-form-control>
-    </nz-form-item>
-    <nz-form-item>
-        <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="captcha" nzRequired>Captcha</nz-form-label>
-        <nz-form-control [nzSm]="14" [nzXs]="24">
-            <div nz-row [nzGutter]="8">
-                <div nz-col [nzSpan]="12">
-                    <input nz-input formControlName="captcha" id="captcha">
-                </div>
-                <div nz-col [nzSpan]="12">
-                    <button nz-button (click)="getCaptcha($event)">Get captcha</button>
-                </div>
-            </div>
-            <nz-form-explain *ngIf="validateForm.get('captcha').dirty && validateForm.get('captcha').errors">Please input the captcha you got!</nz-form-explain>
-            <nz-form-extra>We must make sure that your are a human.</nz-form-extra>
-        </nz-form-control>
-    </nz-form-item>
-    <nz-form-item nz-row style="margin-bottom:8px;">
-        <nz-form-control [nzSpan]="14" [nzOffset]="6">
-            <label nz-checkbox formControlName="agree">
-                <span>I have read the <a>agreement</a></span>
-            </label>
-        </nz-form-control>
-    </nz-form-item>
-    <nz-form-item nz-row style="margin-bottom:8px;">
-        <nz-form-control [nzSpan]="14" [nzOffset]="6">
-            <button nz-button nzType="primary">Register</button>
-        </nz-form-control>
-    </nz-form-item>
-</form>
+<div id="form">
+    <!-- 模板驱动表单 -->
+    <form nz-form
+          (ngSubmit)="onSubmitForm()"
+          #myForm="ngForm">
+        <nz-divider [nzText]="basicTemplate">
+            <ng-template #basicTemplate>
+                <span style="color: #83bf46;">基本信息</span>
+            </ng-template>
+        </nz-divider>
+        <nz-form-item>
+            <nz-form-label [nzSm]="3" [nzXs]="24" nzRequired nzFor="licensePlate">车牌号</nz-form-label>
+            <nz-form-control [nzSm]="7" nzHasFeedback>
+                <input nz-input
+                       required
+                       name="licensePlate"
+                       placeHolder="请输入您的车牌号"
+                       [(ngModel)]="formData.licensePlate"
+                       #licensePlate="ngModel">
+                <nz-form-explain [hidden]="licensePlate.valid || licensePlate.pristine">车牌号不能为空</nz-form-explain>
+            </nz-form-control>
+
+            <nz-form-label [nzSm]="3" [nzXs]="24" nzOffset="2" nzFor="vehicleFrame">车架号</nz-form-label>
+            <nz-form-control [nzSm]="7">
+                <input nz-input
+                       name="vehicleFrame"
+                       placeHolder="请输入您的车架号"
+                       [(ngModel)]="formData.vehicleFrame">
+            </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+            <nz-form-label [nzSm]="3" [nzXs]="24" nzRequired nzFor="engineNumber">发动机号</nz-form-label>
+            <nz-form-control [nzSm]="7">
+                <input nz-input
+                       name="engineNumber"
+                       placeHolder="请输入您的发动机号"
+                       [(ngModel)]="formData.engineNumber">
+            </nz-form-control>
+
+            <nz-form-label [nzSm]="3" [nzXs]="24" nzOffset="2" nzFor="vehicleBoxId">车载盒子ID</nz-form-label>
+            <nz-form-control [nzSm]="7">
+                <input nz-input
+                       name="vehicleBoxId"
+                       placeHolder="请输入您的盒子ID"
+                       [(ngModel)]="formData.vehicleBoxId">
+            </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+            <nz-form-label [nzSm]="3" [nzXs]="24" nzRequired nzFor="purchaseDate">购买时间</nz-form-label>
+            <nz-form-control [nzSm]="7" [nzXs]="24">
+                <nz-date-picker
+                        name="purchaseDate"
+                        required
+                        [(ngModel)]="formData.purchaseDate"
+                        [nzFormat]="yyyy-MM-dd"
+                        (ngModelChange)="onPurchaseDateChange($event)"
+                        #purchaseDate="ngModel">
+                </nz-date-picker>
+                <nz-form-explain [hidden]="purchaseDate.valid || purchaseDate.pristine">请选择购买时间</nz-form-explain>
+            </nz-form-control>
+            <nz-form-label [nzSm]="3" [nzXs]="24" nzOffset="2" nzFor="remark">备注</nz-form-label>
+            <nz-form-control [nzSm]="7" [nzXs]="24">
+                <input nz-input
+                       name="remark"
+                       id="remark"
+                       placeHolder="如有需要请备注"
+                       [(ngModel)]="formData.remark">
+            </nz-form-control>
+        </nz-form-item>
+
+        <nz-divider [nzText]="planTemplate">
+            <ng-template #planTemplate>
+                <span style="color: #83bf46;">规划及统计信息</span>
+            </ng-template>
+        </nz-divider>
+
+        <nz-form-item>
+            <nz-form-label [nzSm]="4" [nzXs]="24" nzRequired nzFor="planStartTime">计划出车时间</nz-form-label>
+            <nz-form-control [nzSm]="7" [nzXs]="24">
+                <nz-time-picker
+                        name="planStartTime"
+                        required
+                        [(ngModel)]="formData.planStartTime"
+                        nzFormat="HH:mm"
+                        #planStartTime="ngModel">
+                </nz-time-picker>
+                <nz-form-explain [hidden]="planStartTime.valid || planStartTime.pristine">请选择出车时间</nz-form-explain>
+            </nz-form-control>
+
+            <nz-form-label [nzSm]="4" [nzXs]="24" nzRequired nzFor="planEndTime">最晚回厂时间</nz-form-label>
+            <nz-form-control [nzSm]="7" [nzXs]="24">
+                <nz-time-picker
+                        name="planEndTime"
+                        required
+                        [(ngModel)]="formData.planEndTime"
+                        nzFormat="HH:mm"
+                        #planEndTime="ngModel">
+                </nz-time-picker>
+                <nz-form-explain [hidden]="planEndTime.valid || planEndTime.pristine">请选择回厂时间</nz-form-explain>
+            </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+            <nz-form-label [nzSm]="4" [nzXs]="24" nzRequired nzFor="vehicleType">车型</nz-form-label>
+            <nz-form-control [nzSm]="7" [nzXs]="24">
+                <nz-select
+                        name="vehicleType"
+                        required
+                        nzShowSearch
+                        nzAllowClear
+                        nzPlaceHolder="请选择车型"
+                        [(ngModel)]="formData.vehicleType"
+                        #vehicleType="ngModel">
+                    <nz-option nzLabel="5吨餐厨车" nzValue="0"></nz-option>
+                    <nz-option nzLabel="8吨餐厨车" nzValue="1"></nz-option>
+                    <nz-option nzLabel="1吨油脂车" nzValue="2"></nz-option>
+                </nz-select>
+                <nz-form-explain [hidden]="vehicleType.valid || vehicleType.pristine">请选择车型</nz-form-explain>
+            </nz-form-control>
+
+            <nz-form-label [nzSm]="4" [nzXs]="24" nzRequired nzFor="vehicleLocation">所属区域</nz-form-label>
+            <nz-form-control [nzSm]="7" [nzXs]="24">
+                <nz-select
+                        name="vehicleLocation"
+                        required
+                        nzShowSearch
+                        nzAllowClear
+                        nzPlaceHolder="请选择区域"
+                        [(ngModel)]="formData.vehicleLocation"
+                        #vehicleLocation="ngModel">
+                    <nz-option nzLabel="漳州市-区域1" nzValue="0"></nz-option>
+                    <nz-option nzLabel="漳州市-区域2" nzValue="1"></nz-option>
+                    <nz-option nzLabel="漳州市-先模拟选项" nzValue="2"></nz-option>
+                </nz-select>
+                <nz-form-explain [hidden]="vehicleLocation.valid || vehicleLocation.pristine">请选择区域</nz-form-explain>
+            </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+            <nz-form-label [nzSm]="4" [nzXs]="24" nzRequired nzFor="isTestVehicle">是否测试车</nz-form-label>
+            <nz-form-control [nzSm]="7" [nzXs]="24">
+                <nz-radio-group
+                        name="isTestVehicle"
+                        id="isTestVehicle"
+                        required
+                        [nzButtonStyle]="'solid'"
+                        [(ngModel)]="formData.isTestVehicle"
+                        #isTestVehicle="ngModel">
+                    <label nz-radio-button nzValue="0">否</label>
+                    <label nz-radio-button nzValue="1">是</label>
+                </nz-radio-group>
+                <nz-form-explain [hidden]="isTestVehicle.valid || isTestVehicle.pristine">请选择车辆类别</nz-form-explain>
+            </nz-form-control>
+        </nz-form-item>
+
+        <nz-divider></nz-divider>
+        <nz-form-item nz-row>
+            <nz-form-control [nzSpan]="3" nzOffset="17">
+                <button nz-button
+                        nzType="primary"
+                        style="width: 100%;"
+                        type="submit"
+                        [disabled]="!myForm.valid">确认
+                </button>
+            </nz-form-control>
+            <nz-form-control [nzSpan]="3" nzOffset="1">
+                <button nz-button
+                        nzType="default"
+                        style="width: 100%;"
+                        type="button"
+                        (click)="onClose()">取消
+                </button>
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+</div><!-- div.form end -->

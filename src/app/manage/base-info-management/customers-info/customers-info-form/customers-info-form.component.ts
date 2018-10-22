@@ -1,65 +1,66 @@
-import { Component, EventEmitter, OnInit } from '@angular/core';
-import {
-    FormBuilder,
-    FormControl,
-    FormGroup,
-    Validators
-} from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
 
 import { NzDrawerRef } from 'ng-zorro-antd';
 
 @Component({
-  selector: 'app-customers-info-form',
-  templateUrl: './customers-info-form.component.html',
-  styleUrls: ['./customers-info-form.component.scss']
+    selector   : 'app-customers-info-form',
+    templateUrl: './customers-info-form.component.html',
+    styleUrls  : [ './customers-info-form.component.scss' ]
 })
 export class CustomersInfoFormComponent implements OnInit {
 
-    constructor(private fb: FormBuilder,
-                private drawerRef: NzDrawerRef<string>) {
+    public formData: any = {
+        collectionName   : null,
+        isPlaza          : null,
+        address          : null,
+        detailAddress    : null,
+        contactPersonName: null,
+        mobile           : null,
+        dustbinCounts    : null,
+        collectionType   : null,
+        tel              : null,
+        hasKey           : null,
+    };
+
+    public duration = [];
+
+    constructor(private drawerRef: NzDrawerRef<any>) {
     }
 
     ngOnInit(): void {
-        this.validateForm = this.fb.group({
-            email            : [ null, [ Validators.email ] ],
-            password         : [ null, [ Validators.required ] ],
-            checkPassword    : [ null, [ Validators.required, this.confirmationValidator ] ],
-            nickname         : [ null, [ Validators.required ] ],
-            phoneNumberPrefix: [ '+86' ],
-            phoneNumber      : [ null, [ Validators.required ] ],
-            website          : [ null, [ Validators.required ] ],
-            captcha          : [ null, [ Validators.required ] ],
-            agree            : [ false ]
-        });
     }
 
-    close(): void {
-        this.drawerRef.close(this.value);
+    onClose(): void {
+        this.drawerRef.close();
     }
 
-    validateForm: FormGroup;
-
-    submitForm(): void {
-        for (const i in this.validateForm.controls) {
-            this.validateForm.controls[ i ].markAsDirty();
-            this.validateForm.controls[ i ].updateValueAndValidity();
-        }
+    onSubmitForm(): void {
+        console.log('submit');
+        console.log(this.formData);
     }
 
-    updateConfirmValidator(): void {
-        /** wait for refresh value */
-        Promise.resolve().then(() => this.validateForm.controls.checkPassword.updateValueAndValidity());
+    onAddressChange($e): void {
+        this.formData.address = $e;
     }
 
-    confirmationValidator = (control: FormControl): { [s: string]: boolean } => {
-        if (!control.value) {
-            return { required: true };
-        } else if (control.value !== this.validateForm.controls.password.value) {
-            return { confirm: true, error: true };
-        }
+    onShowMap() {
+        console.log('onShowMap');
     }
 
-    getCaptcha(e: MouseEvent): void {
-        e.preventDefault();
+    onAddDuration(type: string): void {
+        console.log(type);
+        this.duration.push(1);
+    }
+
+    onRemoveDuration(id) {
+        console.log(id);
+    }
+
+    onAddChildCollection(): void {
+        console.log('onAddChildCollection');
+    }
+
+    onRemoveChildCollections(id) {
+        console.log(id);
     }
 }

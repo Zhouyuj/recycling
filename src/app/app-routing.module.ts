@@ -17,7 +17,7 @@ const ROUTER_CONFIG: Routes = [
         path: 'manage',
         loadChildren: './manage/manage-app.module#ManageAppModule'
     },
-    { path: '**', redirectTo: '/login' },
+    { path: '**', redirectTo: '/manage/customer' },
 ];
 
 @NgModule({

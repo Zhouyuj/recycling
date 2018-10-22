@@ -10,14 +10,16 @@ import { RouterModule } from '@angular/router';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { RebirthNGModule } from 'rebirth-ng';
 import { NgZorroAntdModule } from 'ng-zorro-antd';
+import { NgxEchartsModule } from 'ngx-echarts';
 /* 自定义 */
 import { LoadingService } from './services/loading/loading.service';
+import { MessageService } from './services/message/message.service';
+import { NotificationService } from './services/notification/notification.service';
 
 import { LoadingComponent } from './components/loading/loading.component';
 import { SelectComponent } from './components/select/select.component';
 import { BreadcrumbsComponent } from './components/breadcrumbs/breadcrumbs.component';
 import { CascaderComponent } from './components/cascader/cascader.component';
-//import { NotifyComponent } from './components/notify/notify.component';
 
 @NgModule({
     imports     : [
@@ -28,6 +30,7 @@ import { CascaderComponent } from './components/cascader/cascader.component';
         NgxDatatableModule,
         RebirthNGModule,
         NgZorroAntdModule,
+        NgxEchartsModule,
     ],
     exports     : [
         CommonModule,
@@ -37,20 +40,19 @@ import { CascaderComponent } from './components/cascader/cascader.component';
         NgxDatatableModule,
         RebirthNGModule,
         NgZorroAntdModule,
-        //NotifyComponent,
+        NgxEchartsModule,
         LoadingComponent,
         SelectComponent,
         BreadcrumbsComponent,
         CascaderComponent,
     ],
     declarations: [
-        //NotifyComponent,
         LoadingComponent,
         SelectComponent,
         BreadcrumbsComponent,
         CascaderComponent,
     ],
-    providers   : [ LoadingService ],
+    providers   : [ LoadingService, MessageService, NotificationService ],
 })
 export class SharedModule {
 }

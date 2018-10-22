@@ -123,12 +123,9 @@ export class StaffInfoComponent implements OnInit {
      * form 表单
      */
     onOpenForm(): void {
-        const drawerRef = this.drawerService.create<StaffInfoFormComponent, { value: string }, string>({
-            //nzTitle: '添加',
+        const drawerRef = this.drawerService.create<StaffInfoFormComponent>({
+            nzTitle: '添加',
             nzContent: StaffInfoFormComponent,
-            nzContentParams: {
-                value: this.value
-            },
             nzWidth: '55%',
         });
 
@@ -137,10 +134,7 @@ export class StaffInfoComponent implements OnInit {
         });
 
         drawerRef.afterClose.subscribe(data => {
-            console.log(data);
-            if (typeof data === 'string') {
-                this.value = data;
-            }
+            console.log('Drawer(Component) close');
         });
     }
 }

@@ -1,5 +1,4 @@
-import { Component, OnInit, EventEmitter, ComponentFactoryResolver } from '@angular/core';
-import { Modal, ModalService } from 'rebirth-ng';
+import { Component, OnInit, EventEmitter } from '@angular/core';
 
 import { VehicleInfoFormComponent } from './vehicle-info-form/vehicle-info-form.component';
 import { VehicleInfoService } from './vehicle-info.service';
@@ -7,9 +6,9 @@ import { VehicleInfoService } from './vehicle-info.service';
 import { NzDrawerService } from 'ng-zorro-antd';
 
 @Component({
-    selector: 'app-vehicle-info',
+    selector   : 'app-vehicle-info',
     templateUrl: './vehicle-info.component.html',
-    styleUrls: [ './vehicle-info.component.scss' ]
+    styleUrls  : [ './vehicle-info.component.scss' ]
 })
 export class VehicleInfoComponent implements OnInit {
 
@@ -45,15 +44,15 @@ export class VehicleInfoComponent implements OnInit {
     public selected_system_position = null;
     public selected_system_positions_options = [
         {
-            id: 0,
+            id  : 0,
             name: '全选',
         },
         {
-            id: 1,
+            id  : 1,
             name: '司机',
         },
         {
-            id: 2,
+            id  : 2,
             name: '辅助工',
         },
     ];
@@ -124,13 +123,10 @@ export class VehicleInfoComponent implements OnInit {
      * form 表单
      */
     onOpenForm(): void {
-        const drawerRef = this.drawerService.create<VehicleInfoFormComponent, { value: string }, string>({
-            nzTitle: '添加',
+        const drawerRef = this.drawerService.create<VehicleInfoFormComponent>({
+            nzTitle  : '添加',
             nzContent: VehicleInfoFormComponent,
-            nzContentParams: {
-                value: this.value
-            },
-            nzWidth: '45%',
+            nzWidth  : '55%',
         });
 
         drawerRef.afterOpen.subscribe(() => {
@@ -138,10 +134,7 @@ export class VehicleInfoComponent implements OnInit {
         });
 
         drawerRef.afterClose.subscribe(data => {
-            console.log(data);
-            if (typeof data === 'string') {
-                this.value = data;
-            }
+            console.log('Drawer(Component) close');
         });
     }
 }

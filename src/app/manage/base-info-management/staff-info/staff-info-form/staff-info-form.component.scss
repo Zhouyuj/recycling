@@ -1,3 +1,6 @@
 #form {
-    overflow-x: scroll;
+    overflow: scroll;
+    [nz-date-picker] .ant-calendar-picker{
+        width: 100%;
+    }
 }

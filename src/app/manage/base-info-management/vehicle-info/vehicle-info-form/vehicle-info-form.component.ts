@@ -1,65 +1,51 @@
-import { Component, EventEmitter, OnInit } from '@angular/core';
-import {
-    FormBuilder,
-    FormControl,
-    FormGroup,
-    Validators
-} from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
 
 import { NzDrawerRef } from 'ng-zorro-antd';
+import { MessageService } from '../../../../shared/services/message/message.service';
+import { NotificationService } from '../../../../shared/services/notification/notification.service';
 
 @Component({
-  selector: 'app-vehicle-info-form',
-  templateUrl: './vehicle-info-form.component.html',
-  styleUrls: ['./vehicle-info-form.component.scss']
+    selector   : 'app-vehicle-info-form',
+    templateUrl: './vehicle-info-form.component.html',
+    styleUrls  : [ './vehicle-info-form.component.scss' ]
 })
 export class VehicleInfoFormComponent implements OnInit {
 
-    constructor(private fb: FormBuilder,
-                private drawerRef: NzDrawerRef<string>) {
+    public formData: any = {
+        licensePlate   : null,
+        vehicleFrame   : null,
+        engineNumber   : null,
+        vehicleBoxId   : null,
+        purchaseDate   : new Date(),
+        remark         : null,
+        planStartTime  : null,
+        planEndTime    : null,
+        vehicleType    : null,
+        vehicleLocation: null,
+        isTestVehicle  : null,
+    };
+
+    constructor(private drawerRef: NzDrawerRef<any>,
+                private messageService: MessageService,
+                private notificationService: NotificationService
+    ) {
     }
 
     ngOnInit(): void {
-        this.validateForm = this.fb.group({
-            email            : [ null, [ Validators.email ] ],
-            password         : [ null, [ Validators.required ] ],
-            checkPassword    : [ null, [ Validators.required, this.confirmationValidator ] ],
-            nickname         : [ null, [ Validators.required ] ],
-            phoneNumberPrefix: [ '+86' ],
-            phoneNumber      : [ null, [ Validators.required ] ],
-            website          : [ null, [ Validators.required ] ],
-            captcha          : [ null, [ Validators.required ] ],
-            agree            : [ false ]
-        });
     }
 
-    close(): void {
-        this.drawerRef.close(this.value);
+    onPurchaseDateChange($e): void {
+        console.log($e);
     }
 
-    validateForm: FormGroup;
-
-    submitForm(): void {
-        for (const i in this.validateForm.controls) {
-            this.validateForm.controls[ i ].markAsDirty();
-            this.validateForm.controls[ i ].updateValueAndValidity();
-        }
+    onClose(): void {
+        this.drawerRef.close();
     }
 
-    updateConfirmValidator(): void {
-        /** wait for refresh value */
-        Promise.resolve().then(() => this.validateForm.controls.checkPassword.updateValueAndValidity());
+    onSubmitForm(): void {
+        console.log('submit');
+        console.log(this.formData);
     }
 
-    confirmationValidator = (control: FormControl): { [s: string]: boolean } => {
-        if (!control.value) {
-            return { required: true };
-        } else if (control.value !== this.validateForm.controls.password.value) {
-            return { confirm: true, error: true };
-        }
-    }
 
-    getCaptcha(e: MouseEvent): void {
-        e.preventDefault();
-    }
 }

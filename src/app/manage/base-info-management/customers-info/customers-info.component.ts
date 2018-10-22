@@ -4,6 +4,7 @@ import { CustomersInfoService } from './customers-info.service';
 import { CustomersInfoFormComponent } from './customers-info-form/customers-info-form.component';
 
 import { NzDrawerService } from 'ng-zorro-antd';
+import { EChartOption } from 'echarts';
 
 @Component({
     selector   : 'app-customers-info',
@@ -123,13 +124,10 @@ export class CustomersInfoComponent implements OnInit {
      * form 表单
      */
     onOpenForm(): void {
-        const drawerRef = this.drawerService.create<CustomersInfoFormComponent, { value: string }, string>({
+        const drawerRef = this.drawerService.create<CustomersInfoFormComponent>({
             nzTitle        : '添加',
             nzContent      : CustomersInfoFormComponent,
-            nzContentParams: {
-                value: this.value
-            },
-            nzWidth        : '45%',
+            nzWidth        : '55%',
         });
 
         drawerRef.afterOpen.subscribe(() => {
@@ -137,10 +135,7 @@ export class CustomersInfoComponent implements OnInit {
         });
 
         drawerRef.afterClose.subscribe(data => {
-            console.log(data);
-            if (typeof data === 'string') {
-                this.value = data;
-            }
+            console.log('Drawer(Component) close');
         });
     }
 }

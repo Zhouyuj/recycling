@@ -1,8 +1,9 @@
 <div id="form">
-    <form nz-form [formGroup]="validateForm" (ngSubmit)="onSubmitForm()">
+    <!-- 响应式表单 -->
+    <form nz-form [formGroup]="validateForm">
         <nz-divider [nzText]="basicTemplate">
             <ng-template #basicTemplate>
-                <span style="color: #83bf46;">基础信息</span>
+                <span style="color: #83bf46;">基本信息</span>
             </ng-template>
         </nz-divider>
 
@@ -29,7 +30,7 @@
                 <nz-form-explain *ngIf="validateForm.get('statusId').dirty && validateForm.get('statusId').errors">请输入正确的工号</nz-form-explain>
             </nz-form-control>
             <nz-form-label [nzSm]="3" [nzXs]="24" nzOffset="2" nzFor="password" nzRequired>密码</nz-form-label>
-            <nz-form-control [nzSm]="9" [nzXs]="24">
+            <nz-form-control [nzSm]="7" [nzXs]="24">
                 <input nz-input type="password" id="password" formControlName="password" (ngModelChange)="updateConfirmValidator()"  placeHolder="请输入您的密码">
                 <nz-form-explain *ngIf="validateForm.get('password').dirty && validateForm.get('password').errors">请输入您的密码</nz-form-explain>
             </nz-form-control>
@@ -81,7 +82,7 @@
             </nz-form-control>
             <nz-form-label [nzSm]="3" [nzXs]="24" nzFor="phoneNumber">固话</nz-form-label>
             <nz-form-control [nzSm]="9" [nzXs]="24" [nzValidateStatus]="validateForm.controls['phoneNumber']">
-                <input formControlName="phoneNumber" id="'phoneNumber'" nz-input placeHolder="请输入您的固话号码">
+                <input formControlName="phoneNumber" id="'phoneNumber'" nz-input placeHolder="请输入您的固话号码(eg.07578888888)">
                 <nz-form-explain *ngIf="validateForm.get('phoneNumber').dirty && validateForm.get('phoneNumber').errors">请输入您正确的固话号码</nz-form-explain>
             </nz-form-control>
         </nz-form-item>
@@ -89,7 +90,7 @@
         <nz-form-item>
             <nz-form-label [nzSm]="3" [nzXs]="24" nzRequired nzFor="mobile">移动电话</nz-form-label>
             <nz-form-control [nzSm]="7" [nzXs]="24" [nzValidateStatus]="validateForm.controls['mobile']">
-                    <input formControlName="mobile" id="'mobile'" nz-input placeHolder="请输入您的移动电话号码">
+                    <input formControlName="mobile" id="'mobile'" nz-input placeHolder="请输入您的11位手机号码">
                 <nz-form-explain *ngIf="validateForm.get('mobile').dirty && validateForm.get('mobile').errors">请输入您正确的手机号码</nz-form-explain>
             </nz-form-control>
             <nz-form-label [nzSm]="3" [nzXs]="24" nzFor="address">家庭地址</nz-form-label>
@@ -132,8 +133,18 @@
 
         <nz-divider></nz-divider>
         <nz-form-item nz-row>
-            <nz-form-control [nzSpan]="3" nzOffset="20">
-                <button nz-button nzType="primary" style="width: 100%;">确认</button>
+            <nz-form-control [nzSpan]="3" nzOffset="17">
+                <button nz-button
+                        nzType="primary"
+                        style="width: 100%;"
+                        [disabled]="!validateForm.valid"
+                        (click)="onSubmitForm()">确认</button>
+            </nz-form-control>
+            <nz-form-control [nzSpan]="3" nzOffset="1">
+                <button nz-button
+                        nzType="default"
+                        style="width: 100%;"
+                        (click)="onClose()">取消</button>
             </nz-form-control>
         </nz-form-item>
     </form>
