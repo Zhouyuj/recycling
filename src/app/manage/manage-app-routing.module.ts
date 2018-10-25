@@ -7,6 +7,7 @@ import { ManageAppComponent } from './manage-app/manage-app.component';
 import { StaffInfoComponent } from './base-info-management/staff-info/staff-info.component';
 import { VehicleInfoComponent } from './base-info-management/vehicle-info/vehicle-info.component';
 import { CustomersInfoComponent } from './base-info-management/customers-info/customers-info.component';
+import { TestMapComponent } from './test-map/test-map.component';
 
 const ROUTER_CONFIG: Routes = [
     {
@@ -20,6 +21,9 @@ const ROUTER_CONFIG: Routes = [
             },
             {
                 path: 'customer', component: CustomersInfoComponent, data: { title: '收运单位管理' },
+            },
+            {
+                path: 'testMap', component: TestMapComponent, data: { title: '测试地图' },
             },
         ],
     },

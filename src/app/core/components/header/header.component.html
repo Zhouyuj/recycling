@@ -27,13 +27,13 @@
                     <p class="menu-title" title>基础信息</p>
                     <ul>
                         <li nz-menu-group>
-                            <span nz-menu-item title>人员信息</span>
+                            <a routerLink="/manage/staff" nz-menu-item title>人员信息</a>
                         </li>
                         <li nz-menu-group>
-                            <span nz-menu-item title>车辆信息</span>
+                            <a routerLink="/manage/vehicle" nz-menu-item title>车辆信息</a>
                         </li>
                         <li nz-menu-group>
-                            <span nz-menu-item title>收集点管理</span>
+                            <a routerLink="/manage/customer" nz-menu-item title>收集点管理</a>
                         </li>
                     </ul>
                 </li>
@@ -178,7 +178,9 @@
             <!-- logout -->
             <div nz-col nzSpan="5">
                 <div class="personal-menu-item">
-                    <i class="anticon anticon-logout"></i> 退出
+                    <a routerLink="/login">
+                        <i class="anticon anticon-logout"></i> 退出
+                    </a>
                 </div>
             </div>
         </div>

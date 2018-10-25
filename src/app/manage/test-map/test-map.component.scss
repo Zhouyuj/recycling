@@ -1,0 +1,27 @@
+#testMap {
+    display: flex;
+    justify-content: space-around;
+
+    #operation, #container {
+        font-size: 1.4rem;
+        border: 1px solid #aaa;
+        border-radius: 5px;
+        box-sizing: border-box;
+        box-shadow: 0 0 5px #aaa;
+    }
+
+    #operation {
+        flex: 3;
+        float: left;
+        min-height: 680px;
+        padding: 5px;
+        margin-right: 5px;
+        overflow: scroll;
+    }
+
+    #container {
+        flex: 7;
+        min-height: 680px;
+        margin: 0 auto;
+    }
+}

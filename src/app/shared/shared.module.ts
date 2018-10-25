@@ -15,6 +15,7 @@ import { NgxEchartsModule } from 'ngx-echarts';
 import { LoadingService } from './services/loading/loading.service';
 import { MessageService } from './services/message/message.service';
 import { NotificationService } from './services/notification/notification.service';
+import { MapService } from './services/map/map.service';
 
 import { LoadingComponent } from './components/loading/loading.component';
 import { SelectComponent } from './components/select/select.component';
@@ -52,7 +53,7 @@ import { CascaderComponent } from './components/cascader/cascader.component';
         BreadcrumbsComponent,
         CascaderComponent,
     ],
-    providers   : [ LoadingService, MessageService, NotificationService ],
+    providers   : [ LoadingService, MessageService, NotificationService, MapService ],
 })
 export class SharedModule {
 }
