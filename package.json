@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --host 0.0.0.0",
-    "build": "ng build",
+    "build": "ng build --aot",
     "test": "ng lint && ng test --code-coverage",
     "test-single-run": "ng lint && ng test --code-coverage --single-run",
     "lint": "ng lint",

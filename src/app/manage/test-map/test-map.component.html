@@ -1,12 +1,14 @@
 <div id="testMap">
     <!-- 左边操作栏 -->
     <div id="operation">
-        <p>国金  :113.186894,23.031745</p>
-        <p>康怡  :113.192811,23.033113</p>
-        <p>翰天  :113.175259,23.027268</p>
-        <p>碧海湾:113.177619,23.019092</p>
-        <p>映月湖:113.196588,23.039215</p>
-        <p>天安  :113.196588,23.039215</p>
+        <nz-button-group>
+            <button nz-button nzType="default" (click)="setCenter([113.186894,23.031745])">国金</button>
+            <button nz-button nzType="default" (click)="setCenter([113.192811,23.033113])">康怡</button>
+            <button nz-button nzType="default" (click)="setCenter([113.175259,23.027268])">翰天</button>
+            <button nz-button nzType="default" (click)="setCenter([113.177619,23.019092])">碧海湾</button>
+            <button nz-button nzType="default" (click)="setCenter([113.196588,23.039215])">映月湖</button>
+            <button nz-button nzType="default" (click)="setCenter([113.166737,23.019604])">天安</button>
+        </nz-button-group>
 
         <nz-collapse>
             <nz-collapse-panel [nzHeader]="overlay" [nzActive]="false">

@@ -1,6 +1,16 @@
 import { Injectable } from '@angular/core';
 
+import { isUndefined } from 'util';
+import { Observable } from 'rxjs/index';
+import { interval, of } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
+
 import { Marker, MarkerIcon, Animation } from './marker';
+import { Map } from './map';
+import {Polyline} from './polyline';
+import { Polygon } from './polygon';
+
+import { TestMarkerDemoService } from './test-marker-demo.service';
 
 /**
  * 地图 service
@@ -15,88 +25,128 @@ export class TestMapDemoService {
 
     public _map: any;
 
-    constructor() {
+    constructor(private testMarkerDemoService: TestMarkerDemoService) {
     }
 
-    /***** API map start *****/
-    /** 地图api,应该全局统一调配 **/
-    public createMap() {
+    /*****
+     * API map start
+     *****/
+    // 各业务组件可调用的生成地图方法.注意:该方法使用的前提是this.isLoaded=true;(即业务组件中先调用this.initMap,一般可忽略)
+    public createMap(opts: Map): any {
+        this.map = new AMap.Map(opts.domId, {
+            center: new AMap.LngLat(opts.center[ 0 ], opts.center[ 1 ]),
+            zoom  : opts.zoom
+        });
+        return this.map;
     }
 
-    private build(filename): void {
+    // 初始化地图,全局调用的生成地图方法(应该在首屏调用一次即可,首屏具有地图功能)
+    // 注意:在组件中调用次方法,需要在订阅值为 true 时调用 unsubscribe()
+    public initMap(): Observable<boolean> {
+        return interval(100)
+            .pipe(
+                map(() => {
+                    if (!this.isLoaded) {
+                        this.load();
+                    }
+                    return this.isLoaded;
+                })
+            )
+    }
+
+    // 获取高德地图脚本
+    public load(): void {
+        const URL = 'https://webapi.amap.com/maps?v=1.4.4&key=234f52ac0db9acffc06680a652bc86dc';
         const scriptElm = document.createElement('script');
         scriptElm.setAttribute('type', 'text/javascript');
-        scriptElm.setAttribute('src', filename);
+        scriptElm.setAttribute('src', URL);
         scriptElm.setAttribute('defer', '');
         scriptElm.setAttribute('async', '');
-        document.getElementsByTagName('head')[0].appendChild(scriptElm);
+        document.getElementsByTagName('head')[ 0 ].appendChild(scriptElm);
     }
 
-    public load(): void {
-        const URL = 'https://webapi.amap.com/maps?v=1.4.1&key=234f52ac0db9acffc06680a652bc86dc' + '&plugin=AMap.Autocomplete';
-        this.build(URL);
+    // 判断地图是否加载完成(window.AMap)
+    public get isLoaded(): boolean {
+        return !isUndefined(window[ 'AMap' ]) && !isUndefined(window[ 'AMap' ].constructor);
     }
 
     get map() {
         return this._map;
     }
 
-    /***** API map end *****/
-
-    /***** API marker start *****/
-    // 新建单个marker
-    public createMarker(opt: Marker) {
-        return this.assembleMarker(opt);
+    set map(o: any) {
+        this._map = o;
     }
 
-    // 将自定义的marker配置按照官方 API 组装成合法的 AMap.Marker 对象
-    private assembleMarker(opt: Marker) {
-        let id: string = opt.id;
-        let map = opt.map;
-        let lngLat: { lng: number, lat: number } = new AMap.LngLat(opt.position[ 0 ], opt.position[ 1 ]); // TODO transform
-        let title: string = opt.title;
-        let animation: string = Animation.AMAP_ANIMATION_BOUNCE;
-        let offset: number[];
-        let content: string | object;
-        let icon: string | MarkerIcon;
-        if (opt.offset) {
-            offset = new AMap.Pixel(opt.offset[0], opt.offset[1]);
-        }
-        if (opt.content) {
-            content = opt.content;
-        } else if (opt.icon) {
-            if (typeof(opt.icon) === 'string') {
-                icon = opt.icon;
-            } else {
-                icon = new AMap.Icon({
-                    size       : new AMap.Size(opt.icon.size[ 0 ], opt.icon.size[ 1 ]),
-                    image      : opt.icon.image,
-                    imageOffset: new AMap.Pixel(opt.icon.imageOffset[ 0 ], opt.icon.imageOffset[ 1 ]),
-                    imageSize  : new AMap.Size(opt.icon.imageSize[ 0 ], opt.icon.imageSize[ 1 ]),
-                });
-            }
-        }
-        let draggable: boolean = opt.draggable || false;
-
-        let marker = new AMap.Marker(id, map, lngLat, title, animation, offset, icon, content, draggable);
-        return marker;
+    // 设置地图显示的中心点
+    public setCenter(lngLat: number[]): void {
+        this.map.setCenter(new AMap.LngLat(lngLat[ 0 ], lngLat[ 1 ]));
     }
 
-    // 删除单个marker
+    /*****
+     * API map end
+     *****/
+
+    /*****
+     * API marker start
+     *****/
+    // 新建单个 marker 并返回
+    public createMarker(opts: Marker) {
+        return new AMap.Marker(opts);
+    }
+
+    // 删除单个 marker
     public removeMarker() {
 
     }
 
-    // 批量新建marker
-    public createMarkers() {
-
+    // 批量新建 marker TODO
+    public createMarkers(opts: Marker[]): any[] {
+        let result: any[] = opts.map(preMarker => new AMap.Marker(preMarker));
+        return result;
     }
 
-    // 批量删除marker
+    // 批量删除 marker TODO
     public removeMarkers() {
 
     }
 
-    /***** API marker end *****/
+    // 显示单个 marker TODO
+    public showMarker() {}
+
+    // 批量显示 marker TODO
+    public showMarkers() {}
+
+    // 隐藏单个 marker TODO
+    public hideMarker() {}
+
+    // 批量隐藏 marker TODO
+    public hideMarkers() {}
+
+    /*****
+     * API marker end
+     *****/
+
+    /*****
+     * API polyline start
+     *****/
+    public createPolyline(opts: Polyline) {
+        return new AMap.Polyline(opts);
+    }
+    /*****
+     * API polyline end
+     *****/
+
+    /*****
+     * API polygon start
+     *****/
+    public createPolygon(opts: Polygon) {
+        return new AMap.Polygon(opts);
+    }
+    /*****
+     * API polygon end
+     *****/
+
+    /** 其他函数 TODO **/
 
 }

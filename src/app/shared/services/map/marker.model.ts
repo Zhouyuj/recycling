@@ -1,5 +1,5 @@
 /**
- * Created by wujiahui on 2018/10/23.
+ * Created by wujiahui on 2018/10/26.
  */
 export class Marker {
     public id: string;          // id
@@ -22,7 +22,7 @@ export class Marker {
     public extData: any;            // 用户自定义属性，支持JavaScript API任意数据类型，如Marker的id等
     public label: any;              // 添加文本标注，content为文本标注的内容，offset为偏移量，左上角为偏移量为（0,0)
 
-    constructor(opts: {
+    constructor(obj: {
         map: any,
         position: number[],
         id?: string,
@@ -34,10 +34,9 @@ export class Marker {
         draggable?: boolean,
         label?: { content: string, offset: number[] },
     }) {
-        for (let k in opts) {
-            this[k] = opts[k];
+        for (let k in obj) {
+            this[k] = obj[k];
         }
-        //Object.assign(this, opts);
         if (this.content) {
             delete this.icon;
         }
@@ -51,37 +50,32 @@ export class Marker {
      * @param marker
      */
     private assembleMarker(marker: any) {
-        /** 1-id **/
-        if (marker.id) {
-            marker.extData = { id: marker.id };
-            delete marker.id;
-        }
-        /** 2-坐标 **/
+        /* 1-坐标 */
         if (marker.isTransform) {
-            let tempLngLat = this.lngLatTransform(marker.position);
+            let tempLngLat = this.lngLatTransformer(marker.position);
             marker.position = new AMap.LngLat(tempLngLat[ 0 ], tempLngLat[ 1 ]);
         } else {
             marker.position = new AMap.LngLat(marker.position[ 0 ], marker.position[ 1 ]);
         }
-        /** 3-offset **/
+        /* 2-offset */
         if (marker.offset) {
             marker.offset = new AMap.Pixel(marker.offset[ 0 ], marker.offset[ 1 ]);
         }
-        /** 4-content **/
+        /* 3-content */
         if (marker.content) {
             marker.content = marker.content;
         } else if (marker.icon) {
-        /** 5-icon **/
+            /* 4-icon */
             if (typeof(marker.icon) === 'string') {
                 marker.icon = marker.icon;
             } else {
                 marker.icon = new AMap.Icon(new MarkerIcon(marker.icon));
             }
         }
-    } // assembleMarker end
+    }
 
     // 坐标转换
-    private lngLatTransform(position: number[]): number[] {
+    private lngLatTransformer(position: number[]): number[] {
         return null;
     }
 }
@@ -97,14 +91,14 @@ export class MarkerIcon {
     public imageOffset: number[];
     public imageSize: number[];
 
-    constructor(opts: {
-            size: number[],
-            image: string,
-            imageOffset?: number[],
-            imageSize?: number[]
-        }) {
-        for (let k in opts) {
-            this[k] = opts[k];
+    constructor(obj: {
+        size: number[],
+        image: string,
+        imageOffset?: number[],
+        imageSize?: number[]
+    }) {
+        for (let k in obj) {
+            this[k] = obj[k];
         }
     }
 }
