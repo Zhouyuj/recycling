@@ -12,6 +12,21 @@ import { NzDrawerService } from 'ng-zorro-antd';
 })
 export class VehicleInfoComponent implements OnInit {
 
+    breadcrumbs = [
+        {
+            link: '/',
+            title: '首页',
+        },
+        {
+            link: '',
+            title: '基础信息',
+        },
+        {
+            link: '/manage/baseInfo/vehicles',
+            title: '车辆信息',
+        }
+    ];
+
     public list_options = {
         rows               : [],
         selectedRows       : [],

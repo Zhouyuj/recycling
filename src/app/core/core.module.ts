@@ -8,7 +8,6 @@ import { RebirthHttpModule } from 'rebirth-http';
 import { NgZorroAntdModule } from 'ng-zorro-antd';
 /* 自定义 */
 import { SharedModule } from '../shared/shared.module';
-import { HeaderComponent } from './components/header/header.component';
 import { InterceptorServices } from './services/interceptors/interceptors.service';
 import { TitleService } from './services/title/title.service';
 
@@ -18,12 +17,12 @@ import { TitleService } from './services/title/title.service';
         NgZorroAntdModule,
         SharedModule,
     ],
-    exports: [ HeaderComponent ],
+    exports: [],
     providers: [
         InterceptorServices,
         TitleService,
     ],
-    declarations: [ HeaderComponent ],
+    declarations: [],
 })
 export class CoreModule {
 

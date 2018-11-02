@@ -5,10 +5,9 @@ import { NgModule } from '@angular/core';
 
 import { NgZorroAntdModule } from 'ng-zorro-antd';
 
-import { CoreModule } from '../core/core.module';
+//import { CoreModule } from '../core/core.module';
 import { SharedModule } from '../shared/shared.module';
 import { ManageAppRoutingModule } from './manage-app-routing.module';
-import { BaseInfoManagementModule } from './base-info-management/base-info-management.module';
 
 import { TestMapComponent } from './test-map/test-map.component';
 import { TestMapDemoService } from './test-map/test-map-demo.service';
@@ -19,10 +18,9 @@ import { ManageAppComponent } from './manage-app/manage-app.component';
 @NgModule({
     imports     : [
         NgZorroAntdModule,
-        CoreModule,
+        //CoreModule,
         SharedModule,
         ManageAppRoutingModule,
-        BaseInfoManagementModule,
     ],
     declarations: [ ManageAppComponent, TestMapComponent ],
     providers   : [ TestMapDemoService, TestMarkerDemoService ],

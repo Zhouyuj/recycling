@@ -21,11 +21,13 @@ export class MessageService {
      * @param options
      * @returns {string}
      */
-    public create(type: 'success' | 'error' | 'info' | 'warning' | 'loading',
-                  content: string,
-                  options?: MessageOptions): string {
+    public create(opts: {
+        type: 'success' | 'error' | 'info' | 'warning' | 'loading',
+        content: string,
+        options?: MessageOptions
+    }): string {
 
-        const id = this.message[ type ](content, options).messageId;
+        const id = this.message[ opts.type ](opts.content, opts.options).messageId;
         return id;
     }
 

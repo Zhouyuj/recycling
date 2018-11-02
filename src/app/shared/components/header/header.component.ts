@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 
-/* 第三方 */
-import { MenuBar } from 'rebirth-ng';
 /* 自定义 */
 import { HEADER_CONFIG } from './header.component.config';
 
@@ -12,8 +10,7 @@ import { HEADER_CONFIG } from './header.component.config';
 })
 export class HeaderComponent implements OnInit {
 
-    cssClass = 'header_comp';
-    menus: MenuBar;
+    menus: any;
     constructor() {
     }
 

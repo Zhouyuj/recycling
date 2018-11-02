@@ -4,9 +4,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ManageAppComponent } from './manage-app/manage-app.component';
-import { StaffInfoComponent } from './base-info-management/staff-info/staff-info.component';
-import { VehicleInfoComponent } from './base-info-management/vehicle-info/vehicle-info.component';
-import { CustomersInfoComponent } from './base-info-management/customers-info/customers-info.component';
 import { TestMapComponent } from './test-map/test-map.component';
 
 const ROUTER_CONFIG: Routes = [
@@ -14,13 +11,9 @@ const ROUTER_CONFIG: Routes = [
         path    : '', component: ManageAppComponent,
         children: [
             {
-                path: 'staff', component: StaffInfoComponent, data: { title: '人员管理' },
-            },
-            {
-                path: 'vehicle', component: VehicleInfoComponent, data: { title: '车辆管理' },
-            },
-            {
-                path: 'customer', component: CustomersInfoComponent, data: { title: '收运单位管理' },
+                path        : 'baseInfo',
+                loadChildren: './base-info/base-info.module#BaseInfoModule',
+                data        : { title: '基础信息' },
             },
             {
                 path: 'testMap', component: TestMapComponent, data: { title: '测试地图' },

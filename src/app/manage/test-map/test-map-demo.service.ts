@@ -112,16 +112,24 @@ export class TestMapDemoService {
     }
 
     // 显示单个 marker TODO
-    public showMarker() {}
+    public showMarker() {
+    }
 
     // 批量显示 marker TODO
-    public showMarkers() {}
+    public showMarkers() {
+    }
 
     // 隐藏单个 marker TODO
-    public hideMarker() {}
+    public hideMarker() {
+    }
 
     // 批量隐藏 marker TODO
-    public hideMarkers() {}
+    public hideMarkers() {
+    }
+
+    // 移动 marker TODO
+    public moveMarker(opt: { marker: any, lngLat: number, speed: number, cb?: Function }) {
+    }
 
     /*****
      * API marker end
@@ -133,6 +141,7 @@ export class TestMapDemoService {
     public createPolyline(opts: Polyline) {
         return new AMap.Polyline(opts);
     }
+
     /*****
      * API polyline end
      *****/
@@ -143,6 +152,7 @@ export class TestMapDemoService {
     public createPolygon(opts: Polygon) {
         return new AMap.Polygon(opts);
     }
+
     /*****
      * API polygon end
      *****/

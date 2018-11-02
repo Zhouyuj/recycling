@@ -21,12 +21,14 @@ export class NotificationService {
      * @param options
      * @returns {string}
      */
-    public create(type: 'blank' | 'success' | 'error' | 'info' | 'warning' | 'loading',
-                  title: string,
-                  content: string,
-                  options?: NotificationOptions): string {
+    public create(opts: {
+        type: 'blank' | 'success' | 'error' | 'info' | 'warning' | 'loading',
+        title: string,
+        content: string,
+        options?: NotificationOptions
+    }): string {
 
-        const id = this.nzNotificationService[ type ](title, content, options).messageId;
+        const id = this.nzNotificationService[ opts.type ](opts.title, opts.content, opts.options).messageId;
         return id;
     }
 

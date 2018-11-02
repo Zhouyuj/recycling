@@ -7,7 +7,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 
 const ROUTER_CONFIG: Routes = [
-    { path: '', pathMatch: 'full', redirectTo: '/login' },
+    { path: '', pathMatch: 'full', redirectTo: '/manage/testMap' },
     {
         path: 'login',
         loadChildren: './login/login.module#LoginModule',
@@ -17,7 +17,7 @@ const ROUTER_CONFIG: Routes = [
         path: 'manage',
         loadChildren: './manage/manage-app.module#ManageAppModule'
     },
-    { path: '**', redirectTo: '/manage/customer' },
+    { path: '**', redirectTo: '/login' },
 ];
 
 @NgModule({

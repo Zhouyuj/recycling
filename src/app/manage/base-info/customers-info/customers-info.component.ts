@@ -1,16 +1,32 @@
 import { Component, OnInit, EventEmitter } from '@angular/core';
 
-import { StaffInfoService } from './staff-info.service';
-import { StaffInfoFormComponent } from './staff-info-form/staff-info-form.component';
+import { CustomersInfoService } from './customers-info.service';
+import { CustomersInfoFormComponent } from './customers-info-form/customers-info-form.component';
 
 import { NzDrawerService } from 'ng-zorro-antd';
+import { EChartOption } from 'echarts';
 
 @Component({
-    selector   : 'app-staff-info',
-    templateUrl: './staff-info.component.html',
-    styleUrls  : [ './staff-info.component.scss' ]
+    selector   : 'app-customers-info',
+    templateUrl: './customers-info.component.html',
+    styleUrls  : [ './customers-info.component.scss' ]
 })
-export class StaffInfoComponent implements OnInit {
+export class CustomersInfoComponent implements OnInit {
+
+    breadcrumbs = [
+        {
+            link: '/',
+            title: '首页',
+        },
+        {
+            link: '',
+            title: '基础信息',
+        },
+        {
+            link: '/manage/baseInfo/customers',
+            title: '收集点管理',
+        }
+    ];
 
     public list_options = {
         rows               : [],
@@ -44,25 +60,25 @@ export class StaffInfoComponent implements OnInit {
     public selected_system_position = null;
     public selected_system_positions_options = [
         {
-            id: 0,
+            id  : 0,
             name: '全选',
         },
         {
-            id: 1,
+            id  : 1,
             name: '司机',
         },
         {
-            id: 2,
+            id  : 2,
             name: '辅助工',
         },
     ];
 
-    constructor(private staffInfoService: StaffInfoService,
+    constructor(private customersInfoService: CustomersInfoService,
                 private drawerService: NzDrawerService) {
     }
 
     ngOnInit() {
-        this.staffInfoService.mockListData().subscribe(res => {
+        this.customersInfoService.mockListData().subscribe(res => {
             this.list_options.rows = res;
         });
     }
@@ -123,10 +139,10 @@ export class StaffInfoComponent implements OnInit {
      * form 表单
      */
     onOpenForm(): void {
-        const drawerRef = this.drawerService.create<StaffInfoFormComponent>({
-            nzTitle: '添加',
-            nzContent: StaffInfoFormComponent,
-            nzWidth: '55%',
+        const drawerRef = this.drawerService.create<CustomersInfoFormComponent>({
+            nzTitle        : '添加',
+            nzContent      : CustomersInfoFormComponent,
+            nzWidth        : '55%',
         });
 
         drawerRef.afterOpen.subscribe(() => {

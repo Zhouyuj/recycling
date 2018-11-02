@@ -8,19 +8,13 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 /* 第三方 */
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
-import { RebirthNGModule } from 'rebirth-ng';
-import { NgZorroAntdModule } from 'ng-zorro-antd';
 import { NgxEchartsModule } from 'ngx-echarts';
+import { NgZorroAntdModule } from 'ng-zorro-antd';
+import { RebirthNGModule } from 'rebirth-ng';
 /* 自定义 */
-import { LoadingService } from './services/loading/loading.service';
-import { MessageService } from './services/message/message.service';
-import { NotificationService } from './services/notification/notification.service';
-import { MapService } from './services/map/map.service';
-
-import { LoadingComponent } from './components/loading/loading.component';
-import { SelectComponent } from './components/select/select.component';
-import { BreadcrumbsComponent } from './components/breadcrumbs/breadcrumbs.component';
-import { CascaderComponent } from './components/cascader/cascader.component';
+import { ComponentsModule } from './components/components.module';
+import { PipesModule } from './pipes/pipes.module';
+import { ServicesModule } from './services/services.module';
 
 @NgModule({
     imports     : [
@@ -28,32 +22,32 @@ import { CascaderComponent } from './components/cascader/cascader.component';
         FormsModule,
         ReactiveFormsModule,
         RouterModule,
+
         NgxDatatableModule,
-        RebirthNGModule,
-        NgZorroAntdModule,
         NgxEchartsModule,
+        NgZorroAntdModule,
+        RebirthNGModule,
+
+        ComponentsModule,
+        PipesModule,
+        ServicesModule,
     ],
     exports     : [
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
         RouterModule,
+
         NgxDatatableModule,
-        RebirthNGModule,
-        NgZorroAntdModule,
         NgxEchartsModule,
-        LoadingComponent,
-        SelectComponent,
-        BreadcrumbsComponent,
-        CascaderComponent,
+        NgZorroAntdModule,
+        RebirthNGModule,
+
+        ComponentsModule,
+        PipesModule,
+        ServicesModule,
     ],
-    declarations: [
-        LoadingComponent,
-        SelectComponent,
-        BreadcrumbsComponent,
-        CascaderComponent,
-    ],
-    providers   : [ LoadingService, MessageService, NotificationService, MapService ],
+    declarations: [],
 })
 export class SharedModule {
 }

@@ -1,14 +1,9 @@
 <div class="breadcrumbs">
     <nz-breadcrumb nzSeparator=">">
-        <nz-breadcrumb-item>
-            <i class="anticon anticon-home"></i>
-            <a [routerLink]="['./']">首页</a>
-        </nz-breadcrumb-item>
-        <nz-breadcrumb-item>
-            <span>基础信息</span>
-        </nz-breadcrumb-item>
-        <nz-breadcrumb-item>
-            <a [routerLink]="['/manage/staff']">人员信息</a>
+        <nz-breadcrumb-item *ngFor="let item of options">
+            <i class="anticon anticon-home" *ngIf="item.link == '/'"></i>
+            <a *ngIf="item.link != ''" [routerLink]="[item.link]">{{item.title}}</a>
+            <span *ngIf="item.link == ''" >{{item.title}}</span>
         </nz-breadcrumb-item>
     </nz-breadcrumb>
 </div>

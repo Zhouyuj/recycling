@@ -19,8 +19,6 @@ export class AppComponent {
                 private interceptorServices: InterceptorServices,
                 private titleService: TitleService) {
 
-        let vm = this;
-
         this.rebirthNGConfig.rootContainer = this.viewContainerRef;
 
         /* http 拦截器 */
