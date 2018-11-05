@@ -4,8 +4,8 @@
 
 export const environment = {
     production: false,
-    host: 'http://0.0.0.0:8877',
-    api: 'http://0.0.0.0:8877/api/v1',
+    host: 'http://125.94.39.168:8888',
+    api: 'http://125.94.39.168:8888/api',
     // 高德 api key
     amapKey: '234f52ac0db9acffc06680a652bc86dc'
 };

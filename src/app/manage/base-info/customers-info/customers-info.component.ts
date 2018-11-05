@@ -78,9 +78,11 @@ export class CustomersInfoComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.customersInfoService.mockListData().subscribe(res => {
+        /*this.customersInfoService.mockListData().subscribe(res => {
             this.list_options.rows = res;
-        });
+        });*/
+        this.customersInfoService.getCustomerTypes().subscribe(res => console.log(res));
+        this.customersInfoService.getCustomerList().subscribe(res => console.log(res));
     }
 
     onAdd() {

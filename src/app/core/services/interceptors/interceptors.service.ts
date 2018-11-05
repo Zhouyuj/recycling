@@ -2,15 +2,20 @@
  * Created by wujiahui on 2018/9/5.
  */
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders, HttpRequest } from '@angular/common/http';
+import { Observable } from 'rxjs/index';
 /* 第三方 */
 import { RebirthHttpProvider } from 'rebirth-http';
+import { GET, Query, RebirthHttp } from 'rebirth-http';
 /* 自定义 */
 import { environment } from '../../../../environments/environment';
 
 @Injectable()
-export class InterceptorServices {
+export class InterceptorServices extends RebirthHttp {
 
-    constructor(private rebirthHttpProvider: RebirthHttpProvider) {
+    constructor(http: HttpClient,
+                private rebirthHttpProvider: RebirthHttpProvider) {
+        super(http);
     }
 
     public registInterceptors() {
@@ -42,6 +47,15 @@ export class InterceptorServices {
                     this.router.navigateByUrl('/login');
                 }
             });*/
+        this.rebirthHttpProvider
+            .baseUrl(environment.api)
+            .addInterceptor({
+                request: (request: HttpRequest<any>) => {
+                     console.log('Global interceptors(request)', request);
+                    return request;
+                },
+            });
+
         console.log('registInterceptor successfully');
     }
 }

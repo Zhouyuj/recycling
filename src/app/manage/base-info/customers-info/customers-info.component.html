@@ -40,7 +40,7 @@
     </div>
     <!-- -------- 表格内容 -------- -->
     <div class="table-content">
-        <ngx-datatable #dataTable class="material striped"
+        <ngx-datatable #dataTable class="material striped extra-css"
                        [messages]="list_options.localizationMessage"
                        [rows]="list_options.rows"
                        [columnMode]="'force'"
@@ -75,6 +75,21 @@
             <ngx-datatable-column name="紧急联系人电话" prop="urgentPhone"></ngx-datatable-column>
             <ngx-datatable-column name="邮箱" prop="email"></ngx-datatable-column>
             <ngx-datatable-column name="备注" prop="remark"></ngx-datatable-column>
+            <!--<ngx-datatable-footer>
+                <ng-template
+                        ngx-datatable-footer-template
+                        let-rowCount="rowCount"
+                        let-pageSize="pageSize"
+                        let-selectedCount="selectedCount"
+                        let-curPage="curPage"
+                        let-offset="offset">
+                    <div style="padding: 5px 10px">
+                        <div>
+                            哈哈哈哈
+                        </div>
+                    </div>
+                </ng-template>
+            </ngx-datatable-footer>-->
         </ngx-datatable>
     </div>
 </div>

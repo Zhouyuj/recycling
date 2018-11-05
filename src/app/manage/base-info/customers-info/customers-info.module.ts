@@ -13,9 +13,10 @@ import { CustomersInfoService } from './customers-info.service';
     ],
     declarations: [ CustomersInfoComponent, CustomersInfoFormComponent ],
     providers   : [
-        {
+        CustomersInfoService,
+        /*{
             provide: CustomersInfoService, useClass: CustomersInfoMockService
-        }
+        }*/
     ],
     entryComponents: [
         CustomersInfoFormComponent,

@@ -38,7 +38,7 @@
         </nz-form-item>
 
         <!-- 当选择类别为普通收集点时 -->
-        <div [hidden]="formData.isPlaza == 1">
+        <div *ngIf="formData.isPlaza != 1">
             <!-- 先预留账号密码,日后添加商家功能使用 -->
             <!--<nz-form-item>
                 <nz-form-label [nzSm]="4" [nzXs]="24" nzRequired nzFor="account">账号</nz-form-label>
@@ -215,9 +215,9 @@
                                    (click)="onRemoveDuration(item)">
                                 </i>
                                 <nz-form-item style="margin-bottom: 5px;">
-                                    <nz-form-label [nzSm]="1" [nzXs]="2" nzRequired
-                                                   nzFor="food_workDayType"></nz-form-label>
-                                    <nz-form-control [nzSm]="5" [nzXs]="22">
+                                    <nz-form-label [nzSm]="3" [nzXs]="2" nzRequired
+                                                   nzFor="food_workDayType">时间段</nz-form-label>
+                                    <nz-form-control [nzSm]="4" [nzXs]="22">
                                         <nz-select
                                                 name="food_workDayType"
                                                 required
@@ -229,9 +229,9 @@
                                             <nz-option nzLabel="节假日" nzValue="1"></nz-option>
                                         </nz-select>
                                     </nz-form-control>
-                                    <nz-form-label [nzSm]="1" [nzXs]="2" nzOffset="2" nzRequired
-                                                   nzFor="food_startTime"></nz-form-label>
-                                    <nz-form-control [nzSm]="6" [nzXs]="22">
+                                    <nz-form-label [nzSm]="3" [nzXs]="2" nzOffset="2" nzRequired
+                                                   nzFor="food_startTime">区间</nz-form-label>
+                                    <nz-form-control [nzSm]="5" [nzXs]="22">
                                         <nz-time-picker
                                                 name="food_startTime"
                                                 required
@@ -242,7 +242,7 @@
                                     <nz-form-control [nzSm]="1" [nzXs]="24">
                                         <nz-form-text>至</nz-form-text>
                                     </nz-form-control>
-                                    <nz-form-control [nzSm]="6" [nzXs]="24" nzOffset="1">
+                                    <nz-form-control [nzSm]="5" [nzXs]="24" nzOffset="1">
                                         <nz-time-picker
                                                 name="food_endTime"
                                                 required
@@ -255,7 +255,7 @@
                                 <nz-form-item style="margin-bottom: 5px;">
                                     <nz-form-label [nzSm]="3" [nzXs]="24" nzRequired nzFor="food_level">重要等级
                                     </nz-form-label>
-                                    <nz-form-control [nzSm]="6" [nzXs]="24">
+                                    <nz-form-control [nzSm]="5" [nzXs]="24">
                                         <nz-select
                                                 name="food_level"
                                                 required
@@ -387,7 +387,7 @@
         </div>
 
         <!-- 当选择类别为广场点时 -->
-        <div [hidden]="formData.isPlaza == null || formData.isPlaza == 0">
+        <div *ngIf="formData.isPlaza != null && formData.isPlaza != 0">
             <nz-form-item style="margin-bottom: 5px;">
                 <nz-form-label [nzSm]="3" [nzXs]="24" nzFor="address">地址</nz-form-label>
                 <nz-form-control [nzSm]="18" [nzXs]="24">

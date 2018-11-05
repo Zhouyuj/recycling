@@ -5,7 +5,6 @@ import { NgModule } from '@angular/core';
 
 import { NgZorroAntdModule } from 'ng-zorro-antd';
 
-//import { CoreModule } from '../core/core.module';
 import { SharedModule } from '../shared/shared.module';
 import { ManageAppRoutingModule } from './manage-app-routing.module';
 
@@ -18,7 +17,6 @@ import { ManageAppComponent } from './manage-app/manage-app.component';
 @NgModule({
     imports     : [
         NgZorroAntdModule,
-        //CoreModule,
         SharedModule,
         ManageAppRoutingModule,
     ],

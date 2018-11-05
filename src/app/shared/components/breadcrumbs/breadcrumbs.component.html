@@ -2,6 +2,7 @@
     <nz-breadcrumb nzSeparator=">">
         <nz-breadcrumb-item *ngFor="let item of options">
             <i class="anticon anticon-home" *ngIf="item.link == '/'"></i>
+            <!-- 以下两个标签互斥 -->
             <a *ngIf="item.link != ''" [routerLink]="[item.link]">{{item.title}}</a>
             <span *ngIf="item.link == ''" >{{item.title}}</span>
         </nz-breadcrumb-item>
