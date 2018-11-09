@@ -9,7 +9,7 @@
             <div nz-col class="gutter-row" nzSpan="6" nzOffset="2">
                 <div class="table-search">
                     <nz-input-group nzSearch nzSize="default" [nzSuffix]="suffixButton">
-                        <input type="text" nz-input placeholder="键入关键字搜索" (keyup)='onUpdateFilter($event)'>
+                        <input type="text" nz-input placeholder="键入关键字搜索" (keyup)='onKeywordSearch($event)'>
                     </nz-input-group>
                     <ng-template #suffixButton>
                         <button nz-button nzType="default" nzSize="default" nzSearch>搜索</button>
@@ -17,20 +17,47 @@
                 </div>
             </div>
             <div nz-col class="gutter-row" nzSpan="4">
+                <!-- create,update,delete,export -->
                 <div class="table-CUDE">
-                    <button nz-button nzType="default" nzShape="circle" (click)="onAdd()" nzTitle="添加" nzPlacement="topCenter" nz-tooltip>
+                    <button nz-button
+                            (click)="onAdd($event, 'add')"
+                            nzType="default"
+                            nzShape="circle"
+                            nzTitle="添加"
+                            nzPlacement="topCenter"
+                            nz-tooltip>
                         <i class="anticon anticon-plus-circle-o"></i>
                     </button>
                     &nbsp;
-                    <button nz-button nzType="default" nzShape="circle" (click)="onEdit($event)" nzTitle="编辑" nzPlacement="topCenter" nz-tooltip>
+                    <button nz-button
+                            [disabled]="!formCache"
+                            (click)="onEdit($event)"
+                            nzType="default"
+                            nzShape="circle"
+                            nzTitle="编辑"
+                            nzPlacement="topCenter"
+                            nz-tooltip>
                         <i class="anticon anticon-edit"></i>
                     </button>
                     &nbsp;
-                    <button nz-button nzType="default" nzShape="circle" (click)="onDel($event)" nzTitle="删除" nzPlacement="topCenter" nz-tooltip>
+                    <button nz-button
+                            [disabled]="!formCache"
+                            (click)="onDel($event)"
+                            nzType="default"
+                            nzShape="circle"
+                            nzTitle="删除"
+                            nzPlacement="topCenter"
+                            nz-tooltip>
                         <i class="anticon anticon-minus-circle-o"></i>
                     </button>
                     &nbsp;
-                    <button nz-button nzType="default" nzShape="circle" (click)="onExp()" nzTitle="导出" nzPlacement="topCenter" nz-tooltip>
+                    <button nz-button
+                            (click)="onExp()"
+                            nzType="default"
+                            nzShape="circle"
+                            nzTitle="导出"
+                            nzPlacement="topCenter"
+                            nz-tooltip>
                         <i class="anticon anticon-file-excel"></i>
                     </button>
                     &nbsp;
@@ -44,7 +71,7 @@
                        [messages]="list_options.localizationMessage"
                        [rows]="list_options.rows"
                        [columnMode]="'force'"
-                       [headerHeight]="60"
+                       [headerHeight]="40"
                        [rowHeight]="40"
                        [footerHeight]="40"
                        [scrollbarH]="true"
@@ -53,43 +80,29 @@
                        [limit]="12"
                        (select)="onSelect($event)"
                        (page)="onPage($event)"
+                       (sort)="onSort($event)"
         >
-            <ngx-datatable-column name="姓名" prop="name"></ngx-datatable-column>
-            <ngx-datatable-column name="工号" prop="staffId"></ngx-datatable-column>
-            <ngx-datatable-column name="岗位" prop="position"></ngx-datatable-column>
-            <ngx-datatable-column name="系统角色" prop="sysId">
-                <ng-template let-column="column" ngx-datatable-header-template>
+            <!--TODO-->
+            <ngx-datatable-column name="定位" prop="lngLat"></ngx-datatable-column>
+            <!--TODO-->
+            <ngx-datatable-column name="图片" prop="images"></ngx-datatable-column>
+            <ngx-datatable-column name="名称" prop="name">
+                <!--<ng-template let-column="column" ngx-datatable-header-template>
                     <app-select
-                            [title]="'系统角色'"
-                            [options]="selected_system_roles_options"
+                            [title]="'名称'"
+                            [options]="selected_name"
                             (selectedEmitter)="onSelectEmitter($event)"
                     ></app-select>
-                </ng-template>
+                </ng-template>-->
             </ngx-datatable-column>
-            <ngx-datatable-column name="系统账号" prop="sysAccount"></ngx-datatable-column>
-            <ngx-datatable-column name="系统密码" prop="sysPwd"></ngx-datatable-column>
-            <ngx-datatable-column name="身份证号" prop="identification"></ngx-datatable-column>
-            <ngx-datatable-column name="家庭住址" prop="address"></ngx-datatable-column>
-            <ngx-datatable-column name="联系电话" prop="phone"></ngx-datatable-column>
-            <ngx-datatable-column name="紧急联系人" prop="urgentPerson"></ngx-datatable-column>
-            <ngx-datatable-column name="紧急联系人电话" prop="urgentPhone"></ngx-datatable-column>
-            <ngx-datatable-column name="邮箱" prop="email"></ngx-datatable-column>
-            <ngx-datatable-column name="备注" prop="remark"></ngx-datatable-column>
-            <!--<ngx-datatable-footer>
-                <ng-template
-                        ngx-datatable-footer-template
-                        let-rowCount="rowCount"
-                        let-pageSize="pageSize"
-                        let-selectedCount="selectedCount"
-                        let-curPage="curPage"
-                        let-offset="offset">
-                    <div style="padding: 5px 10px">
-                        <div>
-                            哈哈哈哈
-                        </div>
-                    </div>
-                </ng-template>
-            </ngx-datatable-footer>-->
+            <ngx-datatable-column name="所属区域" prop="countyCode"></ngx-datatable-column>
+            <ngx-datatable-column name="收运时间段" prop="duration"></ngx-datatable-column>
+            <ngx-datatable-column name="地址" prop="detailAddress"></ngx-datatable-column>
+            <ngx-datatable-column name="账号" prop="username"></ngx-datatable-column>
+            <ngx-datatable-column name="派桶数" prop="totalDustbins"></ngx-datatable-column>
+            <ngx-datatable-column name="登记时间" prop="createTime"></ngx-datatable-column>
+            <ngx-datatable-column name="联系人" prop="contactName"></ngx-datatable-column>
+            <ngx-datatable-column name="联系电话" prop="mobilePhone"></ngx-datatable-column>
         </ngx-datatable>
     </div>
 </div>

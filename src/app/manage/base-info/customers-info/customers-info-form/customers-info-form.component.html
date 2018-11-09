@@ -30,15 +30,15 @@
                         [nzButtonStyle]="'solid'"
                         [(ngModel)]="formData.isPlaza"
                         #isPlaza="ngModel">
-                    <label nz-radio-button nzValue=0>普通收集点</label>
-                    <label nz-radio-button nzValue=1>广场点</label>
+                    <label nz-radio-button nzValue='Part'>普通收集点</label>
+                    <label nz-radio-button nzValue='Whole'>广场点</label>
                 </nz-radio-group>
                 <nz-form-explain [hidden]="isPlaza.valid || isPlaza.pristine">请选择类别</nz-form-explain>
             </nz-form-control>
         </nz-form-item>
 
         <!-- 当选择类别为普通收集点时 -->
-        <div *ngIf="formData.isPlaza != 1">
+        <div *ngIf="formData.isPlaza === 'Part'">
             <!-- 先预留账号密码,日后添加商家功能使用 -->
             <!--<nz-form-item>
                 <nz-form-label [nzSm]="4" [nzXs]="24" nzRequired nzFor="account">账号</nz-form-label>
@@ -68,7 +68,7 @@
             <nz-form-item style="margin-bottom: 5px;">
                 <nz-form-label [nzSm]="3" [nzXs]="24" nzFor="address">地址</nz-form-label>
                 <nz-form-control [nzSm]="18" [nzXs]="24">
-                    <app-cascader (changesEmitter)="onAddressChange($event)"></app-cascader>
+                    <app-cascader [(values)]="formData.address" (changesEmitter)="onAddressChange($event)"></app-cascader>
                 </nz-form-control>
             </nz-form-item>
 
@@ -162,11 +162,12 @@
                             nzPlaceHolder="请选择类型"
                             [(ngModel)]="formData.collectionType"
                             #collectionType="ngModel">
-                        <nz-option nzLabel="学校" nzValue="0"></nz-option>
-                        <nz-option nzLabel="企业" nzValue="1"></nz-option>
+                        <nz-option nzLabel="餐饮单位" nzValue="1"></nz-option>
                         <nz-option nzLabel="政府" nzValue="2"></nz-option>
-                        <nz-option nzLabel="餐饮单位" nzValue="3"></nz-option>
-                        <nz-option nzLabel="其他" nzValue="4"></nz-option>
+                        <nz-option nzLabel="医院" nzValue="3"></nz-option>
+                        <nz-option nzLabel="学校" nzValue="4"></nz-option>
+                        <nz-option nzLabel="企业" nzValue="5"></nz-option>
+                        <nz-option nzLabel="其他" nzValue="6"></nz-option>
                     </nz-select>
                     <nz-form-explain [hidden]="collectionType.valid || collectionType.pristine">请选择单位类型
                     </nz-form-explain>
@@ -197,7 +198,7 @@
             </nz-form-item>
 
             <nz-form-item style="margin-bottom: -5px;">
-                <nz-form-label [nzSm]="24" [nzXs]="24" nzRequired nzFor="duration" style="text-align: left;">
+                <nz-form-label [nzSm]="24" [nzXs]="24" nzRequired style="text-align: left;">
                     要求收运时间段(至少选择一个)
                 </nz-form-label>
             </nz-form-item>
@@ -205,168 +206,167 @@
                 <!-- 餐厨垃圾 和 废弃油脂 标签页 -->
                 <nz-form-control [nzSm]="22" [nzXs]="24" nzOffset="1">
                     <nz-tabset [nzTabBarExtraContent]="addDurationTemplate">
-                        <nz-tab [nzTitle]="'餐厨垃圾'">
+                        <nz-tab [nzTitle]="'餐厨垃圾'" (nzSelect)="formData.duration.type = 'food'">
                             <!--餐厨垃圾-->
                             <nz-form-item
-                                    *ngFor="let item of duration"
+                                    *ngFor="let item of formData.duration.food;index as i"
                                     style="background-color: #eee; padding: 7px 5px 0;margin-bottom: 10px;">
                                 <i class="anticon anticon-minus-circle-o dynamic-delete-button"
                                    style="position: absolute; top: -2px;right: 0;z-index: 1;font-size: 1.4rem; cursor: pointer;"
-                                   (click)="onRemoveDuration(item)">
+                                   (click)="onRemoveDuration(formData.duration.type, item.id)">
                                 </i>
+                                {{item | json}}
                                 <nz-form-item style="margin-bottom: 5px;">
-                                    <nz-form-label [nzSm]="3" [nzXs]="2" nzRequired
-                                                   nzFor="food_workDayType">时间段</nz-form-label>
-                                    <nz-form-control [nzSm]="4" [nzXs]="22">
+                                    <nz-form-label [nzSm]="3" [nzXs]="24" nzRequired
+                                                   nzFor="workingDay-{{i}}">时间类型</nz-form-label>
+                                    <nz-form-control [nzSm]="4" [nzXs]="24">
                                         <nz-select
-                                                name="food_workDayType"
-                                                required
-                                                nzShowSearch
-                                                nzAllowClear
+                                                name="workingDay-{{i}}"
                                                 nzPlaceHolder="时间段"
-                                                [(ngModel)]="formData.food_workDayType">
-                                            <nz-option nzLabel="工作日" nzValue="0"></nz-option>
-                                            <nz-option nzLabel="节假日" nzValue="1"></nz-option>
+                                                [(ngModel)]="item.workingDay">
+                                            <nz-option nzLabel="节假日" nzValue="Holiday"></nz-option>
+                                            <nz-option nzLabel="工作日" nzValue="Working"></nz-option>
                                         </nz-select>
                                     </nz-form-control>
-                                    <nz-form-label [nzSm]="3" [nzXs]="2" nzOffset="2" nzRequired
-                                                   nzFor="food_startTime">区间</nz-form-label>
-                                    <nz-form-control [nzSm]="5" [nzXs]="22">
+                                    <nz-form-label [nzSm]="3" [nzXs]="24" nzOffset="2" nzRequired
+                                                   nzFor="startTime-{{i}}">时间区间</nz-form-label>
+                                    <nz-form-control [nzSm]="5" [nzXs]="24">
                                         <nz-time-picker
-                                                name="food_startTime"
+                                                name="startTime-{{i}}"
                                                 required
-                                                [(ngModel)]="formData.food_startTime"
+                                                [(ngModel)]="item.startTime"
+                                                (ngModelChange)="onTimeChange($event)"
                                                 nzFormat="HH:mm">
                                         </nz-time-picker>
                                     </nz-form-control>
                                     <nz-form-control [nzSm]="1" [nzXs]="24">
                                         <nz-form-text>至</nz-form-text>
                                     </nz-form-control>
-                                    <nz-form-control [nzSm]="5" [nzXs]="24" nzOffset="1">
+                                    <nz-form-control [nzSm]="5" [nzXs]="24">
                                         <nz-time-picker
-                                                name="food_endTime"
+                                                name="endTime-{{i}}"
                                                 required
-                                                [(ngModel)]="formData.food_endTime"
+                                                [(ngModel)]="item.endTime"
                                                 nzFormat="HH:mm">
                                         </nz-time-picker>
                                     </nz-form-control>
                                 </nz-form-item>
 
                                 <nz-form-item style="margin-bottom: 5px;">
-                                    <nz-form-label [nzSm]="3" [nzXs]="24" nzRequired nzFor="food_level">重要等级
+                                    <nz-form-label [nzSm]="3" [nzXs]="24" nzRequired nzFor="level-{{i}}">重要等级
                                     </nz-form-label>
-                                    <nz-form-control [nzSm]="5" [nzXs]="24">
+                                    <nz-form-control [nzSm]="4" [nzXs]="24">
                                         <nz-select
-                                                name="food_level"
+                                                name="level-{{i}}"
                                                 required
                                                 nzShowSearch
                                                 nzAllowClear
                                                 nzPlaceHolder="请选择级别"
-                                                [(ngModel)]="formData.food_level">
-                                            <nz-option nzLabel="极高" nzValue="0"></nz-option>
-                                            <nz-option nzLabel="中等" nzValue="1"></nz-option>
-                                            <nz-option nzLabel="低" nzValue="2"></nz-option>
+                                                [(ngModel)]="item.level">
+                                            <nz-option nzLabel="高" nzValue="Hard"></nz-option>
+                                            <nz-option nzLabel="中" nzValue="High"></nz-option>
+                                            <nz-option nzLabel="低" nzValue="Low"></nz-option>
                                         </nz-select>
                                     </nz-form-control>
 
-                                    <nz-form-label [nzSm]="3" [nzXs]="24" nzOffset="2" nzRequired nzFor="food_vehicle">
+                                    <nz-form-label [nzSm]="3" [nzXs]="24" nzOffset="2" nzRequired nzFor="vehicle-{{i}}">
                                         指定车辆
                                     </nz-form-label>
-                                    <nz-form-control [nzSm]="6" [nzXs]="24">
+                                    <nz-form-control [nzSm]="10" [nzXs]="24">
                                         <nz-select
-                                                name="food_vehicle"
+                                                name="vehicle-{{i}}"
                                                 required
                                                 nzShowSearch
                                                 nzAllowClear
                                                 nzPlaceHolder="请选择级别"
-                                                [(ngModel)]="formData.food_vehicle">
+                                                [(ngModel)]="item.vehicle">
                                             <nz-option nzLabel="车1" nzValue="0"></nz-option>
-                                            <nz-option nzLabel="2" nzValue="1"></nz-option>
-                                            <nz-option nzLabel="3" nzValue="2"></nz-option>
+                                            <nz-option nzLabel="车2" nzValue="1"></nz-option>
+                                            <nz-option nzLabel="车3" nzValue="2"></nz-option>
                                         </nz-select>
                                     </nz-form-control>
                                 </nz-form-item>
                             </nz-form-item>
                         </nz-tab>
 
-                        <nz-tab [nzTitle]="'废弃油脂'">
+                        <nz-tab [nzTitle]="'废弃油脂'" (nzSelect)="formData.duration.type = 'oil'">
                             <!--废弃油脂-->
                             <nz-form-item
-                                    *ngFor="let item of duration"
+                                    *ngFor="let item of formData.duration.oil;index as i"
                                     style="background-color: #eee; padding: 7px 5px 0;margin-bottom: 10px;">
                                 <i class="anticon anticon-minus-circle-o dynamic-delete-button"
                                    style="position: absolute; top: -2px;right: 0;z-index: 1;font-size: 1.4rem; cursor: pointer;"
-                                   (click)="onRemoveDuration(item)">
+                                   (click)="onRemoveDuration(formData.duration.type, item.id)">
                                 </i>
                                 <nz-form-item style="margin-bottom: 5px;">
-                                    <nz-form-label [nzSm]="1" [nzXs]="2" nzRequired
-                                                   nzFor="food_workDayType"></nz-form-label>
-                                    <nz-form-control [nzSm]="5" [nzXs]="22">
+                                    <nz-form-label [nzSm]="3" [nzXs]="24" nzRequired
+                                                   nzFor="workingDay-{{i}}">时间类型</nz-form-label>
+                                    <nz-form-control [nzSm]="4" [nzXs]="24">
                                         <nz-select
-                                                name="food_workDayType"
+                                                name="workingDay-{{i}}"
                                                 required
                                                 nzShowSearch
                                                 nzAllowClear
                                                 nzPlaceHolder="时间段"
-                                                [(ngModel)]="formData.food_workDayType">
-                                            <nz-option nzLabel="工作日" nzValue="0"></nz-option>
-                                            <nz-option nzLabel="节假日" nzValue="1"></nz-option>
+                                                [(ngModel)]="item.workingDay">
+                                            <nz-option nzLabel="节假日" nzValue="Holiday"></nz-option>
+                                            <nz-option nzLabel="工作日" nzValue="Working"></nz-option>
                                         </nz-select>
                                     </nz-form-control>
-                                    <nz-form-label [nzSm]="1" [nzXs]="2" nzOffset="2" nzRequired
-                                                   nzFor="food_startTime"></nz-form-label>
-                                    <nz-form-control [nzSm]="6" [nzXs]="22">
+                                    <nz-form-label [nzSm]="3" [nzXs]="24" nzOffset="2" nzRequired
+                                                   nzFor="startTime-{{i}}">时间区间</nz-form-label>
+                                    <nz-form-control [nzSm]="5" [nzXs]="24">
                                         <nz-time-picker
-                                                name="food_startTime"
+                                                name="startTime-{{i}}"
                                                 required
-                                                [(ngModel)]="formData.food_startTime"
+                                                [(ngModel)]="item.startTime"
                                                 nzFormat="HH:mm">
                                         </nz-time-picker>
                                     </nz-form-control>
                                     <nz-form-control [nzSm]="1" [nzXs]="24">
                                         <nz-form-text>至</nz-form-text>
                                     </nz-form-control>
-                                    <nz-form-control [nzSm]="6" [nzXs]="24" nzOffset="1">
+                                    <nz-form-control [nzSm]="5" [nzXs]="24">
                                         <nz-time-picker
-                                                name="food_endTime"
+                                                name="endTime-{{i}}"
                                                 required
-                                                [(ngModel)]="formData.food_endTime"
+                                                [(ngModel)]="item.endTime"
                                                 nzFormat="HH:mm">
                                         </nz-time-picker>
                                     </nz-form-control>
                                 </nz-form-item>
 
                                 <nz-form-item style="margin-bottom: 5px;">
-                                    <nz-form-label [nzSm]="3" [nzXs]="24" nzRequired nzFor="food_level">重要等级
+                                    <nz-form-label [nzSm]="3" [nzXs]="24" nzRequired nzFor="level-{{i}}">重要等级
                                     </nz-form-label>
-                                    <nz-form-control [nzSm]="6" [nzXs]="24">
+                                    <nz-form-control [nzSm]="4" [nzXs]="24">
                                         <nz-select
-                                                name="food_level"
+                                                name="level-{{i}}"
                                                 required
                                                 nzShowSearch
                                                 nzAllowClear
                                                 nzPlaceHolder="请选择级别"
-                                                [(ngModel)]="formData.food_level">
-                                            <nz-option nzLabel="极高" nzValue="0"></nz-option>
+                                                [(ngModel)]="item.level">
+                                            <nz-option nzLabel="极高" nzValue="2"></nz-option>
                                             <nz-option nzLabel="中等" nzValue="1"></nz-option>
-                                            <nz-option nzLabel="低" nzValue="2"></nz-option>
+                                            <nz-option nzLabel="低" nzValue="0"></nz-option>
                                         </nz-select>
                                     </nz-form-control>
 
-                                    <nz-form-label [nzSm]="3" [nzXs]="24" nzOffset="2" nzRequired nzFor="food_vehicle">
+                                    <nz-form-label [nzSm]="3" [nzXs]="24" nzOffset="2" nzRequired nzFor="vehicle-{{i}}">
                                         指定车辆
                                     </nz-form-label>
-                                    <nz-form-control [nzSm]="6" [nzXs]="24">
+                                    <nz-form-control [nzSm]="10" [nzXs]="24">
                                         <nz-select
-                                                name="food_vehicle"
+                                                name="vehicle-{{i}}"
                                                 required
                                                 nzShowSearch
                                                 nzAllowClear
                                                 nzPlaceHolder="请选择级别"
-                                                [(ngModel)]="formData.food_vehicle">
+                                                [(ngModel)]="item.vehicle">
                                             <nz-option nzLabel="车1" nzValue="0"></nz-option>
-                                            <nz-option nzLabel="2" nzValue="1"></nz-option>
-                                            <nz-option nzLabel="3" nzValue="2"></nz-option>
+                                            <nz-option nzLabel="车2" nzValue="1"></nz-option>
+                                            <nz-option nzLabel="车3" nzValue="2"></nz-option>
                                         </nz-select>
                                     </nz-form-control>
                                 </nz-form-item>
@@ -378,7 +378,7 @@
                         <button nz-button
                                 type="button"
                                 nzType="dashed"
-                                (click)="onAddDuration('food')">
+                                (click)="onAddDuration(formData.duration.type)">
                             <i class="anticon anticon-plus"></i> 添加
                         </button>
                     </ng-template>
@@ -387,7 +387,7 @@
         </div>
 
         <!-- 当选择类别为广场点时 -->
-        <div *ngIf="formData.isPlaza != null && formData.isPlaza != 0">
+        <div *ngIf="formData.isPlaza === 'Whole'">
             <nz-form-item style="margin-bottom: 5px;">
                 <nz-form-label [nzSm]="3" [nzXs]="24" nzFor="address">地址</nz-form-label>
                 <nz-form-control [nzSm]="18" [nzXs]="24">
@@ -395,7 +395,7 @@
                 </nz-form-control>
             </nz-form-item>
 
-            <nz-form-item>
+            <nz-form-item style="margin-bottom: 5px;">
                 <nz-form-label [nzSm]="3" [nzXs]="24" nzFor="detailAddress">详细地址</nz-form-label>
                 <nz-form-control [nzSm]="18" [nzXs]="24">
                     <nz-input-group [nzSuffix]="suffixTemplate">
@@ -423,10 +423,10 @@
                 </nz-form-control>
             </nz-form-item>
 
-            <nz-form-item>
+            <nz-form-item style="margin-bottom: 5px;">
                 <nz-form-item>
                     <nz-form-label [nzSm]="4" [nzXs]="24" nzRequired nzFor="collectionType">收运单位类型</nz-form-label>
-                    <nz-form-control [nzSm]="7" [nzXs]="24">
+                    <nz-form-control [nzSm]="17" [nzXs]="24">
                         <nz-select
                                 name="collectionType"
                                 required
@@ -448,17 +448,18 @@
             </nz-form-item>
 
             <nz-form-item>
-                <nz-form-item>
+                <nz-form-item
+                        *ngFor="let item of formData.childCollections;index as i">
                     <nz-form-control [nzSm]="16" [nzXs]="20" nzOffset="3">
                         <input type="text"
                                style="text-align: center;"
                                nz-input
-                               name="childCollections"
+                               name="childCollections-{{i}}"
                                placeHolder="点击输入子收集点名称"
-                               [(ngModel)]="formData.childCollections">
+                               [(ngModel)]="item.name">
                     </nz-form-control>
                     <nz-form-control [nzSm]="2" [nzXs]="2" nzOffset="1">
-                        <i nz-icon type="minus-circle-o" class="anticon dynamic-delete-button anticon-minus-circle-o" (click)="onRemoveChildCollections($event)"></i>
+                        <i nz-icon type="minus-circle-o" class="anticon dynamic-delete-button anticon-minus-circle-o" (click)="onRemoveChildCollections(item.id)"></i>
                     </nz-form-control>
                 </nz-form-item>
                 <nz-form-item>

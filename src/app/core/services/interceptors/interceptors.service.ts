@@ -51,7 +51,7 @@ export class InterceptorServices extends RebirthHttp {
             .baseUrl(environment.api)
             .addInterceptor({
                 request: (request: HttpRequest<any>) => {
-                     console.log('Global interceptors(request)', request);
+                     //console.log('Global interceptors(request)', request);
                     return request;
                 },
             });

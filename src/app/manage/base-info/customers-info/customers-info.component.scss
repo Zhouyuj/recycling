@@ -22,9 +22,9 @@
 ngx-datatable.extra-css {
     min-height: 586px;
     position: relative;
-    datatable-footer {
-        position: absolute !important;
-        bottom: 0 !important;
+    datatable-footer { /* not work... */
+        position: absolute;
+        bottom: 0;
     }
     .ngx-datatable .datatable-footer {
         position: absolute !important;

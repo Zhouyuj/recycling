@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 import { ZHANGZHOU_OPTIONS } from './cascader-zhangzhou.config';
+import {DistrictsService} from '../../services/districts/districts.service';
 
 @Component({
     selector   : 'app-cascader',
@@ -11,14 +12,19 @@ export class CascaderComponent implements OnInit {
 
     @Input() options: any[];
     public nzOptions: any[];
-    public values: any[] = null;
+
+    @Input() values: any[];
     @Output() changesEmitter: EventEmitter<any> = new EventEmitter();
 
-    constructor() {
+    constructor(private districtsService: DistrictsService) {
     }
 
     ngOnInit() {
-        this.nzOptions = this.options || ZHANGZHOU_OPTIONS;
+        this.districtsService.getDistricts('350600', 3).subscribe(res => {
+            this.nzOptions = this.convertData(res.data.districts);
+            // 默认龙文区
+            //this.values = ['350000', '350600', '350603'];
+        });
     }
 
     public onChanges(values: any): void {
@@ -27,6 +33,28 @@ export class CascaderComponent implements OnInit {
 
     /**
      * 转换接口的地区数据为页面展示数据
+     * 350000-福建省, 350600-漳州市, 350603-龙文区
+     * 目前接口查找到 （龙文区级别),福建省与漳州市给默认值.
      */
-    private convertData(): void {}
+    private convertData(districts: any[]): any[] {
+        let leafDistricts = districts.map(district => {
+            return {
+                value: district.code,
+                label: district.name,
+                isLeaf: true,
+            }
+        });
+        let result = [{
+            value: '350000',
+            label: '福建省',
+            children: [
+                {
+                    value: '350600',
+                    label: '漳州市',
+                    children: [...leafDistricts],
+                }
+            ],
+        }];
+        return result;
+    }
 }
