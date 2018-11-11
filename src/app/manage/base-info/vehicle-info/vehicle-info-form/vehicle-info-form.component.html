@@ -54,7 +54,7 @@
                         name="purchaseDate"
                         required
                         [(ngModel)]="formData.purchaseDate"
-                        [nzFormat]="yyyy-MM-dd"
+                        [nzFormat]="'yyyy-MM-dd'"
                         (ngModelChange)="onPurchaseDateChange($event)"
                         #purchaseDate="ngModel">
                 </nz-date-picker>

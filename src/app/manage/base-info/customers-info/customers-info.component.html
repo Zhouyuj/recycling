@@ -13,7 +13,7 @@
                                     nzSize="default">
                         <nz-select id="anti-select"
                                    style="min-width: 32px;"
-                                   [nzSize]="default"
+                                   [nzSize]="'default'"
                                    [nzDropdownMatchSelectWidth]="false"
                                    [(ngModel)]="keywordType">
                             <nz-option nzValue="name" nzLabel="名称"></nz-option>
@@ -32,7 +32,7 @@
                 <!-- CUDE: create,update,delete,export -->
                 <div class="table-CUDE">
                     <button nz-button
-                            (click)="onAdd($event, 'add')"
+                            (click)="onAdd()"
                             nzType="default"
                             nzShape="circle"
                             nzTitle="添加"
@@ -43,7 +43,7 @@
                     &nbsp;
                     <button nz-button
                             [disabled]="!formCache"
-                            (click)="onEdit($event)"
+                            (click)="onEdit()"
                             nzType="default"
                             nzShape="circle"
                             nzTitle="编辑"

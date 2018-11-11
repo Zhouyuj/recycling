@@ -114,11 +114,11 @@ export class CustomersInfoComponent implements OnInit {
         this.onOpenForm('add');
     }
 
-    onEdit(e: ListModel) {
+    onEdit() {
         this.onOpenForm('edit');
     }
 
-    onDel(e) {
+    onDel() {
         console.log('del', this.list_options.selectedRows);
         this.customersInfoService.delCustomer(this.itemCache.id).subscribe(res => {
             this.notificationService.create({
