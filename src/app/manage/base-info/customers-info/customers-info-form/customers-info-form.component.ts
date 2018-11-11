@@ -2,22 +2,24 @@ import { Component, OnInit, Input } from '@angular/core';
 
 import { NzDrawerRef } from 'ng-zorro-antd';
 
-import { FormModel, DurationDetail } from './form.model';
+import { CustomersInfoService } from '../customers-info.service';
+import { NotificationService } from '../../../../shared/services/notification/notification.service';
 import { CustomerReq } from '../customer-req.model';
 import { CustomerRes } from '../customer-res.model';
 import { ChildCollections } from './form.model';
-import { CustomersInfoService } from '../customers-info.service';
-import { MessageService } from '../../../../shared/services/message/message.service';
-import {ModelConverter} from '../model-converter';
-import {ObjectUtils} from '../../../../shared/utils/object-utils';
+import { FormModel, DurationDetail } from './form.model';
+import { ModelConverter } from '../model-converter';
+import { ObjectUtils } from '../../../../shared/utils/object-utils';
+import {VerifyUtil} from '../../../../shared/utils/verify-utils';
 
 @Component({
     selector   : 'app-customers-info-form',
     templateUrl: './customers-info-form.component.html',
     styleUrls  : [ './customers-info-form.component.scss' ]
 })
-export class CustomersInfoFormComponent implements OnInit {
+export class CustomersInfoFormComponent implements OnInit  {
 
+    @Input() type: string;
     @Input() success: boolean;
     @Input() cache: FormModel;
     public formData: FormModel = new FormModel();
@@ -25,58 +27,56 @@ export class CustomersInfoFormComponent implements OnInit {
 
     constructor(private drawerRef: NzDrawerRef<boolean>,
                 private customersInfoService: CustomersInfoService,
-                private messageService: MessageService) {
+                private notificationService: NotificationService) {
     }
 
     ngOnInit(): void {
-        /*if (this.cache) {
-            this.formData = this.cache;
+        if (this.cache) {
+            console.log(this.cache);
+            this.formData = ObjectUtils.extend(this.cache);
+            console.log(this.formData);
+        } else {
+            this.formData = new FormModel();
+            this.formData.address = ['350000', '350600', '350603'];
         }
-        console.log('form opened!!', this.formData);
-        if (!this.formData.address || this.formData.address.length <= 0) {
-            this.formData.address = ['350000', '350600', '350603']; // 默认龙文区
-        }*/
-        // 该测试说明脏检测成功
-        /*let temp = Date.now(), oddEven = 0;
-        setInterval(() => {
-            temp -= 1000 * 3600;
-            oddEven = parseInt(Math.random()*10)%2 as number;
-            this.formData.duration.food[0].startTime = new Date(temp);
-            this.formData.duration.food[0].workingDay = ['Working', 'Holiday'][oddEven];
-            console.log(temp);
-            console.log(this.formData.duration.food[0].startTime, this.formData.duration.food[0].workingDay);
-        }, 3000);*/
-        console.log('init start', this.formData);
-        setTimeout(() => {
-            console.log('init end');
-            if (this.cache) {
-                this.formData = ObjectUtils.deepClone(this.cache);
-            }
-            console.log('form opened!!', this.formData);
-            if (!this.formData.address || this.formData.address.length <= 0) {
-                this.formData.address = ['350000', '350600', '350603']; // 默认龙文区
-            }
-        }, 2000);
     }
 
     onClose(): void {
-        //this.drawerRef.close(false);
-        console.log(this.formData);
-        this.transformFormModelToRequest();
+        this.drawerRef.close(false);
     }
 
     onSubmitForm(): void {
-        console.log('submit');
-        console.log(this.formData);
         this.transformFormModelToRequest();
-        /*this.customersInfoService.addCustomer(this.customerReq).subscribe(res => {
-            this.messageService.create({
-                type: 'success',
-                content: '恭喜,您已添加成功',
-            });
-            this.success = true;
-            this.drawerRef.close(this.success);
-        });*/
+        switch (this.type) {
+            case 'add':
+                this.customersInfoService.addCustomer(this.customerReq, this.cache.id).subscribe(res => {
+                    this.notificationService.create({
+                        type: 'success',
+                        title: '',
+                        content: '恭喜,添加成功',
+                    });
+                    this.success = true;
+                    this.drawerRef.close(this.success);
+                });
+                break;
+            case 'edit':
+                this.customersInfoService.updateCustomer(this.customerReq, this.cache.id).subscribe(res => {
+                    this.notificationService.create({
+                        type: 'success',
+                        title: '',
+                        content: '恭喜,更新成功',
+                    });
+                    this.success = true;
+                    this.drawerRef.close(this.success);
+                });
+                break;
+        }
+    }
+
+    transformFormModelToRequest() {
+        //this.customerReq = new CustomerReq(this.formData);
+        this.customerReq = ModelConverter.formModelToCustomerReq(this.formData);
+        console.log(this.customerReq);
     }
 
     onAddressChange($e): void {
@@ -119,13 +119,12 @@ export class CustomersInfoFormComponent implements OnInit {
         this.formData.childCollections = result;
     }
 
-    transformFormModelToRequest() {
-        this.customerReq = new CustomerReq(this.formData);
-        console.log(this.customerReq);
+    checkFormNull() {
+        // 必填:名称name,类别collectionType,地址address,联系人contactName,联系电话tel,移动电话mobile,
+        //      置桶数dustbinCounts,收运时是否自带钥匙hasKey,(时间类型,时间区间,重要等级,指定车辆;Duration)
+        for(let k in this.formData) {
+            // TODO switch
+            VerifyUtil.isEmpty(this.formData[k])
+        }
     }
-
-    onTimeChange(e: Date) {
-        ModelConverter.convertDateToSecond(e);
-    }
-
 }

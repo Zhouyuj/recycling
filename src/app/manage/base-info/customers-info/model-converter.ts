@@ -2,21 +2,18 @@
  * Created by wujiahui on 2018/11/8.
  */
 
-import {CustomerRes} from './customer-res.model';
-import {FormModel} from './customers-info-form/form.model';
-import {Duration} from './customers-info-form/form.model';
-import {ChildCollections} from './customers-info-form/form.model';
-import {BusinessLine} from './customer-res.model';
-import {DurationDetail} from './customers-info-form/form.model';
-import {CollectionPeriod} from './customer-res.model';
-import {CustomerReq} from './customer-req.model';
-import {ListModel} from './list.model';
-import {DateUtil} from '../../../shared/utils/date-utils';
+import { CustomerRes, Address, BusinessLine, CollectionPeriod } from './customer-res.model';
+import { FormModel, Duration, ChildCollections, DurationDetail } from './customers-info-form/form.model';
+import { CustomerReq, AddressReq, ContactInfo} from './customer-req.model';
+import { ListModel } from './list.model';
+import { DateUtil } from '../../../shared/utils/date-utils';
 
 export class ModelConverter {
+
     public static customerResToFormModel(o: CustomerRes): FormModel {
         let f: FormModel;
         f = {
+            id               : o.id,
             collectionName   : o.name || null,
             isPlaza          : o.rfidId ? 'Whole' : 'Part' || null,
             address          : [ o.address.provinceCode + '', o.address.cityCode + '', o.address.countyCode + '' ] || null,
@@ -26,7 +23,7 @@ export class ModelConverter {
             contactPersonName: o.contactInfo && o.contactInfo.contactName || null,
             mobile           : o.contactInfo && o.contactInfo.mobilePhone + '' || null,
             dustbinCounts    : o.dustbin || null,
-            collectionType   : o.type.id || null,
+            collectionType   : o.type.id + '' || null,
             tel              : o.contactInfo && o.contactInfo.landlinePhone || null,
             hasKey           : o.businessLine && o.businessLine.needKey ? '1' : '0',
             duration         : this.convertToDuration(o.businessLine) || null,
@@ -37,7 +34,7 @@ export class ModelConverter {
         return f;
     }
 
-    public static customerResToListModel(o: CustomerRes, countyNames: [{ code:number, name:string }]): ListModel {
+    public static customerResToListModel(o: CustomerRes, countyNames: [{ code:string, name:string }]): ListModel {
         let l: ListModel;
         l = {
             id           : o.id,
@@ -56,8 +53,72 @@ export class ModelConverter {
         return l;
     }
 
-    public static getCountyName(code: number, countyNames: [{ code:number, name:string }]): string {
-        let result = countyNames.filter(item => item.code === code)[ 0 ].name || '';
+    public static formModelToCustomerReq(f: FormModel): CustomerReq {
+        console.log(f);
+        let c: CustomerReq;
+        let foodPeriod = f.duration.food
+            .filter((o: DurationDetail) => o.workingDay !== null)   /* 过滤为空的数据,因为有默认的值 */
+            .map((o: DurationDetail) => {
+                return {
+                    dateType       : o.workingDay,
+                    startTime      : this.calSecondFromHourAndMin(o.startTime.getTime()),
+                    endTime        : this.calSecondFromHourAndMin(o.endTime.getTime()),
+                    level          : o.level,
+                    plateNumber    : o.vehicle,
+                    garbageCategory: 'KitchenWaste', // 餐厨垃圾
+                }
+            });
+        let oilPeriod = f.duration.oil
+            .filter((o: DurationDetail) => o.workingDay !== null)   /* 过滤为空的数据 */
+            .map((o: DurationDetail) => {
+                return {
+                    dateType       : o.workingDay,
+                    startTime      : this.calSecondFromHourAndMin(o.startTime.getTime()),
+                    endTime        : this.calSecondFromHourAndMin(o.endTime.getTime()),
+                    level          : o.level,
+                    plateNumber    : o.vehicle,
+                    garbageCategory: 'WasteGrease', // 餐厨垃圾
+                }
+            });
+        let customerList = f.childCollections
+            .filter((o: ChildCollections) => o.name && o.name !== null)
+            .map((cc: ChildCollections) => {
+                return {
+                    name: cc.name
+                }
+            });
+        customerList = customerList.length > 0 ? customerList : null;
+        c = {
+            name: f.collectionName || null,
+            username: f.account || null,
+            password: f.password || null,
+            typeId: parseInt(f.collectionType) || null,
+            address: new AddressReq({
+                provinceCode   : f.address[ 0 ] || null,
+                cityCode       : f.address[ 1 ] || null,
+                countyCode     : f.address[ 2 ] || null,
+                detailedAddress: f.detailAddress || null,
+                lat            : f.lat || null,
+                lng            : f.lng || null,
+            }),
+            businessLine: new BusinessLine({
+                businessType        : f.isPlaza,
+                collectionPeriodList: [ ...foodPeriod, ...oilPeriod ],
+                needKey             : [ false, true ][ f.hasKey ],
+            }),
+            contactInfo: new ContactInfo({
+                contactName  : f.contactPersonName,
+                landlinePhone: f.tel,
+                mobilePhone  : f.mobile,
+            }),
+            customerList: customerList,
+            dustbin: f.dustbinCounts || null,
+        };
+        return c;
+    }
+
+    public static getCountyName(code: string, countyNames: [{ code:string, name:string }]): string {
+        let result = (countyNames.filter(item => item.code == code)[ 0 ] || { name: '' }).name || '';
         return result;
     }
 
@@ -66,8 +127,9 @@ export class ModelConverter {
             return { type: 'food', food: [ new DurationDetail() ], oil: [ new DurationDetail() ] };
         }
         let d: Duration;
-        let food = o.collectionPeriodList.map((item: CollectionPeriod, index) => {  // TODO 优化为一个操作
-            if (item.garbageCategory === 'KitchenWaste') { // 餐厨垃圾
+        let food = o.collectionPeriodList
+            .filter((item: CollectionPeriod) => item.garbageCategory === 'KitchenWaste')
+            .map((item: CollectionPeriod, index) => {  // TODO 优化为一个操作
                 let _d = new DurationDetail();
                 _d.id = index;
                 _d.workingDay = item.dateType;
@@ -76,13 +138,10 @@ export class ModelConverter {
                 _d.level = item.level;
                 _d.vehicle = item.plateNumber;
                 return _d;
-            }
-            return;
-        }).map((item: DurationDetail) => {
-            return item || new DurationDetail();
-        });
-        let oil = o.collectionPeriodList.map((item: CollectionPeriod, index) => {  // TODO 优化为一个操作
-            if (item.garbageCategory === 'WasteGrease') { // 废弃油脂
+            });
+        let oil = o.collectionPeriodList
+            .filter((item: CollectionPeriod) => item.garbageCategory === 'WasteGrease')
+            .map((item: CollectionPeriod, index) => {  // TODO 优化为一个操作
                 let _d = new DurationDetail();
                 _d.id = index;
                 _d.workingDay = item.dateType;
@@ -91,11 +150,7 @@ export class ModelConverter {
                 _d.level = item.level;
                 _d.vehicle = item.plateNumber;
                 return _d;
-            }
-            return;
-        }).map((item: DurationDetail) => {
-            return item || new DurationDetail();
-        });
+            });
         d = { type: 'food', food, oil };
         return d;
     }
@@ -136,6 +191,22 @@ export class ModelConverter {
         let hour = date.getHours();
         let min = date.getMinutes();
         let result: number = hour * 3600 + min * 60;
+        return result;
+    }
+
+    public static convertNumberToString(num: number): string {
+        if (num) {
+            //return <string>num;
+            return null;
+        }
+        return null
+    }
+
+    public static calSecondFromHourAndMin(timestamp: number): number {
+        let time = new Date(timestamp);
+        let hour = time.getHours();
+        let min = time.getMinutes();
+        let result = hour * 3600 + min * 60;
         return result;
     }
 }

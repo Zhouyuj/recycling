@@ -11,7 +11,7 @@ export class CustomerRes {
     public dustbin: number;
     public id: string;
     public name: string;
-    public type: { code: string, name: string, id: number };
+    public type: { code: string, name: string, id: string };
     public username: string;
     public images: [{ id: number, type: string, url: string }];
     public rfidId: string;
@@ -19,22 +19,28 @@ export class CustomerRes {
 
 export class Address {
     public province: string;
-    public provinceCode: number;
+    public provinceCode: string;
     public city: string;
-    public cityCode: number;
+    public cityCode: string;
     public county: string;
-    public countyCode: number;
+    public countyCode: string;
     public street: string;
-    public streetCode: number;
-    public lng: number;
-    public lat: number;
+    public streetCode: string;
+    public lng: string;
+    public lat: string;
     public detailedAddress: string;
 }
 
 export class BusinessLine {
     public businessType: string;
     public collectionPeriodList: [CollectionPeriod];
-    public needKey: boolean
+    public needKey: boolean;
+
+    constructor(bl: any) {
+        this.businessType = bl.businessType;
+        this.collectionPeriodList = bl.collectionPeriodList;
+        this.needKey = bl.needKey;
+    }
 }
 
 export class CollectionPeriod {
@@ -50,6 +56,12 @@ export class ContactInfo {
     public contactName: string;
     public landlinePhone: string;
     public mobilePhone: number;
+
+    constructor(ci: any) {
+        this.contactName = ci.contactName;
+        this.landlinePhone = ci.landlinePhone;
+        this.mobilePhone = ci.mobilePhone;
+    }
 }
 
 

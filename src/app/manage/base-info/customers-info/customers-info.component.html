@@ -8,16 +8,28 @@
             </div>
             <div nz-col class="gutter-row" nzSpan="6" nzOffset="2">
                 <div class="table-search">
-                    <nz-input-group nzSearch nzSize="default" [nzSuffix]="suffixButton">
-                        <input type="text" nz-input placeholder="键入关键字搜索" (keyup)='onKeywordSearch($event)'>
+                    <nz-input-group nzSearch
+                                    nzCompact
+                                    nzSize="default">
+                        <nz-select id="anti-select"
+                                   style="min-width: 32px;"
+                                   [nzSize]="default"
+                                   [nzDropdownMatchSelectWidth]="false"
+                                   [(ngModel)]="keywordType">
+                            <nz-option nzValue="name" nzLabel="名称"></nz-option>
+                            <nz-option nzValue="address" nzLabel="地址"></nz-option>
+                            <nz-option nzValue="username" nzLabel="账号"></nz-option>
+                            <nz-option nzValue="createTime" nzLabel="等级时间"></nz-option>
+                            <nz-option nzValue="contactName" nzLabel="联系人"></nz-option>
+                            <nz-option nzValue="mobilePhone" nzLabel="联系电话"></nz-option>
+                        </nz-select>
+                        <input type="text" nz-input placeholder="键入关键字, 按ENTER搜索" [(ngModel)]="keyword"
+                        style="width: 70%;" (keyup)="$event.which == 13 && onKeywordSearch($event, keywordType)">
                     </nz-input-group>
-                    <ng-template #suffixButton>
-                        <button nz-button nzType="default" nzSize="default" nzSearch>搜索</button>
-                    </ng-template>
                 </div>
             </div>
             <div nz-col class="gutter-row" nzSpan="4">
-                <!-- create,update,delete,export -->
+                <!-- CUDE: create,update,delete,export -->
                 <div class="table-CUDE">
                     <button nz-button
                             (click)="onAdd($event, 'add')"
@@ -41,11 +53,12 @@
                     </button>
                     &nbsp;
                     <button nz-button
+                            nz-popconfirm
+                            nzTitle="确认删除该信息吗?"
+                            (nzOnConfirm)="onDel()"
                             [disabled]="!formCache"
-                            (click)="onDel($event)"
                             nzType="default"
                             nzShape="circle"
-                            nzTitle="删除"
                             nzPlacement="topCenter"
                             nz-tooltip>
                         <i class="anticon anticon-minus-circle-o"></i>
@@ -77,7 +90,7 @@
                        [scrollbarH]="true"
                        [selected]="list_options.selectedRows"
                        [selectionType]="'multi'"
-                       [limit]="12"
+                       [limit]="3"
                        (select)="onSelect($event)"
                        (page)="onPage($event)"
                        (sort)="onSort($event)"
@@ -94,6 +107,19 @@
                             (selectedEmitter)="onSelectEmitter($event)"
                     ></app-select>
                 </ng-template>-->
+                <ng-template let-column="column" ngx-datatable-header-template>
+                    <!--<p>名称</p>
+                    <nz-input-group nzSearch nzSize="small" [nzSuffix]="suffixButton">
+                        <input type="text" nz-input placeholder="搜索" [(ngModel)]="keyWord">
+                    </nz-input-group>
+                    <ng-template #suffixButton>
+                        <button nz-button
+                                nzType="default"
+                                nzSize="small"
+                                nzSearch
+                                (click)="onKeywordSearch($event)">搜索</button>
+                    </ng-template>-->
+                </ng-template>
             </ngx-datatable-column>
             <ngx-datatable-column name="所属区域" prop="countyCode"></ngx-datatable-column>
             <ngx-datatable-column name="收运时间段" prop="duration"></ngx-datatable-column>

@@ -9,7 +9,7 @@ export class ListModel {
     lngLat: string = null;
     images: number = null;
     name: string = null;
-    countyCode: number = null;
+    countyCode: string = null;
     duration: number = null;
     detailAddress: string = null;
     username: string = null;

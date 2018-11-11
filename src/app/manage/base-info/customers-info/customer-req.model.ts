@@ -7,23 +7,23 @@ import { ChildCollections } from './customers-info-form/form.model';
 
 export class CustomerReq {
     public name: string;
-    public typeId: number;
     public username: string;
     public password: string;
-    public address: Address;
+    public typeId: number;
+    public address: AddressReq;
     public businessLine: BusinessLine;
     public contactInfo: ContactInfo;
     public customerList: { name: string }[];
     public dustbin: number;
 
-    constructor(formData?: FormModel) {
-        /* 收运单位名称 */
+    /*constructor(formData?: FormModel) {
+        /!* 收运单位名称 *!/
         this.name = formData.collectionName || null;
-        /* 用户名 */
+        /!* 用户名 *!/
         this.username = formData.account || null;
-        /* 密码 */
+        /!* 密码 *!/
         this.password = formData.password || null;
-        /* 地址 */
+        /!* 地址 *!/
         this.address = new Address({
             provinceCode   : formData.address[ 0 ] || null,
             cityCode       : formData.address[ 1 ] || null,
@@ -32,11 +32,11 @@ export class CustomerReq {
             lat            : formData.lat || null,
             lng            : formData.lng || null,
         });
-        /* 收运单位类型 */
-        this.typeId = formData.collectionType || null;
+        /!* 收运单位类型 *!/
+        this.typeId = parseInt(formData.collectionType) || null;
 
         let foodPeriod = formData.duration.food
-            .filter((o: DurationDetail) => o.workingDay !== null)   /* 过滤为空的数据,因为有默认的值 */
+            .filter((o: DurationDetail) => o.workingDay !== null)   /!* 过滤为空的数据,因为有默认的值 *!/
             .map((o: DurationDetail) => {
                 return {
                     dateType       : o.workingDay,
@@ -48,7 +48,7 @@ export class CustomerReq {
                 }
             });
         let oilPeriod = formData.duration.oil
-            .filter((o: DurationDetail) => o.workingDay !== null)   /* 过滤为空的数据 */
+            .filter((o: DurationDetail) => o.workingDay !== null)   /!* 过滤为空的数据 *!/
             .map((o: DurationDetail) => {
                 return {
                     dateType       : o.workingDay,
@@ -59,7 +59,6 @@ export class CustomerReq {
                     garbageCategory: 'WasteGrease', // 餐厨垃圾
                 }
             });
-        console.log([ ...foodPeriod, ...oilPeriod ]);
         this.businessLine = new BusinessLine({
             businessType        : formData.isPlaza,
             collectionPeriodList: [ ...foodPeriod, ...oilPeriod ],
@@ -71,29 +70,22 @@ export class CustomerReq {
             mobilePhone  : formData.mobile,
         });
         this.customerList = formData.childCollections
-            .filter((o: ChildCollections) => o.name !== null)
+            .filter((o: ChildCollections) => o.name && o.name !== null)
             .map((cc: ChildCollections) => {
                 return {
                     name: cc.name
                 }
             });
+        this.customerList = this.customerList.length > 0? this.customerList : null;
         this.dustbin = formData.dustbinCounts || null;
-    }
-
-    calSecondFromHourAndMin(timestamp: number): number {
-        let time = new Date(timestamp);
-        let hour = time.getHours();
-        let min = time.getMinutes();
-        let result = hour * 3600 + min * 60;
-        return result;
-    }
+    }*/
 }
 
-export class Address {
+export class AddressReq {
     public provinceCode: string;
     public cityCode: string;
     public countyCode: string;
-    public streetCode: string;
+    //public streetCode: string;
     public detailedAddress: string;
     public lat: string;
     public lng: string;
@@ -102,7 +94,7 @@ export class Address {
         this.provinceCode = address.provinceCode || null;
         this.cityCode = address.cityCode || null;
         this.countyCode = address.countyCode || null;
-        this.streetCode = address.streetCode || null;
+        //this.streetCode = address.streetCode || null;
         this.detailedAddress = address.detailedAddress || '';
         this.lat = address.lat || null;
         this.lng = address.lng || null;
@@ -111,14 +103,7 @@ export class Address {
 
 export class BusinessLine {
     public businessType: string;    // 'whole'-广场点 | 'part'-部分收运单位
-    public collectionPeriodList: [{
-        "dateType": string,
-        "endTime": number,
-        "garbageCategory": string,
-        "level": string,
-        "plateNumber": string,
-        "startTime": number
-    }];
+    public collectionPeriodList: [CollectionPeriod];
     public needKey: boolean;
 
     constructor(bl: any) {
@@ -126,6 +111,15 @@ export class BusinessLine {
         this.collectionPeriodList = bl.collectionPeriodList;
         this.needKey = bl.needKey;
     }
+}
+
+export class CollectionPeriod {
+    public dateType: string;
+    public endTime: number;
+    public garbageCategory: string;
+    public level: string;
+    public plateNumber: string;
+    public startTime: number;
 }
 
 export class ContactInfo {
