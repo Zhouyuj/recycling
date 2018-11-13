@@ -3,7 +3,18 @@ import { Component, OnInit, EventEmitter } from '@angular/core';
 import { VehicleInfoFormComponent } from './vehicle-info-form/vehicle-info-form.component';
 import { VehicleInfoService } from './vehicle-info.service';
 
+import { DistrictsService } from '../../../shared/services/districts/districts.service';
+import { MessageService } from '../../../shared/services/message/message.service';
+import { NotificationService } from '../../../shared/services/notification/notification.service';
 import { NzDrawerService } from 'ng-zorro-antd';
+
+import { ModelConverter } from './model-converter';
+import { PageReq } from '../../../shared/models/page/page-req.model';
+import { PageRes } from '../../../shared/models/page/page-res.model';
+import { Result } from '../../../shared/models/response/result.model';
+import { VehicleFormModel } from './vehicle-form.model';
+import { VehicleRes } from './vehicle-res.model';
+import { VehicleListModel } from './vehicle-list.model';
 
 @Component({
     selector   : 'app-vehicle-info',
@@ -11,18 +22,18 @@ import { NzDrawerService } from 'ng-zorro-antd';
     styleUrls  : [ './vehicle-info.component.scss' ]
 })
 export class VehicleInfoComponent implements OnInit {
-
+    /* 面包屑导航 */
     breadcrumbs = [
         {
-            link: '/',
+            link : '/',
             title: '首页',
         },
         {
-            link: '',
+            link : '',
             title: '基础信息',
         },
         {
-            link: '/manage/baseInfo/vehicles',
+            link : '/manage/baseInfo/vehicles',
             title: '车辆信息',
         }
     ];
@@ -31,77 +42,58 @@ export class VehicleInfoComponent implements OnInit {
         rows               : [],
         selectedRows       : [],
         localizationMessage: {
-            emptyMessage   : '未找到任何数据！',
-            totalMessage   : '条记录  可配合使用CTRL与SHIFT进行多选',
+            emptyMessage   : '很抱歉, 未找到任何数据！',
+            totalMessage   : '条记录(共)',
             selectedMessage: '已选中',
         },
     };
 
-    public selected_system_role = null;
-    public selected_system_roles_options = [
-        {
-            id  : 0,
-            name: '全选',
-        },
-        {
-            id  : 1,
-            name: '系统管理员',
-        },
-        {
-            id  : 2,
-            name: '司机',
-        },
-        {
-            id  : 3,
-            name: '中控',
-        },
-    ];
-    public selected_system_position = null;
-    public selected_system_positions_options = [
-        {
-            id  : 0,
-            name: '全选',
-        },
-        {
-            id  : 1,
-            name: '司机',
-        },
-        {
-            id  : 2,
-            name: '辅助工',
-        },
-    ];
+    public pageReq = new PageReq();
+    public params: any = {};// 分页查询参数
+    public keywordType = 'plateNumber';
+    public keyword: string;
+
+    public listCache: VehicleRes[];
+    public itemCache: VehicleRes;
+    public formCache: VehicleFormModel;
 
     constructor(private vehicleInfoService: VehicleInfoService,
+                private districtsService: DistrictsService,
+                private messageService: MessageService,
+                private notificationService: NotificationService,
                 private drawerService: NzDrawerService) {
     }
 
     ngOnInit() {
-        this.vehicleInfoService.mockListData().subscribe(res => {
-            this.list_options.rows = res;
-        });
+        this.getListByPage(this.pageReq, this.params);
     }
 
     onAdd() {
-        console.log('add');
-        this.onOpenForm();
+        this.onOpenForm('add');
     }
 
     onEdit($e) {
-        console.log('edit', this.list_options.selectedRows);
-        this.onOpenForm();
+        this.onOpenForm('edit');
     }
 
     onDel($e) {
-        console.log('del', this.list_options.selectedRows);
+        this.vehicleInfoService.delCustomer(this.itemCache.id).subscribe(res => {
+            this.notificationService.create({
+                type   : 'success',
+                title  : '恭喜,删除成功',
+                content: '该提醒将自动消失',
+            });
+        });
     }
 
     onExp() {
-        console.log('exp');
     }
 
-    onSelect($e) {
-        console.log($e, this.list_options.selectedRows);
+    onSelect(e: VehicleListModel) {
+        this.itemCache = this.listCache.filter(item => item.id == this.list_options.selectedRows[ 0 ].id)[ 0 ];
+        this.formCache = ModelConverter.vehicleResToFormModel(this.itemCache);
+        console.log('选中的res-model', this.itemCache);
+        console.log('转化的form-model', this.formCache);
     }
 
     onSelectFilter($e) {
@@ -121,35 +113,88 @@ export class VehicleInfoComponent implements OnInit {
         }
     }
 
-    onUpdateFilter($e) {
-        console.log($e);
+    onKeywordSearch($e, type?: string) {
+        let key = this.keywordType;
+        if (key && type.trim() && this.keyword) {
+            this.params[ key ] = this.keyword.replace(/\s/g, '');
+            this.getListByPage(this.pageReq, this.params);
+        } else if (!key || !this.keyword) {
+            this.messageService.create({
+                type   : 'warning',
+                content: '请先选择搜索类别,或关键字不能为空',
+            });
+        }
     }
 
-    onPage($e) {
-        console.log($e);
+    onPage(e) {
+        this.updatePage(e);
+        //this.getListByPage(this.pageReq, this.params);
+        console.log(this.pageReq);
     }
 
-    asyncGetDataByPage() {
+    /**
+     * e.sorts[0] = { dir: 'asc'|'desc', prop: '列名' }
+     * @param e
+     */
+    onSort(e) {
+        let columnName = e.sorts[ 0 ].prop,
+            columnSort = e.sorts[ 0 ].dir,
+            sort = `${columnName}.${columnSort},`;
+        this.pageReq.sort = sort;
+        //this.getListByPage(this.pageReq);
+        console.log(this.pageReq);
+    }
+
+    checkColumn(c) {
+        console.log(c);
+    }
+
+    updatePage(pageInfo: { count: number, pageSize: number, limit: number, offset: number }): void {
+        this.pageReq.page = pageInfo.offset + 1;
+        this.pageReq.size = pageInfo.pageSize;
+    }
+
+    getListByPage(page, params?) {
         // 分页接口
+        this.vehicleInfoService.getVehicleList(this.pageReq, this.params).subscribe((res: Result<PageRes<VehicleRes[]>>) => {
+            if (res.data.content.length > 0) {
+                this.listCache = res.data.content;
+                let list = this.dataToTableRows(res.data.content);
+                this.list_options.rows = list;
+            }
+        }, err => console.log(`分页查询失败!!!${err}`));
+    }
+
+    dataToTableRows(data: VehicleRes[]): VehicleListModel[] {
+        return data.map((o: VehicleRes) => ModelConverter.vehicleResToListModel(o));
     }
 
     /**
      * 抽屉组件
      * form 表单
      */
-    onOpenForm(): void {
-        const drawerRef = this.drawerService.create<VehicleInfoFormComponent>({
-            nzTitle  : '添加',
-            nzContent: VehicleInfoFormComponent,
-            nzWidth  : '55%',
-        });
+    onOpenForm(type?: 'add' | 'edit'): void {
+        const drawerRef = this.drawerService
+            .create<VehicleInfoFormComponent, { type: string, success: boolean, cache: VehicleFormModel }, boolean>({
+                nzTitle        : { add: '添加', edit: '编辑' }[ type ] || '请编辑表单',
+                nzContent      : VehicleInfoFormComponent,
+                nzWidth        : '55%',
+                nzContentParams: {
+                    type   : type,
+                    success: false,
+                    cache  : type === 'edit' ? this.formCache : null,
+                }
+            });
 
         drawerRef.afterOpen.subscribe(() => {
-            console.log('Drawer(Component) open');
         });
 
-        drawerRef.afterClose.subscribe(data => {
+        drawerRef.afterClose.subscribe(res => {
             console.log('Drawer(Component) close');
+            if (res) {
+                // 重新调分页接口
+                this.getListByPage(this.pageReq, this.params);
+            }
         });
     }
 }

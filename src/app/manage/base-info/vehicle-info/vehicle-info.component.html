@@ -2,35 +2,74 @@
     <!-- -------- 表格操作 -------- -->
     <div class="table-operations">
         <div nz-row nzGutter="16">
-            <div nz-col class="gutter-row" nzSpan="12">
+            <div nz-col class="gutter-row" nzSpan="8">
                 <!-- 面包屑导航 -->
                 <app-breadcrumbs [options]="breadcrumbs"></app-breadcrumbs>
             </div>
-            <div nz-col class="gutter-row" nzSpan="6" nzOffset="2">
+            <div nz-col class="gutter-row" nzSpan="10" nzOffset="2">
+                <!-- 关键字搜索 -->
                 <div class="table-search">
-                    <nz-input-group nzSearch nzSize="default" [nzSuffix]="suffixButton">
-                        <input type="text" nz-input placeholder="键入关键字搜索" (keyup)='onUpdateFilter($event)'>
+                    <nz-input-group nzSearch
+                                    nzCompact
+                                    nzSize="default">
+                        <nz-select id="anti-select"
+                                   style="min-width: 32px;"
+                                   [nzSize]="'default'"
+                                   [nzDropdownMatchSelectWidth]="false"
+                                   [(ngModel)]="keywordType">
+                            <nz-option nzValue="plateNumber" nzLabel="车牌号"></nz-option>
+                            <nz-option nzValue="driver" nzLabel="当前司机"></nz-option>
+                            <nz-option nzValue="planDepartureTime" nzLabel="计划出车时间"></nz-option>
+                            <nz-option nzValue="boxId" nzLabel="车载盒子ID"></nz-option>
+                            <nz-option nzValue="buyDate" nzLabel="购买时间"></nz-option>
+                        </nz-select>
+                        <input type="text" nz-input placeholder="键入关键字, 按ENTER搜索" [(ngModel)]="keyword"
+                               style="width: 70%;" (keyup)="$event.which == 13 && onKeywordSearch($event, keywordType)">
                     </nz-input-group>
-                    <ng-template #suffixButton>
-                        <button nz-button nzType="default" nzSize="default" nzSearch>搜索</button>
-                    </ng-template>
                 </div>
             </div>
             <div nz-col class="gutter-row" nzSpan="4">
+                <!-- CUDE: create,update,delete,export -->
                 <div class="table-CUDE">
-                    <button nz-button nzType="default" nzShape="circle" (click)="onAdd()" nzTitle="添加" nzPlacement="topCenter" nz-tooltip>
+                    <button nz-button
+                            nzType="default"
+                            nzShape="circle"
+                            (click)="onAdd()"
+                            nzTitle="添加"
+                            nzPlacement="topCenter"
+                            nz-tooltip>
                         <i class="anticon anticon-plus-circle-o"></i>
                     </button>
                     &nbsp;
-                    <button nz-button nzType="default" nzShape="circle" (click)="onEdit($event)" nzTitle="编辑" nzPlacement="topCenter" nz-tooltip>
+                    <button nz-button
+                            [disabled]="!formCache"
+                            nzType="default"
+                            nzShape="circle"
+                            (click)="onEdit($event)"
+                            nzTitle="编辑"
+                            nzPlacement="topCenter"
+                            nz-tooltip>
                         <i class="anticon anticon-edit"></i>
                     </button>
                     &nbsp;
-                    <button nz-button nzType="default" nzShape="circle" (click)="onDel($event)" nzTitle="删除" nzPlacement="topCenter" nz-tooltip>
+                    <button nz-button
+                            [disabled]="!formCache"
+                            nzType="default"
+                            nzShape="circle"
+                            (click)="onDel($event)"
+                            nzTitle="删除"
+                            nzPlacement="topCenter"
+                            nz-tooltip>
                         <i class="anticon anticon-minus-circle-o"></i>
                     </button>
                     &nbsp;
-                    <button nz-button nzType="default" nzShape="circle" (click)="onExp()" nzTitle="导出" nzPlacement="topCenter" nz-tooltip>
+                    <button nz-button
+                            nzType="default"
+                            nzShape="circle"
+                            (click)="onExp()"
+                            nzTitle="导出"
+                            nzPlacement="topCenter"
+                            nz-tooltip>
                         <i class="anticon anticon-file-excel"></i>
                     </button>
                     &nbsp;
@@ -44,7 +83,7 @@
                        [messages]="list_options.localizationMessage"
                        [rows]="list_options.rows"
                        [columnMode]="'force'"
-                       [headerHeight]="60"
+                       [headerHeight]="40"
                        [rowHeight]="40"
                        [footerHeight]="40"
                        [scrollbarH]="true"
@@ -53,28 +92,27 @@
                        [limit]="12"
                        (select)="onSelect($event)"
                        (page)="onPage($event)"
+                       (sort)="onSort($event)"
         >
-            <ngx-datatable-column name="姓名" prop="name"></ngx-datatable-column>
-            <ngx-datatable-column name="工号" prop="staffId"></ngx-datatable-column>
-            <ngx-datatable-column name="岗位" prop="position"></ngx-datatable-column>
-            <ngx-datatable-column name="系统角色" prop="sysId">
+            <!--TODO-->
+            <ngx-datatable-column name="当前位置" prop="lngLat" [sortable]="false"></ngx-datatable-column>
+            <ngx-datatable-column name="是否参与规划" prop="plan" [sortable]="false"></ngx-datatable-column>
+            <ngx-datatable-column name="是否可用" prop="available" [sortable]="false"></ngx-datatable-column>
+            <ngx-datatable-column name="车牌号" prop="plateNumber" [sortable]="false">
                 <ng-template let-column="column" ngx-datatable-header-template>
-                    <app-select
-                            [title]="'系统角色'"
-                            [options]="selected_system_roles_options"
-                            (selectedEmitter)="onSelectEmitter($event)"
-                    ></app-select>
+
+                </ng-template>
+                <ng-template let-value="value" ngx-datatable-cell-template>
                 </ng-template>
             </ngx-datatable-column>
-            <ngx-datatable-column name="系统账号" prop="sysAccount"></ngx-datatable-column>
-            <ngx-datatable-column name="系统密码" prop="sysPwd"></ngx-datatable-column>
-            <ngx-datatable-column name="身份证号" prop="identification"></ngx-datatable-column>
-            <ngx-datatable-column name="家庭住址" prop="address"></ngx-datatable-column>
-            <ngx-datatable-column name="联系电话" prop="phone"></ngx-datatable-column>
-            <ngx-datatable-column name="紧急联系人" prop="urgentPerson"></ngx-datatable-column>
-            <ngx-datatable-column name="紧急联系人电话" prop="urgentPhone"></ngx-datatable-column>
-            <ngx-datatable-column name="邮箱" prop="email"></ngx-datatable-column>
-            <ngx-datatable-column name="备注" prop="remark"></ngx-datatable-column>
+            <ngx-datatable-column name="所属区域" prop="district" [sortable]="false"></ngx-datatable-column>
+            <ngx-datatable-column name="当前司机" prop="driver" [sortable]="false"></ngx-datatable-column>
+            <ngx-datatable-column name="计划出车时间" prop="planDepartureTime" [sortable]="false"></ngx-datatable-column>
+            <ngx-datatable-column name="车型" prop="vehicleType" [sortable]="false"></ngx-datatable-column>
+            <ngx-datatable-column name="车架号" prop="idNumber" [sortable]="false"></ngx-datatable-column>
+            <ngx-datatable-column name="发动机号" prop="engineModel" [sortable]="false"></ngx-datatable-column>
+            <ngx-datatable-column name="车载盒子ID" prop="boxId" [sortable]="false"></ngx-datatable-column>
+            <ngx-datatable-column name="购买时间" prop="buyDate"></ngx-datatable-column>
         </ngx-datatable>
     </div>
 </div>

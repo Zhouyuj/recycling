@@ -13,250 +13,238 @@ export class StaffInfoMockService {
     constructor() {
     }
 
-    mockListData(): Observable<[object]> {
+    getListByPage(): Observable<[object]> {
         return Observable.create(observer => {
-            observer.next([
+            observer.next(
                 {
-                    name: '我是姓名1',
-                    staffId: '我是工号1',
-                    position: '我是岗位1',
-                    sysId: '我是角色1',
-                    sysAccount: '我是账号1',
-                    sysPwd: '我是密码1',
-                    identification: '我是身份证1',
-                    address: '我是住址1',
-                    phone: '我是电话1',
-                    urgentPerson: '我是紧急联系人1',
-                    urgentPhone: '我是紧急联系人电话1',
-                    email: '我是邮箱1',
-                    remark: '我是备注1',
-                },
-                {
-                    name: '我是姓名2',
-                    staffId: '我是工号2',
-                    position: '我是岗位2',
-                    sysId: '我是角色2',
-                    sysAccount: '我是账号2',
-                    sysPwd: '我是密码2',
-                    identification: '我是身份证2',
-                    address: '我是住址2',
-                    phone: '我是电话2',
-                    urgentPerson: '我是紧急联系人2',
-                    urgentPhone: '我是紧急联系人电话2',
-                    email: '我是邮箱2',
-                    remark: '我是备注2',
-                },
-                {
-                    name: '我是姓名2',
-                    staffId: '我是工号2',
-                    position: '我是岗位2',
-                    sysId: '我是角色2',
-                    sysAccount: '我是账号2',
-                    sysPwd: '我是密码2',
-                    identification: '我是身份证2',
-                    address: '我是住址2',
-                    phone: '我是电话2',
-                    urgentPerson: '我是紧急联系人2',
-                    urgentPhone: '我是紧急联系人电话2',
-                    email: '我是邮箱2',
-                    remark: '我是备注2',
-                },
-                {
-                    name: '我是姓名2',
-                    staffId: '我是工号2',
-                    position: '我是岗位2',
-                    sysId: '我是角色2',
-                    sysAccount: '我是账号2',
-                    sysPwd: '我是密码2',
-                    identification: '我是身份证2',
-                    address: '我是住址2',
-                    phone: '我是电话2',
-                    urgentPerson: '我是紧急联系人2',
-                    urgentPhone: '我是紧急联系人电话2',
-                    email: '我是邮箱2',
-                    remark: '我是备注2',
-                },
-                {
-                    name: '我是姓名2',
-                    staffId: '我是工号2',
-                    position: '我是岗位2',
-                    sysId: '我是角色2',
-                    sysAccount: '我是账号2',
-                    sysPwd: '我是密码2',
-                    identification: '我是身份证2',
-                    address: '我是住址2',
-                    phone: '我是电话2',
-                    urgentPerson: '我是紧急联系人2',
-                    urgentPhone: '我是紧急联系人电话2',
-                    email: '我是邮箱2',
-                    remark: '我是备注2',
-                },
-                {
-                    name: '我是姓名2',
-                    staffId: '我是工号2',
-                    position: '我是岗位2',
-                    sysId: '我是角色2',
-                    sysAccount: '我是账号2',
-                    sysPwd: '我是密码2',
-                    identification: '我是身份证2',
-                    address: '我是住址2',
-                    phone: '我是电话2',
-                    urgentPerson: '我是紧急联系人2',
-                    urgentPhone: '我是紧急联系人电话2',
-                    email: '我是邮箱2',
-                    remark: '我是备注2',
-                },
-                {
-                    name: '我是姓名2',
-                    staffId: '我是工号2',
-                    position: '我是岗位2',
-                    sysId: '我是角色2',
-                    sysAccount: '我是账号2',
-                    sysPwd: '我是密码2',
-                    identification: '我是身份证2',
-                    address: '我是住址2',
-                    phone: '我是电话2',
-                    urgentPerson: '我是紧急联系人2',
-                    urgentPhone: '我是紧急联系人电话2',
-                    email: '我是邮箱2',
-                    remark: '我是备注2',
-                },
-                {
-                    name: '我是姓名2',
-                    staffId: '我是工号2',
-                    position: '我是岗位2',
-                    sysId: '我是角色2',
-                    sysAccount: '我是账号2',
-                    sysPwd: '我是密码2',
-                    identification: '我是身份证2',
-                    address: '我是住址2',
-                    phone: '我是电话2',
-                    urgentPerson: '我是紧急联系人2',
-                    urgentPhone: '我是紧急联系人电话2',
-                    email: '我是邮箱2',
-                    remark: '我是备注2',
-                },
-                {
-                    name: '我是姓名2',
-                    staffId: '我是工号2',
-                    position: '我是岗位2',
-                    sysId: '我是角色2',
-                    sysAccount: '我是账号2',
-                    sysPwd: '我是密码2',
-                    identification: '我是身份证2',
-                    address: '我是住址2',
-                    phone: '我是电话2',
-                    urgentPerson: '我是紧急联系人2',
-                    urgentPhone: '我是紧急联系人电话2',
-                    email: '我是邮箱2',
-                    remark: '我是备注2',
-                },
-                {
-                    name: '我是姓名2',
-                    staffId: '我是工号2',
-                    position: '我是岗位2',
-                    sysId: '我是角色2',
-                    sysAccount: '我是账号2',
-                    sysPwd: '我是密码2',
-                    identification: '我是身份证2',
-                    address: '我是住址2',
-                    phone: '我是电话2',
-                    urgentPerson: '我是紧急联系人2',
-                    urgentPhone: '我是紧急联系人电话2',
-                    email: '我是邮箱2',
-                    remark: '我是备注2',
-                },
-                {
-                    name: '我是姓名2',
-                    staffId: '我是工号2',
-                    position: '我是岗位2',
-                    sysId: '我是角色2',
-                    sysAccount: '我是账号2',
-                    sysPwd: '我是密码2',
-                    identification: '我是身份证2',
-                    address: '我是住址2',
-                    phone: '我是电话2',
-                    urgentPerson: '我是紧急联系人2',
-                    urgentPhone: '我是紧急联系人电话2',
-                    email: '我是邮箱2',
-                    remark: '我是备注2',
-                },
-                {
-                    name: '我是姓名2',
-                    staffId: '我是工号2',
-                    position: '我是岗位2',
-                    sysId: '我是角色2',
-                    sysAccount: '我是账号2',
-                    sysPwd: '我是密码2',
-                    identification: '我是身份证2',
-                    address: '我是住址2',
-                    phone: '我是电话2',
-                    urgentPerson: '我是紧急联系人2',
-                    urgentPhone: '我是紧急联系人电话2',
-                    email: '我是邮箱2',
-                    remark: '我是备注2',
-                },
-                {
-                    name: '我是姓名2',
-                    staffId: '我是工号2',
-                    position: '我是岗位2',
-                    sysId: '我是角色2',
-                    sysAccount: '我是账号2',
-                    sysPwd: '我是密码2',
-                    identification: '我是身份证2',
-                    address: '我是住址2',
-                    phone: '我是电话2',
-                    urgentPerson: '我是紧急联系人2',
-                    urgentPhone: '我是紧急联系人电话2',
-                    email: '我是邮箱2',
-                    remark: '我是备注2',
-                },
-                {
-                    name: '我是姓名2',
-                    staffId: '我是工号2',
-                    position: '我是岗位2',
-                    sysId: '我是角色2',
-                    sysAccount: '我是账号2',
-                    sysPwd: '我是密码2',
-                    identification: '我是身份证2',
-                    address: '我是住址2',
-                    phone: '我是电话2',
-                    urgentPerson: '我是紧急联系人2',
-                    urgentPhone: '我是紧急联系人电话2',
-                    email: '我是邮箱2',
-                    remark: '我是备注2',
-                },
-                {
-                    name: '我是姓名2',
-                    staffId: '我是工号2',
-                    position: '我是岗位2',
-                    sysId: '我是角色2',
-                    sysAccount: '我是账号2',
-                    sysPwd: '我是密码2',
-                    identification: '我是身份证2',
-                    address: '我是住址2',
-                    phone: '我是电话2',
-                    urgentPerson: '我是紧急联系人2',
-                    urgentPhone: '我是紧急联系人电话2',
-                    email: '我是邮箱2',
-                    remark: '我是备注2',
-                },
-                {
-                    name: '我是姓名2',
-                    staffId: '我是工号2',
-                    position: '我是岗位2',
-                    sysId: '我是角色2',
-                    sysAccount: '我是账号2',
-                    sysPwd: '我是密码2',
-                    identification: '我是身份证2',
-                    address: '我是住址2',
-                    phone: '我是电话2',
-                    urgentPerson: '我是紧急联系人2',
-                    urgentPhone: '我是紧急联系人电话2',
-                    email: '我是邮箱2',
-                    remark: '我是备注2',
-                },
-            ]);
+                    "data": {
+                        "content": [
+                            {
+                                "address": {
+                                    "city": "漳州市",
+                                    "cityCode": '350600',
+                                    "county": "龙文区",
+                                    "countyCode": '350603',
+                                    "detailedAddress": "福建省漳州市龙文区蓝田镇xxx",
+                                    "province": "福建省",
+                                    "provinceCode": '350000',
+                                    "street": "蓝田镇",
+                                    "streetCode": '350603100'
+                                },
+                                "contactInfo": {
+                                    "email": "yuningli@locision.com",
+                                    "emergencyContact": "李白",
+                                    "emergencyContactPhone": '15888888889',
+                                    "landlinePhone": "0754-85111260",
+                                    "mobilePhone": '15888888888'
+                                },
+                                "entryTime": 1541518953756,
+                                "id": 1,
+                                "identity": '440583199409141250',
+                                "name": "张三",
+                                "post": {
+                                    "id": 1,
+                                    "name": "司机"
+                                },
+                                "roles": [
+                                    {
+                                        "id": 1,
+                                        "name": "系统管理员"
+                                    }
+                                ],
+                                "sex": "Male",
+                                "username": "admin"
+                            },
+                            {
+                                "address": {
+                                    "city": "漳州市",
+                                    "cityCode": '350600',
+                                    "county": "龙文区",
+                                    "countyCode": '350603',
+                                    "detailedAddress": "福建省漳州市龙文区蓝田镇xxx",
+                                    "province": "福建省",
+                                    "provinceCode": '350000',
+                                    "street": "蓝田镇",
+                                    "streetCode": '350603100'
+                                },
+                                "contactInfo": {
+                                    "email": "yuningli@locision.com",
+                                    "emergencyContact": "李白",
+                                    "emergencyContactPhone": '15888888889',
+                                    "landlinePhone": "0754-85111260",
+                                    "mobilePhone": '15888888888'
+                                },
+                                "entryTime": 1541518953756,
+                                "id": 2,
+                                "identity": '440583199409141250',
+                                "name": "张三",
+                                "post": {
+                                    "id": 1,
+                                    "name": "司机"
+                                },
+                                "roles": [
+                                    {
+                                        "id": 1,
+                                        "name": "系统管理员"
+                                    }
+                                ],
+                                "sex": "Male",
+                                "username": "admin"
+                            },
+                            {
+                                "address": {
+                                    "city": "漳州市",
+                                    "cityCode": '350600',
+                                    "county": "龙文区",
+                                    "countyCode": '350603',
+                                    "detailedAddress": "福建省漳州市龙文区蓝田镇xxx",
+                                    "province": "福建省",
+                                    "provinceCode": '350000',
+                                    "street": "蓝田镇",
+                                    "streetCode": '350603100'
+                                },
+                                "contactInfo": {
+                                    "email": "yuningli@locision.com",
+                                    "emergencyContact": "李白",
+                                    "emergencyContactPhone": '15888888889',
+                                    "landlinePhone": "0754-85111260",
+                                    "mobilePhone": '15888888888'
+                                },
+                                "entryTime": 1541518953756,
+                                "id": 3,
+                                "identity": '440583199409141250',
+                                "name": "张三",
+                                "post": {
+                                    "id": 1,
+                                    "name": "司机"
+                                },
+                                "roles": [
+                                    {
+                                        "id": 1,
+                                        "name": "系统管理员"
+                                    }
+                                ],
+                                "sex": "Male",
+                                "username": "admin"
+                            },
+                            {
+                                "address": {
+                                    "city": "漳州市",
+                                    "cityCode": '350600',
+                                    "county": "龙文区",
+                                    "countyCode": '350603',
+                                    "detailedAddress": "福建省漳州市龙文区蓝田镇xxx",
+                                    "province": "福建省",
+                                    "provinceCode": '350000',
+                                    "street": "蓝田镇",
+                                    "streetCode": '350603100'
+                                },
+                                "contactInfo": {
+                                    "email": "yuningli@locision.com",
+                                    "emergencyContact": "李白",
+                                    "emergencyContactPhone": '15888888889',
+                                    "landlinePhone": "0754-85111260",
+                                    "mobilePhone": '15888888888'
+                                },
+                                "entryTime": 1541518953756,
+                                "id": 4,
+                                "identity": '440583199409141250',
+                                "name": "张三",
+                                "post": {
+                                    "id": 1,
+                                    "name": "司机"
+                                },
+                                "roles": [
+                                    {
+                                        "id": 1,
+                                        "name": "系统管理员"
+                                    }
+                                ],
+                                "sex": "Male",
+                                "username": "admin"
+                            },
+                            {
+                                "address": {
+                                    "city": "漳州市",
+                                    "cityCode": '350600',
+                                    "county": "龙文区",
+                                    "countyCode": '350603',
+                                    "detailedAddress": "福建省漳州市龙文区蓝田镇xxx",
+                                    "province": "福建省",
+                                    "provinceCode": '350000',
+                                    "street": "蓝田镇",
+                                    "streetCode": '350603100'
+                                },
+                                "contactInfo": {
+                                    "email": "yuningli@locision.com",
+                                    "emergencyContact": "李白",
+                                    "emergencyContactPhone": '15888888889',
+                                    "landlinePhone": "0754-85111260",
+                                    "mobilePhone": '15888888888'
+                                },
+                                "entryTime": 1541518953756,
+                                "id": 5,
+                                "identity": '440583199409141250',
+                                "name": "张三",
+                                "post": {
+                                    "id": 1,
+                                    "name": "司机"
+                                },
+                                "roles": [
+                                    {
+                                        "id": 1,
+                                        "name": "系统管理员"
+                                    }
+                                ],
+                                "sex": "Male",
+                                "username": "admin"
+                            },
+                            {
+                                "address": {
+                                    "city": "漳州市",
+                                    "cityCode": '350600',
+                                    "county": "龙文区",
+                                    "countyCode": '350603',
+                                    "detailedAddress": "福建省漳州市龙文区蓝田镇xxx",
+                                    "province": "福建省",
+                                    "provinceCode": '350000',
+                                    "street": "蓝田镇",
+                                    "streetCode": '350603100'
+                                },
+                                "contactInfo": {
+                                    "email": "yuningli@locision.com",
+                                    "emergencyContact": "李白",
+                                    "emergencyContactPhone": '15888888889',
+                                    "landlinePhone": "0754-85111260",
+                                    "mobilePhone": '15888888888'
+                                },
+                                "entryTime": 1541518953756,
+                                "id": 6,
+                                "identity": '440583199409141250',
+                                "name": "张三",
+                                "post": {
+                                    "id": 1,
+                                    "name": "司机"
+                                },
+                                "roles": [
+                                    {
+                                        "id": 1,
+                                        "name": "系统管理员"
+                                    }
+                                ],
+                                "sex": "Male",
+                                "username": "admin"
+                            },
+                        ],
+                        "last": true,
+                        "page": 1,
+                        "pages": 0,
+                        "size": 20,
+                        "total": 0
+                    },
+                    "status": 1
+                }
+            );
         });
     }
 }

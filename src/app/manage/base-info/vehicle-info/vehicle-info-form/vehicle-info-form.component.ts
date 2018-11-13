@@ -1,8 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 import { NzDrawerRef } from 'ng-zorro-antd';
-import { MessageService } from '../../../../shared/services/message/message.service';
+import { DistrictsService } from '../../../../shared/services/districts/districts.service';
 import { NotificationService } from '../../../../shared/services/notification/notification.service';
+import { VehicleInfoService } from '../vehicle-info.service';
+import { ModelConverter } from '../model-converter';
+import { ObjectUtils } from '../../../../shared/utils/object-utils';
+import { VehicleFormModel } from '../vehicle-form.model';
+import { VehicleReq } from '../vehicle-req.model';
 
 @Component({
     selector   : 'app-vehicle-info-form',
@@ -11,41 +16,78 @@ import { NotificationService } from '../../../../shared/services/notification/no
 })
 export class VehicleInfoFormComponent implements OnInit {
 
-    public formData: any = {
-        licensePlate   : null,
-        vehicleFrame   : null,
-        engineNumber   : null,
-        vehicleBoxId   : null,
-        purchaseDate   : new Date(),
-        remark         : null,
-        planStartTime  : null,
-        planEndTime    : null,
-        vehicleType    : null,
-        vehicleLocation: null,
-        isTestVehicle  : null,
-    };
+    @Input() type: string;
+    @Input() success: boolean;
+    @Input() cache: VehicleFormModel;
+    public formData: VehicleFormModel = new VehicleFormModel();
+    public vehicleReq: VehicleReq;
+    public cascaderOptions: any;
 
     constructor(private drawerRef: NzDrawerRef<any>,
-                private messageService: MessageService,
-                private notificationService: NotificationService
+                private districtsService: DistrictsService,
+                private notificationService: NotificationService,
+                private vehicleInfoService: VehicleInfoService
     ) {
     }
 
     ngOnInit(): void {
-    }
-
-    onPurchaseDateChange($e): void {
-        console.log($e);
+        this.districtsService.getDistricts('350600', 1).subscribe(res => {
+            this.cascaderOptions = this.convertDataToDistricts(res.data.districts);
+            if (this.cache) {
+                this.formData = ObjectUtils.extend(this.cache);
+            } else {
+                this.formData = new VehicleFormModel();
+                this.formData.district = ['350603'];
+            }
+        });
     }
 
     onClose(): void {
-        this.drawerRef.close();
+        this.drawerRef.close(false);
     }
 
     onSubmitForm(): void {
-        console.log('submit');
-        console.log(this.formData);
+        this.transformFormModelToRequest();
+        console.log(this.vehicleReq);
+        switch (this.type) {
+            case 'add':
+                this.vehicleInfoService.addVehicle(this.vehicleReq).subscribe(res => {
+                    this.notificationService.create({
+                        type: 'success',
+                        title: '恭喜,添加成功',
+                        content: '该提醒将自动消失',
+                    });
+                    this.success = true;
+                    this.drawerRef.close(this.success);
+                });
+                break;
+            case 'edit':
+                this.vehicleInfoService.updateVehicle(this.vehicleReq, this.cache.id).subscribe(res => {
+                    this.notificationService.create({
+                        type: 'success',
+                        title: '恭喜,更新成功',
+                        content: '该提醒将自动消失',
+                    });
+                    this.success = true;
+                    this.drawerRef.close(this.success);
+                });
+                break;
+        }
     }
 
+    transformFormModelToRequest() {
+        this.vehicleReq = ModelConverter.formModelToVehicleReq(this.formData);
+    }
+
+    convertDataToDistricts(districts: any[]): any[] {
+        let leafDistricts = districts.map(district => {
+            return {
+                value : district.code,
+                label : district.name,
+                isLeaf: true,
+            }
+        });
+        return leafDistricts;
+    }
 
 }

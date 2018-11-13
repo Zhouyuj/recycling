@@ -11,7 +11,6 @@ import {DistrictsService} from '../../services/districts/districts.service';
 export class CascaderComponent implements OnInit {
 
     @Input() options: any[];
-    public nzOptions: any[];
 
     @Input() values: any[];
     @Output() changesEmitter: EventEmitter<any> = new EventEmitter();
@@ -20,11 +19,13 @@ export class CascaderComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.districtsService.getDistricts('350600', 3).subscribe(res => {
-            this.nzOptions = this.convertData(res.data.districts);
-            // 默认龙文区
-            //this.values = ['350000', '350600', '350603'];
-        });
+        if (!this.options) {    // 当没有options(可选择项)传进时,默认为3级（福建省-市-县）
+            this.districtsService.getDistricts('350600', 3).subscribe(res => {
+                this.options = this.convertData(res.data.districts);
+                // 默认龙文区
+                //this.values = ['350000', '350600', '350603'];
+            });
+        }
     }
 
     public onChanges(values: any): void {
@@ -39,22 +40,22 @@ export class CascaderComponent implements OnInit {
     private convertData(districts: any[]): any[] {
         let leafDistricts = districts.map(district => {
             return {
-                value: district.code,
-                label: district.name,
+                value : district.code,
+                label : district.name,
                 isLeaf: true,
             }
         });
-        let result = [{
-            value: '350000',
-            label: '福建省',
+        let result = [ {
+            value   : '350000',
+            label   : '福建省',
             children: [
                 {
-                    value: '350600',
-                    label: '漳州市',
-                    children: [...leafDistricts],
+                    value   : '350600',
+                    label   : '漳州市',
+                    children: [ ...leafDistricts ],
                 }
             ],
-        }];
+        } ];
         return result;
     }
 }

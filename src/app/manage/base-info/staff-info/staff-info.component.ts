@@ -5,6 +5,13 @@ import { StaffInfoFormComponent } from './staff-info-form/staff-info-form.compon
 
 import { NzDrawerService } from 'ng-zorro-antd';
 
+import { DistrictsService } from '../../../shared/services/districts/districts.service';
+import { PageReq } from '../../../shared/models/page/page-req.model';
+import { PageRes } from '../../../shared/models/page/page-res.model';
+import { Result } from '../../../shared/models/response/result.model';
+import { StaffRes } from './staff-res.model';
+import { StaffFormModel } from './staff-form.model';
+
 @Component({
     selector   : 'app-staff-info',
     templateUrl: './staff-info.component.html',
@@ -14,15 +21,15 @@ export class StaffInfoComponent implements OnInit {
 
     breadcrumbs = [
         {
-            link: '/',
+            link : '/',
             title: '首页',
         },
         {
-            link: '',
+            link : '',
             title: '基础信息',
         },
         {
-            link: '/manage/baseInfo/staffs',
+            link : '/manage/baseInfo/staffs',
             title: '人员信息',
         }
     ];
@@ -31,68 +38,48 @@ export class StaffInfoComponent implements OnInit {
         rows               : [],
         selectedRows       : [],
         localizationMessage: {
-            emptyMessage   : '未找到任何数据！',
-            totalMessage   : '条记录  可配合使用CTRL与SHIFT进行多选',
+            emptyMessage   : '很抱歉, 未找到任何数据！',
+            totalMessage   : '条记录(共)',
             selectedMessage: '已选中',
         },
     };
 
-    public selected_system_role = null;
-    public selected_system_roles_options = [
-        {
-            id  : 0,
-            name: '全选',
-        },
-        {
-            id  : 1,
-            name: '系统管理员',
-        },
-        {
-            id  : 2,
-            name: '司机',
-        },
-        {
-            id  : 3,
-            name: '中控',
-        },
-    ];
-    public selected_system_position = null;
-    public selected_system_positions_options = [
-        {
-            id: 0,
-            name: '全选',
-        },
-        {
-            id: 1,
-            name: '司机',
-        },
-        {
-            id: 2,
-            name: '辅助工',
-        },
-    ];
+    // TODO
+    public pageReq = new PageReq();
+    public params: any = {};// 分页查询参数
+    public keywordType = 'plateNumber';
+    public keyword: string;
+
+    public listCache: StaffRes[];
+    public itemCache: StaffRes;
+    public formCache: StaffFormModel;
 
     constructor(private staffInfoService: StaffInfoService,
+                private districtsService: DistrictsService,
                 private drawerService: NzDrawerService) {
     }
 
     ngOnInit() {
-        this.staffInfoService.mockListData().subscribe(res => {
-            this.list_options.rows = res;
+        this.districtsService.getDistricts('350600', 1).subscribe(res => {
+
+            this.staffInfoService.getListByPage().subscribe((res: Result<PageRes<StaffRes[]>>) => {
+                this.list_options.rows = res.data.content;
+                console.log(this.list_options.rows);
+            });
         });
     }
 
     onAdd() {
         console.log('add');
-        this.onOpenForm();
+        this.onOpenForm('add');
     }
 
-    onEdit($e) {
+    onEdit() {
         console.log('edit', this.list_options.selectedRows);
-        this.onOpenForm();
+        this.onOpenForm('edit');
     }
 
-    onDel($e) {
+    onDel() {
         console.log('del', this.list_options.selectedRows);
     }
 
@@ -129,7 +116,7 @@ export class StaffInfoComponent implements OnInit {
         console.log($e);
     }
 
-    asyncGetDataByPage() {
+    getListByPage(page, params?) {
         // 分页接口
     }
 
@@ -137,19 +124,23 @@ export class StaffInfoComponent implements OnInit {
      * 抽屉组件
      * form 表单
      */
-    onOpenForm(): void {
+    onOpenForm(type: string): void {
         const drawerRef = this.drawerService.create<StaffInfoFormComponent>({
-            nzTitle: '添加',
+            nzTitle  : { add: '添加', edit: '编辑' }[ type ] || '请编辑表单',
             nzContent: StaffInfoFormComponent,
-            nzWidth: '55%',
+            nzWidth  : '55%',
         });
 
         drawerRef.afterOpen.subscribe(() => {
             console.log('Drawer(Component) open');
         });
 
-        drawerRef.afterClose.subscribe(data => {
+        drawerRef.afterClose.subscribe(res => {
             console.log('Drawer(Component) close');
+            if (res) {
+                // 重新调分页接口
+                this.getListByPage(this.pageReq, this.params);
+            }
         });
     }
 }

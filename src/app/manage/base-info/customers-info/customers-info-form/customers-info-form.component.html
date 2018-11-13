@@ -278,15 +278,20 @@
                                     </nz-form-label>
                                     <nz-form-control [nzSm]="10" [nzXs]="24">
                                         <nz-select
-                                                name="vehicle-{{item.id}}-food"
                                                 required
-                                                nzShowSearch
+                                                name="vehicle-{{item.id}}-food"
+                                                [(ngModel)]="item.vehicle"
+                                                nzPlaceHolder="请指定车辆"
                                                 nzAllowClear
-                                                nzPlaceHolder="请选择级别"
-                                                [(ngModel)]="item.vehicle">
-                                            <nz-option nzLabel="车1" nzValue="0"></nz-option>
-                                            <nz-option nzLabel="车2" nzValue="1"></nz-option>
-                                            <nz-option nzLabel="车3" nzValue="2"></nz-option>
+                                                nzShowSearch
+                                                [nzServerSearch]="true"
+                                                (nzOnSearch)="onSearchVehicles($event)">
+                                            <ng-container *ngFor="let o of vehicles">
+                                                <nz-option *ngIf="!isVehiclesLoading" [nzValue]="o" [nzLabel]="o"></nz-option>
+                                            </ng-container>
+                                            <nz-option *ngIf="isVehiclesLoading" nzDisabled nzCustomContent>
+                                                <i nz-icon type="loading" class="loading-icon"></i> 加载中...
+                                            </nz-option>
                                         </nz-select>
                                     </nz-form-control>
                                 </nz-form-item>

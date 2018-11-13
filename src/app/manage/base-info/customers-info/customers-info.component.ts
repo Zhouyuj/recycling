@@ -123,8 +123,8 @@ export class CustomersInfoComponent implements OnInit {
         this.customersInfoService.delCustomer(this.itemCache.id).subscribe(res => {
             this.notificationService.create({
                 type: 'success',
-                title: '',
-                content: '恭喜,更新成功',
+                title: '恭喜,删除成功',
+                content: '该提醒将自动消失',
             });
         })
     }
@@ -150,7 +150,7 @@ export class CustomersInfoComponent implements OnInit {
 
     onKeywordSearch(e, type?: string) {
         let key = this.keywordType;
-        if (key && type.trim()) {
+        if (key && type.trim() && this.keyword) {
             this.params[key] = this.keyword.replace(/\s/g, '');
             this.getListByPage(this.pageReq, this.params);
         } else {
@@ -189,7 +189,7 @@ export class CustomersInfoComponent implements OnInit {
      * form 表单
      */
     onOpenForm(type?: 'add' | 'edit'): void {
-        this.drawerRef = this.drawerService.create<CustomersInfoFormComponent, { type: string, success: boolean, cache: FormModel }, boolean>({
+        this.drawerRef = this.drawerService.create<CustomersInfoFormComponent, { type: string, success: boolean, cache: FormModel, countyNames: [{ code: string, name: string }] }, boolean>({
             nzTitle        : { add: '添加', edit: '编辑' }[ type ] || '请编辑表单',
             nzContent      : CustomersInfoFormComponent,
             nzWidth        : '55%',
@@ -197,6 +197,7 @@ export class CustomersInfoComponent implements OnInit {
                 type: type,
                 success: false,
                 cache  : type === 'edit' ? this.formCache : null,
+                countyNames: this.countyNames,
             }
         });
 

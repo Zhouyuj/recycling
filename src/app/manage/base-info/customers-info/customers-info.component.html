@@ -2,11 +2,11 @@
     <!-- -------- 表格操作 -------- -->
     <div class="table-operations">
         <div nz-row nzGutter="16">
-            <div nz-col class="gutter-row" nzSpan="12">
+            <div nz-col class="gutter-row" nzSpan="8">
                 <!-- 面包屑导航 -->
                 <app-breadcrumbs [options]="breadcrumbs"></app-breadcrumbs>
             </div>
-            <div nz-col class="gutter-row" nzSpan="6" nzOffset="2">
+            <div nz-col class="gutter-row" nzSpan="10" nzOffset="2">
                 <div class="table-search">
                     <nz-input-group nzSearch
                                     nzCompact
@@ -99,28 +99,7 @@
             <ngx-datatable-column name="定位" prop="lngLat"></ngx-datatable-column>
             <!--TODO-->
             <ngx-datatable-column name="图片" prop="images"></ngx-datatable-column>
-            <ngx-datatable-column name="名称" prop="name">
-                <!--<ng-template let-column="column" ngx-datatable-header-template>
-                    <app-select
-                            [title]="'名称'"
-                            [options]="selected_name"
-                            (selectedEmitter)="onSelectEmitter($event)"
-                    ></app-select>
-                </ng-template>-->
-                <ng-template let-column="column" ngx-datatable-header-template>
-                    <!--<p>名称</p>
-                    <nz-input-group nzSearch nzSize="small" [nzSuffix]="suffixButton">
-                        <input type="text" nz-input placeholder="搜索" [(ngModel)]="keyWord">
-                    </nz-input-group>
-                    <ng-template #suffixButton>
-                        <button nz-button
-                                nzType="default"
-                                nzSize="small"
-                                nzSearch
-                                (click)="onKeywordSearch($event)">搜索</button>
-                    </ng-template>-->
-                </ng-template>
-            </ngx-datatable-column>
+            <ngx-datatable-column name="名称" prop="name"></ngx-datatable-column>
             <ngx-datatable-column name="所属区域" prop="countyCode"></ngx-datatable-column>
             <ngx-datatable-column name="收运时间段" prop="duration"></ngx-datatable-column>
             <ngx-datatable-column name="地址" prop="detailAddress"></ngx-datatable-column>

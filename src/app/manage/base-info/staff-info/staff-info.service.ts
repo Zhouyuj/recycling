@@ -9,7 +9,7 @@ export class StaffInfoService {
     constructor() {
     }
 
-    mockListData(): Observable<[object]> {
+    getListByPage(): any {
         return null;
     }
 }

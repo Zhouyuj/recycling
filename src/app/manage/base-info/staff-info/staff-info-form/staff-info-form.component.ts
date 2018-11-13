@@ -8,7 +8,6 @@ import {
 
 import { NzDrawerRef } from 'ng-zorro-antd';
 
-
 @Component({
     selector   : 'app-staff-info-form',
     templateUrl: './staff-info-form.component.html',
@@ -23,28 +22,31 @@ export class StaffInfoFormComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.initForm();
+    }
+
+    initForm() {
         /** form config **/
         this.validateForm = this.fb.group({
-            username        : [ null, [ Validators.required ] ],
-            gender          : [ null, [ Validators.required ] ],
-            statusId        : [ null, [ Validators.required ] ],
-            password        : [ null, [ Validators.required ] ],
-            position        : [ null, [ Validators.required ] ],
-            hireDate        : [ null, [ Validators.required ] ],
-            systemRole      : [ null, [ Validators.required ] ],
-            personalId      : [ null, [ Validators.pattern(/([A-z]|[0-9]){18}/) || null ] ],
-            mobile          : [ null, [ Validators.required ] ],
-            phoneNumber     : [ null ],
-            address         : this.fb.group({
+            name                 : [ null, [ Validators.required ] ],
+            sex                  : [ null, [ Validators.required ] ],
+            username             : [ null, [ Validators.required ] ],
+            password             : [ null, [ Validators.required ] ],
+            position             : [ null, [ Validators.required ] ],
+            role                 : [ null, [ Validators.required ] ],
+            entryTime            : [ null, [ Validators.required ] ],
+            identity             : [ null, [ Validators.pattern(/([A-z]|[0-9]){18}/) || null ] ],
+            landlinePhone        : [ null ],
+            mobilePhone          : [ null, [ Validators.required ] ],
+            address              : this.fb.group({
                 province: [ null ],
                 city    : [ null ],
                 region  : [ null ],
             }),
-            homeAddress     : [ null ],
-            emergencyPerson : [ null ],
-            emergencyContact: [ null ],
-            email           : [ null, [ Validators.email ] ],
-            remark          : [ null ],
+            detailAddress        : [ null ],
+            emergencyContact     : [ null ],
+            emergencyContactPhone: [ null ],
+            email                : [ null, [ Validators.email ] ],
         });
     }
 
@@ -85,7 +87,7 @@ export class StaffInfoFormComponent implements OnInit {
     }
 
     onClose(): void {
-        //this.drawerRef.close();
+        this.drawerRef.close();
         console.log(this.validateForm);
     }
 }

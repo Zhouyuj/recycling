@@ -26,7 +26,7 @@ export const Mock = {
                             "endTime": 10800,
                             "garbageCategory": "KitchenWaste",
                             "level": "Hard",
-                            "plateNumber": "粤Y88888",
+                            "plateNumber": "闽Y11111",
                             "startTime": 10800
                         }
                     ],
@@ -202,7 +202,7 @@ export const Mock = {
                     }
                 ],
                 "dustbin": 10,
-                "id": 0,
+                "id": 1,
                 "images": [
                     {
                         "id": 1,
@@ -309,7 +309,7 @@ export const Mock = {
                     }
                 ],
                 "dustbin": 10,
-                "id": 0,
+                "id": 2,
                 "images": [
                     {
                         "id": 1,
@@ -416,7 +416,7 @@ export const Mock = {
                     }
                 ],
                 "dustbin": 10,
-                "id": 0,
+                "id": 3,
                 "images": [
                     {
                         "id": 1,
@@ -523,7 +523,7 @@ export const Mock = {
                     }
                 ],
                 "dustbin": 10,
-                "id": 0,
+                "id": 4,
                 "images": [
                     {
                         "id": 1,
@@ -630,7 +630,7 @@ export const Mock = {
                     }
                 ],
                 "dustbin": 10,
-                "id": 0,
+                "id": 5,
                 "images": [
                     {
                         "id": 1,
@@ -737,7 +737,7 @@ export const Mock = {
                     }
                 ],
                 "dustbin": 10,
-                "id": 0,
+                "id": 6,
                 "images": [
                     {
                         "id": 1,
