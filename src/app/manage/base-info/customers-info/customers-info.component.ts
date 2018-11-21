@@ -16,7 +16,7 @@ import { PageRes } from '../../../shared/models/page/page-res.model';
 import { Result } from '../../../shared/models/response/result.model';
 import { DateUtil } from '../../../shared/utils/date-utils';
 import { ModelConverter } from './model-converter';
-import { FormModel } from './customers-info-form/form.model';
+import { FormModel } from './form.model';
 import { ListModel } from './list.model';
 import { Mock } from './mock';
 
@@ -52,7 +52,10 @@ export class CustomersInfoComponent implements OnInit {
             selectedMessage: '已选中',
         },
     };
-    public pageReq = new PageReq();
+    public isSpinning = false;
+
+    public pageReq = new PageReq(1, 2);
+    public pageRes = new PageRes();
     public params: any = {};// 分页查询参数
     public keywordType: 'name';
     public keyword: string;
@@ -69,12 +72,104 @@ export class CustomersInfoComponent implements OnInit {
     }
 
     ngOnInit() {
-        let mock = Mock;
+        //let mock = Mock;
         this.districtsService.getDistricts('350600', 1).subscribe((res: any) => {
             this.countyNames = res.data.districts;
-            //this.getListByPage(this.pageReq, this.params);
-            this.listCache = mock.data.content as any;
-            this.list_options.rows = this.dataToTableRows(mock.data.content as any);
+            this.getListByPage();
+            //this.listCache = mock.data.content as any;
+            //this.list_options.rows = this.dataToTableRows(mock.data.content as any);
+        });
+    }
+
+    onAdd() {
+        this.onOpenForm('add');
+    }
+
+    onEdit() {
+        this.onOpenForm('edit');
+    }
+
+    onDel() {
+        this.customersInfoService.delCustomer(this.itemCache.id).subscribe(res => {
+            this.notificationService.create({
+                type   : 'success',
+                title  : '恭喜,删除成功',
+                content: '该提醒将自动消失',
+            });
+            this.getListByPage();
+        })
+    }
+
+    onExp() {
+        console.log('exp');
+    }
+
+    onSelect(e: ListModel) {
+        this.itemCache = this.listCache.filter(item => item.id == this.list_options.selectedRows[ 0 ].id)[ 0 ];
+        this.formCache = ModelConverter.customerResToFormModel(this.itemCache);
+    }
+
+    onKeywordSearch(e, type?: string) {
+        let key = this.keywordType;
+        if (key && type.trim() && this.keyword) {
+            this.params[ key ] = this.keyword.replace(/\s/g, '');
+            this.getListByPage();
+        } else {
+            this.messageService.create({
+                type   : 'warning',
+                content: '请先选择搜索类别',
+            });
+        }
+    }
+
+    /**
+     * TODO limit通过双向绑定来实现
+     * e == {count: 0, pageSize: 12, limit: 12, offset: 1}
+     * @param e
+     */
+    onPage(e) {
+        this.updatePageReq(e);
+        this.getListByPage();
+    }
+
+    /**
+     * e.sorts = [{ dir: 'asc'|'desc', prop: '列名' }]
+     * @param e
+     */
+    onSort(e) {
+        let sorts = e.sorts
+            .map(sort => `${sort.prop}.${sort.dir},`)
+            .join('');
+        this.pageReq.sort = sorts;
+        this.pageReq.page = 1;
+        this.getListByPage();
+    }
+
+    /**
+     * 抽屉组件
+     * form 表单
+     */
+    onOpenForm(type?: 'add' | 'edit'): void {
+        this.drawerRef = this.drawerService.create<CustomersInfoFormComponent, { type: string, success: boolean, cache: FormModel, countyNames: [{ code: string, name: string }] }, boolean>({
+            nzTitle        : { add: '添加', edit: '编辑' }[ type ] || '请编辑表单',
+            nzContent      : CustomersInfoFormComponent,
+            nzWidth        : '55%',
+            nzContentParams: {
+                type       : type,
+                success    : false,
+                cache      : type === 'edit' ? this.formCache : null,
+                countyNames: this.countyNames,
+            }
+        });
+
+        this.drawerRef.afterOpen.subscribe(() => {
+        });
+
+        this.drawerRef.afterClose.subscribe((res: boolean) => {
+            if (res) {
+                // 重新调分页接口
+                this.getListByPage();
+            }
         });
     }
 
@@ -83,19 +178,27 @@ export class CustomersInfoComponent implements OnInit {
      * @param page
      * @param params
      */
-    getListByPage(page: PageReq, params?: any) {
+    getListByPage() {
+        this.isSpinning = true;
         this.customersInfoService
-            .getCustomerList(page, params)
-            .subscribe((res: Result<PageRes<CustomerRes[]>>) => {
-                this.listCache = res.data.content;
-                let list = this.dataToTableRows(res.data.content);
-                this.list_options.rows = list;
-            }, err => console.log(`分页查询失败!!!${err}`));
-    }
-
-    updatePage(pageInfo: { count: number, pageSize: number, limit: number, offset: number }): void {
-        this.pageReq.page = pageInfo.offset + 1;
-        this.pageReq.size = pageInfo.pageSize;
+            .getCustomerList(this.pageReq, this.params)
+            .subscribe(
+                (res: Result<PageRes<CustomerRes[]>>) => {
+                    if (res.data.content.length > 0) {
+                        /* 缓存（返回值类型的）列表 */
+                        this.listCache = res.data.content;
+                        /* 组装（列表类型的）列表数据 */
+                        this.list_options.rows = this.dataToTableRows(res.data.content);
+                        /* 更新列表的信息（分页/排序） */
+                        this.updatePageRes(res.data);
+                    }
+                },
+                err => {
+                    console.error(`分页查询失败!!!${err}`);
+                    this.isSpinning = false;
+                },
+                () => this.isSpinning = false
+            );
     }
 
     /**
@@ -110,105 +213,13 @@ export class CustomersInfoComponent implements OnInit {
         return data.map((o: CustomerRes) => ModelConverter.customerResToListModel(o, this.countyNames));
     }
 
-    onAdd() {
-        this.onOpenForm('add');
+    // 只存储分页信息,不包括数据
+    updatePageRes(data: PageRes<CustomerRes[]>): void {
+        this.pageRes = new PageRes(data.page - 1, data.size, data.pages, data.total, data.last);
     }
 
-    onEdit() {
-        this.onOpenForm('edit');
-    }
-
-    onDel() {
-        console.log('del', this.list_options.selectedRows);
-        this.customersInfoService.delCustomer(this.itemCache.id).subscribe(res => {
-            this.notificationService.create({
-                type: 'success',
-                title: '恭喜,删除成功',
-                content: '该提醒将自动消失',
-            });
-        })
-    }
-
-    onExp() {
-        console.log('exp');
-    }
-
-    onSelect(e: ListModel) {
-        this.itemCache = this.listCache.filter(item => item.id == this.list_options.selectedRows[ 0 ].id)[ 0 ];
-        this.formCache = ModelConverter.customerResToFormModel(this.itemCache);
-        console.log('选中的res-model', this.itemCache);
-        console.log('转化的form-model', this.formCache);
-    }
-
-    onSelectFilter(e) {
-        console.log(e);
-    }
-
-    onSelectEmitter(e) {
-        console.log(e);
-    }
-
-    onKeywordSearch(e, type?: string) {
-        let key = this.keywordType;
-        if (key && type.trim() && this.keyword) {
-            this.params[key] = this.keyword.replace(/\s/g, '');
-            this.getListByPage(this.pageReq, this.params);
-        } else {
-            this.messageService.create({
-                type: 'warning',
-                content: '请先选择搜索类别',
-            });
-        }
-    }
-
-    /**
-     * TODO limit通过双向绑定来实现
-     * e == {count: 0, pageSize: 12, limit: 12, offset: 1}
-     * @param e
-     */
-    onPage(e) {
-        this.updatePage(e);
-        this.getListByPage(this.pageReq, this.params);
-        console.log(this.pageReq);
-    }
-
-    /**
-     * e.sorts[0] = { dir: 'asc'|'desc', prop: '列名' }
-     * @param e
-     */
-    onSort(e) {
-        let columnName = e.sorts[ 0 ].prop,
-            columnSort = e.sorts[ 0 ].dir,
-            sort = `${columnName}.${columnSort},`;
-        this.pageReq.sort = sort;
-        this.getListByPage(this.pageReq);
-    }
-
-    /**
-     * 抽屉组件
-     * form 表单
-     */
-    onOpenForm(type?: 'add' | 'edit'): void {
-        this.drawerRef = this.drawerService.create<CustomersInfoFormComponent, { type: string, success: boolean, cache: FormModel, countyNames: [{ code: string, name: string }] }, boolean>({
-            nzTitle        : { add: '添加', edit: '编辑' }[ type ] || '请编辑表单',
-            nzContent      : CustomersInfoFormComponent,
-            nzWidth        : '55%',
-            nzContentParams: {
-                type: type,
-                success: false,
-                cache  : type === 'edit' ? this.formCache : null,
-                countyNames: this.countyNames,
-            }
-        });
-
-        this.drawerRef.afterOpen.subscribe(() => {
-        });
-
-        this.drawerRef.afterClose.subscribe((res: boolean) => {
-            if (res) {
-                // 重新调分页接口
-                this.getListByPage(this.pageReq, this.params);
-            }
-        });
+    updatePageReq(pageInfo: { count: number, pageSize: number, limit: number, offset: number }): void {
+        this.pageReq.page = pageInfo.offset + 1;
+        this.pageReq.size = pageInfo.pageSize;
     }
 }

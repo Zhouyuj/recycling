@@ -3,7 +3,7 @@
  */
 
 import { CustomerRes, Address, BusinessLine, CollectionPeriod } from './customer-res.model';
-import { FormModel, Duration, ChildCollections, DurationDetail } from './customers-info-form/form.model';
+import { FormModel, Duration, ChildCollections, DurationDetail } from './form.model';
 import { CustomerReq, AddressReq, ContactInfo} from './customer-req.model';
 import { ListModel } from './list.model';
 import { DateUtil } from '../../../shared/utils/date-utils';

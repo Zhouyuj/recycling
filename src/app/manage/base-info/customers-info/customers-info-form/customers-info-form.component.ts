@@ -10,8 +10,7 @@ import { NotificationService } from '../../../../shared/services/notification/no
 
 import { CustomerReq } from '../customer-req.model';
 import { CustomerRes } from '../customer-res.model';
-import { ChildCollections } from './form.model';
-import { FormModel, DurationDetail } from './form.model';
+import { FormModel, DurationDetail, ChildCollections } from './../form.model';
 import { ModelConverter } from '../model-converter';
 import { ObjectUtils } from '../../../../shared/utils/object-utils';
 import { PageRes } from '../../../../shared/models/page/page-res.model';

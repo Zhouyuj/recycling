@@ -8,6 +8,7 @@
     "build": "ng build --aot",
     "test": "ng lint && ng test --code-coverage",
     "test-single-run": "ng lint && ng test --code-coverage --single-run",
+    "deploy-test": "node ./deploy/test.js",
     "lint": "ng lint",
     "e2e": "ng e2e"
   },

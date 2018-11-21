@@ -2,13 +2,14 @@
  * Created by wujiahui on 2018/11/13.
  */
 
-export class StaffList {
+export class StaffListModel {
     // TODO 工号
+    id: number = null;
     name: string = null;
     username: string = null;
     sex: string = null;
     position: string = null;
-    role: string = null;
+    roles: string = null;
     entryTime: string = null;
     identity: string = null;
     address: string = null;

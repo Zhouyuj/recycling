@@ -11,6 +11,11 @@ const ROUTER_CONFIG: Routes = [
         path    : '', component: ManageAppComponent,
         children: [
             {
+                path        : 'plan',
+                loadChildren: './plan/plan.module#PlanModule',
+                data        : { title: '方案管理' },
+            },
+            {
                 path        : 'baseInfo',
                 loadChildren: './base-info/base-info.module#BaseInfoModule',
                 data        : { title: '基础信息' },

@@ -9,8 +9,8 @@ export class StaffReq {
     identity: string = null;
     name: string = null;
     password: string = null;
-    post: { id: number, name: string } = null;
-    role: [ { id: number,name: string } ] = null;
+    postId: number = null;
+    roles: number[] = null;
     sex: string = null;
     username: string = null;
 }
@@ -25,6 +25,17 @@ export class AddressReq {
     provinceCode: string = null;
     street: string = null;
     streetCode: string = null;
+    constructor(req?) {
+        this.city = req.city || null;
+        this.cityCode = req.cityCode || null;
+        this.county = req.county || null;
+        this.countyCode = req.countyCode || null;
+        this.detailedAddress = req.detailedAddress || null;
+        this.province = req.province || null;
+        this.provinceCode = req.provinceCode || null;
+        this.street = req.street || null;
+        this.streetCode = req.streetCode || null;
+    }
 }
 
 export class ContactInfoReq {
@@ -33,4 +44,11 @@ export class ContactInfoReq {
     emergencyContactPhone: string = null;
     landlinePhone: string = null;
     mobilePhone: string = null;
+    constructor(req?) {
+        this.email = req.email || null;
+        this.emergencyContact = req.emergencyContact || null;
+        this.emergencyContactPhone = req.emergencyContactPhone || null;
+        this.landlinePhone = req.landlinePhone || null;
+        this.mobilePhone = req.mobilePhone || null;
+    }
 }

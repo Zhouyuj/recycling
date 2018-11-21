@@ -13,7 +13,7 @@ export class StaffInfoMockService {
     constructor() {
     }
 
-    getListByPage(): Observable<[object]> {
+    getStaffList(pageReq, params): Observable<[object]> {
         return Observable.create(observer => {
             observer.next(
                 {
@@ -247,4 +247,8 @@ export class StaffInfoMockService {
             );
         });
     }
+
+    addStaff() {}
+    updateStaff() {}
+    delStaff() {}
 }

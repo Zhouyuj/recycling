@@ -2,11 +2,11 @@
     <!-- -------- 表格操作 -------- -->
     <div class="table-operations">
         <div nz-row nzGutter="16">
-            <div nz-col class="gutter-row" nzSpan="12">
+            <div nz-col class="gutter-row" nzSpan="10">
                 <!-- 面包屑导航 -->
                 <app-breadcrumbs [options]="breadcrumbs"></app-breadcrumbs>
             </div>
-            <div nz-col class="gutter-row" nzSpan="6" nzOffset="2">
+            <div nz-col class="gutter-row" nzSpan="8" nzOffset="2">
                 <div class="table-search">
                     <nz-input-group nzSearch
                                     nzCompact
@@ -16,14 +16,18 @@
                                    [nzSize]="'default'"
                                    [nzDropdownMatchSelectWidth]="false"
                                    [(ngModel)]="keywordType">
-                            <nz-option nzValue="plateNumber" nzLabel="车牌号"></nz-option>
-                            <nz-option nzValue="driver" nzLabel="当前司机"></nz-option>
-                            <nz-option nzValue="planDepartureTime" nzLabel="计划出车时间"></nz-option>
-                            <nz-option nzValue="boxId" nzLabel="车载盒子ID"></nz-option>
-                            <nz-option nzValue="buyDate" nzLabel="购买时间"></nz-option>
+                            <nz-option nzValue="username" nzLabel="工号"></nz-option>
+                            <nz-option nzValue="name" nzLabel="姓名"></nz-option>
+                            <nz-option nzValue="entryTime" nzLabel="入职时间"></nz-option>
+                            <nz-option nzValue="identity" nzLabel="身份证"></nz-option>
+                            <nz-option nzValue="address" nzLabel="家庭住址"></nz-option>
+                            <nz-option nzValue="mobilePhone" nzLabel="联系电话"></nz-option>
+                            <nz-option nzValue="emergencyContact" nzLabel="紧急联系人"></nz-option>
+                            <nz-option nzValue="emergencyContactPhone" nzLabel="紧急联系人电话"></nz-option>
+                            <nz-option nzValue="email" nzLabel="邮箱"></nz-option>
                         </nz-select>
                         <input type="text" nz-input placeholder="键入关键字, 按ENTER搜索" [(ngModel)]="keyword"
-                               style="width: 70%;" (keyup)="$event.which == 13 && onKeywordSearch($event, keywordType)">
+                               style="width: 60%;" (keyup)="$event.which == 13 && onKeywordSearch($event, keywordType)">
                     </nz-input-group>
                 </div>
             </div>
@@ -33,11 +37,26 @@
                         <i class="anticon anticon-plus-circle-o"></i>
                     </button>
                     &nbsp;
-                    <button nz-button nzType="default" nzShape="circle" (click)="onEdit()" nzTitle="编辑" nzPlacement="topCenter" nz-tooltip>
+                    <button nz-button
+                            [disabled]="!formCache"
+                            nzType="default"
+                            nzShape="circle"
+                            (click)="onEdit()"
+                            nzTitle="编辑"
+                            nzPlacement="topCenter"
+                            nz-tooltip>
                         <i class="anticon anticon-edit"></i>
                     </button>
                     &nbsp;
-                    <button nz-button nzType="default" nzShape="circle" (click)="onDel()" nzTitle="删除" nzPlacement="topCenter" nz-tooltip>
+                    <button nz-button
+                            [disabled]="!formCache"
+                            nz-popconfirm
+                            nzTitle="确认删除该信息吗?"
+                            (nzOnConfirm)="onDel()"
+                            nzType="default"
+                            nzShape="circle"
+                            nzPlacement="topCenter"
+                            nz-tooltip>
                         <i class="anticon anticon-minus-circle-o"></i>
                     </button>
                     &nbsp;
@@ -51,32 +70,36 @@
     </div>
     <!-- -------- 表格内容 -------- -->
     <div class="table-content">
-        <ngx-datatable #dataTable class="material striped"
-                       [messages]="list_options.localizationMessage"
-                       [rows]="list_options.rows"
-                       [columnMode]="'force'"
-                       [headerHeight]="40"
-                       [rowHeight]="40"
-                       [footerHeight]="40"
-                       [scrollbarH]="true"
-                       [selected]="list_options.selectedRows"
-                       [selectionType]="'multi'"
-                       [limit]="12"
-                       (select)="onSelect($event)"
-                       (page)="onPage($event)"
-        >
-            <ngx-datatable-column name="姓名" prop="name"></ngx-datatable-column>
-            <ngx-datatable-column name="工号" prop="username"></ngx-datatable-column>
-            <ngx-datatable-column name="性别" prop="sex"></ngx-datatable-column>
-            <ngx-datatable-column name="岗位" prop="position"></ngx-datatable-column>
-            <ngx-datatable-column name="系统角色" prop="role"></ngx-datatable-column>
-            <ngx-datatable-column name="入职时间" prop="entryTime"></ngx-datatable-column>
-            <ngx-datatable-column name="身份证" prop="identity"></ngx-datatable-column>
-            <ngx-datatable-column name="家庭住址" prop="address"></ngx-datatable-column>
-            <ngx-datatable-column name="联系电话" prop="mobilePhone"></ngx-datatable-column>
-            <ngx-datatable-column name="紧急联系人" prop="emergencyContact"></ngx-datatable-column>
-            <ngx-datatable-column name="紧急联系人电话" prop="emergencyContactPhone"></ngx-datatable-column>
-            <ngx-datatable-column name="邮箱" prop="email"></ngx-datatable-column>
-        </ngx-datatable>
+        <nz-spin [nzSize]="'large'" [nzSpinning]="isSpinning">
+            <ngx-datatable #dataTable class="material striped"
+                           [messages]="list_options.localizationMessage"
+                           [rows]="list_options.rows"
+                           [columnMode]="'force'"
+                           [headerHeight]="40"
+                           [rowHeight]="40"
+                           [footerHeight]="40"
+                           [scrollbarH]="true"
+                           [selected]="list_options.selectedRows"
+                           [selectionType]="'multi'"
+                           [limit]="12"
+                           [sorts]="[{prop: 'entryTime', dir: 'desc'}]"
+                           (select)="onSelect($event)"
+                           (page)="onPage($event)"
+                           (sort)="onSort($event)"
+            >
+                <ngx-datatable-column name="姓名" prop="name"></ngx-datatable-column>
+                <ngx-datatable-column name="工号" prop="username"></ngx-datatable-column>
+                <ngx-datatable-column name="性别" prop="sex"></ngx-datatable-column>
+                <ngx-datatable-column name="岗位" prop="position"></ngx-datatable-column>
+                <ngx-datatable-column name="系统角色" prop="roles"></ngx-datatable-column>
+                <ngx-datatable-column name="入职时间" prop="entryTime"></ngx-datatable-column>
+                <ngx-datatable-column name="身份证" prop="identity"></ngx-datatable-column>
+                <ngx-datatable-column name="家庭住址" prop="address"></ngx-datatable-column>
+                <ngx-datatable-column name="联系电话" prop="mobilePhone"></ngx-datatable-column>
+                <ngx-datatable-column name="紧急联系人" prop="emergencyContact"></ngx-datatable-column>
+                <ngx-datatable-column name="紧急联系人电话" prop="emergencyContactPhone"></ngx-datatable-column>
+                <ngx-datatable-column name="邮箱" prop="email"></ngx-datatable-column>
+            </ngx-datatable>
+        </nz-spin>
     </div>
 </div>

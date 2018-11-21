@@ -18,7 +18,7 @@ export class ModelConverter {
             plan             : v.businessLine.plan,
             available        : v.state == 'Available' ? true : false,
             plateNumber      : v.plateNumber,
-            district         : v.areaName,
+            district         : v.area,
             driver           : v.driver,
             planDepartureTime: DateUtil
                 .dateFormat(new Date(this.convertSecondToDate(v.businessLine.planDepartureTime)), 'hh:mm'),

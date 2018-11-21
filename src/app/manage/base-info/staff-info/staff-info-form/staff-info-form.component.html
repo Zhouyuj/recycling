@@ -1,6 +1,222 @@
 <div id="form">
+    <!-- 模板驱动表单 -->
+    <form nz-form
+          (ngSubmit)="onSubmitForm()"
+          #myForm="ngForm">
+        <nz-divider [nzText]="basicTemplate">
+            <ng-template #basicTemplate>
+                <span style="color: #83bf46;">基本信息</span>
+            </ng-template>
+        </nz-divider>
+        <nz-form-item>
+            <nz-form-label [nzSm]="3" [nzXs]="24" nzRequired nzFor="name">姓名</nz-form-label>
+            <nz-form-control [nzSm]="7" [nzXs]="24" nzHasFeedback>
+                <input nz-input
+                       required
+                       name="name"
+                       placeHolder="请输入您的姓名"
+                       [(ngModel)]="formData.name"
+                       #name="ngModel">
+                <nz-form-explain [hidden]="name.valid || name.pristine">请输入正确的用户名</nz-form-explain>
+            </nz-form-control>
+            <nz-form-label [nzSm]="3" [nzXs]="24" nzOffset="2" nzRequired nzFor="sex">性别</nz-form-label>
+            <nz-form-control [nzSm]="7" [nzXs]="24">
+                <nz-radio-group
+                        [nzButtonStyle]="'solid'"
+                        required
+                        [(ngModel)]="formData.sex"
+                        name="sex"
+                        id="sex"
+                        #sex="ngModel">
+                    <label nz-radio-button nzValue="Female">女</label>
+                    <label nz-radio-button nzValue="Male">男</label>
+                </nz-radio-group>
+                <nz-form-explain [hidden]="sex.valid || sex.pristine">请选择您的性别</nz-form-explain>
+            </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+            <nz-form-label [nzSm]="3" [nzXs]="24" nzRequired nzFor="username">工号</nz-form-label>
+            <nz-form-control [nzSm]="7" [nzXs]="24" nzHasFeedback>
+                <input nz-input
+                       required
+                       [(ngModel)]="formData.username"
+                       name="username"
+                       placeHolder="请输入您的工号"
+                       #username="ngModel">
+                <nz-form-explain [hidden]="username.valid || username.pristine">请输入正确的工号</nz-form-explain>
+            </nz-form-control>
+            <nz-form-label [nzSm]="3" [nzXs]="24" nzOffset="2" nzFor="password" nzRequired>密码</nz-form-label>
+            <nz-form-control [nzSm]="6" [nzXs]="24" nzHasFeedback>
+                <input nz-input
+                       [(ngModel)]="formData.password"
+                       required
+                       type="password"
+                       id="password"
+                       name="password"
+                       placeHolder="请输入您的密码"
+                       #password="ngModel">
+                <nz-form-explain [hidden]="password.valid || password.pristine">请输入您的密码</nz-form-explain>
+            </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+            <nz-form-label [nzSm]="3" [nzXs]="24" nzRequired nzFor="position">岗位</nz-form-label>
+            <nz-form-control [nzSm]="7" [nzXs]="24" nzHasFeedback>
+                <nz-select name="position"
+                           [(ngModel)]="formData.position"
+                           required
+                           nzShowSearch
+                           nzAllowClear
+                           nzPlaceHolder="请选择岗位"
+                           #position="ngModel">
+                    <nz-option nzLabel="司机" nzValue="1"></nz-option>
+                    <nz-option nzLabel="收运专员" nzValue="2"></nz-option>
+                    <nz-option nzLabel="操作工" nzValue="3"></nz-option>
+                    <nz-option nzLabel="车队长" nzValue="4"></nz-option>
+                    <nz-option nzLabel="收运主管" nzValue="5"></nz-option>
+                    <nz-option nzLabel="项目公司总经理" nzValue="6"></nz-option>
+                    <nz-option nzLabel="中控人员" nzValue="7"></nz-option>
+                </nz-select>
+                <nz-form-explain [hidden]="position.valid || position.pristine">请选择对应岗位</nz-form-explain>
+            </nz-form-control>
+
+            <nz-form-label [nzSm]="3" [nzXs]="24" nzOffset="2" nzRequired nzFor="entryTime">入职时间</nz-form-label>
+            <nz-form-control [nzSm]="9" [nzXs]="24" nzHasFeedback>
+                <nz-date-picker name="entryTime"
+                                [(ngModel)]="formData.entryTime"
+                                [nzFormat]="'yyyy-MM-dd'"
+                                required
+                                #entryTime="ngModel">
+                </nz-date-picker>
+                <nz-form-explain [hidden]="entryTime.valid || entryTime.pristine">请选择时间</nz-form-explain>
+            </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+            <nz-form-label [nzSm]="4" [nzXs]="24" nzRequired nzFor="roles">系统角色</nz-form-label>
+            <nz-form-control [nzSm]="17" [nzXs]="24" nzHasFeedback>
+                <nz-select name="roles"
+                           [(ngModel)]="formData.roles"
+                           [nzSize]="'size'"
+                           nzMode="multiple"
+                           nzPlaceHolder="请选择角色"
+                           required
+                           #roles="ngModel">
+                    <nz-option nzLabel="系统管理员" nzValue="1"></nz-option>
+                    <nz-option nzLabel="中控人员" nzValue="2"></nz-option>
+                    <nz-option nzLabel="司机" nzValue="3"></nz-option>
+                    <nz-option nzLabel="收运专员" nzValue="4"></nz-option>
+                </nz-select>
+                <nz-form-explain [hidden]="roles.valid || roles.pristine">请选择对应岗位</nz-form-explain>
+            </nz-form-control>
+        </nz-form-item>
+
+        <nz-divider [nzText]="contactTemplate">
+            <ng-template #contactTemplate>
+                <span style="color: #83bf46;">联系信息</span>
+            </ng-template>
+        </nz-divider>
+
+        <nz-form-item>
+            <nz-form-label [nzSm]="3" [nzXs]="24" nzFor="identity">身份证</nz-form-label>
+            <nz-form-control [nzSm]="7" [nzXs]="24">
+                <input nz-input
+                       [(ngModel)]="formData.identity"
+                       name="identity"
+                       id="identity"
+                       placeHolder="请输入您的身份证号">
+            </nz-form-control>
+            <nz-form-label [nzSm]="3" [nzXs]="24" nzOffset="2" nzFor="email">邮箱</nz-form-label>
+            <nz-form-control [nzSm]="7" [nzXs]="24">
+                <input nz-input
+                       [(ngModel)]="formData.email"
+                       name="email"
+                       id="email"
+                       placeHolder="请输入您的邮箱地址">
+            </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item style="margin-bottom: 24px;">
+            <nz-form-label [nzSm]="3" [nzXs]="24" nzFor="landlinePhone">固话</nz-form-label>
+            <nz-form-control [nzSm]="7" [nzXs]="24">
+                <input nz-input
+                       [(ngModel)]="formData.landlinePhone"
+                       name="landlinePhone"
+                       id="'landlinePhone'"
+                       placeHolder="请输入固话(例0596-8888888)">
+            </nz-form-control>
+            <nz-form-label [nzSm]="3" [nzXs]="24" nzOffset="2" nzRequired nzFor="mobilePhone">移动电话</nz-form-label>
+            <nz-form-control [nzSm]="7" [nzXs]="24" nzHasFeedback>
+                <input nz-input
+                       [(ngModel)]="formData.mobilePhone"
+                       name="mobilePhone"
+                       id="'mobilePhone'"
+                       placeHolder="请输入您的11位手机号码"
+                       required
+                       #mobilePhone="ngModel">
+                <nz-form-explain [hidden]="mobilePhone.valid || mobilePhone.pristine">请输入正确的移动电话号码</nz-form-explain>
+            </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+            <nz-form-label [nzSm]="3" [nzXs]="24" nzFor="emergencyContact">紧急联系人</nz-form-label>
+            <nz-form-control [nzSm]="7" [nzXs]="24">
+                <input nz-input
+                       [(ngModel)]="formData.emergencyContact"
+                       name="emergencyContact"
+                       id="emergencyContact"
+                       placeHolder="请输入您的紧急联系人姓名">
+            </nz-form-control>
+            <nz-form-label [nzSm]="3" [nzXs]="24" nzOffset="2" nzFor="emergencyContactPhone">联系人电话</nz-form-label>
+            <nz-form-control [nzSm]="7" [nzXs]="24">
+                <input nz-input
+                       [(ngModel)]="formData.emergencyContactPhone"
+                       name="emergencyContactPhone"
+                       id="emergencyContactPhone"
+                       placeHolder="请输入紧急联系人电话">
+            </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+            <nz-form-label [nzSm]="3" [nzXs]="24" nzFor="address">家庭地址</nz-form-label>
+            <nz-form-control [nzSm]="7" [nzXs]="24">
+                <app-cascader name="address"
+                              [(values)]="formData.address">
+                </app-cascader>
+            </nz-form-control>
+            <nz-form-label [nzSm]="3" [nzXs]="24" nzOffset="2" nzFor="detailAddress">详细地址</nz-form-label>
+            <nz-form-control [nzSm]="7" [nzXs]="24">
+                <textarea nz-input
+                          [(ngModel)]="formData.detailAddress"
+                          name="detailAddress"
+                          id="'detailAddress'"
+                          placeholder="请输入您的详细地址"
+                          [nzAutosize]="{ minRows: 1, maxRows: 6 }">
+                </textarea>
+            </nz-form-control>
+        </nz-form-item>
+
+        <nz-divider></nz-divider>
+        <nz-form-item nz-row>
+            <nz-form-control [nzSpan]="3" nzOffset="17">
+                <button nz-button
+                        nzType="primary"
+                        style="width: 100%;"
+                        [disabled]="!myForm.valid"
+                        (click)="onSubmitForm()">确认</button>
+            </nz-form-control>
+            <nz-form-control [nzSpan]="3" nzOffset="1">
+                <button nz-button
+                        nzType="default"
+                        style="width: 100%;"
+                        (click)="onClose()">取消</button>
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+
     <!-- 响应式表单 -->
-    <form nz-form [formGroup]="validateForm">
+    <!--<form nz-form [formGroup]="validateForm">
         <nz-divider [nzText]="basicTemplate">
             <ng-template #basicTemplate>
                 <span style="color: #83bf46;">基本信息</span>
@@ -31,7 +247,7 @@
             </nz-form-control>
             <nz-form-label [nzSm]="3" [nzXs]="24" nzOffset="2" nzFor="password" nzRequired>密码</nz-form-label>
             <nz-form-control [nzSm]="7" [nzXs]="24">
-                <input nz-input type="password" id="password" formControlName="password" (ngModelChange)="updateConfirmValidator()"  placeHolder="请输入您的密码">
+                <input nz-input type="password" id="password" formControlName="password" placeHolder="请输入您的密码">
                 <nz-form-explain *ngIf="validateForm.get('password').dirty && validateForm.get('password').errors">请输入您的密码</nz-form-explain>
             </nz-form-control>
         </nz-form-item>
@@ -142,5 +358,5 @@
             </nz-form-control>
         </nz-form-item>
     </form>
-
+-->
 </div><!-- div.form end -->

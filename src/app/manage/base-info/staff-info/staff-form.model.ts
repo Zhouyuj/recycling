@@ -3,6 +3,7 @@
  */
 
 export class StaffFormModel {
+    id: number = null;
     name: string = null;
     sex: string = null;
     username: string= null;

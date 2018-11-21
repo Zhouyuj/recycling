@@ -7,8 +7,7 @@ import { GET, Path, POST, PUT, DELETE, Body, Query, RebirthHttp } from 'rebirth-
 import { Result } from '../../../shared/models/response/result.model';
 import { CustomerReq } from './customer-req.model';
 import { CustomerRes } from './customer-res.model';
-import { Duration } from './customers-info-form/form.model';
-import { FormModel } from './customers-info-form/form.model';
+import { Duration, FormModel } from './form.model';
 import { PageReq } from '../../../shared/models/page/page-req.model';
 import { PageRes } from '../../../shared/models/page/page-res.model';
 import {VehicleRes} from '../vehicle-info/vehicle-res.model';

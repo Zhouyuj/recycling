@@ -1,12 +1,14 @@
-import { Component, EventEmitter, OnInit } from '@angular/core';
-import {
-    FormBuilder,
-    FormControl,
-    FormGroup,
-    Validators
-} from '@angular/forms';
+import { Component, EventEmitter, OnInit, Input } from '@angular/core';
+
+import { DistrictsService } from '../../../../shared/services/districts/districts.service';
+import { NotificationService } from '../../../../shared/services/notification/notification.service';
+import { StaffInfoService } from '../staff-info.service';
 
 import { NzDrawerRef } from 'ng-zorro-antd';
+import { ObjectUtils } from '../../../../shared/utils/object-utils';
+import { StaffFormModel } from '../staff-form.model';
+import { StaffReq } from '../staff-req.model';
+import { ModelConverter } from '../model-converter';
 
 @Component({
     selector   : 'app-staff-info-form',
@@ -15,79 +17,62 @@ import { NzDrawerRef } from 'ng-zorro-antd';
 })
 export class StaffInfoFormComponent implements OnInit {
 
-    validateForm: FormGroup;
+    @Input() type: string;
+    @Input() success: boolean;
+    @Input() cache: StaffFormModel;
+    public formData: StaffFormModel;
+    public staffReq: StaffReq;
 
-    constructor(private fb: FormBuilder,
-                private drawerRef: NzDrawerRef<any>) {
+    constructor(private drawerRef: NzDrawerRef<any>,
+                private districtsService: DistrictsService,
+                private notificationService: NotificationService,
+                private StaffInfoService: StaffInfoService
+    ) {
     }
 
     ngOnInit(): void {
-        this.initForm();
-    }
-
-    initForm() {
-        /** form config **/
-        this.validateForm = this.fb.group({
-            name                 : [ null, [ Validators.required ] ],
-            sex                  : [ null, [ Validators.required ] ],
-            username             : [ null, [ Validators.required ] ],
-            password             : [ null, [ Validators.required ] ],
-            position             : [ null, [ Validators.required ] ],
-            role                 : [ null, [ Validators.required ] ],
-            entryTime            : [ null, [ Validators.required ] ],
-            identity             : [ null, [ Validators.pattern(/([A-z]|[0-9]){18}/) || null ] ],
-            landlinePhone        : [ null ],
-            mobilePhone          : [ null, [ Validators.required ] ],
-            address              : this.fb.group({
-                province: [ null ],
-                city    : [ null ],
-                region  : [ null ],
-            }),
-            detailAddress        : [ null ],
-            emergencyContact     : [ null ],
-            emergencyContactPhone: [ null ],
-            email                : [ null, [ Validators.email ] ],
-        });
+        if (this.cache) {
+            this.formData = ObjectUtils.extend(this.cache);
+        } else {
+            this.formData = new StaffFormModel();
+            this.formData.address = [ '350000', '350600', '350603' ];
+        }
     }
 
     onSubmitForm(): void {
-        for (const i in this.validateForm.controls) {
-            this.validateForm.controls[ i ].markAsDirty();
-            this.validateForm.controls[ i ].updateValueAndValidity();
+        this.transformFormModelToRequest();
+        console.log(this.staffReq);
+        switch (this.type) {
+            case 'add':
+                this.StaffInfoService.addStaff(this.staffReq).subscribe(res => {
+                    this.notificationService.create({
+                        type: 'success',
+                        title: '恭喜,添加成功',
+                        content: '该提醒将自动消失',
+                    });
+                    this.success = true;
+                    this.drawerRef.close(this.success);
+                });
+                break;
+            case 'edit':
+                this.StaffInfoService.updateStaff(this.cache.id, this.staffReq).subscribe(res => {
+                    this.notificationService.create({
+                        type: 'success',
+                        title: '恭喜,更新成功',
+                        content: '该提醒将自动消失',
+                    });
+                    this.success = true;
+                    this.drawerRef.close(this.success);
+                });
+                break;
         }
-        console.log(this.validateForm.value);
-    }
-
-    updateConfirmValidator(): void {
-        /** wait for refresh value */
-        //Promise.resolve().then(() => this.validateForm.controls.checkPassword.updateValueAndValidity());
-    }
-
-    /**
-     * 日期选择器 change 事件
-     * @param result
-     */
-    onHireDateChange(result: Date): void {
-        console.log(result);
-    }
-
-    /**
-     * 级联组件
-     * @param $e
-     */
-    onAddressChange($e: any): void {
-        console.log($e);
-        this.validateForm.patchValue({
-            address: {
-                province: $e[ 0 ] || '',    // 省
-                city    : $e[ 1 ] || '',    // 市
-                region  : $e[ 2 ] || '',    // 区
-            }
-        });
     }
 
     onClose(): void {
-        this.drawerRef.close();
-        console.log(this.validateForm);
+        this.drawerRef.close(false);
+    }
+
+    transformFormModelToRequest() {
+        this.staffReq = ModelConverter.formModelToStaffReq(this.formData);
     }
 }

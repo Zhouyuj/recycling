@@ -1,9 +1,7 @@
 /**
  * Created by wujiahui on 2018/11/6.
  */
-import { FormModel } from './customers-info-form/form.model';
-import { DurationDetail } from './customers-info-form/form.model';
-import { ChildCollections } from './customers-info-form/form.model';
+import { FormModel, DurationDetail, ChildCollections } from './form.model';
 
 export class CustomerReq {
     public name: string;

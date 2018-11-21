@@ -2,11 +2,11 @@
     <!-- -------- 表格操作 -------- -->
     <div class="table-operations">
         <div nz-row nzGutter="16">
-            <div nz-col class="gutter-row" nzSpan="8">
+            <div nz-col class="gutter-row" nzSpan="10">
                 <!-- 面包屑导航 -->
                 <app-breadcrumbs [options]="breadcrumbs"></app-breadcrumbs>
             </div>
-            <div nz-col class="gutter-row" nzSpan="10" nzOffset="2">
+            <div nz-col class="gutter-row" nzSpan="8" nzOffset="2">
                 <div class="table-search">
                     <nz-input-group nzSearch
                                     nzCompact
@@ -24,7 +24,7 @@
                             <nz-option nzValue="mobilePhone" nzLabel="联系电话"></nz-option>
                         </nz-select>
                         <input type="text" nz-input placeholder="键入关键字, 按ENTER搜索" [(ngModel)]="keyword"
-                        style="width: 70%;" (keyup)="$event.which == 13 && onKeywordSearch($event, keywordType)">
+                               style="width: 60%;" (keyup)="$event.which == 13 && onKeywordSearch($event, keywordType)">
                     </nz-input-group>
                 </div>
             </div>
@@ -80,34 +80,40 @@
     </div>
     <!-- -------- 表格内容 -------- -->
     <div class="table-content">
-        <ngx-datatable #dataTable class="material striped extra-css"
-                       [messages]="list_options.localizationMessage"
-                       [rows]="list_options.rows"
-                       [columnMode]="'force'"
-                       [headerHeight]="40"
-                       [rowHeight]="40"
-                       [footerHeight]="40"
-                       [scrollbarH]="true"
-                       [selected]="list_options.selectedRows"
-                       [selectionType]="'multi'"
-                       [limit]="3"
-                       (select)="onSelect($event)"
-                       (page)="onPage($event)"
-                       (sort)="onSort($event)"
-        >
-            <!--TODO-->
-            <ngx-datatable-column name="定位" prop="lngLat"></ngx-datatable-column>
-            <!--TODO-->
-            <ngx-datatable-column name="图片" prop="images"></ngx-datatable-column>
-            <ngx-datatable-column name="名称" prop="name"></ngx-datatable-column>
-            <ngx-datatable-column name="所属区域" prop="countyCode"></ngx-datatable-column>
-            <ngx-datatable-column name="收运时间段" prop="duration"></ngx-datatable-column>
-            <ngx-datatable-column name="地址" prop="detailAddress"></ngx-datatable-column>
-            <ngx-datatable-column name="账号" prop="username"></ngx-datatable-column>
-            <ngx-datatable-column name="派桶数" prop="totalDustbins"></ngx-datatable-column>
-            <ngx-datatable-column name="登记时间" prop="createTime"></ngx-datatable-column>
-            <ngx-datatable-column name="联系人" prop="contactName"></ngx-datatable-column>
-            <ngx-datatable-column name="联系电话" prop="mobilePhone"></ngx-datatable-column>
-        </ngx-datatable>
+        <nz-spin [nzSize]="'large'" [nzSpinning]="isSpinning">
+            <ngx-datatable #dataTable class="material striped extra-css"
+                           [messages]="list_options.localizationMessage"
+                           [rows]="list_options.rows"
+                           [columnMode]="'force'"
+                           [headerHeight]="40"
+                           [rowHeight]="40"
+                           [footerHeight]="40"
+                           [scrollbarH]="true"
+                           [selected]="list_options.selectedRows"
+                           [selectionType]="'multi'"
+                           [sorts]="[{prop: 'createTime', dir: 'desc'}]"
+                           [limit]="2"
+                           [externalPaging]="true"
+                           [count]="pageRes.total"
+                           [offset]="pageRes.page"
+                           (select)="onSelect($event)"
+                           (page)="onPage($event)"
+                           (sort)="onSort($event)"
+            >
+                <!--TODO-->
+                <ngx-datatable-column name="定位" prop="lngLat"></ngx-datatable-column>
+                <!--TODO-->
+                <ngx-datatable-column name="图片" prop="images"></ngx-datatable-column>
+                <ngx-datatable-column name="名称" prop="name"></ngx-datatable-column>
+                <ngx-datatable-column name="所属区域" prop="countyCode"></ngx-datatable-column>
+                <ngx-datatable-column name="收运时间段" prop="duration"></ngx-datatable-column>
+                <ngx-datatable-column name="地址" prop="detailAddress"></ngx-datatable-column>
+                <ngx-datatable-column name="账号" prop="username"></ngx-datatable-column>
+                <ngx-datatable-column name="派桶数" prop="totalDustbins"></ngx-datatable-column>
+                <ngx-datatable-column name="登记时间" prop="createTime"></ngx-datatable-column>
+                <ngx-datatable-column name="联系人" prop="contactName"></ngx-datatable-column>
+                <ngx-datatable-column name="联系电话" prop="mobilePhone"></ngx-datatable-column>
+            </ngx-datatable>
+        </nz-spin>
     </div>
 </div>

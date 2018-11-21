@@ -9,6 +9,7 @@ import { NotificationService } from '../../../shared/services/notification/notif
 import { NzDrawerService } from 'ng-zorro-antd';
 
 import { ModelConverter } from './model-converter';
+import { ObjectUtils } from '../../../shared/utils/object-utils';
 import { PageReq } from '../../../shared/models/page/page-req.model';
 import { PageRes } from '../../../shared/models/page/page-res.model';
 import { Result } from '../../../shared/models/response/result.model';
@@ -47,11 +48,13 @@ export class VehicleInfoComponent implements OnInit {
             selectedMessage: '已选中',
         },
     };
+    public isSpinning = false;
 
     public pageReq = new PageReq();
+    public pageRes = new PageRes();
     public params: any = {};// 分页查询参数
-    public keywordType = 'plateNumber';
-    public keyword: string;
+    public keywordType: string;
+    public keyword = '';
 
     public listCache: VehicleRes[];
     public itemCache: VehicleRes;
@@ -65,7 +68,7 @@ export class VehicleInfoComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.getListByPage(this.pageReq, this.params);
+        this.getListByPage();
     }
 
     onAdd() {
@@ -83,6 +86,7 @@ export class VehicleInfoComponent implements OnInit {
                 title  : '恭喜,删除成功',
                 content: '该提醒将自动消失',
             });
+            this.getListByPage();
         });
     }
 
@@ -92,81 +96,39 @@ export class VehicleInfoComponent implements OnInit {
     onSelect(e: VehicleListModel) {
         this.itemCache = this.listCache.filter(item => item.id == this.list_options.selectedRows[ 0 ].id)[ 0 ];
         this.formCache = ModelConverter.vehicleResToFormModel(this.itemCache);
-        console.log('选中的res-model', this.itemCache);
-        console.log('转化的form-model', this.formCache);
-    }
-
-    onSelectFilter($e) {
-        console.log($e);
-    }
-
-    onSelectEmitter($e) {
-        let requestParams = ''; // 拼接过滤的条件
-        switch ($e.type) {
-            case '岗位':
-                console.log($e.id);
-                break;
-            case '系统角色':
-                break;
-            default:
-                break;
-        }
     }
 
     onKeywordSearch($e, type?: string) {
         let key = this.keywordType;
-        if (key && type.trim() && this.keyword) {
-            this.params[ key ] = this.keyword.replace(/\s/g, '');
-            this.getListByPage(this.pageReq, this.params);
-        } else if (!key || !this.keyword) {
+        if (key) {
+            let o = {};
+            o[ key ] = this.keyword.replace(/\s/g, '');
+            this.params = ObjectUtils.extend(o);
+            this.getListByPage();
+        } else if (!key) {
             this.messageService.create({
                 type   : 'warning',
-                content: '请先选择搜索类别,或关键字不能为空',
+                content: '请先选择搜索类别',
             });
         }
     }
 
     onPage(e) {
         this.updatePage(e);
-        //this.getListByPage(this.pageReq, this.params);
-        console.log(this.pageReq);
+        this.getListByPage();
     }
 
     /**
-     * e.sorts[0] = { dir: 'asc'|'desc', prop: '列名' }
+     * e.sorts = [{ dir: 'asc'|'desc', prop: '列名' }]
      * @param e
      */
     onSort(e) {
-        let columnName = e.sorts[ 0 ].prop,
-            columnSort = e.sorts[ 0 ].dir,
-            sort = `${columnName}.${columnSort},`;
-        this.pageReq.sort = sort;
-        //this.getListByPage(this.pageReq);
-        console.log(this.pageReq);
-    }
-
-    checkColumn(c) {
-        console.log(c);
-    }
-
-    updatePage(pageInfo: { count: number, pageSize: number, limit: number, offset: number }): void {
-        this.pageReq.page = pageInfo.offset + 1;
-        this.pageReq.size = pageInfo.pageSize;
-    }
-
-    getListByPage(page, params?) {
-        // 分页接口
-        this.vehicleInfoService.getVehicleList(this.pageReq, this.params).subscribe((res: Result<PageRes<VehicleRes[]>>) => {
-            if (res.data.content.length > 0) {
-                this.listCache = res.data.content;
-                let list = this.dataToTableRows(res.data.content);
-                this.list_options.rows = list;
-            }
-        }, err => console.log(`分页查询失败!!!${err}`));
-    }
-
-    dataToTableRows(data: VehicleRes[]): VehicleListModel[] {
-        return data.map((o: VehicleRes) => ModelConverter.vehicleResToListModel(o));
+        let sorts = e.sorts
+            .map(sort => `${sort.prop}.${sort.dir},`)
+            .join('');
+        this.pageReq.sort = sorts;
+        this.pageReq.page = 1;
+        this.getListByPage();
     }
 
     /**
@@ -193,8 +155,45 @@ export class VehicleInfoComponent implements OnInit {
             console.log('Drawer(Component) close');
             if (res) {
                 // 重新调分页接口
-                this.getListByPage(this.pageReq, this.params);
+                this.getListByPage();
             }
         });
     }
+
+    getListByPage() {
+        this.isSpinning = true;
+        // 分页接口
+        this.vehicleInfoService
+            .getVehicleList(this.pageReq, this.params)
+            .subscribe(
+                (res: Result<PageRes<VehicleRes[]>>) => {
+                    if (res.data.content.length > 0) {
+                        /* 缓存（返回值类型的）列表 */
+                        this.listCache = res.data.content;
+                        /* 组装（列表类型的）列表数据 */
+                        this.list_options.rows = this.dataToTableRows(res.data.content);
+                        /* 更新列表的信息（分页/排序） */
+                        this.updatePageRes(res.data);
+                    }
+                    this.isSpinning = false;
+                },
+                err => console.warn(`分页查询失败!!!${err}`),
+                () => this.isSpinning = false
+            );
+    }
+
+    dataToTableRows(data: VehicleRes[]): VehicleListModel[] {
+        return data.map((o: VehicleRes) => ModelConverter.vehicleResToListModel(o));
+    }
+
+    updatePage(pageInfo: { count: number, pageSize: number, limit: number, offset: number }): void {
+        this.pageReq.page = pageInfo.offset + 1;
+        this.pageReq.size = pageInfo.pageSize;
+    }
+
+    // 只存储分页信息,不包括数据
+    updatePageRes(data: PageRes<VehicleRes[]>): void {
+        this.pageRes = new PageRes(data.page - 1, data.size, data.pages, data.total, data.last);
+    }
+
 }
