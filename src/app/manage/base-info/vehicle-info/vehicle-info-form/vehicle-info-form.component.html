@@ -1,167 +1,171 @@
 <div id="form">
-    <!-- 模板驱动表单 -->
-    <form nz-form
-          (ngSubmit)="onSubmitForm()"
-          #myForm="ngForm">
-        <nz-divider [nzText]="basicTemplate">
-            <ng-template #basicTemplate>
-                <span style="color: #83bf46;">基本信息</span>
-            </ng-template>
-        </nz-divider>
-        <nz-form-item>
-            <nz-form-label [nzSm]="3" [nzXs]="24" nzRequired nzFor="plateNumber">车牌号</nz-form-label>
-            <nz-form-control [nzSm]="7" nzHasFeedback>
-                <input nz-input
-                       required
-                       name="plateNumber"
-                       placeHolder="请输入您的车牌号"
-                       [(ngModel)]="formData.plateNumber"
-                       #plateNumber="ngModel">
-                <nz-form-explain [hidden]="plateNumber.valid || plateNumber.pristine">车牌号不能为空</nz-form-explain>
-            </nz-form-control>
+    <nz-spin [nzSize]="'large'" [nzSpinning]="isSpinning">
+        <!-- 模板驱动表单 -->
+        <form nz-form
+              (ngSubmit)="onSubmitForm()"
+              #myForm="ngForm">
+            <nz-divider [nzText]="basicTemplate">
+                <ng-template #basicTemplate>
+                    <span style="color: #83bf46;">基本信息</span>
+                </ng-template>
+            </nz-divider>
+            <nz-form-item>
+                <nz-form-label [nzSm]="3" [nzXs]="24" nzRequired nzFor="plateNumber">车牌号</nz-form-label>
+                <nz-form-control [nzSm]="7" nzHasFeedback>
+                    <input nz-input
+                           required
+                           name="plateNumber"
+                           placeHolder="请输入您的车牌号"
+                           [(ngModel)]="formData.plateNumber"
+                           #plateNumber="ngModel">
+                    <nz-form-explain [hidden]="plateNumber.valid || plateNumber.pristine">车牌号不能为空</nz-form-explain>
+                </nz-form-control>
 
-            <nz-form-label [nzSm]="3" [nzXs]="24" nzOffset="2" nzFor="idNumber">车架号</nz-form-label>
-            <nz-form-control [nzSm]="7">
-                <input nz-input
-                       name="idNumber"
-                       placeHolder="请输入您的车架号"
-                       [(ngModel)]="formData.idNumber">
-            </nz-form-control>
-        </nz-form-item>
+                <nz-form-label [nzSm]="3" [nzXs]="24" nzOffset="2" nzFor="idNumber">车架号</nz-form-label>
+                <nz-form-control [nzSm]="7">
+                    <input nz-input
+                           name="idNumber"
+                           placeHolder="请输入您的车架号"
+                           [(ngModel)]="formData.idNumber">
+                </nz-form-control>
+            </nz-form-item>
 
-        <nz-form-item>
-            <nz-form-label [nzSm]="3" [nzXs]="24" nzRequired nzFor="engineModel">发动机号</nz-form-label>
-            <nz-form-control [nzSm]="7">
-                <input nz-input
-                       name="engineModel"
-                       placeHolder="请输入您的发动机号"
-                       [(ngModel)]="formData.engineModel">
-            </nz-form-control>
+            <nz-form-item>
+                <nz-form-label [nzSm]="3" [nzXs]="24" nzRequired nzFor="engineModel">发动机号</nz-form-label>
+                <nz-form-control [nzSm]="7">
+                    <input nz-input
+                           name="engineModel"
+                           placeHolder="请输入您的发动机号"
+                           [(ngModel)]="formData.engineModel">
+                </nz-form-control>
 
-            <nz-form-label [nzSm]="3" [nzXs]="24" nzOffset="2" nzFor="boxId">车载盒子ID</nz-form-label>
-            <nz-form-control [nzSm]="7">
-                <input nz-input
-                       name="boxId"
-                       placeHolder="请输入您的盒子ID"
-                       [(ngModel)]="formData.boxId">
-            </nz-form-control>
-        </nz-form-item>
+                <nz-form-label [nzSm]="3" [nzXs]="24" nzOffset="2" nzFor="boxId">车载盒子ID</nz-form-label>
+                <nz-form-control [nzSm]="7">
+                    <input nz-input
+                           name="boxId"
+                           placeHolder="请输入您的盒子ID"
+                           [(ngModel)]="formData.boxId">
+                </nz-form-control>
+            </nz-form-item>
 
-        <nz-form-item>
-            <nz-form-label [nzSm]="3" [nzXs]="24" nzRequired nzFor="buyDate">购买时间</nz-form-label>
-            <nz-form-control [nzSm]="7" [nzXs]="24">
-                <nz-date-picker
-                        name="buyDate"
-                        required
-                        [(ngModel)]="formData.buyDate"
-                        [nzFormat]="'yyyy-MM-dd'"
-                        #buyDate="ngModel">
-                </nz-date-picker>
-                <nz-form-explain [hidden]="buyDate.valid || buyDate.pristine">请选择购买时间</nz-form-explain>
-            </nz-form-control>
-        </nz-form-item>
+            <nz-form-item>
+                <nz-form-label [nzSm]="3" [nzXs]="24" nzRequired nzFor="buyDate">购买时间</nz-form-label>
+                <nz-form-control [nzSm]="7" [nzXs]="24">
+                    <nz-date-picker
+                            name="buyDate"
+                            required
+                            [(ngModel)]="formData.buyDate"
+                            [nzFormat]="'yyyy-MM-dd'"
+                            #buyDate="ngModel">
+                    </nz-date-picker>
+                    <nz-form-explain [hidden]="buyDate.valid || buyDate.pristine">请选择购买时间</nz-form-explain>
+                </nz-form-control>
+            </nz-form-item>
 
-        <nz-divider [nzText]="planTemplate">
-            <ng-template #planTemplate>
-                <span style="color: #83bf46;">规划及统计信息</span>
-            </ng-template>
-        </nz-divider>
+            <nz-divider [nzText]="planTemplate">
+                <ng-template #planTemplate>
+                    <span style="color: #83bf46;">规划及统计信息</span>
+                </ng-template>
+            </nz-divider>
 
-        <nz-form-item>
-            <nz-form-label [nzSm]="4" [nzXs]="24" nzRequired nzFor="planDepartureTime">计划出车时间</nz-form-label>
-            <nz-form-control [nzSm]="7" [nzXs]="24">
-                <nz-time-picker
-                        name="planDepartureTime"
-                        required
-                        [(ngModel)]="formData.planDepartureTime"
-                        nzFormat="HH:mm"
-                        #planDepartureTime="ngModel">
-                </nz-time-picker>
-                <nz-form-explain [hidden]="planDepartureTime.valid || planDepartureTime.pristine">请选择出车时间</nz-form-explain>
-            </nz-form-control>
+            <nz-form-item>
+                <nz-form-label [nzSm]="4" [nzXs]="24" nzRequired nzFor="planDepartureTime">计划出车时间</nz-form-label>
+                <nz-form-control [nzSm]="7" [nzXs]="24">
+                    <nz-time-picker
+                            name="planDepartureTime"
+                            required
+                            [(ngModel)]="formData.planDepartureTime"
+                            nzFormat="HH:mm"
+                            #planDepartureTime="ngModel">
+                    </nz-time-picker>
+                    <nz-form-explain [hidden]="planDepartureTime.valid || planDepartureTime.pristine">请选择出车时间
+                    </nz-form-explain>
+                </nz-form-control>
 
-            <nz-form-label [nzSm]="4" [nzXs]="24" nzRequired nzFor="planBackTime">最晚回厂时间</nz-form-label>
-            <nz-form-control [nzSm]="7" [nzXs]="24">
-                <nz-time-picker
-                        name="planBackTime"
-                        required
-                        [(ngModel)]="formData.planBackTime"
-                        nzFormat="HH:mm"
-                        #planBackTime="ngModel">
-                </nz-time-picker>
-                <nz-form-explain [hidden]="planBackTime.valid || planBackTime.pristine">请选择回厂时间</nz-form-explain>
-            </nz-form-control>
-        </nz-form-item>
+                <nz-form-label [nzSm]="4" [nzXs]="24" nzRequired nzFor="planBackTime">最晚回厂时间</nz-form-label>
+                <nz-form-control [nzSm]="7" [nzXs]="24">
+                    <nz-time-picker
+                            name="planBackTime"
+                            required
+                            [(ngModel)]="formData.planBackTime"
+                            nzFormat="HH:mm"
+                            #planBackTime="ngModel">
+                    </nz-time-picker>
+                    <nz-form-explain [hidden]="planBackTime.valid || planBackTime.pristine">请选择回厂时间</nz-form-explain>
+                </nz-form-control>
+            </nz-form-item>
 
-        <nz-form-item>
-            <nz-form-label [nzSm]="4" [nzXs]="24" nzRequired nzFor="type">车型</nz-form-label>
-            <nz-form-control [nzSm]="7" [nzXs]="24">
-                <nz-select
-                        name="type"
-                        required
-                        nzShowSearch
-                        nzAllowClear
-                        nzPlaceHolder="请选择车型"
-                        [(ngModel)]="formData.type"
-                        #vehicleType="ngModel">
-                    <nz-option nzLabel="5吨餐厨车" nzValue="1"></nz-option>
-                    <nz-option nzLabel="8吨餐厨车" nzValue="2"></nz-option>
-                    <nz-option nzLabel="1吨油脂车" nzValue="3"></nz-option>
-                </nz-select>
-                <nz-form-explain [hidden]="vehicleType.valid || vehicleType.pristine">请选择车型</nz-form-explain>
-            </nz-form-control>
+            <nz-form-item>
+                <nz-form-label [nzSm]="4" [nzXs]="24" nzRequired nzFor="type">车型</nz-form-label>
+                <nz-form-control [nzSm]="7" [nzXs]="24">
+                    <nz-select
+                            name="type"
+                            required
+                            nzShowSearch
+                            nzAllowClear
+                            nzPlaceHolder="请选择车型"
+                            [(ngModel)]="formData.type"
+                            #vehicleType="ngModel">
+                        <nz-option nzLabel="5吨餐厨车" nzValue="1"></nz-option>
+                        <nz-option nzLabel="8吨餐厨车" nzValue="2"></nz-option>
+                        <nz-option nzLabel="1吨油脂车" nzValue="3"></nz-option>
+                    </nz-select>
+                    <nz-form-explain [hidden]="vehicleType.valid || vehicleType.pristine">请选择车型</nz-form-explain>
+                </nz-form-control>
 
-            <nz-form-label [nzSm]="4" [nzXs]="24" nzRequired nzFor="district">所属区域</nz-form-label>
-            <nz-form-control [nzSm]="7" [nzXs]="24">
-                <!--<app-cascader [(values)]="formData.district"
-                              [options]="cascaderOptions"
-                              (changesEmitter)="onAddressChange($event)"></app-cascader>-->
-                <nz-cascader
-                        name="district"
-                        [nzExpandTrigger]="'hover'"
-                        [nzOptions]="cascaderOptions"
-                        [(ngModel)]="formData.district"
-                        [nzPlaceHolder]="'请选择地区'"
-                        #district="ngModel">
-                </nz-cascader>
-                <nz-form-explain [hidden]="district.valid || district.pristine">请选择区域</nz-form-explain>
-            </nz-form-control>
-        </nz-form-item>
+                <nz-form-label [nzSm]="4" [nzXs]="24" nzRequired nzFor="district">所属区域</nz-form-label>
+                <nz-form-control [nzSm]="7" [nzXs]="24">
+                    <!--<app-cascader [(values)]="formData.district"
+                                  [options]="cascaderOptions"
+                                  (changesEmitter)="onAddressChange($event)"></app-cascader>-->
+                    <nz-cascader
+                            name="district"
+                            [nzExpandTrigger]="'hover'"
+                            [nzOptions]="cascaderOptions"
+                            [(ngModel)]="formData.district"
+                            [nzPlaceHolder]="'请选择地区'"
+                            #district="ngModel">
+                    </nz-cascader>
+                    <nz-form-explain [hidden]="district.valid || district.pristine">请选择区域</nz-form-explain>
+                </nz-form-control>
+            </nz-form-item>
 
-        <nz-form-item>
-            <nz-form-label [nzSm]="4" [nzXs]="24" nzRequired nzFor="isTestVehicle">是否测试车</nz-form-label>
-            <nz-form-control [nzSm]="7" [nzXs]="24">
-                <nz-radio-group
-                        name="isTestVehicle"
-                        id="isTestVehicle"
-                        required
-                        [nzButtonStyle]="'solid'"
-                        [(ngModel)]="formData.test"
-                        #isTestVehicle="ngModel">
-                    <label nz-radio-button nzValue="0">否</label>
-                    <label nz-radio-button nzValue="1">是</label>
-                </nz-radio-group>
-                <nz-form-explain [hidden]="isTestVehicle.valid || isTestVehicle.pristine">请选择车辆类别</nz-form-explain>
-            </nz-form-control>
-        </nz-form-item>
+            <nz-form-item>
+                <nz-form-label [nzSm]="4" [nzXs]="24" nzRequired nzFor="isTestVehicle">是否测试车</nz-form-label>
+                <nz-form-control [nzSm]="7" [nzXs]="24">
+                    <nz-radio-group
+                            name="isTestVehicle"
+                            id="isTestVehicle"
+                            required
+                            [nzButtonStyle]="'solid'"
+                            [(ngModel)]="formData.test"
+                            #isTestVehicle="ngModel">
+                        <label nz-radio-button nzValue="0">否</label>
+                        <label nz-radio-button nzValue="1">是</label>
+                    </nz-radio-group>
+                    <nz-form-explain [hidden]="isTestVehicle.valid || isTestVehicle.pristine">请选择车辆类别</nz-form-explain>
+                </nz-form-control>
+            </nz-form-item>
 
-        <nz-divider></nz-divider>
-        <nz-form-item nz-row>
-            <nz-form-control [nzSpan]="3" nzOffset="17">
-                <button nz-button
-                        nzType="primary"
-                        style="width: 100%;"
-                        type="submit">确认
-                </button>
-            </nz-form-control>
-            <nz-form-control [nzSpan]="3" nzOffset="1">
-                <button nz-button
-                        nzType="default"
-                        style="width: 100%;"
-                        type="button"
-                        (click)="onClose()">取消
-                </button>
-            </nz-form-control>
-        </nz-form-item>
-    </form>
+            <nz-divider></nz-divider>
+            <nz-form-item nz-row>
+                <nz-form-control [nzSpan]="3" nzOffset="17">
+                    <button nz-button
+                            nzType="primary"
+                            [disabled]="!myForm.valid"
+                            style="width: 100%;"
+                            type="submit">确认
+                    </button>
+                </nz-form-control>
+                <nz-form-control [nzSpan]="3" nzOffset="1">
+                    <button nz-button
+                            nzType="default"
+                            style="width: 100%;"
+                            type="button"
+                            (click)="onClose()">取消
+                    </button>
+                </nz-form-control>
+            </nz-form-item>
+        </form>
+    </nz-spin>
 </div><!-- div.form end -->

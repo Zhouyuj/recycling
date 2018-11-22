@@ -72,7 +72,7 @@ export class CustomersInfoComponent implements OnInit {
     }
 
     ngOnInit() {
-        //let mock = Mock;
+        let mock = Mock;
         this.districtsService.getDistricts('350600', 1).subscribe((res: any) => {
             this.countyNames = res.data.districts;
             this.getListByPage();

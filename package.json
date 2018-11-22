@@ -4,11 +4,13 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --host 0.0.0.0",
-    "start-mock": "ng serve --host 0.0.0.0 && node ./server/mock-server.js",
-    "build": "ng build --aot",
+    "start-test": "ng serve --host 0.0.0.0 --configuration=test",
+    "start-prod": "ng serve --host 0.0.0.0 --configuration=production",
+    "build-test": "ng build --configuration=development",
+    "build-prod": "ng build --configuration=production",
     "test": "ng lint && ng test --code-coverage",
-    "test-single-run": "ng lint && ng test --code-coverage --single-run",
-    "deploy-test": "node ./deploy/test.js",
+    "deploy-test": "npm run build-test && node ./deploy/deploy-test.js",
+    "deploy-prod": "npm run build-prod && node ./deploy/deploy-prod.js",
     "lint": "ng lint",
     "e2e": "ng e2e"
   },
@@ -52,7 +54,10 @@
     "karma-coverage-istanbul-reporter": "~2.0.0",
     "karma-jasmine": "~1.1.1",
     "karma-jasmine-html-reporter": "^0.2.2",
+    "node-ssh": "^5.1.2",
+    "node-zip-dir": "^1.0.2",
     "protractor": "~5.4.0",
+    "scp2": "^0.5.0",
     "ts-node": "~5.0.1",
     "tslint": "~5.9.1",
     "typescript": "~2.7.2"

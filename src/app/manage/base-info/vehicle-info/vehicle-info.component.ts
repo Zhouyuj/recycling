@@ -75,11 +75,11 @@ export class VehicleInfoComponent implements OnInit {
         this.onOpenForm('add');
     }
 
-    onEdit($e) {
+    onEdit() {
         this.onOpenForm('edit');
     }
 
-    onDel($e) {
+    onDel() {
         this.vehicleInfoService.delCustomer(this.itemCache.id).subscribe(res => {
             this.notificationService.create({
                 type   : 'success',

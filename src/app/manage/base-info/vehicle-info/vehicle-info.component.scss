@@ -4,6 +4,8 @@
 }
 
 .table-operations {
+    position: relative;
+    z-index: 13;
     padding-bottom: 8px;
     [nz-button] {
     }

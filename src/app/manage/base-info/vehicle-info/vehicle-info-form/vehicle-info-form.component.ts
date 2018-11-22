@@ -8,6 +8,7 @@ import { ModelConverter } from '../model-converter';
 import { ObjectUtils } from '../../../../shared/utils/object-utils';
 import { VehicleFormModel } from '../vehicle-form.model';
 import { VehicleReq } from '../vehicle-req.model';
+import {VerifyUtil} from '../../../../shared/utils/verify-utils';
 
 @Component({
     selector   : 'app-vehicle-info-form',
@@ -22,12 +23,12 @@ export class VehicleInfoFormComponent implements OnInit {
     public formData: VehicleFormModel = new VehicleFormModel();
     public vehicleReq: VehicleReq;
     public cascaderOptions: any;
+    public isSpinning = false;
 
     constructor(private drawerRef: NzDrawerRef<any>,
                 private districtsService: DistrictsService,
                 private notificationService: NotificationService,
-                private vehicleInfoService: VehicleInfoService
-    ) {
+                private vehicleInfoService: VehicleInfoService) {
     }
 
     ngOnInit(): void {
@@ -37,7 +38,7 @@ export class VehicleInfoFormComponent implements OnInit {
                 this.formData = ObjectUtils.extend(this.cache);
             } else {
                 this.formData = new VehicleFormModel();
-                this.formData.district = ['350603'];
+                this.formData.district = [ '350603' ];
             }
         });
     }
@@ -48,29 +49,48 @@ export class VehicleInfoFormComponent implements OnInit {
 
     onSubmitForm(): void {
         this.transformFormModelToRequest();
-        console.log(this.vehicleReq);
         switch (this.type) {
             case 'add':
-                this.vehicleInfoService.addVehicle(this.vehicleReq).subscribe(res => {
-                    this.notificationService.create({
-                        type: 'success',
-                        title: '恭喜,添加成功',
-                        content: '该提醒将自动消失',
-                    });
-                    this.success = true;
-                    this.drawerRef.close(this.success);
-                });
+                this.vehicleInfoService.addVehicle(this.vehicleReq).subscribe(
+                    res => {
+                        this.notificationService.create({
+                            type   : 'success',
+                            title  : '恭喜,添加成功',
+                            content: '该提醒将自动消失',
+                        });
+                        this.success = true;
+                        this.drawerRef.close(this.success);
+                    },
+                    err => {
+                        this.notificationService.create({
+                            type   : 'error',
+                            title  : '抱歉,添加失败',
+                            content: err.message ? err.message : '该提醒将自动消失',
+                        });
+                        this.isSpinning = false;
+                    },
+                    () => this.isSpinning = false);
                 break;
             case 'edit':
-                this.vehicleInfoService.updateVehicle(this.vehicleReq, this.cache.id).subscribe(res => {
-                    this.notificationService.create({
-                        type: 'success',
-                        title: '恭喜,更新成功',
-                        content: '该提醒将自动消失',
-                    });
-                    this.success = true;
-                    this.drawerRef.close(this.success);
-                });
+                this.vehicleInfoService.updateVehicle(this.vehicleReq, this.cache.id).subscribe(
+                    res => {
+                        this.notificationService.create({
+                            type   : 'success',
+                            title  : '恭喜,更新成功',
+                            content: '该提醒将自动消失',
+                        });
+                        this.success = true;
+                        this.drawerRef.close(this.success);
+                    },
+                    err => {
+                        this.notificationService.create({
+                            type   : 'error',
+                            title  : '抱歉,更新失败',
+                            content: err.message ? err.message : '该提醒将自动消失',
+                        });
+                        this.isSpinning = false;
+                    },
+                    () => this.isSpinning = false);
                 break;
         }
     }
@@ -88,6 +108,15 @@ export class VehicleInfoFormComponent implements OnInit {
             }
         });
         return leafDistricts;
+    }
+
+    checkForm() {
+        console.log(this.formData);
+        for (const k in this.formData) {
+            if (VerifyUtil.isNull(this.formData[ k ])) {
+                console.log(this.formData[ k ]);
+            }
+        }
     }
 
 }

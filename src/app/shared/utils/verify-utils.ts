@@ -3,6 +3,10 @@
  */
 export class VerifyUtil {
 
+    public static isNull(o: Object): boolean {
+        return o === void 0 || o === null || (o + '').replace(/\s/g, '') === '';
+    }
+
     /**
      * 判断空
      * @param args

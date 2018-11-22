@@ -35,6 +35,7 @@ export class CustomersInfoFormComponent implements OnInit {
     public vehicleSearchChange$ = new BehaviorSubject('');
     public formData: FormModel = new FormModel();
     public customerReq: CustomerReq;
+    public isSpinning = false;
 
     constructor(private drawerRef: NzDrawerRef<boolean>,
                 private customersInfoService: CustomersInfoService,
@@ -48,8 +49,6 @@ export class CustomersInfoFormComponent implements OnInit {
             this.formData = new FormModel();
             this.formData.address = [ '350000', '350600', '350603' ];
         }
-        //this.getVehicles();
-
     }
 
     getVehicles(plateNum: string, countyName: string) {
@@ -64,7 +63,7 @@ export class CustomersInfoFormComponent implements OnInit {
             });
     }
 
-    getSelectedCountyName(code: string) {
+    getSelectedCountyName(code: string): string {
         let result = this.countyNames.filter(item => item.code == code);
         return result.length > 0 ? result[ 0 ].name : '';
     }
@@ -83,37 +82,56 @@ export class CustomersInfoFormComponent implements OnInit {
     }
 
     onSubmitForm(): void {
+        this.isSpinning = true;
         this.transformFormModelToRequest();
         switch (this.type) {
             case 'add':
-                this.customersInfoService.addCustomer(this.customerReq, this.cache.id).subscribe(res => {
-                    this.notificationService.create({
-                        type   : 'success',
-                        title  : '',
-                        content: '恭喜,添加成功',
-                    });
-                    this.success = true;
-                    this.drawerRef.close(this.success);
-                });
+                this.customersInfoService.addCustomer(this.customerReq, this.cache.id).subscribe(
+                    res => {
+                        this.notificationService.create({
+                            type   : 'success',
+                            title  : '恭喜,添加成功',
+                            content: '该提醒将自动消失',
+                        });
+                        this.success = true;
+                        this.drawerRef.close(this.success);
+                    },
+                    err => {
+                        this.notificationService.create({
+                            type   : 'error',
+                            title  : '抱歉,添加失败',
+                            content: err.message ? err.message : '该提醒将自动消失',
+                        });
+                        this.isSpinning = false;
+                    },
+                    () => this.isSpinning = false);
                 break;
             case 'edit':
-                this.customersInfoService.updateCustomer(this.customerReq, this.cache.id).subscribe(res => {
-                    this.notificationService.create({
-                        type   : 'success',
-                        title  : '',
-                        content: '恭喜,更新成功',
-                    });
-                    this.success = true;
-                    this.drawerRef.close(this.success);
-                });
+                this.customersInfoService.updateCustomer(this.customerReq, this.cache.id).subscribe(
+                    res => {
+                        this.notificationService.create({
+                            type   : 'success',
+                            title  : '恭喜,更新成功',
+                            content: '该提醒将自动消失',
+                        });
+                        this.success = true;
+                        this.drawerRef.close(this.success);
+                    },
+                    err => {
+                        this.notificationService.create({
+                            type   : 'error',
+                            title  : '抱歉,更新失败',
+                            content: err.message ? err.message : '该提醒将自动消失',
+                        });
+                        this.isSpinning = false;
+                    },
+                    () => this.isSpinning = false);
                 break;
         }
     }
 
     transformFormModelToRequest() {
-        //this.customerReq = new CustomerReq(this.formData);
         this.customerReq = ModelConverter.formModelToCustomerReq(this.formData);
-        console.log(this.customerReq);
     }
 
     onAddressChange($e): void {
@@ -154,14 +172,5 @@ export class CustomersInfoFormComponent implements OnInit {
             return item.id !== id;
         });
         this.formData.childCollections = result;
-    }
-
-    checkFormNull() {
-        // 必填:名称name,类别collectionType,地址address,联系人contactName,联系电话tel,移动电话mobile,
-        //      置桶数dustbinCounts,收运时是否自带钥匙hasKey,(时间类型,时间区间,重要等级,指定车辆;Duration)
-        for (let k in this.formData) {
-            // TODO switch
-            VerifyUtil.isEmpty(this.formData[ k ])
-        }
     }
 }

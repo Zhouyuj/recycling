@@ -17,9 +17,9 @@ var remotes = {
         },
     ],
     projectName: 'recycling-web-client',
-    projectSpace: '/root/deploy/recycling/web-client/web-middleware',
-    scriptPath: '/root/deploy/recycling/web-client/web-middleware/web-client',
-    backupPath: '/root/deploy/recycling/web-client/web-middleware/backup',
+    projectSpace: '/root/recycling/web-client/web-middleware',
+    scriptPath: '/root/recycling/web-client/web-middleware/web-client',
+    backupPath: '/root/recycling/web-client/web-middleware/backup',
 };
 
 class Deployer {
@@ -46,7 +46,7 @@ class Deployer {
     zipCompress() {
         return new Promise((resolve, reject) => {
             console.log('start zip...');
-            zip.zip('dist', './deploy/' + remotes.projectName + '.zip').then(() => {
+            zip.zip('dist/recycling-web-client', './deploy/' + remotes.projectName + '.zip').then(() => {
                 console.log('nice, zip success');
                 resolve();
             }).catch((err) => {
@@ -186,4 +186,4 @@ function deploy() {
     remotes.servers.forEach(server => new Deployer(server).publish());
 }
 
-deploy()
+deploy();
