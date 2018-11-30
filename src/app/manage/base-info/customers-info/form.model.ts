@@ -4,7 +4,7 @@
 export class FormModel {
     id: string = null;
     collectionName: string = null;
-    isPlaza: string = 'Part';
+    category: string = 'Separate';   // 业务上分: 聚类点Cluster / 普通收集点Separate
     address: string[];
     account: string = null;
     password: string = null;
@@ -22,30 +22,33 @@ export class FormModel {
 }
 
 export class Duration {
-    type: 'food' | 'oil' = 'food';
+    tabType: 'food' | 'oil' = 'food';  // 该值只用于切换tab
     food: DurationDetail[] = [ new DurationDetail() ];
     oil: DurationDetail[] = [ new DurationDetail() ];
 }
 
 export class DurationDetail {
-    id = 0; // 用于页面的增删
+    id: string = null;
+    idx = 0; // 用于页面的增删
     workingDay: string = null; // Holiday-节假日,Working-工作日
     startTime: Date = null;
     endTime: Date = null;
-    level: string = null; // Low-低级,High-中等,Hard-极高
-    vehicle: string = null;
+    priorityType: string = null; // Low-低级,High-中等,Hard-极高
+    plateNumber: string = null;
 
-    constructor(id?: number) {
-        this.id = id || 0;
+    constructor(idx?: number) {
+        this.idx = idx || 0;
     }
 }
 
 export class ChildCollections {
-    id = 0;
+    idx = 0; // 用于页面的增删
     name: string = null;
+    id: string = null;
 
-    constructor(id?: number, name?: string) {
-        this.id = id || 0;
+    constructor(idx?: number, name?: string, id?: string) {
+        this.idx = idx || 0;
         this.name = name;
+        this.id = id;
     }
 }

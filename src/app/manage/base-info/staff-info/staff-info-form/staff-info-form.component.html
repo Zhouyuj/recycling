@@ -107,6 +107,8 @@
                         <nz-option nzLabel="中控人员" nzValue="2"></nz-option>
                         <nz-option nzLabel="司机" nzValue="3"></nz-option>
                         <nz-option nzLabel="收运专员" nzValue="4"></nz-option>
+                        <nz-option nzLabel="管理人员" nzValue="5"></nz-option>
+                        <nz-option nzLabel="随车人员" nzValue="6"></nz-option>
                     </nz-select>
                     <nz-form-explain [hidden]="roles.valid || roles.pristine">请选择对应岗位</nz-form-explain>
                 </nz-form-control>
@@ -204,7 +206,7 @@
                             nzType="primary"
                             style="width: 100%;"
                             [disabled]="!myForm.valid"
-                            (click)="onSubmitForm()">确认
+                            type="submit">确认
                     </button>
                 </nz-form-control>
                 <nz-form-control [nzSpan]="3" nzOffset="1">
@@ -277,11 +279,12 @@
                 <nz-form-label [nzSm]="4" [nzXs]="24" nzRequired nzFor="roles">系统角色</nz-form-label>
                 <nz-form-control [nzSm]="18" [nzXs]="24">
                     <nz-select formControlName="roles" [nzSize]="'size'" nzMode="multiple" nzPlaceHolder="请选择角色">
-                        <nz-option nzLabel="系统管理员" nzValue="0"></nz-option>
-                        <nz-option nzLabel="司机" nzValue="1"></nz-option>
+                        <nz-option nzLabel="系统管理员" nzValue="1"></nz-option>
                         <nz-option nzLabel="中控人员" nzValue="2"></nz-option>
-                        <nz-option nzLabel="收运专员" nzValue="3"></nz-option>
-                        <nz-option nzLabel="管理人员" nzValue="4"></nz-option>
+                        <nz-option nzLabel="司机" nzValue="3"></nz-option>
+                        <nz-option nzLabel="收运专员" nzValue="4"></nz-option>
+                        <nz-option nzLabel="管理人员" nzValue="5"></nz-option>
+                        <nz-option nzLabel="随车人员" nzValue="6"></nz-option>
                     </nz-select>
                 </nz-form-control>
             </nz-form-item>

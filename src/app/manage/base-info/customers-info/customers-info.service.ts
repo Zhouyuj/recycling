@@ -57,8 +57,8 @@ export class CustomersInfoService extends RebirthHttp {
      * 创建收集点
      * @returns {null}
      */
-    @POST('/customers/:parentId')
-    public addCustomer(@Body customer: CustomerReq, @Path('parentId') parentId?: string): Observable<Result<{ id: string }>> {
+    @POST('/customers')
+    public addCustomer(@Body customer: CustomerReq): Observable<Result<{ id: string }>> {
         return null;
     }
 

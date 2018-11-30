@@ -1,0 +1,102 @@
+<div class="wrap">
+    <!-- -------- 表格操作 -------- -->
+    <div class="table-operations">
+        <div nz-row nzGutter="16">
+            <div nz-col class="gutter-row" nzSpan="10">
+                <!-- 面包屑导航 -->
+                <app-breadcrumbs [options]="breadcrumbs"></app-breadcrumbs>
+            </div>
+            <div nz-col class="gutter-row" nzSpan="6"  nzOffset="8">
+                <!-- CUDE: create,update,delete,export -->
+                <div class="table-CUDE">
+                    <button nz-button
+                            nzType="default"
+                            nzShape="circle"
+                            (click)="onAdd()"
+                            nzTitle="添加"
+                            nzPlacement="topCenter"
+                            nz-tooltip>
+                        <i class="anticon anticon-plus-circle-o"></i>
+                    </button>
+                    &nbsp;
+                    <button nz-button
+                            [disabled]="!formCache"
+                            nzType="default"
+                            nzShape="circle"
+                            (click)="onEdit()"
+                            nzTitle="编辑"
+                            nzPlacement="topCenter"
+                            nz-tooltip>
+                        <i class="anticon anticon-edit"></i>
+                    </button>
+                    &nbsp;
+                    <button nz-button
+                            nz-popconfirm
+                            nzTitle="确认删除该信息吗?"
+                            (nzOnConfirm)="onDel()"
+                            [disabled]="!formCache"
+                            nzType="default"
+                            nzShape="circle"
+                            nzPlacement="topCenter"
+                            nz-tooltip>
+                        <i class="anticon anticon-minus-circle-o"></i>
+                    </button>
+                    &nbsp;
+                    <button nz-button
+                            nzType="default"
+                            nzShape="circle"
+                            (click)="onEdit()"
+                            nzTitle="计算"
+                            nzPlacement="topCenter"
+                            nz-tooltip>
+                        <i class="anticon anticon-line-chart"></i>
+                    </button>
+                    &nbsp;
+                    <button nz-button
+                            nzType="default"
+                            nzShape="circle"
+                            (click)="onExp()"
+                            nzTitle="执行"
+                            nzPlacement="topCenter"
+                            nz-tooltip>
+                        <i class="anticon anticon-play-circle-o"></i>
+                    </button>
+                    &nbsp;
+                    <button nz-button
+                            nzType="default"
+                            nzShape="circle"
+                            (click)="onExp()"
+                            nzTitle="停止"
+                            nzPlacement="topCenter"
+                            nz-tooltip>
+                        <i class="anticon anticon-close-circle-o"></i>
+                    </button>
+                    &nbsp;
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- -------- 表格内容 -------- -->
+    <div class="table-content">
+        <nz-spin [nzSize]="'large'" [nzSpinning]="isSpinning">
+            <nz-table #basicTable [nzData]="dataSet">
+                <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>名称</th>
+                    <th>路程总数</th>
+                    <th>收集点总数</th>
+                    <th>状态</th>
+                    <th>方案类型</th>
+                    <th>编辑人员</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let data of basicTable.data">
+                    <td></td>
+                </tr>
+                </tbody>
+            </nz-table>
+        </nz-spin>
+    </div>
+</div>

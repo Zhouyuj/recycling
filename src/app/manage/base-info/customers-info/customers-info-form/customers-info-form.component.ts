@@ -32,10 +32,13 @@ export class CustomersInfoFormComponent implements OnInit {
     @Input() countyNames: [{ code: string, name: string }];
     public vehicles: string[];
     public isVehiclesLoading = false;
-    public vehicleSearchChange$ = new BehaviorSubject('');
-    public formData: FormModel = new FormModel();
+    public selectedCategory: 'Separate' | 'Cluster' | string;
+    public formModel: FormModel = new FormModel();   // 普通收集点/子收集点
+    public formModelSeparate: FormModel = new FormModel();   // 普通收集点/子收集点
+    public formModelCluster: FormModel = new FormModel();   // 聚类点
     public customerReq: CustomerReq;
     public isSpinning = false;
+    searchChange$ = new BehaviorSubject({});
 
     constructor(private drawerRef: NzDrawerRef<boolean>,
                 private customersInfoService: CustomersInfoService,
@@ -43,37 +46,66 @@ export class CustomersInfoFormComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.initForm();
+    }
+
+    initForm() {
         if (this.cache) {
-            this.formData = ObjectUtils.extend(this.cache);
+            this.selectedCategory = this.cache.category;
+            this.formModelSeparate = ObjectUtils.extend(this.cache);
+            this.formModelCluster = ObjectUtils.extend(this.cache);
         } else {
-            this.formData = new FormModel();
-            this.formData.address = [ '350000', '350600', '350603' ];
+            this.selectedCategory = 'Separate';
+            this.formModelSeparate = new FormModel();
+            this.formModelSeparate.address = [ '350000', '350600', '350603' ];   // 初始化地区为龙文区
+            this.formModelSeparate.category = this.selectedCategory;
+            this.formModelCluster = new FormModel();
+            this.formModelCluster.address = [ '350000', '350600', '350603' ];   // 初始化地区为龙文区
+            this.formModelCluster.category = 'Cluster';
         }
+        this.initVehicles();
+
     }
 
-    getVehicles(plateNum: string, countyName: string) {
-        return this.customersInfoService.getCustomerVehicles(new PageReq(), countyName, 'Available', plateNum)
-            .pipe(
-                map((res: Result<PageRes<VehicleRes[]>>) => res.data.content),
-                map((res: VehicleRes[]) => res.map((vehicle: VehicleRes) => vehicle.plateNumber))
-            )
-            .subscribe((res: string[]) => {
-                this.vehicles = res;
-                this.isVehiclesLoading = false;
-            });
-    }
-
-    getSelectedCountyName(code: string): string {
-        let result = this.countyNames.filter(item => item.code == code);
-        return result.length > 0 ? result[ 0 ].name : '';
+    /**
+     * 默认龙文区下的车辆
+     * @param districtCode
+     */
+    initVehicles() {
+        const getRandomNameList = ({ districtCode, plateNumber }) => {
+            districtCode = districtCode || '350603';
+            return this.customersInfoService.getCustomerVehicles(new PageReq(), districtCode, 'Available', plateNumber)
+                .pipe(map((res: Result<PageRes<VehicleRes[]>>) => res.data.content))
+                .pipe(map((list: VehicleRes[]) => {
+                    return list.map(item => `${item.plateNumber}`);
+                }));
+        };
+        const optionList$: Observable<any> = this.searchChange$
+            .asObservable()
+            .pipe(debounceTime(500))
+            .pipe(switchMap(getRandomNameList));
+        optionList$.subscribe(data => {
+            this.isVehiclesLoading = false;
+            this.vehicles = data;
+        });
     }
 
     onSearchVehicles(e) {
+        this.isVehiclesLoading = true;
+        console.log('search vehicles')
+        let district: string;
+        if (this.selectedCategory === 'Separate') {
+            district = this.formModelSeparate.address[ 2 ] || '';
+        } else if (this.selectedCategory === 'Cluster') {
+            district = this.formModelCluster.address[ 2 ] || '';
+        }
+        this.searchChange$.next({ districtCode: district, plateNumber: e });
+        console.log(district);
+    }
+
+    onVehicleSearchOpen(e) {
         if (e) {
-            let countyCode: string = this.formData.address[ 2 ],
-                countyName: string = this.getSelectedCountyName(countyCode);
-            this.isVehiclesLoading = true;
-            this.getVehicles(e, countyName);
+            this.onSearchVehicles('');
         }
     }
 
@@ -81,12 +113,18 @@ export class CustomersInfoFormComponent implements OnInit {
         this.drawerRef.close(false);
     }
 
+    /**
+     * 处理流程:
+     * 1.判断收集点类型(category:Cluster|Separate)
+     * 2.组装相应数据(body)
+     * 3.调用服务（发起post请求）
+     */
     onSubmitForm(): void {
         this.isSpinning = true;
         this.transformFormModelToRequest();
         switch (this.type) {
             case 'add':
-                this.customersInfoService.addCustomer(this.customerReq, this.cache.id).subscribe(
+                this.customersInfoService.addCustomer(this.customerReq).subscribe(
                     res => {
                         this.notificationService.create({
                             type   : 'success',
@@ -131,46 +169,83 @@ export class CustomersInfoFormComponent implements OnInit {
     }
 
     transformFormModelToRequest() {
-        this.customerReq = ModelConverter.formModelToCustomerReq(this.formData);
+        switch (this.selectedCategory) {
+            case 'Separate':
+                this.customerReq = ModelConverter.formModelToCustomerReq(this.formModelSeparate);
+                break;
+            case 'Cluster':
+                this.customerReq = ModelConverter.formModelToCustomerReq(this.formModelCluster);
+                break;
+        }
     }
 
     onAddressChange($e): void {
-        this.formData.address = $e; // TODO
+        if (this.selectedCategory === 'Separate') {
+            this.formModelSeparate.address = $e;
+        } else if (this.selectedCategory === 'Cluster') {
+            this.formModelCluster.address = $e;
+        }
     }
 
     onShowMap() {
         console.log('onShowMap');
     }
 
+    /**
+     * @param type: food | oil
+     * @param category: Cluster | Separate
+     */
     onAddDuration(type: string): void {
-        let length = this.formData.duration[ type ].length || 0;
-        let newId = this.formData.duration[ type ][ length - 1 ].id + 1;
-        this.formData.duration[ type ].push(new DurationDetail(newId));
+        console.log(type);
+        switch (this.selectedCategory) {
+            case 'Separate':    /* 普通点 | 子收集点 */
+                const lengthS = this.formModelSeparate.duration[ type ].length || 0;
+                const newIdS = this.formModelSeparate.duration[ type ][ lengthS - 1 ].idx + 1;
+                this.formModelSeparate.duration[ type ].push(new DurationDetail(newIdS));
+                break;
+            case 'Cluster':     /* 聚类点 */
+                const lengthC = this.formModelCluster.duration[ type ].length || 0;
+                let newIdC;
+                if (!lengthC) {
+                    newIdC = 0;
+                } else {
+                    newIdC = this.formModelCluster.duration[ type ][ lengthC - 1 ].idx + 1;
+                }
+                this.formModelCluster.duration[ type ].push(new DurationDetail(newIdC));
+                break;
+        }
+        console.log(this.formModelSeparate.duration);
+        console.log(this.formModelCluster.duration);
     }
 
-    onRemoveDuration(type: string, id: number) {
-        if (this.formData.duration[ type ].length == 1) {
-            return;
+    onRemoveDuration(durationType: string, idx: number) {
+        switch (this.selectedCategory) {
+            case 'Separate':
+                if (this.formModelSeparate.duration[ durationType ].length == 1) return;
+                let durationS = this.formModelSeparate.duration[ durationType ].filter(item => item.idx !== idx);
+                this.formModelSeparate.duration[ durationType ] = durationS;
+                break;
+            case 'Cluster':
+                if (this.formModelCluster.duration[ durationType ].length == 1) return;
+                let durationC = this.formModelCluster.duration[ durationType ].filter(item => item.idx !== idx);
+                this.formModelCluster.duration[ durationType ] = durationC;
+                break;
         }
-        let result = this.formData.duration[ type ].filter(item => {
-            return item.id !== id;
-        });
-        this.formData.duration[ type ] = result;
     }
 
     onAddChildCollection(): void {
-        let length = this.formData.childCollections.length || 0;
-        let newId = this.formData.childCollections[ length - 1 ].id + 1;
-        this.formData.childCollections.push(new ChildCollections(newId));
+        let length = this.formModelSeparate.childCollections.length || 0;
+        let newIdx = this.formModelSeparate.childCollections[ length - 1 ].idx + 1;
+        this.formModelSeparate.childCollections.push(new ChildCollections(newIdx));
     }
 
-    onRemoveChildCollections(id: number) {
-        if (this.formData.childCollections.length == 1) {
+    onRemoveChildCollections(idx: number) {
+        if (this.formModelSeparate.childCollections.length == 1) {
             return;
         }
-        let result = this.formData.childCollections.filter(item => {
-            return item.id !== id;
+        let result = this.formModelSeparate.childCollections.filter(item => {
+            return item.idx !== idx;
         });
-        this.formData.childCollections = result;
+        this.formModelSeparate.childCollections = result;
     }
 }

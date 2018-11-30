@@ -14,4 +14,21 @@
     .dynamic-delete-button:hover {
         color: #777;
     }
+
+    /* 时间段部分 */
+    #dynamic-delete-duration {
+        position: absolute;
+        top: -2px;
+        right: 0;
+        z-index: 1;
+        font-size: 1.4rem;
+        cursor: pointer;
+    }
+
+    #dynamic-delete-duration:hover {
+        color: #f5222d;
+    }
+}
+
+.table-content {
 }

@@ -69,21 +69,17 @@ export class ModelConverter {
     }
 
     /**
-     * 计算方法:
-     * eg. 时间插件输入的为: 21:27 即 sec = 70020
-     * 1-求当前时间戳（毫秒）假设为 1541729677068
-     * 2-将 sec 补零为毫秒单位即 70020000
-     * 3-将当前时间戳的相等sec长度的部分置换为sec,再new Date(),即可
-     * 由于目前需求只需要 h 和 m,故该方法适合
      * @param sec
      * @returns {Date}
      */
     public static convertSecondToDate(sec: number): Date {
-        let timestampStr = `${Date.now()}`;
-        let length = `${sec}`.length;
-        timestampStr = timestampStr.slice(-timestampStr.length, -length - 3) + `${sec}000`;
-        let timestamp = parseInt(timestampStr);
-        return new Date(timestamp);
+        let num_hour = sec / 3600;
+        let h = Math.floor(num_hour);
+        let m = (sec / 3600 - h) * 60;
+        let result = new Date();
+        result.setHours(h);
+        result.setMinutes(m);
+        return result;
     }
 
     public static convertDateToSecond(date: Date): number {

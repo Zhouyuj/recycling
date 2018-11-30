@@ -7,7 +7,7 @@
                 <app-breadcrumbs [options]="breadcrumbs"></app-breadcrumbs>
             </div>
             <div nz-col class="gutter-row" nzSpan="8" nzOffset="2">
-                <div class="table-search">
+                <!--<div class="table-search">
                     <nz-input-group nzSearch
                                     nzCompact
                                     nzSize="default">
@@ -26,7 +26,7 @@
                         <input type="text" nz-input placeholder="键入关键字, 按ENTER搜索" [(ngModel)]="keyword"
                                style="width: 60%;" (keyup)="$event.which == 13 && onKeywordSearch($event, keywordType)">
                     </nz-input-group>
-                </div>
+                </div>-->
             </div>
             <div nz-col class="gutter-row" nzSpan="4">
                 <!-- CUDE: create,update,delete,export -->
@@ -81,7 +81,7 @@
     <!-- -------- 表格内容 -------- -->
     <div class="table-content">
         <nz-spin [nzSize]="'large'" [nzSpinning]="isSpinning">
-            <ngx-datatable #dataTable class="material striped extra-css"
+            <!--<ngx-datatable #dataTable class="material striped expandable extra-css"
                            [messages]="list_options.localizationMessage"
                            [rows]="list_options.rows"
                            [columnMode]="'force'"
@@ -89,6 +89,7 @@
                            [rowHeight]="40"
                            [footerHeight]="40"
                            [scrollbarH]="true"
+                           [scrollbarV]="true"
                            [selected]="list_options.selectedRows"
                            [selectionType]="'multi'"
                            [sorts]="[{prop: 'createTime', dir: 'desc'}]"
@@ -100,20 +101,191 @@
                            (page)="onPage($event)"
                            (sort)="onSort($event)"
             >
-                <!--TODO-->
-                <ngx-datatable-column name="定位" prop="lngLat"></ngx-datatable-column>
-                <!--TODO-->
-                <ngx-datatable-column name="图片" prop="images"></ngx-datatable-column>
-                <ngx-datatable-column name="名称" prop="name"></ngx-datatable-column>
-                <ngx-datatable-column name="所属区域" prop="countyCode"></ngx-datatable-column>
-                <ngx-datatable-column name="收运时间段" prop="duration"></ngx-datatable-column>
-                <ngx-datatable-column name="地址" prop="detailAddress"></ngx-datatable-column>
-                <ngx-datatable-column name="账号" prop="username"></ngx-datatable-column>
-                <ngx-datatable-column name="派桶数" prop="totalDustbins"></ngx-datatable-column>
+                &lt;!&ndash; Row Detail Template &ndash;&gt;
+                <ngx-datatable-row-detail [rowHeight]="auto" #myDetailRow (toggle)="onDetailToggle($event)">
+                    <ng-template let-row="row" let-expanded="expanded" ngx-datatable-row-detail-template>
+                        <div style="padding-left:35px; background-color: #fff;">
+                            <ul>
+                                <li>
+                                    <div nz-row nzGutter="16">
+                                        <div nz-col class="gutter-row" nzSpan="1">
+                                            <div class="gutter-box"><strong>序号</strong></div>
+                                        </div>
+                                        <div nz-col class="gutter-row" nzSpan="4">
+                                            <div class="gutter-box"><strong>子收集点名称</strong></div>
+                                        </div>
+                                        <div nz-col class="gutter-row" nzSpan="4">
+                                            <div class="gutter-box"><strong>登记时间</strong></div>
+                                        </div>
+                                        <div nz-col class="gutter-row" nzSpan="3">
+                                            <div class="gutter-box"><strong>置桶数</strong></div>
+                                        </div>
+                                        <div nz-col class="gutter-row" nzSpan="4">
+                                            <div class="gutter-box"><strong>联系人</strong></div>
+                                        </div>
+                                        <div nz-col class="gutter-row" nzSpan="4">
+                                            <div class="gutter-box"><strong>联系电话</strong></div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li *ngFor="let item of row.customerList;index as i" id="children-list">
+                                    <div nz-row nzGutter="16">
+                                        <div nz-col class="gutter-row" nzSpan="1">
+                                            <div class="gutter-box">{{i}}</div>
+                                        </div>
+                                        <div nz-col class="gutter-row" nzSpan="4">
+                                            <div class="gutter-box">{{item.name}}</div>
+                                        </div>
+                                        <div nz-col class="gutter-row" nzSpan="4">
+                                            <div class="gutter-box">{{item.createdDate | date:'yyyy-MM-dd'}}</div>
+                                        </div>
+                                        <div nz-col class="gutter-row" nzSpan="3">
+                                            <div class="gutter-box">{{item.dustbin}}</div>
+                                        </div>
+                                        <div nz-col class="gutter-row" nzSpan="4">
+                                            <div class="gutter-box">{{item.contactName}}</div>
+                                        </div>
+                                        <div nz-col class="gutter-row" nzSpan="4">
+                                            <div class="gutter-box">{{item.mobilePhone}}&nbsp;&nbsp;{{item.landlinePhone}}</div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        &lt;!&ndash;<div id="customer-list">
+                            {{row.customerList | json}}
+                            <ngx-datatable #childrenTable class="material striped"
+                                           [rows]="row.customerList"
+                                           [columnMode]="'force'">
+                                <ngx-datatable-column name="子节点名称" prop="name"></ngx-datatable-column>
+                            </ngx-datatable>
+                        </div>&ndash;&gt;
+                    </ng-template>
+                </ngx-datatable-row-detail>
+                &lt;!&ndash; Column Templates &ndash;&gt;
+                <ngx-datatable-column
+                        [width]="50"
+                        [resizeable]="false"
+                        [sortable]="false"
+                        [draggable]="false"
+                        [canAutoResize]="false">
+                    <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+                        <a
+                                href="javascript:void(0)"
+                                [class.datatable-icon-right]="!expanded"
+                                [class.datatable-icon-down]="expanded"
+                                title="展开/收起"
+                                (click)="toggleExpandRow(row)">
+                        </a>
+                    </ng-template>
+                </ngx-datatable-column>
+                &lt;!&ndash;TODO&ndash;&gt;
+                <ngx-datatable-column name="定位" prop="lngLat" [sortable]="false"></ngx-datatable-column>
+                &lt;!&ndash;TODO&ndash;&gt;
+                <ngx-datatable-column name="图片" prop="images" [sortable]="false"></ngx-datatable-column>
+                <ngx-datatable-column name="名称" prop="name" [sortable]="false"></ngx-datatable-column>
+                <ngx-datatable-column name="所属区域" prop="countyCode" [sortable]="false"></ngx-datatable-column>
+                <ngx-datatable-column name="收运时间段" prop="duration" [sortable]="false"></ngx-datatable-column>
+                <ngx-datatable-column name="地址" prop="detailAddress" [sortable]="false"></ngx-datatable-column>
+                <ngx-datatable-column name="账号" prop="username" [sortable]="false"></ngx-datatable-column>
+                <ngx-datatable-column name="派桶数" prop="totalDustbins" [sortable]="false"></ngx-datatable-column>
                 <ngx-datatable-column name="登记时间" prop="createTime"></ngx-datatable-column>
-                <ngx-datatable-column name="联系人" prop="contactName"></ngx-datatable-column>
-                <ngx-datatable-column name="联系电话" prop="mobilePhone"></ngx-datatable-column>
-            </ngx-datatable>
+                <ngx-datatable-column name="联系人" prop="contactName" [sortable]="false"></ngx-datatable-column>
+                <ngx-datatable-column name="联系电话" prop="mobilePhone" [sortable]="false"></ngx-datatable-column>
+            </ngx-datatable>-->
+
+
+
+            <nz-table #nzTable
+                      [nzScroll]="{ x: '500px' }"
+                      [nzData]="list_options.rows"
+                      (nzPageIndexChange)="refreshStatus()"
+                      (nzPageSizeChange)="refreshStatus()">
+                <thead>
+                <tr>
+                    <th nzWidth="30px"></th>
+                    <th nzWidth="30px"></th><!-- 此th与下面的th(全选)互斥,当前先不实现全选 -->
+                    <!--<th nzShowCheckbox [(nzChecked)]="allChecked" [nzIndeterminate]="indeterminate" (nzCheckedChange)="checkAll($event)"></th>-->
+                    <th nzWidth="150px">类型</th>
+                    <th nzWidth="100px">定位</th>
+                    <th nzWidth="100px">图片</th>
+                    <th nzWidth="300px" nzCustomFilter>名称
+                        <div>
+                            <input type="text" nz-input placeholder=""
+                                   nzSize="small" style="width: 80%;"
+                                   [(ngModel)]="keyword.name"
+                                   (keyup)="$event.which == 13 && onKeywordSearchTh('name')">
+                        </div>
+                    </th>
+                    <th nzWidth="150px">所属区域</th>
+                    <th nzWidth="200px">收运时间段</th>
+                    <th nzWidth="300px">
+                        <div>
+                            地址
+                            <input type="text" nz-input placeholder=""
+                                   nzSize="small" style="width: 80%;"
+                                   [(ngModel)]="keyword.address"
+                                   (keyup)="$event.which == 13 && onKeywordSearchTh('address')">
+                        </div>
+                    </th>
+                    <th nzWidth="200px">账号
+                        <div>
+                            <input type="text" nz-input placeholder=""
+                                   nzSize="small" style="width: 80%;"
+                                   [(ngModel)]="keyword.username"
+                                   (keyup)="$event.which == 13 && onKeywordSearchTh('username')">
+                        </div>
+                    </th>
+                    <th nzWidth="150px">派桶数</th>
+                    <th nzWidth="300px" nzShowSort [(nzSort)]="sortMap.createTime" (nzSortChange)="onSortTh('createTime',$event)">登记时间
+                        <div>
+                            <input type="text" nz-input placeholder=""
+                                   nzSize="small" style="width: 80%;"
+                                   [(ngModel)]="keyword.createTime"
+                                   (keyup)="$event.which == 13 && onKeywordSearchTh('createTime')">
+                        </div>
+                    </th>
+                    <th nzWidth="200px">联系人
+                        <div>
+                            <input type="text" nz-input placeholder=""
+                                   nzSize="small" style="width: 80%;"
+                                   [(ngModel)]="keyword.contactName"
+                                   (keyup)="$event.which == 13 && onKeywordSearchTh('contactName')">
+                        </div>
+                    </th>
+                    <th nzWidth="200px">联系电话
+                        <div>
+                            <input type="text" nz-input placeholder=""
+                                   nzSize="small" style="width: 80%;"
+                                   [(ngModel)]="keyword.mobilePhone"
+                                   (keyup)="$event.which == 13 && onKeywordSearchTh('mobilePhone')">
+                        </div>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <ng-template ngFor let-data [ngForOf]="nzTable.data">
+                    <ng-template ngFor let-item [ngForOf]="expandDataCache[data.id]">
+                        <tr *ngIf="(item.parent&&item.parent.expand)||!(item.parent)" (click)="onClickTr($event, item)">
+                            <td [nzShowExpand]="!!item.customerList" [(nzExpand)]="item.expand" (nzExpandChange)="collapse(expandDataCache[item.id], item, $event)"></td>
+                            <td nzShowCheckbox [(nzChecked)]="item.checked" [nzDisabled]="item.disabled" (nzCheckedChange)="refreshStatus($event, item)"></td>
+                            <td>{{item.level ? '子收集点' : (item.customerList ? '聚类点' : '普通点')}}</td>
+                            <td >{{item.lngLat ? '有' : '无'}}</td>
+                            <td>{{item.images.length}}</td>
+                            <td>{{item.name}}</td>
+                            <td>{{item.countyName}}</td>
+                            <td>{{item.duration}}</td>
+                            <td>{{item.detailAddress}}</td>
+                            <td>{{item.username}}</td>
+                            <td>{{item.totalDustbins}}</td>
+                            <td>{{item.createTime | date:'yyyy-MM-dd'}}</td>
+                            <td>{{item.contactName}}</td>
+                            <td>{{item.mobilePhone}}</td>
+                        </tr>
+                    </ng-template>
+                </ng-template>
+                </tbody>
+            </nz-table>
         </nz-spin>
     </div>
 </div>

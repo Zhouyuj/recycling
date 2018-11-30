@@ -1,7 +1,7 @@
 /**
  * Created by wujiahui on 2018/11/6.
  */
-export class CustomerRes {
+export class CustomerResOld {
     public address: Address;
     public businessLine: BusinessLine;
     public contactInfo: ContactInfo;
@@ -44,12 +44,13 @@ export class BusinessLine {
 }
 
 export class CollectionPeriod {
-    public dateType: string;
+    public workingDay: string;
     public endTime: number;
     public garbageCategory: string;
-    public level: string;
+    public priorityType: string;
     public plateNumber: string;
     public startTime: number;
+    public id: string;
 }
 
 export class ContactInfo {
@@ -64,112 +65,7 @@ export class ContactInfo {
     }
 }
 
-let o = {
-    "address": {
-        "city": "漳州市",
-        "cityCode": 350600,
-        "county": "龙文区",
-        "countyCode": 350603,
-        "detailedAddress": "福建省漳州市龙文区蓝田镇xxx",
-        "lat": 23.123123,
-        "lng": 123.123123,
-        "province": "福建省",
-        "provinceCode": 350000,
-        "street": "蓝田镇",
-        "streetCode": 350603100
-    },
-    "cardNumber": "string",
-    "category": "Separate",
-    "childSize": 0,
-    "collectionPeriodList": [
-        {
-            "dateType": "Working",
-            "endTime": 10800,
-            "garbageCategory": "KitchenWaste",
-            "plateNumber": "粤Y88888",
-            "priorityType": "Hard",
-            "startTime": 10800
-        }
-    ],
-    "contactInfo": {
-        "contactName": "曹操",
-        "landlinePhone": "020-85111260",
-        "mobilePhone": 16888888888
-    },
-    "createdDate": "2018-11-22T07:39:25.274Z",
-    "customerList": [
-        {
-            "address": {
-                "city": "漳州市",
-                "cityCode": 350600,
-                "county": "龙文区",
-                "countyCode": 350603,
-                "detailedAddress": "福建省漳州市龙文区蓝田镇xxx",
-                "lat": 23.123123,
-                "lng": 123.123123,
-                "province": "福建省",
-                "provinceCode": 350000,
-                "street": "蓝田镇",
-                "streetCode": 350603100
-            },
-            "cardNumber": "string",
-            "category": "Separate",
-            "collectionPeriodList": [
-                {
-                    "dateType": "Working",
-                    "endTime": 10800,
-                    "garbageCategory": "KitchenWaste",
-                    "plateNumber": "粤Y88888",
-                    "priorityType": "Hard",
-                    "startTime": 10800
-                }
-            ],
-            "contactInfo": {
-                "contactName": "曹操",
-                "landlinePhone": "020-85111260",
-                "mobilePhone": 16888888888
-            },
-            "createdDate": "2018-11-22T07:39:25.274Z",
-            "dustbin": 10,
-            "id": 0,
-            "images": [
-                {
-                    "id": 1,
-                    "type": "Image",
-                    "url": "http://host/image.png"
-                }
-            ],
-            "name": "九龙烧味或万达广场",
-            "needKey": true,
-            "type": {
-                "code": "CateringIndustry",
-                "id": 1,
-                "name": "餐饮行业"
-            },
-            "username": "admin"
-        }
-    ],
-    "dustbin": 10,
-    "id": 0,
-    "images": [
-        {
-            "id": 1,
-            "type": "Image",
-            "url": "http://host/image.png"
-        }
-    ],
-    "name": "九龙烧味或万达广场",
-    "needKey": true,
-    "type": {
-        "code": "CateringIndustry",
-        "id": 1,
-        "name": "餐饮行业"
-    },
-    "username": "admin"
-}
-
-
-export class CustomerResV2 {
+export class CustomerRes {
     public address: Address;    // *
     public cardNumber: string; // RFID卡卡号
     public category: string; // 收运单位类别: Cluster-聚类(广场点),  Separate-(收集单位) *
@@ -177,11 +73,13 @@ export class CustomerResV2 {
     public collectionPeriodList: CollectionPeriod[];
     public contactInfo: ContactInfo;
     public createdDate: string;
-    public customerList: CustomerResV2[];
+    public customerList: CustomerRes[];
     public dustbin: number;
     public id: string; // *
     public images: [{ id: number, type: string, url: string }];
     public name: string; // *
+    public needKey: boolean;
     public type: { code: string, name: string, id: string };
     public username: string;
+    public level: number; // 0 | 1（0:普通点/聚类点; 1:子收集点）
 }

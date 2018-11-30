@@ -31,3 +31,35 @@ ngx-datatable.extra-css {
         bottom: 0 !important;
     }
 }
+
+.table-content {
+    th, td {
+        text-align: center;
+    }
+    th {
+        height: 70px;
+    }
+    div.ngx-datatable.material .datatable-body .datatable-row-detail { /* not work */
+        background-color: #fff !important;
+    }
+}
+
+#customer-list {
+    max-width: 1440px;
+    min-height: 50px;
+    margin: 0 auto;
+}
+
+#children-list {
+    height: 40px;
+    line-height: 40px;
+    font-size: 1.3rem;
+}
+
+#children-list:hover {
+    background-color: #f8f8f8;
+}
+
+#children-list:visited {
+    background-color: #304FFE;
+}

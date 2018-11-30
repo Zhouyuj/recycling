@@ -1,11 +1,27 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { RouterModule, Routes } from '@angular/router';
+
+import { PlanComponent } from './plan/plan.component';
+
+const ROUTER_CONFIG: Routes = [
+    {
+        path    : '', component: PlanComponent,
+        /*children: [
+            {
+             path        : 'plan',
+             loadChildren: './plan/plan.module#PlanModule',
+             data        : { title: '方案管理' },
+             },
+        ],*/
+    },
+];
 
 @NgModule({
     imports     : [
-        CommonModule
+        RouterModule.forChild(ROUTER_CONFIG),
     ],
-    declarations: []
+    exports: [RouterModule],
+    declarations: [],
 })
 export class PlanRoutingModule {
 }

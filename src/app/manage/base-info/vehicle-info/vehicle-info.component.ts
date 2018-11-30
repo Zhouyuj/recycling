@@ -96,6 +96,8 @@ export class VehicleInfoComponent implements OnInit {
     onSelect(e: VehicleListModel) {
         this.itemCache = this.listCache.filter(item => item.id == this.list_options.selectedRows[ 0 ].id)[ 0 ];
         this.formCache = ModelConverter.vehicleResToFormModel(this.itemCache);
+        console.log(this.itemCache);
+        console.log(this.formCache);
     }
 
     onKeywordSearch($e, type?: string) {

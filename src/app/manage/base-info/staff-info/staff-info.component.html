@@ -81,24 +81,27 @@
                            [scrollbarH]="true"
                            [selected]="list_options.selectedRows"
                            [selectionType]="'multi'"
-                           [limit]="12"
                            [sorts]="[{prop: 'entryTime', dir: 'desc'}]"
+                           [limit]="12"
+                           [externalPaging]="true"
+                           [count]="pageRes.total"
+                           [offset]="pageRes.page"
                            (select)="onSelect($event)"
                            (page)="onPage($event)"
                            (sort)="onSort($event)"
             >
-                <ngx-datatable-column name="姓名" prop="name"></ngx-datatable-column>
-                <ngx-datatable-column name="工号" prop="username"></ngx-datatable-column>
-                <ngx-datatable-column name="性别" prop="sex"></ngx-datatable-column>
-                <ngx-datatable-column name="岗位" prop="position"></ngx-datatable-column>
-                <ngx-datatable-column name="系统角色" prop="roles"></ngx-datatable-column>
+                <ngx-datatable-column name="姓名" prop="name" [sortable]="false"></ngx-datatable-column>
+                <ngx-datatable-column name="工号" prop="username" [sortable]="false"></ngx-datatable-column>
+                <ngx-datatable-column name="性别" prop="sex" [sortable]="false"></ngx-datatable-column>
+                <ngx-datatable-column name="岗位" prop="position" [sortable]="false"></ngx-datatable-column>
+                <ngx-datatable-column name="系统角色" prop="roles" [sortable]="false"></ngx-datatable-column>
                 <ngx-datatable-column name="入职时间" prop="entryTime"></ngx-datatable-column>
-                <ngx-datatable-column name="身份证" prop="identity"></ngx-datatable-column>
-                <ngx-datatable-column name="家庭住址" prop="address"></ngx-datatable-column>
-                <ngx-datatable-column name="联系电话" prop="mobilePhone"></ngx-datatable-column>
-                <ngx-datatable-column name="紧急联系人" prop="emergencyContact"></ngx-datatable-column>
-                <ngx-datatable-column name="紧急联系人电话" prop="emergencyContactPhone"></ngx-datatable-column>
-                <ngx-datatable-column name="邮箱" prop="email"></ngx-datatable-column>
+                <ngx-datatable-column name="身份证" prop="identity" [sortable]="false"></ngx-datatable-column>
+                <ngx-datatable-column name="家庭住址" prop="address" [sortable]="false"></ngx-datatable-column>
+                <ngx-datatable-column name="联系电话" prop="mobilePhone" [sortable]="false"></ngx-datatable-column>
+                <ngx-datatable-column name="紧急联系人" prop="emergencyContact" [sortable]="false"></ngx-datatable-column>
+                <ngx-datatable-column name="紧急联系人电话" prop="emergencyContactPhone" [sortable]="false"></ngx-datatable-column>
+                <ngx-datatable-column name="邮箱" prop="email" [sortable]="false"></ngx-datatable-column>
             </ngx-datatable>
         </nz-spin>
     </div>

@@ -107,7 +107,7 @@
                         是否参与规划
                     </ng-template>
                     <ng-template let-value="value" ngx-datatable-cell-template>
-                        <label nz-checkbox [ngModel]="value" [nzDisabled]="true"></label>
+                        <label nz-checkbox [ngModel]="value"></label>
                     </ng-template>
                 </ngx-datatable-column>
                 <ngx-datatable-column name="是否可用" prop="available" [sortable]="false">
@@ -115,7 +115,7 @@
                         是否可用
                     </ng-template>
                     <ng-template let-value="value" ngx-datatable-cell-template>
-                        <label nz-checkbox [ngModel]="value" [nzDisabled]="true"></label>
+                        <label nz-checkbox [ngModel]="value"></label>
                     </ng-template>
                 </ngx-datatable-column>
                 <ngx-datatable-column name="车牌号" prop="plateNumber" [sortable]="false"></ngx-datatable-column>
