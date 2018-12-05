@@ -21,6 +21,11 @@ const ROUTER_CONFIG: Routes = [
                 data        : { title: '基础信息' },
             },
             {
+                path        : 'system',
+                loadChildren: './system/system.module#SystemModule',
+                data        : { title: '系统设置' },
+            },
+            {
                 path: 'testMap', component: TestMapComponent, data: { title: '测试地图' },
             },
         ],

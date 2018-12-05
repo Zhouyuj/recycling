@@ -38,7 +38,7 @@ export class AddressReq {
 }
 
 export class CollectionPeriod {
-    public workingDay: string; // Holiday-节假日,Working-工作日
+    public dateType: string; // Holiday-节假日,Working-工作日
     public endTime: number;
     public garbageCategory: string; // KitchenWaste | WasteGrease
     public priorityType: string; // Low-低级,High-中等,Hard-极高

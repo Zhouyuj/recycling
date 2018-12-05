@@ -6,7 +6,7 @@
                 <!-- 面包屑导航 -->
                 <app-breadcrumbs [options]="breadcrumbs"></app-breadcrumbs>
             </div>
-            <div nz-col class="gutter-row" nzSpan="6"  nzOffset="8">
+            <div nz-col class="gutter-row" nzSpan="2" nzOffset="12">
                 <!-- CUDE: create,update,delete,export -->
                 <div class="table-CUDE">
                     <button nz-button
@@ -20,7 +20,7 @@
                     </button>
                     &nbsp;
                     <button nz-button
-                            [disabled]="!formCache"
+                            [disabled]="!selectedItem"
                             nzType="default"
                             nzShape="circle"
                             (click)="onEdit()"
@@ -30,7 +30,7 @@
                         <i class="anticon anticon-edit"></i>
                     </button>
                     &nbsp;
-                    <button nz-button
+                    <!--<button nz-button
                             nz-popconfirm
                             nzTitle="确认删除该信息吗?"
                             (nzOnConfirm)="onDel()"
@@ -70,7 +70,7 @@
                             nzPlacement="topCenter"
                             nz-tooltip>
                         <i class="anticon anticon-close-circle-o"></i>
-                    </button>
+                    </button>-->
                     &nbsp;
                 </div>
             </div>
@@ -79,9 +79,10 @@
     <!-- -------- 表格内容 -------- -->
     <div class="table-content">
         <nz-spin [nzSize]="'large'" [nzSpinning]="isSpinning">
-            <nz-table #basicTable [nzData]="dataSet">
+            <nz-table #planTable [nzData]="listCache">
                 <thead>
                 <tr>
+                    <th></th><!-- 此表头为checkbox -->
                     <th>序号</th>
                     <th>名称</th>
                     <th>路程总数</th>
@@ -92,11 +93,20 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr *ngFor="let data of basicTable.data">
-                    <td></td>
+                <tr *ngFor="let item of planTable.data; index as i" (click)="onClickListItem($event, item)">
+                    <td nzShowCheckbox [(nzChecked)]="item.checked"
+                        (nzCheckedChange)="onSelected($event, item)"></td>
+                    <td>{{i + 1}}</td>
+                    <td>{{item.name}}</td>
+                    <td>{{item.numberOfRoutes}}</td>
+                    <td>{{item.numberOfTasks}}</td>
+                    <td>{{item.state}}</td>
+                    <td>{{item.category}}</td>
+                    <td>{{item.editUser}}</td>
                 </tr>
                 </tbody>
             </nz-table>
         </nz-spin>
+        {{selectedItem | json}}
     </div>
 </div>

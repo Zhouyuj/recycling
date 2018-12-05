@@ -108,6 +108,7 @@ export class StaffInfoComponent implements OnInit {
     }
 
     onSelect(e: StaffListModel) {
+        debugger;
         this.itemCache = this.staffResCache.filter(item => item.id == this.list_options.selectedRows[ 0 ].id)[ 0 ];
         this.formCache = ModelConverter.staffResToFormModel(this.itemCache);
     }

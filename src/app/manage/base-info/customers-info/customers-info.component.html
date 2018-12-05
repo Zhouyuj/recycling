@@ -195,16 +195,19 @@
             </ngx-datatable>-->
 
 
-
             <nz-table #nzTable
-                      [nzScroll]="{ x: '500px' }"
+                      [nzScroll]="{ x: '1000px', y: '500px' }"
                       [nzData]="list_options.rows"
-                      (nzPageIndexChange)="refreshStatus()"
-                      (nzPageSizeChange)="refreshStatus()">
+                      [nzFrontPagination]="false"
+                      [nzTotal]="pageRes.total"
+                      [nzPageIndex]="pageRes.page"
+                      [nzPageSize]="pageRes.size"
+                      (nzPageIndexChange)="onPageV2($event)"
+                      (nzPageSizeChange)="onPageV2($event)">
                 <thead>
                 <tr>
-                    <th nzWidth="30px"></th>
-                    <th nzWidth="30px"></th><!-- 此th与下面的th(全选)互斥,当前先不实现全选 -->
+                    <th nzWidth="50px"></th>
+                    <th nzWidth="62px"></th><!-- 此th与下面的th(全选)互斥,当前先不实现全选 -->
                     <!--<th nzShowCheckbox [(nzChecked)]="allChecked" [nzIndeterminate]="indeterminate" (nzCheckedChange)="checkAll($event)"></th>-->
                     <th nzWidth="150px">类型</th>
                     <th nzWidth="100px">定位</th>
@@ -237,7 +240,8 @@
                         </div>
                     </th>
                     <th nzWidth="150px">派桶数</th>
-                    <th nzWidth="300px" nzShowSort [(nzSort)]="sortMap.createTime" (nzSortChange)="onSortTh('createTime',$event)">登记时间
+                    <th nzWidth="300px" nzShowSort [(nzSort)]="sortMap.createTime"
+                        (nzSortChange)="onSortTh('createTime',$event)">登记时间
                         <div>
                             <input type="text" nz-input placeholder=""
                                    nzSize="small" style="width: 80%;"
@@ -267,10 +271,12 @@
                 <ng-template ngFor let-data [ngForOf]="nzTable.data">
                     <ng-template ngFor let-item [ngForOf]="expandDataCache[data.id]">
                         <tr *ngIf="(item.parent&&item.parent.expand)||!(item.parent)" (click)="onClickTr($event, item)">
-                            <td [nzShowExpand]="!!item.customerList" [(nzExpand)]="item.expand" (nzExpandChange)="collapse(expandDataCache[item.id], item, $event)"></td>
-                            <td nzShowCheckbox [(nzChecked)]="item.checked" [nzDisabled]="item.disabled" (nzCheckedChange)="refreshStatus($event, item)"></td>
+                            <td [nzShowExpand]="!!item.customerList" [(nzExpand)]="item.expand"
+                                (nzExpandChange)="collapse(expandDataCache[item.id], item, $event)"></td>
+                            <td nzShowCheckbox [(nzChecked)]="item.checked" [nzDisabled]="item.disabled"
+                                (nzCheckedChange)="refreshStatus($event, item)"></td>
                             <td>{{item.level ? '子收集点' : (item.customerList ? '聚类点' : '普通点')}}</td>
-                            <td >{{item.lngLat ? '有' : '无'}}</td>
+                            <td>{{item.lngLat ? '有' : '无'}}</td>
                             <td>{{item.images.length}}</td>
                             <td>{{item.name}}</td>
                             <td>{{item.countyName}}</td>

@@ -30,7 +30,7 @@ export class Duration {
 export class DurationDetail {
     id: string = null;
     idx = 0; // 用于页面的增删
-    workingDay: string = null; // Holiday-节假日,Working-工作日
+    dateType: string = null; // Holiday-节假日,Working-工作日
     startTime: Date = null;
     endTime: Date = null;
     priorityType: string = null; // Low-低级,High-中等,Hard-极高

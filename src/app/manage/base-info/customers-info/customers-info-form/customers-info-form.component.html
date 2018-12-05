@@ -222,13 +222,13 @@
                                     </i>
                                     <nz-form-item style="margin-bottom: 5px;">
                                         <nz-form-label [nzSm]="3" [nzXs]="24" nzRequired
-                                                       nzFor="workingDay-{{item.idx}}-food-separate">时间类型
+                                                       nzFor="dateType-{{item.idx}}-food-separate">时间类型
                                         </nz-form-label>
                                         <nz-form-control [nzSm]="4" [nzXs]="24">
                                             <nz-select
-                                                    name="workingDay-{{item.idx}}-food-separate"
+                                                    name="dateType-{{item.idx}}-food-separate"
                                                     nzPlaceHolder="时间段"
-                                                    [(ngModel)]="item.workingDay">
+                                                    [(ngModel)]="item.dateType">
                                                 <nz-option nzLabel="节假日" nzValue="Holiday"></nz-option>
                                                 <nz-option nzLabel="工作日" nzValue="Working"></nz-option>
                                             </nz-select>
@@ -314,16 +314,16 @@
                                     </i>
                                     <nz-form-item style="margin-bottom: 5px;">
                                         <nz-form-label [nzSm]="3" [nzXs]="24" nzRequired
-                                                       nzFor="workingDay-{{item.idx}}-oil-separate">时间类型
+                                                       nzFor="dateType-{{item.idx}}-oil-separate">时间类型
                                         </nz-form-label>
                                         <nz-form-control [nzSm]="4" [nzXs]="24">
                                             <nz-select
-                                                    name="workingDay-{{item.idx}}-oil-separate"
+                                                    name="dateType-{{item.idx}}-oil-separate"
                                                     required
                                                     nzShowSearch
                                                     nzAllowClear
                                                     nzPlaceHolder="时间段"
-                                                    [(ngModel)]="item.workingDay">
+                                                    [(ngModel)]="item.dateType">
                                                 <nz-option nzLabel="节假日" nzValue="Holiday"></nz-option>
                                                 <nz-option nzLabel="工作日" nzValue="Working"></nz-option>
                                             </nz-select>
@@ -545,13 +545,13 @@
                                     </i>
                                     <nz-form-item style="margin-bottom: 5px;">
                                         <nz-form-label [nzSm]="3" [nzXs]="24" nzRequired
-                                                       nzFor="workingDay-{{item.idx}}-food-cluster">时间类型
+                                                       nzFor="dateType-{{item.idx}}-food-cluster">时间类型
                                         </nz-form-label>
                                         <nz-form-control [nzSm]="4" [nzXs]="24">
                                             <nz-select
-                                                    name="workingDay-{{item.idx}}-food-cluster"
+                                                    name="dateType-{{item.idx}}-food-cluster"
                                                     nzPlaceHolder="时间段"
-                                                    [(ngModel)]="item.workingDay">
+                                                    [(ngModel)]="item.dateType">
                                                 <nz-option nzLabel="节假日" nzValue="Holiday"></nz-option>
                                                 <nz-option nzLabel="工作日" nzValue="Working"></nz-option>
                                             </nz-select>
@@ -636,16 +636,16 @@
                                     </i>
                                     <nz-form-item style="margin-bottom: 5px;">
                                         <nz-form-label [nzSm]="3" [nzXs]="24" nzRequired
-                                                       nzFor="workingDay-{{item.idx}}-oil-cluster">时间类型
+                                                       nzFor="dateType-{{item.idx}}-oil-cluster">时间类型
                                         </nz-form-label>
                                         <nz-form-control [nzSm]="4" [nzXs]="24">
                                             <nz-select
-                                                    name="workingDay-{{item.idx}}-oil-cluster"
+                                                    name="dateType-{{item.idx}}-oil-cluster"
                                                     required
                                                     nzShowSearch
                                                     nzAllowClear
                                                     nzPlaceHolder="时间段"
-                                                    [(ngModel)]="item.workingDay">
+                                                    [(ngModel)]="item.dateType">
                                                 <nz-option nzLabel="节假日" nzValue="Holiday"></nz-option>
                                                 <nz-option nzLabel="工作日" nzValue="Working"></nz-option>
                                             </nz-select>

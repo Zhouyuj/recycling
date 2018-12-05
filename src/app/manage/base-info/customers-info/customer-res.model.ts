@@ -44,7 +44,7 @@ export class BusinessLine {
 }
 
 export class CollectionPeriod {
-    public workingDay: string;
+    public dateType: string;
     public endTime: number;
     public garbageCategory: string;
     public priorityType: string;

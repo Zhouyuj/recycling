@@ -2,17 +2,16 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { PlanComponent } from './plan/plan.component';
+import { EditPlanComponent } from './edit-plan/edit-plan.component';
 
 const ROUTER_CONFIG: Routes = [
     {
         path    : '', component: PlanComponent,
-        /*children: [
+        children: [
             {
-             path        : 'plan',
-             loadChildren: './plan/plan.module#PlanModule',
-             data        : { title: '方案管理' },
-             },
-        ],*/
+                path: 'edit', component: EditPlanComponent, data: { title: '编辑' },
+            },
+        ],
     },
 ];
 
@@ -20,7 +19,7 @@ const ROUTER_CONFIG: Routes = [
     imports     : [
         RouterModule.forChild(ROUTER_CONFIG),
     ],
-    exports: [RouterModule],
+    exports     : [ RouterModule ],
     declarations: [],
 })
 export class PlanRoutingModule {

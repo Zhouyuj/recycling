@@ -1,0 +1,118 @@
+<div class="wrap">
+    <!-- -------- 表格操作 -------- -->
+    <div class="table-operations">
+        <div nz-row nzGutter="16">
+            <div nz-col class="gutter-row" nzSpan="10">
+                <!-- 面包屑导航 -->
+                <app-breadcrumbs [options]="breadcrumbs"></app-breadcrumbs>
+            </div>
+            <div nz-col class="gutter-row" nzSpan="8" nzOffset="2">
+            </div>
+            <div nz-col class="gutter-row" nzSpan="4">
+                <div class="table-CUDE">
+                    <button nz-button
+                            (click)="onOpenForm()"
+                            nzType="default"
+                            nzShape="circle"
+                            nzTitle="上传"
+                            nzPlacement="topCenter"
+                            nz-tooltip>
+                        <i class="anticon anticon-upload"></i>
+                    </button>
+                    &nbsp;
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- -------- 表格内容 -------- -->
+    <div class="table-content">
+        <nz-spin [nzSize]="'large'" [nzSpinning]="isTableSpinning">
+            <nz-table #nzTable
+                      [nzScroll]="{ x: '1000px', y: '500px' }"
+                      [nzData]="resCache">
+                <thead>
+                <tr>
+                    <th [nzWidth]="'20%'">更新时间</th>
+                    <th [nzWidth]="'10%'">版本号</th>
+                    <th [nzWidth]="'25%'">更新描述</th>
+                    <th [nzWidth]="'35%'">下载链接</th>
+                    <th [nzWidth]="'10%'">下载应用</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let item of nzTable.data">
+                    <td>{{item.uploadTime | date:'yyyy-MM-dd hh:mm' || '空'}}</td>
+                    <td>{{item.version || '空'}}</td>
+                    <td>{{item.description || '空'}}</td>
+                    <td>{{item.url || '空'}}</td>
+                    <td>
+                        <button nz-button
+                                nzType="primary"
+                                [nzSize]="size"
+                                nzShape="circle"
+                                (click)="onDownload(item.url)">
+                            <i nz-icon type="download" class="anticon anticon-download"></i>
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </nz-table>
+        </nz-spin>
+    </div>
+</div>
+
+<nz-drawer [nzClosable]="false"
+           [nzVisible]="isFormVisible"
+           [nzWidth]="'40%'"
+           nzPlacement="right"
+           nzTitle="上传新版本">
+    <nz-spin [nzSize]="'large'" [nzSpinning]="isFormSpinning">
+        <form nz-form>
+            <nz-form-item>
+                <nz-form-label [nzSpan]="6" nzFor="version">版本号</nz-form-label>
+                <nz-form-control [nzSpan]="16" nzOffset="1">
+                    <input nz-input
+                           id="version"
+                           name="version"
+                           type="text"
+                           placeholder="例如: 2.1"
+                           [(ngModel)]="formCache.version">
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label [nzSpan]="6" nzFor="description">描述</nz-form-label>
+                <nz-form-control [nzSpan]="16" nzOffset="1">
+                    <input nz-input
+                           id="description"
+                           name="description"
+                           type="text"
+                           placeholder="例如: 本次更新了阻塞警报..."
+                           [(ngModel)]="formCache.description">
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label [nzSpan]="6" nzFor="description">APK文件</nz-form-label>
+                <nz-form-control [nzSpan]="16" nzOffset="1">
+                    <nz-upload
+                            [(nzFileList)]="fileList"
+                            [nzBeforeUpload]="onBeforeUpload">
+                        <button nz-button type="button">
+                            <i nz-icon type="upload" class="anticon anticon-upload"></i>
+                            <span>选择</span>
+                        </button>
+                    </nz-upload>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-control [nzSpan]="16" nzOffset="7">
+                    <button nz-button
+                            nzType="default"
+                            style="width: 100%;"
+                            type="button"
+                            (click)="onSubmit()">确定
+                    </button>
+                </nz-form-control>
+            </nz-form-item>
+        </form>
+    </nz-spin>
+</nz-drawer>

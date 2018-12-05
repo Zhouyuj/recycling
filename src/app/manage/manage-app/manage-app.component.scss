@@ -10,3 +10,25 @@
     padding: 1rem;
     position: relative;
 }
+
+/* 包含列表组件的样式 */
+.wrap {
+    width: 100%;
+    height: 100%;
+}
+
+.table-operations {
+    position: relative;
+    z-index: 13;
+    padding-bottom: 8px;
+    [nz-button] {
+    }
+
+    .table-search {
+        text-align: right;
+    }
+
+    .table-CUDE { /* 增删改导出 */
+        text-align: right;
+    }
+}

@@ -68,7 +68,7 @@ export class CustomersInfoComponent implements OnInit {
     public isSpinning = false;
 
     public pageReq = new PageReq(1, 12);
-    public pageRes = new PageRes(1, 12, 1, 1);
+    public pageRes = new PageRes(1, 12);
     public params: any = {};// 分页查询参数
     public keywordType: 'name';
     public keyword = {
@@ -215,6 +215,7 @@ export class CustomersInfoComponent implements OnInit {
                         //this.list_options.rows = this.list_options.rows.map(item => this.convertTreeToList(item));
                         /* 更新列表的信息（分页/排序） */
                         this.updatePageRes(res.data);
+                        console.log(this.expandDataCache);
                     } else {
                         this.list_options.rows = [];
                         this.expandDataCache = {};
@@ -325,8 +326,16 @@ export class CustomersInfoComponent implements OnInit {
      * e: boolean
      * item: expandDataCache 中
      * 点击多选框时,当修改普通点/聚类点时,直接获取
+     * 注意:
+     * 由于点击行通过tr的onClickTr实现
+     * 取消选中只能点击checkbox
      **/
     refreshStatus(e?, item?): void {
+        if (!e) {
+            this.formCache = null;
+            this.selectedItemRes = null;
+            return;
+        }
         if (!item) return;
         // 改成单选, 修改 this.expandDataCache
         // 保存选中的id,将其他项均改为false,再修改id的项
@@ -349,16 +358,14 @@ export class CustomersInfoComponent implements OnInit {
             this.expandDataCache[ item.id ][ 0 ].checked = true;
             this.selectedItemRes = this.listCache.find(l => l.id === item.id);
         }
-        console.log(this.expandDataCache);
         this.formCache = ModelConverter.customerResToFormModel(this.selectedItemRes);
-        console.log(this.formCache);
     }
 
     /** checkable end **/
 
     onClickTr(e, item) {
         e.stopPropagation(true);
-        this.refreshStatus(e, item);
+        this.refreshStatus(true, item);
     }
 
     /**
@@ -378,6 +385,12 @@ export class CustomersInfoComponent implements OnInit {
         this.params[ keyType ] = this.keyword[keyType].replace(/\s/g, '');
         if (!this.params[ keyType ]) {
         }
+        this.getListByPage();
+    }
+
+    onPageV2(e) {
+        console.log(e);
+        this.pageReq.page = e;
         this.getListByPage();
     }
 

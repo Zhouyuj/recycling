@@ -70,11 +70,11 @@ export class ModelConverter {
     public static formModelToCustomerReq(f: FormModel): CustomerReq {
         let c: CustomerReq;
         let foodPeriod = f.duration.food
-            .filter((o: DurationDetail) => o.workingDay !== null)   /* 过滤为空的数据,因为有默认的值 */
+            .filter((o: DurationDetail) => o.dateType !== null)   /* 过滤为空的数据,因为有默认的值 */
             .map((o: DurationDetail) => {
                 return {
                     id             : o.id,
-                    workingDay     : o.workingDay,
+                    dateType     : o.dateType,
                     startTime      : this.calSecondFromHourAndMin(o.startTime),
                     endTime        : this.calSecondFromHourAndMin(o.endTime),
                     priorityType   : o.priorityType,
@@ -83,11 +83,11 @@ export class ModelConverter {
                 }
             });
         let oilPeriod = f.duration.oil
-            .filter((o: DurationDetail) => o.workingDay !== null)   /* 过滤为空的数据 */
+            .filter((o: DurationDetail) => o.dateType !== null)   /* 过滤为空的数据 */
             .map((o: DurationDetail) => {
                 return {
                     id             : o.id,
-                    workingDay     : o.workingDay,
+                    dateType     : o.dateType,
                     startTime      : this.calSecondFromHourAndMin(o.startTime),
                     endTime        : this.calSecondFromHourAndMin(o.endTime),
                     priorityType   : o.priorityType,
@@ -143,7 +143,7 @@ export class ModelConverter {
                 let _d = new DurationDetail();
                 _d.id = item.id;
                 _d.idx = index;
-                _d.workingDay = item.workingDay;
+                _d.dateType = item.dateType;
                 _d.startTime = this.convertSecondToDate(item.startTime);
                 _d.endTime = this.convertSecondToDate(item.endTime);
                 _d.priorityType = item.priorityType;
@@ -155,7 +155,7 @@ export class ModelConverter {
                 let _d = new DurationDetail();
                 _d.id = item.id;
                 _d.idx = index;
-                _d.workingDay = item.workingDay;
+                _d.dateType = item.dateType;
                 _d.startTime = this.convertSecondToDate(item.startTime);
                 _d.endTime = this.convertSecondToDate(item.endTime);
                 _d.priorityType = item.priorityType;

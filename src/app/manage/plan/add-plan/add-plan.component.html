@@ -1,0 +1,129 @@
+<div class="wrap">
+    <div nz-row>
+        <div nz-col nzSpan="18">
+            <div class="left">
+                <div nz-row>
+                    <button nz-button nzType="primary" (click)="onOpenChildren()">新建空白方案</button>
+                </div>
+                <nz-divider [nzText]="basicTemplate" nzOrientation="left">
+                    <ng-template #basicTemplate>
+                        <span style="color: #83bf46;">从已有方案中选择</span>
+                    </ng-template>
+                </nz-divider>
+                <div nz-row class="table-container">
+                    <nz-input-group class="keyword-search-input" nzSearch [nzSuffix]="suffixIconButton">
+                        <input type="text" nz-input [(ngModel)]="params.name" placeholder="请输入方案名称关键字">
+                    </nz-input-group>
+                    <ng-template #suffixIconButton>
+                        <button nz-button
+                                nzType="primary"
+                                (click)="onKeywordSearch()"
+                                nzSearch>
+                            <i class="anticon anticon-search"></i>
+                        </button>
+                    </ng-template>
+                    <nz-spin [nzSize]="'large'" [nzSpinning]="isTableSpinning">
+                        <nz-table #planTable [nzData]="listCache">
+                            <thead>
+                            <tr>
+                                <th></th><!-- 此表头为checkbox -->
+                                <th>序号</th>
+                                <th>名称</th>
+                                <th>路程总数</th>
+                                <th>收集点总数</th>
+                                <th>状态</th>
+                                <th>方案类型</th>
+                                <th>编辑人员</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr *ngFor="let item of planTable.data; index as i" (click)="onClickListItem($event, item)">
+                                <td nzShowCheckbox [(nzChecked)]="item.checked"
+                                    (nzCheckedChange)="onCheckedChange($event, item)"></td>
+                                <td>{{i + 1}}</td>
+                                <td>{{item.name}}</td>
+                                <td>{{item.numberOfRoutes}}</td>
+                                <td>{{item.numberOfTasks}}</td>
+                                <td>{{item.state}}</td>
+                                <td>{{item.category}}</td>
+                                <td>{{item.editUser}}</td>
+                            </tr>
+                            </tbody>
+                        </nz-table>
+                    </nz-spin>
+                </div>
+            </div>
+        </div>
+        <div nz-col nzSpan="6" class="table-form">
+            <form nz-form (ngSubmit)="onSubmitExistPlan()">
+                <nz-form-item>
+                    <nz-form-label [nzSpan]="7" nzFor="plan-name" class="table-form-label">方案名称</nz-form-label>
+                    <nz-form-control [nzSpan]="17">
+                        <input nz-input
+                               name="plan-name"
+                               type="text"
+                               id="plan-name"
+                               [(ngModel)]="formDataExist.name">
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                    <nz-form-label [nzSpan]="7" nzForm="plan-type" class="table-form-label">方案类型</nz-form-label>
+                    <nz-form-control [nzSpan]="17">
+                        <nz-radio-group
+                                name="category-exist"
+                                id="category-exist"
+                                [(ngModel)]="formDataExist.category"
+                                [nzButtonStyle]="'solid'">
+                            <label nz-radio-button [nzValue]="'Formal'">正式方案</label>
+                            <label nz-radio-button [nzValue]="'Demo'">演示方案</label>
+                        </nz-radio-group>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                    <nz-form-control [nzSpan]="8" [nzOffset]="7">
+                        <button nz-button nzType="primary" type="submit">生成方案</button>
+                    </nz-form-control>
+                </nz-form-item>
+            </form>
+        </div>
+    </div>
+</div>
+
+<nz-drawer
+        [nzPlacement]="'left'"
+        [nzWidth]="400"
+        [nzClosable]="false"
+        [nzVisible]="childrenVisible"
+        nzTitle="新建空白方案"
+        (nzOnClose)="onCloseChildren()">
+    <form nz-form>
+        <nz-form-item>
+            <nz-form-label [nzSpan]="7" nzFor="plan-name-new" class="table-form-label">方案名称</nz-form-label>
+            <nz-form-control [nzSpan]="17">
+                <input nz-input
+                       name="plan-name-new"
+                       type="text"
+                       id="plan-name-new"
+                       [(ngModel)]="formDataBlank.name">
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSpan]="7" nzForm="plan-type-new" class="table-form-label">方案类型</nz-form-label>
+            <nz-form-control [nzSpan]="17">
+                <nz-radio-group
+                        name="category-blank"
+                        id="category-blank"
+                        [nzButtonStyle]="'solid'"
+                        [(ngModel)]="formDataBlank.category">
+                    <label nz-radio-button [nzValue]="'Formal'">正式方案</label>
+                    <label nz-radio-button [nzValue]="'Demo'">演示方案</label>
+                </nz-radio-group>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-control [nzSpan]="8" [nzOffset]="7">
+                <button nz-button nzType="primary" (click)="onSubmitBlankPlan()">生成方案</button>
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+</nz-drawer>
