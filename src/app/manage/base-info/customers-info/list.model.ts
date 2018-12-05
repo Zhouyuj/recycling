@@ -20,7 +20,7 @@ export class ListModel {
     mobilePhone: number = null;
     category: string = null;    // Cluster | Separate
     level: number = null; // 0 | 1（0:普通点/聚类点; 1:子收集点）
-    customerList: CustomerRes[] = null; // 此字段与level用于展示 row detail
+    customerList: ListModel[] = null; // 此字段与level用于展示 row detail
     expand = false;    // 展开（聚类点）
     checked = false;    // 多选
     disabled = false;   // 是否可选

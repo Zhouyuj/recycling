@@ -35,6 +35,10 @@ export class CustomersInfoComponent implements OnInit {
     indeterminate = false;
     selectedItemRes: CustomerRes;
     selectedItemId: number;
+    checkedItem = {
+        parentId: null,
+        data    : null,
+    };
     sortMap = {
         createTime: '',
     };   // 操作表格的排序参数
@@ -129,15 +133,15 @@ export class CustomersInfoComponent implements OnInit {
 
     onKeywordSearch(e, type?: string) {
         /*let key = this.keywordType;
-        if (key && type.trim() && this.keyword) {
-            this.params[ key ] = this.keyword.replace(/\s/g, '');
-            this.getListByPage();
-        } else {
-            this.messageService.create({
-                type   : 'warning',
-                content: '请先选择搜索类别',
-            });
-        }*/
+         if (key && type.trim() && this.keyword) {
+         this.params[ key ] = this.keyword.replace(/\s/g, '');
+         this.getListByPage();
+         } else {
+         this.messageService.create({
+         type   : 'warning',
+         content: '请先选择搜索类别',
+         });
+         }*/
     }
 
     onSelect(e: ListModel) {
@@ -211,11 +215,13 @@ export class CustomersInfoComponent implements OnInit {
                         this.listCache = res.data.content;
                         /* 组装（列表类型的）列表数据 */
                         this.list_options.rows = this.dataToTableRows(res.data.content);
-                        this.list_options.rows.forEach(item => this.expandDataCache[ item.id ] = this.convertTreeToList(item));
-                        //this.list_options.rows = this.list_options.rows.map(item => this.convertTreeToList(item));
+                        //this.list_options.rows.forEach(item => this.expandDataCache[ item.id ] =
+                        // this.convertTreeToList(item)); this.list_options.rows = this.list_options.rows.map(item =>
+                        // this.convertTreeToList(item));
                         /* 更新列表的信息（分页/排序） */
                         this.updatePageRes(res.data);
                         console.log(this.expandDataCache);
+                        console.log(this.list_options.rows);
                     } else {
                         this.list_options.rows = [];
                         this.expandDataCache = {};
@@ -246,7 +252,7 @@ export class CustomersInfoComponent implements OnInit {
      * @param data
      */
     updatePageRes(data: PageRes<CustomerRes[]>): void {
-        this.pageRes = new PageRes(data.page - 1 || 0, data.size || 12, data.pages || 1, data.total || 1, data.last || false);
+        this.pageRes = new PageRes(data.page, data.size, data.pages, data.total, data.last);
     }
 
     updatePageReq(pageInfo: { count: number, pageSize: number, limit: number, offset: number }): void {
@@ -361,12 +367,41 @@ export class CustomersInfoComponent implements OnInit {
         this.formCache = ModelConverter.customerResToFormModel(this.selectedItemRes);
     }
 
-    /** checkable end **/
+    onCheckedChange(isChecked: boolean, target: ListModel) {
+        if (!isChecked) {
+            this.formCache = null;
+            return;
+        }
+        // 单选
+        this.list_options.rows.forEach((item: ListModel) => {
+            item.checked = false;
+            if (item.id === target.id) {
+                item.checked = true;
+                this.formCache = ModelConverter.customerResToFormModel(this.listCache.find(l => l.id === target.id));
+            }
+            if (item.customerList && item.customerList.length) {
+                item.customerList.forEach((l: ListModel) => {
+                    l.checked = false;  // 所有子收集点改为 false
+                    if (l.id === target.id) {
+                        l.checked = true;
+                        this.formCache = ModelConverter.customerResToFormModel(
+                            this.listCache
+                                .find(l => l.id === item.id).customerList
+                                .find(l => l.id === target.id)
+                        );
+                    }
+                })
+            }
+        });
+    }
 
     onClickTr(e, item) {
         e.stopPropagation(true);
-        this.refreshStatus(true, item);
+        this.onCheckedChange(true, item);
     }
+
+    /** checkable end **/
+
 
     /**
      * @param type: this.sortMap 的值
@@ -382,9 +417,10 @@ export class CustomersInfoComponent implements OnInit {
     }
 
     onKeywordSearchTh(keyType: string) {
-        this.params[ keyType ] = this.keyword[keyType].replace(/\s/g, '');
+        this.params[ keyType ] = this.keyword[ keyType ].replace(/\s/g, '');
         if (!this.params[ keyType ]) {
         }
+        //console.log(this.params);
         this.getListByPage();
     }
 

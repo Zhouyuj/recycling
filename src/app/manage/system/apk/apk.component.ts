@@ -120,7 +120,7 @@ export class ApkComponent implements OnInit {
         this.isTableSpinning = true;
         const url = `${this.env.api}/apps/latest`;
         this.apkService.getApkList(url).subscribe((res: Result<ApkRes>) => {
-            this.resCache = [ res.data ];
+            this.resCache = res.data ? [ res.data ] : [];
             this.resCache.forEach(item => {
                 item.uploadTime = new Date(item.uploadTime);
             });
