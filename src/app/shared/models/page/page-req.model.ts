@@ -12,4 +12,9 @@ export class PageReq {
     /*public setSort(pageSort: PageSort): void {
         this.sort = pageSort.getSortString();
     }*/
+
+    public reset() {
+        this.page = 1;
+        this.sort = '';
+    }
 }

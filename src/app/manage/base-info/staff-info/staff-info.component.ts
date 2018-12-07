@@ -108,7 +108,6 @@ export class StaffInfoComponent implements OnInit {
     }
 
     onSelect(e: StaffListModel) {
-        debugger;
         this.itemCache = this.staffResCache.filter(item => item.id == this.list_options.selectedRows[ 0 ].id)[ 0 ];
         this.formCache = ModelConverter.staffResToFormModel(this.itemCache);
     }
@@ -155,7 +154,7 @@ export class StaffInfoComponent implements OnInit {
             .create<StaffInfoFormComponent, { type: string, success: boolean, cache: StaffFormModel }, boolean>({
                 nzTitle        : { add: '添加', edit: '编辑' }[ type ] || '请编辑表单',
                 nzContent      : StaffInfoFormComponent,
-                nzWidth        : '55%',
+                nzWidth        : '65%',
                 nzContentParams: {
                     type   : type,
                     success: false,

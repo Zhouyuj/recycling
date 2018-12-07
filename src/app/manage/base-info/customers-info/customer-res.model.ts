@@ -11,7 +11,7 @@ export class CustomerRes {
     public createdDate: string;
     public customerList: CustomerRes[];
     public dustbin: number;
-    public id: string; // *
+    public id: number; // *
     public images: [{ id: number, type: string, url: string }];
     public name: string; // *
     public needKey: boolean;
@@ -34,18 +34,6 @@ export class Address {
     public detailedAddress: string;
 }
 
-export class BusinessLine {
-    public businessType: string;
-    public collectionPeriodList: [CollectionPeriod];
-    public needKey: boolean;
-
-    constructor(bl: any) {
-        this.businessType = bl.businessType;
-        this.collectionPeriodList = bl.collectionPeriodList;
-        this.needKey = bl.needKey;
-    }
-}
-
 export class CollectionPeriod {
     public dateType: string;
     public endTime: number;
@@ -53,7 +41,7 @@ export class CollectionPeriod {
     public priorityType: string;
     public plateNumber: string;
     public startTime: number;
-    public id: string;
+    public id: number;
 }
 
 export class ContactInfo {

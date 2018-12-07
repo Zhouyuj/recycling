@@ -43,13 +43,7 @@ export class CustomersInfoService extends RebirthHttp {
 
     @GET('/customers')
     public getCustomerList(@Query('page') page: PageReq,
-                           @Query('params') params?: any
-                           /*@Query('address') address?: string,
-                            @Query('contactName') contactName?: string,
-                            @Query('mobilePhone') mobilePhone?: string,
-                            @Query('name') name?: string,
-                            @Query('state') state?: string,
-                            @Query('username') username?: string*/): Observable<Result<PageRes<CustomerRes[]>>> {//TODO
+                           @Query('params') params?: any): Observable<Result<PageRes<CustomerRes[]>>> {//TODO
         return null;
     }
 
@@ -58,7 +52,7 @@ export class CustomersInfoService extends RebirthHttp {
      * @returns {null}
      */
     @POST('/customers')
-    public addCustomer(@Body customer: CustomerReq): Observable<Result<{ id: string }>> {
+    public addCustomer(@Body customer: CustomerReq): Observable<Result<{ id: number }>> {
         return null;
     }
 
@@ -67,7 +61,7 @@ export class CustomersInfoService extends RebirthHttp {
      * @returns {null}
      */
     @PUT('/customers/:id')
-    public updateCustomer(@Body customer: CustomerReq, @Path('id') id?: string): Observable<Result<{ id: string }>> {
+    public updateCustomer(@Body customer: CustomerReq, @Path('id') id?: number): Observable<Result<{ id: string }>> {
         return null;
     }
 
@@ -76,7 +70,7 @@ export class CustomersInfoService extends RebirthHttp {
      * @returns {null}
      */
     @DELETE('/customers/:id')
-    public delCustomer(@Path('id') id: string): Observable<Result<{ id: string }>> {
+    public delCustomer(@Path('id') id: number): Observable<Result<{ status: string }>> {
         return null;
     }
 

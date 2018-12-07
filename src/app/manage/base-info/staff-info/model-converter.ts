@@ -35,16 +35,16 @@ export class ModelConverter {
         let f: StaffFormModel;
         f = {
             id                   : res.id,
-            name                 : res.name || null,
-            sex                  : res.sex || null,
-            username             : res.username || null,
-            password             : null,
-            position             : res.post.id + '' || null,
+            name                 : res.name || '',
+            sex                  : res.sex || '',
+            username             : res.username || '',
+            password             : '',
+            position             : res.post.id + '',
             roles                : res.roles.length > 0 ? res.roles.map(role => `${role.id}`) : null,
             entryTime            : new Date(res.entryTime) || null,
-            identity             : res.identity || null,
-            landlinePhone        : res.contactInfo.landlinePhone || null,
-            mobilePhone          : res.contactInfo.mobilePhone || null,
+            identity             : res.identity || '',
+            landlinePhone        : res.contactInfo.landlinePhone || '',
+            mobilePhone          : res.contactInfo.mobilePhone || '',
             address              : this.getDistrictCodeByRes(res.address) || null,
             detailAddress        : res.address.detailedAddress || null,
             emergencyContact     : res.contactInfo.emergencyContact || null,
@@ -83,7 +83,7 @@ export class ModelConverter {
     }
 
     public static getDistrictCodeByRes(res: AddressRes): string[] {
-        return [ `${res.provinceCode}`, `${res.cityCode}`, `${res.countyCode}` ];
+        return [ `${res.provinceCode}`, `${res.cityCode}`, `${res.countyCode}`, `${res.streetCode}` ];
     }
 
     public static getRoleNames(roles: [{id: number, name: string}]): string {

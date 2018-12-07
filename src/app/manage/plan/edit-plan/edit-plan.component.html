@@ -1,3 +1,273 @@
-<p>
-  edit-plan works!
-</p>
+<div class="wrap">
+    <!-- -------- 表格操作 -------- -->
+    <div class="table-operations">
+        <div nz-row nzGutter="16">
+            <div nz-col nzSpan="10">
+                <!-- 面包屑导航 -->
+                <app-breadcrumbs [options]="breadcrumbs"></app-breadcrumbs>
+            </div>
+            <div nz-col nzSpan="6" nzOffset="8">
+                <!-- CUDE: create,update,delete,export -->
+                <div class="table-CUDE">
+                    <button nz-button
+                            nzType="default"
+                            nzShape="circle"
+                            nzTitle="保存"
+                            nzPlacement="topCenter"
+                            nz-tooltip>
+                        <i class="anticon anticon-plus-circle-o"></i>
+                    </button>
+                    &nbsp;
+                    <button nz-button
+                            nzType="default"
+                            nzShape="circle"
+                            nzTitle="方案预测"
+                            nzPlacement="topCenter"
+                            nz-tooltip>
+                        <i class="anticon anticon-bar-chart"></i>
+                    </button>
+                    &nbsp;
+                    <!--<button nz-button
+                            nz-popconfirm
+                            nzTitle="确认删除该信息吗?"
+                            (nzOnConfirm)="onDel()"
+                            [disabled]="!formCache"
+                            nzType="default"
+                            nzShape="circle"
+                            nzPlacement="topCenter"
+                            nz-tooltip>
+                        <i class="anticon anticon-minus-circle-o"></i>
+                    </button>
+                    &nbsp;
+                    <button nz-button
+                            nzType="default"
+                            nzShape="circle"
+                            (click)="onEdit()"
+                            nzTitle="计算"
+                            nzPlacement="topCenter"
+                            nz-tooltip>
+                        <i class="anticon anticon-line-chart"></i>
+                    </button>
+                    &nbsp;
+                    <button nz-button
+                            nzType="default"
+                            nzShape="circle"
+                            (click)="onExp()"
+                            nzTitle="执行"
+                            nzPlacement="topCenter"
+                            nz-tooltip>
+                        <i class="anticon anticon-play-circle-o"></i>
+                    </button>
+                    &nbsp;
+                    <button nz-button
+                            nzType="default"
+                            nzShape="circle"
+                            (click)="onExp()"
+                            nzTitle="停止"
+                            nzPlacement="topCenter"
+                            nz-tooltip>
+                        <i class="anticon anticon-close-circle-o"></i>
+                    </button>-->
+                    &nbsp;
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- -------- 表格内容 -------- -->
+    <div class="table-content">
+        <div nz-row nzGutter="16">
+            <div nz-col nzSpan="7">
+                <div class="inner-table-opt">
+                    <div nz-row>
+                        <div nz-col nzSpan="4" class="inner-table-title">
+                            <i nz-icon class="anticon anticon-environment location"></i>
+                            路线
+                        </div>
+                        <div nz-col nzSpan="19" nzOffset="1" class="inner-table-btns">
+                            <button nz-button
+                                    nzType="default">
+                                <i class="anticon anticon-plus-circle-o"></i>新增
+                            </button>
+                            &nbsp;
+                            <button nz-button
+                                    nzType="default">
+                                <i class="anticon anticon-car"></i>选择车辆
+                            </button>
+                            &nbsp;
+                            <button nz-button
+                                    nz-popconfirm
+                                    nzTitle="确认删除该信息吗?"
+                                    (nzOnConfirm)="onDelRoutes()"
+                                    nzType="default"
+                                    nzPlacement="topCenter">
+                                <i class="anticon anticon-minus-circle-o"></i>删除
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <nz-spin [nzSize]="'large'" [nzSpinning]="isRoutesSpinning">
+                    <nz-table #routesTable
+                              [nzData]="listCache"
+                              [nzScroll]="{ y: '500px' }"
+                              [nzFrontPagination]="false"
+                              [nzTotal]="pageRes.total"
+                              [nzPageIndex]="pageRes.page"
+                              [nzPageSize]="pageRes.size"
+                              (nzPageIndexChange)="onPage($event)"
+                              (nzPageSizeChange)="onPage($event)">
+                        <thead>
+                        <tr>
+                            <th nzWidth="62px"></th><!-- 此表头为checkbox -->
+                            <th nzWidth="70px">
+                                锁定
+                            </th>
+                            <th nzWidth="100px">
+                                路线名称
+                            </th>
+                            <th nzWidth="100px">
+                                车牌号
+                            </th>
+                            <th nzWidth="100px">
+                                优先级
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </nz-table>
+                </nz-spin>
+            </div>
+            <div nz-col nzSpan="7">
+                <div class="inner-table-opt">
+                    <div nz-row>
+                        <div nz-col nzSpan="4" class="inner-table-title">
+                            <i nz-icon class="anticon anticon-check location"></i>
+                            已派发
+                        </div>
+                        <div nz-col nzSpan="19" nzOffset="1" class="inner-table-btns">
+                            <button nz-button
+                                    nz-popconfirm
+                                    nzTitle="确认取消派发?"
+                                    (nzOnConfirm)="onCancelDistribute()"
+                                    nzType="default"
+                                    nzPlacement="topCenter">
+                                取消派发
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <nz-spin [nzSize]="'large'" [nzSpinning]="isDistributeSpinning">
+                    <nz-table #routesTable
+                              [nzData]="listCache"
+                              [nzScroll]="{ y: '500px' }"
+                              [nzFrontPagination]="false"
+                              [nzTotal]="pageRes.total"
+                              [nzPageIndex]="pageRes.page"
+                              [nzPageSize]="pageRes.size"
+                              (nzPageIndexChange)="onPage($event)"
+                              (nzPageSizeChange)="onPage($event)">
+                        <thead>
+                        <tr>
+                            <th nzWidth="62px"></th><!-- 此表头为checkbox -->
+                            <th nzWidth="70px">
+                                名称
+                            </th>
+                            <th nzWidth="100px">
+                                收运时间
+                            </th>
+                            <th nzWidth="100px">
+                                收运量
+                            </th>
+                            <th nzWidth="100px">
+                                状态
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </nz-table>
+                </nz-spin>
+            </div>
+            <div nz-col nzSpan="10">
+                <div class="inner-table-opt">
+                    <div nz-row>
+                        <div nz-col nzSpan="4" class="inner-table-title">
+                            <i nz-icon class="anticon anticon-to-top location"></i>
+                            收运请求
+                        </div>
+                        <div nz-col nzSpan="19" nzOffset="1" class="inner-table-btns">
+                            <button nz-button
+                                    nzType="default">
+                                新增
+                            </button>
+                            &nbsp;
+                            <button nz-button
+                                    nz-popconfirm
+                                    nzTitle="确认删除该请求?"
+                                    (nzOnConfirm)="onDelDemand()"
+                                    nzType="default"
+                                    nzPlacement="topCenter">
+                                删除
+                            </button>
+                            &nbsp;
+                            <button nz-button
+                                    nzType="default">
+                                选择车辆
+                            </button>
+                            &nbsp;
+                            <button nz-button
+                                    nzType="default">
+                                规划
+                            </button>
+                            &nbsp;
+                            <button nz-button
+                                    nzType="default">
+                                派发
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <nz-spin [nzSize]="'large'" [nzSpinning]="isRoutesSpinning">
+                    <nz-table #routesTable
+                              [nzData]="listCache"
+                              [nzScroll]="{ y: '500px' }"
+                              [nzFrontPagination]="false"
+                              [nzTotal]="pageRes.total"
+                              [nzPageIndex]="pageRes.page"
+                              [nzPageSize]="pageRes.size"
+                              (nzPageIndexChange)="onPage($event)"
+                              (nzPageSizeChange)="onPage($event)">
+                        <thead>
+                        <tr>
+                            <th nzWidth="62px"></th><!-- 此表头为checkbox -->
+                            <th nzWidth="100px">
+                                名称
+                            </th>
+                            <th nzWidth="100px">
+                                收运时间
+                            </th>
+                            <th nzWidth="100px">
+                                收运量
+                            </th>
+                            <th nzWidth="100px">
+                                日期类型
+                            </th>
+                            <th nzWidth="100px">
+                                超时等级
+                            </th>
+                            <th nzWidth="100px">
+                                指定车辆
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </nz-table>
+                </nz-spin>
+            </div>
+        </div>
+    </div>
+</div>

@@ -64,6 +64,7 @@
 <nz-drawer [nzClosable]="false"
            [nzVisible]="isFormVisible"
            [nzWidth]="'40%'"
+           (nzOnClose)="onCloseForm()"
            nzPlacement="right"
            nzTitle="上传新版本">
     <nz-spin [nzSize]="'large'" [nzSpinning]="isFormSpinning">

@@ -75,7 +75,6 @@ export class ApkComponent implements OnInit {
 
     // TODO
     onSubmit() {
-        debugger;
         console.count();
         if (!this.formCache.version || !this.formCache.description || !this.fileList) {
             this.messageService.create({
@@ -106,11 +105,14 @@ export class ApkComponent implements OnInit {
                 this.getListByPage();
                 this.onCloseForm();
             },
-            err => this.notificationService.create({
-                type   : 'error',
-                title  : '抱歉,上传失败',
-                content: `${err.message}`,
-            })
+            err => {
+                this.notificationService.create({
+                    type   : 'error',
+                    title  : '抱歉,上传失败',
+                    content: `${err.message}`,
+                });
+                this.isFormSpinning = false;
+            }
         );
     }
 
@@ -119,13 +121,16 @@ export class ApkComponent implements OnInit {
     getListByPage() {
         this.isTableSpinning = true;
         const url = `${this.env.api}/apps/latest`;
-        this.apkService.getApkList(url).subscribe((res: Result<ApkRes>) => {
-            this.resCache = res.data ? [ res.data ] : [];
-            this.resCache.forEach(item => {
-                item.uploadTime = new Date(item.uploadTime);
-            });
-            this.isTableSpinning = false;
-        });
+        this.apkService.getApkList(url).subscribe(
+            (res: Result<ApkRes>) => {
+                this.resCache = res.data ? [ res.data ] : [];
+                this.resCache.forEach(item => {
+                    item.uploadTime = new Date(item.uploadTime);
+                });
+                this.isTableSpinning = false;
+            },
+            err => this.isTableSpinning = false
+        );
     }
 
 }

@@ -2,7 +2,7 @@
  * Created by wujiahui on 2018/11/8.
  */
 
-import { CustomerRes, Address, BusinessLine, CollectionPeriod } from './customer-res.model';
+import { CustomerRes, Address, CollectionPeriod } from './customer-res.model';
 import { FormModel, Duration, ChildCollections, DurationDetail } from './form.model';
 import { CustomerReq, AddressReq, ContactInfo} from './customer-req.model';
 import { ListModel } from './list.model';
@@ -14,22 +14,28 @@ export class ModelConverter {
         let f: FormModel;
         f = {
             id               : o.id,
-            collectionName   : o.name || null,
+            collectionName   : o.name || '',
             category         : o.category,
-            address          : [ o.address.provinceCode + '', o.address.cityCode + '', o.address.countyCode + '' ] || null,
-            account          : o.username || null,
-            password         : null,
-            detailAddress    : o.address && o.address.detailedAddress || null,
-            contactPersonName: o.contactInfo && o.contactInfo.contactName || null,
-            mobile           : o.contactInfo && o.contactInfo.mobilePhone + '' || null,
+            address          : [
+                o.address.provinceCode + '',
+                o.address.cityCode + '',
+                o.address.countyCode + '',
+                o.address.streetCode
+            ] || null,
+            account          : o.username || '',
+            password         : '',
+            detailAddress    : o.address && o.address.detailedAddress || '',
+            contactPersonName: o.contactInfo && o.contactInfo.contactName || '',
+            mobile           : (o.contactInfo && o.contactInfo.mobilePhone || '') + '',
             dustbinCounts    : o.dustbin || null,
-            collectionType   : o.type.id + '' || null,
-            tel              : o.contactInfo && o.contactInfo.landlinePhone || null,
+            collectionType   : o.type.id + '' || '',
+            tel              : o.contactInfo && o.contactInfo.landlinePhone || '',
             hasKey           : o.needKey ? '1' : '0',
             duration         : this.convertToDuration(o.collectionPeriodList) || null,
             childCollections : this.convertToChildCollection(o.customerList) || null,
-            lat              : o.address && o.address.lat + '' || null,
-            lng              : o.address && o.address.lng + '' || null,
+            lat              : o.address && o.address.lat + '' || '',
+            lng              : o.address && o.address.lng + '' || '',
+            level            : o.level,
         };
         return f;
     }
@@ -39,14 +45,14 @@ export class ModelConverter {
         l = {
             id           : o.id,
             lngLat       : `(${o.address.lng}, ${o.address.lat})` || '',
-            images       : o.images ? o.images.length : 0,
+            images       : o.images || null,
             name         : o.name,
-            county       : o.address.county,
+            countyName   : o.address.county,
             duration     : o.collectionPeriodList ? o.collectionPeriodList.length : 0,
             detailAddress: o.address.detailedAddress,
             username     : o.username || '',
             totalDustbins: o.dustbin || 0,
-            createTime   : DateUtil.dateFormat(new Date(o.createdDate), 'yyyy-MM-dd'),
+            createdDate  : DateUtil.dateFormat(new Date(o.createdDate), 'yyyy-MM-dd'),
             contactName  : o.contactInfo ? o.contactInfo.contactName : '',
             mobilePhone  : o.contactInfo ? o.contactInfo.mobilePhone : '',
             category     : o.category,
@@ -74,7 +80,7 @@ export class ModelConverter {
             .map((o: DurationDetail) => {
                 return {
                     id             : o.id,
-                    dateType     : o.dateType,
+                    dateType       : o.dateType,
                     startTime      : this.calSecondFromHourAndMin(o.startTime),
                     endTime        : this.calSecondFromHourAndMin(o.endTime),
                     priorityType   : o.priorityType,
@@ -87,7 +93,7 @@ export class ModelConverter {
             .map((o: DurationDetail) => {
                 return {
                     id             : o.id,
-                    dateType     : o.dateType,
+                    dateType       : o.dateType,
                     startTime      : this.calSecondFromHourAndMin(o.startTime),
                     endTime        : this.calSecondFromHourAndMin(o.endTime),
                     priorityType   : o.priorityType,
@@ -99,6 +105,7 @@ export class ModelConverter {
             .filter((o: ChildCollections) => o.name && o.name !== null)
             .map((cc: ChildCollections) => {
                 return {
+                    id  : cc.id || null,
                     name: cc.name
                 }
             });
@@ -108,6 +115,7 @@ export class ModelConverter {
                 provinceCode   : f.address[ 0 ] || null,
                 cityCode       : f.address[ 1 ] || null,
                 countyCode     : f.address[ 2 ] || null,
+                streetCode     : f.address[ 3 ] || null,
                 detailedAddress: f.detailAddress || null,
                 lat            : f.lat || null,
                 lng            : f.lng || null,

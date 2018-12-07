@@ -2,7 +2,7 @@
  * Created by wujiahui on 2018/11/6.
  */
 export class FormModel {
-    id: string = null;
+    id: number = null;
     collectionName: string = null;
     category: string = 'Separate';   // 业务上分: 聚类点Cluster / 普通收集点Separate
     address: string[];
@@ -19,6 +19,7 @@ export class FormModel {
     childCollections: ChildCollections[] = [ new ChildCollections() ];
     lat: string = null;
     lng: string = null;
+    level: number = null; // 显示/隐藏 收运时间段
 }
 
 export class Duration {
@@ -28,7 +29,7 @@ export class Duration {
 }
 
 export class DurationDetail {
-    id: string = null;
+    id: number = null;
     idx = 0; // 用于页面的增删
     dateType: string = null; // Holiday-节假日,Working-工作日
     startTime: Date = null;
@@ -44,9 +45,9 @@ export class DurationDetail {
 export class ChildCollections {
     idx = 0; // 用于页面的增删
     name: string = null;
-    id: string = null;
+    id: number = null;
 
-    constructor(idx?: number, name?: string, id?: string) {
+    constructor(idx?: number, name?: string, id?: number) {
         this.idx = idx || 0;
         this.name = name;
         this.id = id;

@@ -33,7 +33,6 @@ export class CustomersInfoFormComponent implements OnInit {
     public vehicles: string[];
     public isVehiclesLoading = false;
     public selectedCategory: 'Separate' | 'Cluster' | string;
-    public formModel: FormModel = new FormModel();   // 普通收集点/子收集点
     public formModelSeparate: FormModel = new FormModel();   // 普通收集点/子收集点
     public formModelCluster: FormModel = new FormModel();   // 聚类点
     public customerReq: CustomerReq;
@@ -57,14 +56,13 @@ export class CustomersInfoFormComponent implements OnInit {
         } else {
             this.selectedCategory = 'Separate';
             this.formModelSeparate = new FormModel();
-            this.formModelSeparate.address = [ '350000', '350600', '350603' ];   // 初始化地区为龙文区
+            this.formModelSeparate.address = [ '350000', '350600', '350603', '350603100' ];   // 初始化地区为龙文区
             this.formModelSeparate.category = this.selectedCategory;
             this.formModelCluster = new FormModel();
-            this.formModelCluster.address = [ '350000', '350600', '350603' ];   // 初始化地区为龙文区
+            this.formModelCluster.address = [ '350000', '350600', '350603', '350603100' ];   // 初始化地区为龙文区
             this.formModelCluster.category = 'Cluster';
         }
         this.initVehicles();
-
     }
 
     /**
@@ -92,7 +90,6 @@ export class CustomersInfoFormComponent implements OnInit {
 
     onSearchVehicles(e) {
         this.isVehiclesLoading = true;
-        console.log('search vehicles')
         let district: string;
         if (this.selectedCategory === 'Separate') {
             district = this.formModelSeparate.address[ 2 ] || '';
@@ -100,7 +97,6 @@ export class CustomersInfoFormComponent implements OnInit {
             district = this.formModelCluster.address[ 2 ] || '';
         }
         this.searchChange$.next({ districtCode: district, plateNumber: e });
-        console.log(district);
     }
 
     onVehicleSearchOpen(e) {
@@ -122,6 +118,7 @@ export class CustomersInfoFormComponent implements OnInit {
     onSubmitForm(): void {
         this.isSpinning = true;
         this.transformFormModelToRequest();
+        debugger;
         switch (this.type) {
             case 'add':
                 this.customersInfoService.addCustomer(this.customerReq).subscribe(
@@ -196,7 +193,6 @@ export class CustomersInfoFormComponent implements OnInit {
      * @param category: Cluster | Separate
      */
     onAddDuration(type: string): void {
-        console.log(type);
         switch (this.selectedCategory) {
             case 'Separate':    /* 普通点 | 子收集点 */
                 const lengthS = this.formModelSeparate.duration[ type ].length || 0;
@@ -214,8 +210,6 @@ export class CustomersInfoFormComponent implements OnInit {
                 this.formModelCluster.duration[ type ].push(new DurationDetail(newIdC));
                 break;
         }
-        console.log(this.formModelSeparate.duration);
-        console.log(this.formModelCluster.duration);
     }
 
     onRemoveDuration(durationType: string, idx: number) {
@@ -234,18 +228,18 @@ export class CustomersInfoFormComponent implements OnInit {
     }
 
     onAddChildCollection(): void {
-        let length = this.formModelSeparate.childCollections.length || 0;
-        let newIdx = this.formModelSeparate.childCollections[ length - 1 ].idx + 1;
-        this.formModelSeparate.childCollections.push(new ChildCollections(newIdx));
+        let length = this.formModelCluster.childCollections.length || 0;
+        let newIdx = this.formModelCluster.childCollections[ length - 1 ].idx + 1;
+        this.formModelCluster.childCollections.push(new ChildCollections(newIdx));
     }
 
     onRemoveChildCollections(idx: number) {
-        if (this.formModelSeparate.childCollections.length == 1) {
+        if (this.formModelCluster.childCollections.length == 1) {
             return;
         }
-        let result = this.formModelSeparate.childCollections.filter(item => {
+        let result = this.formModelCluster.childCollections.filter(item => {
             return item.idx !== idx;
         });
-        this.formModelSeparate.childCollections = result;
+        this.formModelCluster.childCollections = result;
     }
 }

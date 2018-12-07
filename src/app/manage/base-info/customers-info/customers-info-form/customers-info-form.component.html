@@ -20,8 +20,8 @@
                             [nzButtonStyle]="'solid'"
                             [(ngModel)]="selectedCategory"
                             #category="ngModel">
-                        <label nz-radio-button nzValue='Separate'>普通收集点</label>
-                        <label nz-radio-button nzValue='Cluster'>广场点</label>
+                        <label nz-radio-button nzValue='Separate' [nzDisabled]="type === 'edit'">普通收集点</label>
+                        <label nz-radio-button nzValue='Cluster'  [nzDisabled]="type === 'edit'">广场点</label>
                     </nz-radio-group>
                     <nz-form-explain [hidden]="category.valid || category.pristine">请选择类别</nz-form-explain>
                 </nz-form-control>
@@ -201,8 +201,7 @@
                         <nz-form-explain [hidden]="hasKey.valid || hasKey.pristine">请选择是否</nz-form-explain>
                     </nz-form-control>
                 </nz-form-item>
-
-                <nz-form-item style="margin-bottom: -5px;" *ngIf="type === 'add' || formModelSeparate.level === 0">
+                <nz-form-item style="margin-bottom: -5px;" *ngIf="type === 'add' || (cache ? cache.level : formModelSeparate.level) === 0">
                     <nz-form-label [nzSm]="24" [nzXs]="24" nzRequired style="text-align: left;">
                         要求收运时间段(至少选择一个)
                     </nz-form-label>
@@ -283,7 +282,7 @@
                                             <nz-select
                                                     required
                                                     name="vehicle-{{item.idx}}-food-separate"
-                                                    [(ngModel)]="item.vehicle"
+                                                    [(ngModel)]="item.plateNumber"
                                                     nzPlaceHolder="请指定车辆"
                                                     nzAllowClear
                                                     nzShowSearch

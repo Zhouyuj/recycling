@@ -45,7 +45,10 @@ export class ApkService  {
     addApk(formData: FormData, url: string) {
         const httpOptions = {
             headers: new HttpHeaders({ 'Content-Type': 'multipart/form-data' }),
-        }
+            //headers: new HttpHeaders().set('Content-Type', 'multipart/form-data'),
+            //headers: { 'Content-Type': 'multipart/form-data' },
+            //headers: { 'Content-Type': 'multipart/form-data', 'X-RequestedWith': 'XMLHttpRequest' },
+        };
         return this.http.post(url, formData, httpOptions);
     }
 }

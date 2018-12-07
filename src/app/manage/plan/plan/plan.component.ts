@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { PlanListModel } from './../models/plan-list.model';
 import { PageRes } from '../../../shared/models/page/page-res.model';
 import { PageReq } from '../../../shared/models/page/page-req.model';
@@ -8,6 +9,8 @@ import { Result } from '../../../shared/models/response/result.model';
 import { ModelConverter } from './../models/model-converter';
 import { NzModalService, NzDrawerService } from 'ng-zorro-antd';
 import { AddPlanComponent } from '../add-plan/add-plan.component';
+import { PlanStateEnum,PlanStateEnumChinese } from '../models/plan.enum';
+import { RouteRes } from '../models/route-res.model';
 
 @Component({
     selector   : 'app-plan',
@@ -33,16 +36,26 @@ export class PlanComponent implements OnInit {
 
     pageReq = new PageReq();
     pageRes = new PageRes();
-    params = {};
 
-    planNameKeyword: string;    // 方案名称搜索
+    params = {
+        name  : '',
+        status: '',
+    };
+    planStateList = [
+        { text: PlanStateEnumChinese.Completed, value: PlanStateEnum.Completed },
+        { text: PlanStateEnumChinese.Executing, value: PlanStateEnum.Executing },
+        { text: PlanStateEnumChinese.Stopped, value: PlanStateEnum.Stopped },
+        { text: PlanStateEnumChinese.UnExecuted, value: PlanStateEnum.UnExecuted },
+    ];
 
     resCache: PlanRes[];
-    listCache: PlanListModel[];
     selectedItem: PlanRes;
+    listCache: PlanListModel[];
     formCache: any;
+    routesListCache: RouteRes[];
 
-    constructor(private planService: PlanService,
+    constructor(private router: Router,
+                private planService: PlanService,
                 private drawerService: NzDrawerService) {
     }
 
@@ -54,11 +67,28 @@ export class PlanComponent implements OnInit {
         this.isSpinning = true;
         this.planService.getPlanList(this.pageReq, this.params).subscribe((res: Result<PageRes<PlanRes[]>>) => {
             if (res.data.content) {
-                this.resCache = res.data.content;
-                this.listCache = res.data.content.map(item => ModelConverter.planResToPlanListModel(item));
                 this.isSpinning = false;
+                this.resCache = res.data.content;
+                this.listCache = this.dataToTableList(res.data.content);
+                this.updatePageRes(res.data);
             }
         })
+    }
+
+    dataToTableList(data: PlanRes[]): PlanListModel[] {
+        return data.map(item => ModelConverter.planResToPlanListModel(item));
+    }
+
+    updatePageRes(data: PageRes<PlanRes[]>): void {
+        this.pageRes = new PageRes(data.page, data.size, data.pages, data.total, data.last);
+    }
+
+    getRouteList(name?: string, planId?: number, lateNumber?: string) {
+        this.planService.getRouteList(name || null, planId || null, lateNumber || null).subscribe((res: Result<RouteRes[]>) => {
+            if (res.data) {
+                this.routesListCache = res.data;
+            }
+        });
     }
 
     onSelected(e?: boolean, item?: PlanListModel) {
@@ -66,7 +96,7 @@ export class PlanComponent implements OnInit {
             this.selectedItem = null;
             return;
         }
-        this.selectedItem = this.resCache.filter((o: PlanRes) => o.id === item.id)[0];
+        this.selectedItem = this.resCache.filter((o: PlanRes) => o.id === item.id)[ 0 ];
         this.listCache.forEach((l: PlanListModel) => {
             if (l.id === item.id) {
                 l.checked = true;
@@ -78,6 +108,24 @@ export class PlanComponent implements OnInit {
 
     onClickListItem(e, item: PlanListModel) {
         this.onSelected(true, item);
+    }
+
+    onPage(e) {
+        this.pageReq.page = e;
+        this.getListByPage();
+    }
+
+    onKeywordSearch(keywordType: string) {
+        this.getListByPage();
+    }
+
+    onkeywordFilter(e: string[]) {
+        if (!e.length) {
+            this.params.status = '';
+        } else {
+            this.params.status = e.join(',');
+        }
+        this.getListByPage();
     }
 
     onAdd(): void {
@@ -101,7 +149,9 @@ export class PlanComponent implements OnInit {
         });
     }
 
-    onEdit() {
-        // 路由跳转
+    onNavigateToEdit() {
+        // 判断是否被锁定
+
+        //this.router.navigateByUrl('/manage/plan/edit');
     }
 }

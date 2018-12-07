@@ -7,26 +7,7 @@
                 <app-breadcrumbs [options]="breadcrumbs"></app-breadcrumbs>
             </div>
             <div nz-col class="gutter-row" nzSpan="8" nzOffset="2">
-                <!--<div class="table-search">
-                    <nz-input-group nzSearch
-                                    nzCompact
-                                    nzSize="default">
-                        <nz-select id="anti-select"
-                                   style="min-width: 32px;"
-                                   [nzSize]="'default'"
-                                   [nzDropdownMatchSelectWidth]="false"
-                                   [(ngModel)]="keywordType">
-                            <nz-option nzValue="name" nzLabel="名称"></nz-option>
-                            <nz-option nzValue="address" nzLabel="地址"></nz-option>
-                            <nz-option nzValue="username" nzLabel="账号"></nz-option>
-                            <nz-option nzValue="createTime" nzLabel="等级时间"></nz-option>
-                            <nz-option nzValue="contactName" nzLabel="联系人"></nz-option>
-                            <nz-option nzValue="mobilePhone" nzLabel="联系电话"></nz-option>
-                        </nz-select>
-                        <input type="text" nz-input placeholder="键入关键字, 按ENTER搜索" [(ngModel)]="keyword"
-                               style="width: 60%;" (keyup)="$event.which === 13 && onKeywordSearch($event, keywordType)">
-                    </nz-input-group>
-                </div>-->
+
             </div>
             <div nz-col class="gutter-row" nzSpan="4">
                 <!-- CUDE: create,update,delete,export -->
@@ -82,8 +63,8 @@
     <div class="table-content">
         <nz-spin [nzSize]="'large'" [nzSpinning]="isSpinning">
             <nz-table #nzTable
-                      [nzScroll]="{x: '2000px'}"
-                      [nzData]="list_options.rows"
+                      [nzScroll]="{x: '2000px', y: '500px'}"
+                      [nzData]="listCache"
                       [nzFrontPagination]="false"
                       [nzTotal]="pageRes.total"
                       [nzPageIndex]="pageRes.page"
@@ -92,49 +73,49 @@
                       (nzPageSizeChange)="onPageV2($event)">
                 <thead>
                 <tr>
-                    <th></th>
-                    <th>
-                        <div></div>
-                    </th><!-- 此th与下面的th(全选)互斥,当前先不实现全选 -->
-                    <!--<th nzShowCheckbox [(nzChecked)]="allChecked" [nzIndeterminate]="indeterminate" (nzCheckedChange)="checkAll($event)"></th>-->
-                    <th>类型</th>
-                    <th>定位</th>
-                    <th>图片</th>
-                    <th nzCustomFilter>名称 <br/>
+                    <th nzWidth="50px"></th><!-- 此th为展开/收起表头 -->
+                    <th nzWidth="62px"><div></div></th><!-- 此th与下面的th(全选)互斥,当前先不实现全选 -->
+                    <th nzWidth="100px">类型</th>
+                    <th nzWidth="100px">定位</th>
+                    <th nzWidth="100px">图片</th>
+                    <th nzWidth="200px" nzCustomFilter>名称
+                        <br/>
                         <input type="text" nz-input placeholder=""
                                nzSize="small" style="width: 60%;"
                                [(ngModel)]="keyword.name"
                                (keyup)="$event.which === 13 && onKeywordSearchTh('name')">
                     </th>
-                    <th>所属区域</th>
-                    <th>收运时间段</th>
-                    <th>地址 <br/>
+                    <th nzWidth="100px">所属区域</th>
+                    <th nzWidth="250px">收运时间段</th>
+                    <th nzWidth="200px">地址
+                        <br/>
                         <input type="text" nz-input placeholder=""
                                nzSize="small" style="width: 60%;"
                                [(ngModel)]="keyword.address"
                                (keyup)="$event.which === 13 && onKeywordSearchTh('address')">
                     </th>
-                    <th>账号 <br/>
+                    <th nzWidth="200px">账号
+                        <br/>
                         <input type="text" nz-input placeholder=""
                                nzSize="small" style="width: 60%;"
                                [(ngModel)]="keyword.username"
                                (keyup)="$event.which === 13 && onKeywordSearchTh('username')">
                     </th>
-                    <th>派桶数</th>
-                    <th nzShowSort [(nzSort)]="sortMap.createTime"
-                        (nzSortChange)="onSortTh('createTime',$event)">登记时间 <br/>
+                    <th nzWidth="100px">派桶数</th>
+                    <th nzWidth="200px" nzShowSort [(nzSort)]="sortMap.createDate"
+                        (nzSortChange)="onSortTh('createDate',$event)">登记时间 <br/>
                         <input type="text" nz-input placeholder=""
                                nzSize="small" style="width: 60%;"
-                               [(ngModel)]="keyword.createTime"
-                               (keyup)="$event.which === 13 && onKeywordSearchTh('createTime')">
+                               [(ngModel)]="keyword.createdDate"
+                               (keyup)="$event.which === 13 && onKeywordSearchTh('createDate')">
                     </th>
-                    <th>联系人 <br/>
+                    <th nzWidth="150px">联系人 <br/>
                         <input type="text" nz-input placeholder=""
                                nzSize="small" style="width: 60%;"
                                [(ngModel)]="keyword.contactName"
                                (keyup)="$event.which === 13 && onKeywordSearchTh('contactName')">
                     </th>
-                    <th>联系电话 <br/>
+                    <th nzWidth="200px">联系电话 <br/>
                         <input type="text" nz-input placeholder=""
                                nzSize="small" style="width: 60%;"
                                [(ngModel)]="keyword.mobilePhone"
@@ -145,22 +126,30 @@
                 <tbody>
                 <ng-template ngFor let-data [ngForOf]="nzTable.data">
                     <tr *ngIf="data.level === 0" (click)="onClickTr($event, data)">
-                        <td [nzShowExpand]="!!data.customerList" [(nzExpand)]="data.expand"
-                            (nzExpandChange)="collapse(expandDataCache[data.id], data, $event)"></td>
-                        <td nzShowCheckbox [(nzChecked)]="data.checked" [nzDisabled]="data.disabled"
+                        <td [nzShowExpand]="!!data.customerList"
+                            [(nzExpand)]="data.expand"
+                            (nzExpandChange)="onCollapse(data, $event)"></td>
+                        <td nzShowCheckbox
+                            [(nzChecked)]="data.checked"
+                            [nzDisabled]="data.disabled"
                             (nzCheckedChange)="onCheckedChange($event, data)"></td>
                         <td>{{data.level ? '子收集点' : (data.customerList ? '聚类点' : '普通点')}}</td>
-                        <td>{{data.lngLat ? '有' : '无'}}</td>
-                        <td>{{data.images.length || '空'}}</td>
-                        <td>{{data.name || '空'}}</td>
-                        <td>{{data.countyName || '空'}}</td>
-                        <td>{{data.duration || '空'}}</td>
-                        <td>{{data.detailAddress || '空'}}</td>
-                        <td>{{data.username || '空'}}</td>
-                        <td>{{data.totalDustbins || '空'}}</td>
-                        <td>{{data.createTime | date:'yyyy-MM-dd' || '空'}}</td>
-                        <td>{{data.contactName || '空'}}</td>
-                        <td>{{data.mobilePhone || '空'}}</td>
+                        <td>
+                            <i nz-icon
+                               class="anticon anticon-environment location"
+                               *ngIf="data.lngLat">
+                            </i>
+                        </td>
+                        <td>{{data.images.length}}</td>
+                        <td>{{data.name}}</td>
+                        <td>{{data.countyName}}</td>
+                        <td>{{data.duration}}</td>
+                        <td>{{data.detailAddress}}</td>
+                        <td>{{data.username}}</td>
+                        <td>{{data.totalDustbins}}</td>
+                        <td>{{data.createdDate | date:'yyyy-MM-dd'}}</td>
+                        <td>{{data.contactName}}</td>
+                        <td>{{data.mobilePhone}}</td>
                     </tr>
                     <ng-template *ngIf="data.expand" ngFor let-item [ngForOf]="data.customerList">
                         <tr  (click)="onClickTr($event, item)">
@@ -168,17 +157,22 @@
                             <td nzShowCheckbox [(nzChecked)]="item.checked" [nzDisabled]="item.disabled"
                                 (nzCheckedChange)="onCheckedChange($event, item)"></td>
                             <td>{{item.level ? '子收集点' : (item.customerList ? '聚类点' : '普通点')}}</td>
-                            <td>{{item.lngLat ? '有' : '无'}}</td>
-                            <td>{{item.images.length || '空'}}</td>
-                            <td>{{item.name || '空'}}</td>
-                            <td>{{item.countyName || '空'}}</td>
-                            <td>{{item.duration || '空'}}</td>
-                            <td>{{item.detailAddress || '空'}}</td>
-                            <td>{{item.username || '空'}}</td>
-                            <td>{{item.totalDustbins || '空'}}</td>
-                            <td>{{item.createTime | date:'yyyy-MM-dd' || '空'}}</td>
-                            <td>{{item.contactName || '空'}}</td>
-                            <td>{{item.mobilePhone || '空'}}</td>
+                            <td>
+                                <i nz-icon
+                                   class="anticon anticon-environment location"
+                                   *ngIf="item.lngLat">
+                                </i>
+                            </td>
+                            <td>{{item.images.length}}</td>
+                            <td>{{item.name}}</td>
+                            <td>{{item.countyName}}</td>
+                            <td>{{item.duration}}</td>
+                            <td>{{item.detailAddress}}</td>
+                            <td>{{item.username}}</td>
+                            <td>{{item.totalDustbins}}</td>
+                            <td>{{item.createdDate | date:'yyyy-MM-dd'}}</td>
+                            <td>{{item.contactName}}</td>
+                            <td>{{item.mobilePhone}}</td>
                         </tr>
                     </ng-template>
 

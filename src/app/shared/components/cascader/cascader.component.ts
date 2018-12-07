@@ -1,7 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
+import { DistrictsService } from '../../services/districts/districts.service';
+
 import { ZHANGZHOU_OPTIONS } from './cascader-zhangzhou.config';
-import {DistrictsService} from '../../services/districts/districts.service';
 
 @Component({
     selector   : 'app-cascader',
@@ -20,11 +21,10 @@ export class CascaderComponent implements OnInit {
 
     ngOnInit() {
         if (!this.options) {    // 当没有options(可选择项)传进时,默认为3级（福建省-市-县）
-            this.districtsService.getDistricts('350600', 3).subscribe(res => {
+            /*this.districtsService.getDistricts('350600', 3).subscribe(res => {
                 this.options = this.convertData(res.data.districts);
-                // 默认龙文区
-                //this.values = ['350000', '350600', '350603'];
-            });
+            });*/
+            this.options = ZHANGZHOU_OPTIONS;
         }
     }
 

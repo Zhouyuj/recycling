@@ -21,7 +21,7 @@ export class AddressReq {
     public provinceCode: string;
     public cityCode: string;
     public countyCode: string;
-    //public streetCode: string;
+    public streetCode: string;
     public detailedAddress: string;
     public lat: string;
     public lng: string;
@@ -30,7 +30,7 @@ export class AddressReq {
         this.provinceCode = address.provinceCode || null;
         this.cityCode = address.cityCode || null;
         this.countyCode = address.countyCode || null;
-        //this.streetCode = address.streetCode || null;
+        this.streetCode = address.streetCode || null;
         this.detailedAddress = address.detailedAddress || '';
         this.lat = address.lat || null;
         this.lng = address.lng || null;

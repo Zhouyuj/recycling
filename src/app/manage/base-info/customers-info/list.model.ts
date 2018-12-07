@@ -6,16 +6,16 @@ import { CustomerRes } from './customer-res.model';
  * 列表所需column的字段
  */
 export class ListModel {
-    id: number | string = null;
+    id: number = null;
     lngLat: string = null;
-    images: number = null;
+    images: [{ id: number, type: string, url: string }] = null;
     name: string = null;
-    county: string = null;
+    countyName: string = null;
     duration: number = null;
     detailAddress: string = null;
     username: string = null;
     totalDustbins: number = null;
-    createTime: string = null;
+    createdDate: string = null;
     contactName: string = null;
     mobilePhone: number = null;
     category: string = null;    // Cluster | Separate
