@@ -55,9 +55,11 @@ export class CustomersInfoFormComponent implements OnInit {
             this.formModelCluster = ObjectUtils.extend(this.cache);
         } else {
             this.selectedCategory = 'Separate';
+
             this.formModelSeparate = new FormModel();
             this.formModelSeparate.address = [ '350000', '350600', '350603', '350603100' ];   // 初始化地区为龙文区
             this.formModelSeparate.category = this.selectedCategory;
+
             this.formModelCluster = new FormModel();
             this.formModelCluster.address = [ '350000', '350600', '350603', '350603100' ];   // 初始化地区为龙文区
             this.formModelCluster.category = 'Cluster';
@@ -118,7 +120,6 @@ export class CustomersInfoFormComponent implements OnInit {
     onSubmitForm(): void {
         this.isSpinning = true;
         this.transformFormModelToRequest();
-        debugger;
         switch (this.type) {
             case 'add':
                 this.customersInfoService.addCustomer(this.customerReq).subscribe(
@@ -135,11 +136,12 @@ export class CustomersInfoFormComponent implements OnInit {
                         this.notificationService.create({
                             type   : 'error',
                             title  : '抱歉,添加失败',
-                            content: err.message ? err.message : '该提醒将自动消失',
+                            content: err.error.message ? err.error.message : '该提醒将自动消失',
                         });
                         this.isSpinning = false;
                     },
-                    () => this.isSpinning = false);
+                    () => this.isSpinning = false
+                );
                 break;
             case 'edit':
                 this.customersInfoService.updateCustomer(this.customerReq, this.cache.id).subscribe(
@@ -156,11 +158,12 @@ export class CustomersInfoFormComponent implements OnInit {
                         this.notificationService.create({
                             type   : 'error',
                             title  : '抱歉,更新失败',
-                            content: err.message ? err.message : '该提醒将自动消失',
+                            content: err.error.message ? err.error.message : '该提醒将自动消失',
                         });
                         this.isSpinning = false;
                     },
-                    () => this.isSpinning = false);
+                    () => this.isSpinning = false
+                );
                 break;
         }
     }
@@ -241,5 +244,10 @@ export class CustomersInfoFormComponent implements OnInit {
             return item.idx !== idx;
         });
         this.formModelCluster.childCollections = result;
+    }
+
+    checkFormValid(): boolean {
+
+        return null;
     }
 }

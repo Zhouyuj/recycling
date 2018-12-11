@@ -47,7 +47,7 @@ export class CustomersInfoComponent implements OnInit {
     public sortMap = {
         createDate: '',
     };   // 操作表格的排序参数
-    public keyword = {
+    public params = {
         name       : '',
         address    : '',
         username   : '',
@@ -137,7 +137,7 @@ export class CustomersInfoComponent implements OnInit {
     getListByPage() {
         this.isSpinning = true;
         this.customersInfoService
-            .getCustomerList(this.pageReq, this.keyword)
+            .getCustomerList(this.pageReq, this.params)
             .subscribe(
                 (res: Result<PageRes<CustomerRes[]>>) => {
                     if (res.data.content.length > 0) {
@@ -203,7 +203,7 @@ export class CustomersInfoComponent implements OnInit {
 
     /** checkable start **/
 
-    onCheckedChange(isChecked: boolean, target: ListModel) {
+    onSelected(isChecked: boolean, target: ListModel) {
         if (!isChecked) {
             this.formCache = null;
             return;
@@ -233,9 +233,9 @@ export class CustomersInfoComponent implements OnInit {
         });
     }
 
-    onClickTr(e, item) {
+    onSelectedTr(e, item) {
         e.stopPropagation(true);
-        this.onCheckedChange(true, item);
+        this.onSelected(true, item);
     }
 
     /** checkable end **/

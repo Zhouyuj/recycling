@@ -6,31 +6,7 @@
                 <!-- 面包屑导航 -->
                 <app-breadcrumbs [options]="breadcrumbs"></app-breadcrumbs>
             </div>
-            <div nz-col class="gutter-row" nzSpan="8" nzOffset="2">
-                <div class="table-search">
-                    <nz-input-group nzSearch
-                                    nzCompact
-                                    nzSize="default">
-                        <nz-select id="anti-select"
-                                   style="min-width: 32px;"
-                                   [nzSize]="'default'"
-                                   [nzDropdownMatchSelectWidth]="false"
-                                   [(ngModel)]="keywordType">
-                            <nz-option nzValue="username" nzLabel="工号"></nz-option>
-                            <nz-option nzValue="name" nzLabel="姓名"></nz-option>
-                            <nz-option nzValue="entryTime" nzLabel="入职时间"></nz-option>
-                            <nz-option nzValue="identity" nzLabel="身份证"></nz-option>
-                            <nz-option nzValue="address" nzLabel="家庭住址"></nz-option>
-                            <nz-option nzValue="mobilePhone" nzLabel="联系电话"></nz-option>
-                            <nz-option nzValue="emergencyContact" nzLabel="紧急联系人"></nz-option>
-                            <nz-option nzValue="emergencyContactPhone" nzLabel="紧急联系人电话"></nz-option>
-                            <nz-option nzValue="email" nzLabel="邮箱"></nz-option>
-                        </nz-select>
-                        <input type="text" nz-input placeholder="键入关键字, 按ENTER搜索" [(ngModel)]="keyword"
-                               style="width: 60%;" (keyup)="$event.which == 13 && onKeywordSearch($event, keywordType)">
-                    </nz-input-group>
-                </div>
-            </div>
+            <div nz-col class="gutter-row" nzSpan="8" nzOffset="2"></div>
             <div nz-col class="gutter-row" nzSpan="4">
                 <div class="table-CUDE">
                     <button nz-button nzType="default" nzShape="circle" (click)="onAdd()" nzTitle="添加" nzPlacement="topCenter" nz-tooltip>
@@ -71,7 +47,7 @@
     <!-- -------- 表格内容 -------- -->
     <div class="table-content">
         <nz-spin [nzSize]="'large'" [nzSpinning]="isSpinning">
-            <ngx-datatable #dataTable class="material striped"
+            <!--<ngx-datatable #dataTable class="material striped"
                            [messages]="list_options.localizationMessage"
                            [rows]="list_options.rows"
                            [columnMode]="'force'"
@@ -102,7 +78,137 @@
                 <ngx-datatable-column name="紧急联系人" prop="emergencyContact" [sortable]="false"></ngx-datatable-column>
                 <ngx-datatable-column name="紧急联系人电话" prop="emergencyContactPhone" [sortable]="false"></ngx-datatable-column>
                 <ngx-datatable-column name="邮箱" prop="email" [sortable]="false"></ngx-datatable-column>
-            </ngx-datatable>
+            </ngx-datatable>-->
+
+            <nz-table #staffTable
+                      [nzData]="listCache"
+                      [nzScroll]="{x: '2200px', y: '500px'}"
+                      [nzFrontPagination]="false"
+                      [nzTotal]="pageRes.total"
+                      [nzPageIndex]="pageRes.page"
+                      [nzPageSize]="pageRes.size"
+                      (nzPageIndexChange)="onPage($event)"
+                      (nzPageSizeChange)="onPage($event)">
+                <thead>
+                <tr>
+                    <th nzWidth="62px"></th><!-- 此表头为checkbox -->
+                    <th nzWidth="250px">姓名
+                        <br/>
+                        <input type="text" nz-input placeholder=""
+                               nzSize="small" style="width: 60%;"
+                               [(ngModel)]="params.name"
+                               (keyup)="$event.which === 13 && onKeywordSearch()">
+                    </th>
+                    <th nzWidth="250px">
+                        工号
+                        <br/>
+                        <input type="text" nz-input placeholder=""
+                               nzSize="small" style="width: 60%;"
+                               [(ngModel)]="params.username"
+                               (keyup)="$event.which === 13 && onKeywordSearch()">
+                    </th>
+                    <th nzWidth="100px"
+                        nzShowFilter
+                        [nzFilters]="[{ text: '男', value: 'Male' }, { text: '女', value: 'Female' }]"
+                        [nzFilterMultiple]="false"
+                        (nzFilterChange)="onFilter($event, 'sex')">
+                        性别
+                    </th>
+                    <th nzWidth="150px"
+                        nzShowFilter
+                        [nzFilters]="roleList"
+                        [nzFilterMultiple]="false"
+                        (nzFilterChange)="onFilter($event, 'postId')">
+                        岗位
+                    </th>
+                    <th nzWidth="150px"
+                        nzShowFilter
+                        [nzFilters]="postList"
+                        [nzFilterMultiple]="true"
+                        (nzFilterChange)="onFilter($event, 'roleId')">
+                        系统角色
+                    </th>
+                    <th nzWidth="200px"
+                        nzShowSort
+                        [(nzSort)]="sortMap.entryTime"
+                        (nzSortChange)="onSort($event, 'entryTime')">
+                        入职时间
+                        <!--<br/>
+                        <input type="text" nz-input placeholder=""
+                               nzSize="small" style="width: 60%;"
+                               [(ngModel)]="params.entryTime"
+                               (focus)="onStopPropagation($event)"
+                               (keyup)="$event.which === 13 && onKeywordSearch()">-->
+                    </th>
+                    <th nzWidth="250px">
+                        身份证
+                        <br/>
+                        <input type="text" nz-input placeholder=""
+                               nzSize="small" style="width: 60%;"
+                               [(ngModel)]="params.identity"
+                               (keyup)="$event.which === 13 && onKeywordSearch()">
+                    </th>
+                    <th nzWidth="250px">
+                        家庭住址
+                        <br/>
+                        <input type="text" nz-input placeholder=""
+                               nzSize="small" style="width: 60%;"
+                               [(ngModel)]="params.detailedAddress"
+                               (keyup)="$event.which === 13 && onKeywordSearch()">
+                    </th>
+                    <th nzWidth="250px">
+                        联系电话
+                        <br/>
+                        <input type="text" nz-input placeholder=""
+                               nzSize="small" style="width: 60%;"
+                               [(ngModel)]="params.mobilePhone"
+                               (keyup)="$event.which === 13 && onKeywordSearch()">
+                    </th>
+                    <th nzWidth="250px">
+                        紧急联系人
+                        <br/>
+                        <input type="text" nz-input placeholder=""
+                               nzSize="small" style="width: 60%;"
+                               [(ngModel)]="params.emergencyContact"
+                               (keyup)="$event.which === 13 && onKeywordSearch()">
+                    </th>
+                    <th nzWidth="250px">
+                        紧急联系人电话
+                        <br/>
+                        <input type="text" nz-input placeholder=""
+                               nzSize="small" style="width: 60%;"
+                               [(ngModel)]="params.emergencyContactPhone"
+                               (keyup)="$event.which === 13 && onKeywordSearch()">
+                    </th>
+                    <th nzWidth="250px">
+                        邮箱
+                        <br/>
+                        <input type="text" nz-input placeholder=""
+                               nzSize="small" style="width: 60%;"
+                               [(ngModel)]="params.email"
+                               (keyup)="$event.which === 13 && onKeywordSearch()">
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let item of staffTable.data; index as i" (click)="onSelectedTr($event, item)">
+                    <td nzShowCheckbox [(nzChecked)]="item.checked"
+                        (nzCheckedChange)="onSelected($event, item)"></td>
+                    <td>{{item.name}}</td>
+                    <td>{{item.username}}</td>
+                    <td>{{item.sex}}</td>
+                    <td>{{item.position}}</td>
+                    <td>{{item.roles}}</td>
+                    <td>{{item.entryTime}}</td>
+                    <td>{{item.identity}}</td>
+                    <td>{{item.address}}</td>
+                    <td>{{item.mobilePhone}}</td>
+                    <td>{{item.emergencyContact}}</td>
+                    <td>{{item.emergencyContactPhone}}</td>
+                    <td>{{item.email}}</td>
+                </tr>
+                </tbody>
+            </nz-table>
         </nz-spin>
     </div>
 </div>

@@ -6,6 +6,7 @@ import { SharedModule } from '../../../shared/shared.module';
 import { ApkComponent } from './apk.component';
 
 import { ApkService } from './apk.service';
+import {ApkServiceV2} from './apk.service-v2';
 
 @NgModule({
     imports     : [
@@ -15,6 +16,7 @@ import { ApkService } from './apk.service';
     declarations: [ ApkComponent ],
     providers   : [
         ApkService,
+        ApkServiceV2,
     ],
 })
 export class ApkModule {

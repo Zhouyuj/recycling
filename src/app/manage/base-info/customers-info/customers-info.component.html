@@ -63,7 +63,7 @@
     <div class="table-content">
         <nz-spin [nzSize]="'large'" [nzSpinning]="isSpinning">
             <nz-table #nzTable
-                      [nzScroll]="{x: '2000px', y: '500px'}"
+                      [nzScroll]="{x: '2200px', y: '500px'}"
                       [nzData]="listCache"
                       [nzFrontPagination]="false"
                       [nzTotal]="pageRes.total"
@@ -82,23 +82,23 @@
                         <br/>
                         <input type="text" nz-input placeholder=""
                                nzSize="small" style="width: 60%;"
-                               [(ngModel)]="keyword.name"
+                               [(ngModel)]="params.name"
                                (keyup)="$event.which === 13 && onKeywordSearchTh('name')">
                     </th>
-                    <th nzWidth="100px">所属区域</th>
+                    <th nzWidth="200px">所属区域</th>
                     <th nzWidth="250px">收运时间段</th>
                     <th nzWidth="200px">地址
                         <br/>
                         <input type="text" nz-input placeholder=""
                                nzSize="small" style="width: 60%;"
-                               [(ngModel)]="keyword.address"
+                               [(ngModel)]="params.address"
                                (keyup)="$event.which === 13 && onKeywordSearchTh('address')">
                     </th>
                     <th nzWidth="200px">账号
                         <br/>
                         <input type="text" nz-input placeholder=""
                                nzSize="small" style="width: 60%;"
-                               [(ngModel)]="keyword.username"
+                               [(ngModel)]="params.username"
                                (keyup)="$event.which === 13 && onKeywordSearchTh('username')">
                     </th>
                     <th nzWidth="100px">派桶数</th>
@@ -106,33 +106,33 @@
                         (nzSortChange)="onSortTh('createDate',$event)">登记时间 <br/>
                         <input type="text" nz-input placeholder=""
                                nzSize="small" style="width: 60%;"
-                               [(ngModel)]="keyword.createdDate"
+                               [(ngModel)]="params.createdDate"
                                (keyup)="$event.which === 13 && onKeywordSearchTh('createDate')">
                     </th>
                     <th nzWidth="150px">联系人 <br/>
                         <input type="text" nz-input placeholder=""
                                nzSize="small" style="width: 60%;"
-                               [(ngModel)]="keyword.contactName"
+                               [(ngModel)]="params.contactName"
                                (keyup)="$event.which === 13 && onKeywordSearchTh('contactName')">
                     </th>
                     <th nzWidth="200px">联系电话 <br/>
                         <input type="text" nz-input placeholder=""
                                nzSize="small" style="width: 60%;"
-                               [(ngModel)]="keyword.mobilePhone"
+                               [(ngModel)]="params.mobilePhone"
                                (keyup)="$event.which === 13 && onKeywordSearchTh('mobilePhone')">
                     </th>
                 </tr>
                 </thead>
                 <tbody>
                 <ng-template ngFor let-data [ngForOf]="nzTable.data">
-                    <tr *ngIf="data.level === 0" (click)="onClickTr($event, data)">
-                        <td [nzShowExpand]="!!data.customerList"
+                    <tr *ngIf="data.level === 0" (click)="onSelectedTr($event, data)">
+                        <td [nzShowExpand]="data.customerList && data.customerList.length > 0"
                             [(nzExpand)]="data.expand"
                             (nzExpandChange)="onCollapse(data, $event)"></td>
                         <td nzShowCheckbox
                             [(nzChecked)]="data.checked"
                             [nzDisabled]="data.disabled"
-                            (nzCheckedChange)="onCheckedChange($event, data)"></td>
+                            (nzCheckedChange)="onSelected($event, data)"></td>
                         <td>{{data.level ? '子收集点' : (data.customerList ? '聚类点' : '普通点')}}</td>
                         <td>
                             <i nz-icon

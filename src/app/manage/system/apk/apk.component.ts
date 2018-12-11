@@ -7,6 +7,7 @@ import { NotificationService } from '../../../shared/services/notification/notif
 import { Result } from '../../../shared/models/response/result.model';
 import { MessageService } from '../../../shared/services/message/message.service';
 import { environment } from '../../../../environments/environment';
+import {ApkServiceV2} from './apk.service-v2';
 
 @Component({
     selector   : 'app-apk',
@@ -41,7 +42,7 @@ export class ApkComponent implements OnInit {
 
     env = environment;
 
-    constructor(private apkService: ApkService,
+    constructor(private apkService: ApkServiceV2,
                 private notificationService: NotificationService,
                 private messageService: MessageService) {
     }
@@ -75,7 +76,6 @@ export class ApkComponent implements OnInit {
 
     // TODO
     onSubmit() {
-        console.count();
         if (!this.formCache.version || !this.formCache.description || !this.fileList) {
             this.messageService.create({
                 type   : 'warning',
@@ -88,12 +88,11 @@ export class ApkComponent implements OnInit {
         this.fileList.forEach((file: any) => formData.append('apk', file));
 
         const url = `${this.env.api}/apps?description=${this.formCache.description}&version=${this.formCache.version}`;
-        this.asyncPost(formData, url);
-    }
-
-    // TODO 由于 rebirth-http 的库在上传apk时出现bug导致上传失败,当前先使用原生的 ng 的 httpClient
-    asyncPost(formData, url) {
-        this.apkService.addApk(formData, url).subscribe(
+        //this.asyncPost(formData, url);
+        this.apkService.addApk(formData, {
+            version    : this.formCache.version,
+            description: this.formCache.description
+        }).subscribe(
             res => {
                 console.log(res);
                 this.isFormSpinning = false;
@@ -114,6 +113,31 @@ export class ApkComponent implements OnInit {
                 this.isFormSpinning = false;
             }
         );
+    }
+
+    // TODO 由于 rebirth-http 的库在上传apk时出现bug导致上传失败,当前先使用原生的 ng 的 httpClient
+    asyncPost(formData, url) {
+        /*this.apkService.addApk(formData, url).subscribe(
+         res => {
+         console.log(res);
+         this.isFormSpinning = false;
+         this.notificationService.create({
+         type   : 'success',
+         title  : '恭喜,上传成功',
+         content: '该提醒将自动消失',
+         });
+         this.getListByPage();
+         this.onCloseForm();
+         },
+         err => {
+         this.notificationService.create({
+         type   : 'error',
+         title  : '抱歉,上传失败',
+         content: `${err.message}`,
+         });
+         this.isFormSpinning = false;
+         }
+         );*/
     }
 
 

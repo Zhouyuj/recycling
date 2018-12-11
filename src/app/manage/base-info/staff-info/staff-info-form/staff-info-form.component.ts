@@ -33,13 +33,14 @@ export class StaffInfoFormComponent implements OnInit {
             this.formData = ObjectUtils.extend(this.cache);
         } else {
             this.formData = new StaffFormModel();
-            this.formData.address = [ '350000', '350600', '350603' ];
+            this.formData.address = [ '350000', '350600', '350603', '350603100' ];
         }
     }
 
     onSubmitForm(): void {
+        this.isSpinning = true;
         this.transformFormModelToRequest();
-        console.log(this.staffReq);
+        debugger;
         switch (this.type) {
             case 'add':
                 this.StaffInfoService.addStaff(this.staffReq).subscribe(
@@ -56,7 +57,7 @@ export class StaffInfoFormComponent implements OnInit {
                         this.notificationService.create({
                             type   : 'error',
                             title  : '抱歉,添加失败',
-                            content: err.message ? err.message : '该提醒将自动消失',
+                            content: err.error.message ? err.error.message : '该提醒将自动消失',
                         });
                         this.isSpinning = false;
                     },
@@ -77,7 +78,7 @@ export class StaffInfoFormComponent implements OnInit {
                         this.notificationService.create({
                             type   : 'error',
                             title  : '抱歉,更新失败',
-                            content: err.message ? err.message : '该提醒将自动消失',
+                            content: err.error.message ? err.error.message : '该提醒将自动消失',
                         });
                         this.isSpinning = false;
                     },
@@ -88,6 +89,11 @@ export class StaffInfoFormComponent implements OnInit {
 
     onClose(): void {
         this.drawerRef.close(false);
+    }
+
+    // 修改地址
+    onCascaderChange(e) {
+        this.formData.address = e;
     }
 
     transformFormModelToRequest() {

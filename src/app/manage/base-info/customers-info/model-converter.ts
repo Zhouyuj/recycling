@@ -17,10 +17,10 @@ export class ModelConverter {
             collectionName   : o.name || '',
             category         : o.category,
             address          : [
-                o.address.provinceCode + '',
-                o.address.cityCode + '',
-                o.address.countyCode + '',
-                o.address.streetCode
+                `${o.address.provinceCode || ''}`,
+                `${o.address.cityCode || ''}`,
+                `${o.address.countyCode || ''}`,
+                `${o.address.streetCode || ''}`,
             ] || null,
             account          : o.username || '',
             password         : '',
@@ -47,7 +47,7 @@ export class ModelConverter {
             lngLat       : `(${o.address.lng}, ${o.address.lat})` || '',
             images       : o.images || null,
             name         : o.name,
-            countyName   : o.address.county,
+            countyName   : `${o.address.county || ''}${o.address.street || ''}`,
             duration     : o.collectionPeriodList ? o.collectionPeriodList.length : 0,
             detailAddress: o.address.detailedAddress,
             username     : o.username || '',

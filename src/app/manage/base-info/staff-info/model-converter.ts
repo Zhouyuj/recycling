@@ -15,18 +15,19 @@ export class ModelConverter {
         let l: StaffListModel;
         l = {
             id                   : res.id,
-            name                 : res.name || null,
+            name                 : res.name || '',
             username             : res.username || null,
-            sex                  : { 'Male': '男', 'Female': '女' }[ res.sex ] || null,
-            position             : res.post.name || null,
-            roles                : this.getRoleNames(res.roles) || null,
-            entryTime            : DateUtil.dateFormat(new Date(res.entryTime), 'yyyy-MM-dd') || null,
+            sex                  : { 'Male': '男', 'Female': '女' }[ res.sex ] || '',
+            position             : res.post.name || '',
+            roles                : this.getRoleNames(res.roles) || '',
+            entryTime            : DateUtil.dateFormat(new Date(res.entryTime), 'yyyy-MM-dd') || '',
             identity             : res.identity || null,
-            address              : res.address.detailedAddress || res.address.county || null,
-            mobilePhone          : res.contactInfo.mobilePhone || null,
-            emergencyContact     : res.contactInfo.emergencyContact || null,
-            emergencyContactPhone: res.contactInfo.emergencyContactPhone || null,
-            email                : res.contactInfo.email || null,
+            address              : `${res.address.city || ''}${res.address.county || ''}${res.address.street || ''}` || '',
+            mobilePhone          : res.contactInfo.mobilePhone || '',
+            emergencyContact     : res.contactInfo.emergencyContact || '',
+            emergencyContactPhone: res.contactInfo.emergencyContactPhone || '',
+            email                : res.contactInfo.email || '',
+            checked              : false,
         };
         return l;
     }
@@ -61,6 +62,7 @@ export class ModelConverter {
                 provinceCode   : f.address[ 0 ],
                 cityCode       : f.address[ 1 ],
                 countyCode     : f.address[ 2 ],
+                streetCode     : f.address[ 3 ],
                 detailedAddress: f.detailAddress || null,
             }),
             contactInfo: new ContactInfoReq({

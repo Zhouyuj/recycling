@@ -1,6 +1,13 @@
 <div id="form">
     <nz-spin [nzSize]="'large'" [nzSpinning]="isSpinning">
         <!-- 模板驱动表单 -->
+
+        <nz-row>
+            <nz-col></nz-col>
+        </nz-row>
+        <form #ClusterForm></form>
+        <form #SeparateForm></form>
+
         <form nz-form
               (ngSubmit)="onSubmitForm()"
               #myForm="ngForm">
@@ -162,7 +169,7 @@
                 </nz-form-item>
 
                 <nz-form-item>
-                    <nz-form-label [nzSm]="3" [nzXs]="24" nzRequired nzFor="dustbinCounts">置桶数</nz-form-label>
+                    <nz-form-label [nzSm]="3" [nzXs]="24" nzFor="dustbinCounts">派桶数</nz-form-label>
                     <nz-form-control [nzSm]="4" [nzXs]="24">
                         <nz-input-number
                                 style="width: 100%"
@@ -269,7 +276,7 @@
                                                     nzPlaceHolder="请选择级别"
                                                     [(ngModel)]="item.priorityType">
                                                 <nz-option nzLabel="高" nzValue="Hard"></nz-option>
-                                                <nz-option nzLabel="中" nzValue="High"></nz-option>
+                                                <!--<nz-option nzLabel="中" nzValue="High"></nz-option>-->
                                                 <nz-option nzLabel="低" nzValue="Low"></nz-option>
                                             </nz-select>
                                         </nz-form-control>
@@ -364,7 +371,7 @@
                                                     nzPlaceHolder="请选择级别"
                                                     [(ngModel)]="item.priorityType">
                                                 <nz-option nzLabel="极高" nzValue="Hard"></nz-option>
-                                                <nz-option nzLabel="中等" nzValue="High"></nz-option>
+                                                <!--<nz-option nzLabel="中等" nzValue="High"></nz-option>-->
                                                 <nz-option nzLabel="低" nzValue="Low"></nz-option>
                                             </nz-select>
                                         </nz-form-control>
@@ -592,7 +599,7 @@
                                                     nzPlaceHolder="请选择级别"
                                                     [(ngModel)]="item.priorityType">
                                                 <nz-option nzLabel="高" nzValue="Hard"></nz-option>
-                                                <nz-option nzLabel="中" nzValue="High"></nz-option>
+                                                <!--<nz-option nzLabel="中" nzValue="High"></nz-option>-->
                                                 <nz-option nzLabel="低" nzValue="Low"></nz-option>
                                             </nz-select>
                                         </nz-form-control>
@@ -686,7 +693,7 @@
                                                     nzPlaceHolder="请选择级别"
                                                     [(ngModel)]="item.priorityType">
                                                 <nz-option nzLabel="极高" nzValue="Hard"></nz-option>
-                                                <nz-option nzLabel="中等" nzValue="High"></nz-option>
+                                                <!--<nz-option nzLabel="中等" nzValue="High"></nz-option>-->
                                                 <nz-option nzLabel="低" nzValue="Low"></nz-option>
                                             </nz-select>
                                         </nz-form-control>

@@ -119,10 +119,13 @@ export class PlanComponent implements OnInit {
         this.getListByPage();
     }
 
-    onkeywordFilter(e: string[]) {
+    onKeywordFilter(e: string[]) {
         if (!e.length) {
+            if (!this.params.status) return;
             this.params.status = '';
         } else {
+            let result = e.join(',');
+            if (this.params.status === result) return;
             this.params.status = e.join(',');
         }
         this.getListByPage();

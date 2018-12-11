@@ -184,6 +184,7 @@
                 <nz-form-label [nzSm]="3" [nzXs]="24" nzFor="address">家庭地址</nz-form-label>
                 <nz-form-control [nzSm]="7" [nzXs]="24">
                     <app-cascader name="address"
+                                  (changesEmitter)="onCascaderChange($event)"
                                   [(values)]="formData.address">
                     </app-cascader>
                 </nz-form-control>

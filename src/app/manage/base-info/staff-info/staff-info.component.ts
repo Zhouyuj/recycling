@@ -6,7 +6,6 @@ import { StaffInfoFormComponent } from './staff-info-form/staff-info-form.compon
 import { NzDrawerService } from 'ng-zorro-antd';
 
 import { DistrictsService } from '../../../shared/services/districts/districts.service';
-import { MessageService } from '../../../shared/services/message/message.service';
 import { NotificationService } from '../../../shared/services/notification/notification.service';
 import { PageReq } from '../../../shared/models/page/page-req.model';
 import { PageRes } from '../../../shared/models/page/page-res.model';
@@ -15,7 +14,9 @@ import { StaffRes } from './staff-res.model';
 import { StaffFormModel } from './staff-form.model';
 import { StaffListModel } from './staff-list.model';
 import { ModelConverter } from '../staff-info/model-converter';
-import {ObjectUtils} from '../../../shared/utils/object-utils';
+import { ObjectUtils } from '../../../shared/utils/object-utils';
+import { RoleEnum } from './models/role.enum';
+import { PostEnum } from './models/post.enum';
 
 @Component({
     selector   : 'app-staff-info',
@@ -39,30 +40,51 @@ export class StaffInfoComponent implements OnInit {
         }
     ];
 
-    public list_options = {
-        rows               : [],
-        selectedRows       : [],
-        localizationMessage: {
-            emptyMessage   : '很抱歉, 未找到任何数据！',
-            totalMessage   : '条记录(共)',
-            selectedMessage: '已选中',
-        },
-    };
     public isSpinning = false;
 
+    public resCache: StaffRes[];   // 分页接口获取的表格数据
+    public selectedItemCache: StaffRes;
+    public listCache: StaffListModel[];
+    public formCache: StaffFormModel;
+
+    public params = {
+        username             : '',
+        name                 : '',
+        sex                  : '',
+        roleId               : '',
+        postId               : '',
+        mobilePhone          : '',
+        emergencyContactPhone: '',
+        emergencyContact     : '',
+        email                : '',
+        detailedAddress      : '',
+        identity             : '',
+    };// 分页查询参数
+    public roleList = [
+        { text: RoleEnum.aministrator, value: 1 },
+        { text: RoleEnum.surviellant, value: 2 },
+        { text: RoleEnum.driver, value: 3 },
+        { text: RoleEnum.specialist, value: 4 },
+        { text: RoleEnum.manager, value: 5 },
+        { text: RoleEnum.attendant, value: 6 },
+    ];
+    public postList = [
+        { text: PostEnum.driver, value: 1 },
+        { text: PostEnum.specialist, value: 2 },
+        { text: PostEnum.attendant, value: 3 },
+        { text: PostEnum.captain, value: 4 },
+        { text: PostEnum.supervisor, value: 5 },
+        { text: PostEnum.generalManager, value: 6 },
+        { text: PostEnum.surviellant, value: 7 },
+    ];
+    public sortMap = {
+        entryTime: '',
+    };   // 操作表格的排序参数
     public pageReq = new PageReq();
     public pageRes = new PageRes();
-    public params: any = {};// 分页查询参数
-    public keywordType: string;
-    public keyword = '';
-
-    public staffResCache: StaffRes[];   // 分页接口获取的表格数据
-    public itemCache: StaffRes;
-    public formCache: StaffFormModel;
 
     constructor(private staffInfoService: StaffInfoService,
                 private districtsService: DistrictsService,
-                private messageService: MessageService,
                 private notificationService: NotificationService,
                 private drawerService: NzDrawerService) {
     }
@@ -74,7 +96,6 @@ export class StaffInfoComponent implements OnInit {
     }
 
     onAdd() {
-        console.log('add');
         this.onOpenForm('add');
     }
 
@@ -83,7 +104,7 @@ export class StaffInfoComponent implements OnInit {
     }
 
     onDel() {
-        this.staffInfoService.delStaff(this.itemCache.id).subscribe(
+        this.staffInfoService.delStaff(this.selectedItemCache.id).subscribe(
             res => {
                 this.notificationService.create({
                     type   : 'success',
@@ -95,11 +116,11 @@ export class StaffInfoComponent implements OnInit {
                 this.notificationService.create({
                     type   : 'error',
                     title  : '抱歉,删除失败',
-                    content: err ? err.message : '',
+                    content: err ? err.error.message : '',
                 });
-                console.warn(err);
                 this.getListByPage();
-            });
+            }
+        );
     }
 
     // TODO
@@ -107,42 +128,85 @@ export class StaffInfoComponent implements OnInit {
         console.log('exp');
     }
 
-    onSelect(e: StaffListModel) {
-        this.itemCache = this.staffResCache.filter(item => item.id == this.list_options.selectedRows[ 0 ].id)[ 0 ];
-        this.formCache = ModelConverter.staffResToFormModel(this.itemCache);
+    onSelected(e: boolean, item: StaffListModel) {
+        if (!e) {
+            this.selectedItemCache = null;
+            return;
+        }
+        this.listCache.forEach((l: StaffListModel) => {
+            if (l.id === item.id) {
+                l.checked = true;
+            } else {
+                l.checked = false;
+            }
+        });
+        this.selectedItemCache = this.resCache.filter((o: StaffRes) => o.id === item.id)[ 0 ];
+        this.formCache = ModelConverter.staffResToFormModel(this.selectedItemCache);
     }
 
-    onKeywordSearch($e, type?: string) {
-        let key = this.keywordType;
-        if (key) {
-            let o = {};
-            o[ key ] = this.keyword.replace(/\s/g, '');
-            this.params = o;
-            this.getListByPage();
-        } else if (!key) {
-            this.messageService.create({
-                type   : 'warning',
-                content: '请先选择搜索类别',
-            });
-        }
+    onSelectedTr(e, item: StaffListModel) {
+        this.onSelected(true, item);
     }
 
     onPage(e) {
-        this.updatePageReq(e);
+        //this.updatePageReq(e);
+        this.pageReq.page = e;
         this.getListByPage();
     }
 
     /**
-     * e.sorts = [{ dir: 'asc'|'desc', prop: '列名' }]
+     * 排序
+     * 双向绑定 sortMap
      * @param e
+     * @param type
      */
-    onSort(e) {
-        let sorts = e.sorts
-            .map(sort => `${sort.prop}.${sort.dir},`)
-            .join('');
-        this.pageReq.sort = sorts;
+    onSort(e, type: string) {
+        if (!e) return;
+        e = e.replace('end', '');
+        this.pageReq.sort = `${type}.${e},`;
         this.pageReq.page = 1;
         this.getListByPage();
+    }
+
+    /**
+     * @param e : string[] | string
+     * @param type
+     */
+    onFilter(e, type?: string) {
+        switch (type) {
+            case 'sex':
+                if (this.params.sex === e) return;
+                this.params.sex = e || '';
+                break;
+            case 'roleId':
+                let result = (e && !e.length) ? '' : e.join(',');
+                if (this.params.roleId === result) return;
+                this.params.roleId = (e && !e.length) ? '' : e.join(',');
+                break;
+            case 'postId':
+                if (this.params.postId === e) return;
+                this.params.postId = e || '';
+                break;
+        }
+        this.getListByPage();
+    }
+
+    /**
+     * 关键字搜索
+     * 双向绑定 params
+     * @param type
+     */
+    onKeywordSearch() {
+        this.getListByPage();
+    }
+
+    /**
+     * 点击 入职时间 的关键字筛选框,会触发组件的排序,需要添加该方法
+     * @param e
+     */
+    onStopPropagation(e) {
+        console.log(e);
+        e.stopPropagation();
     }
 
     /**
@@ -183,9 +247,9 @@ export class StaffInfoComponent implements OnInit {
                 (res: Result<PageRes<StaffRes[]>>) => {
                     if (res.data.content.length > 0) {
                         /* 缓存（返回值类型的）列表 */
-                        this.staffResCache = res.data.content;
+                        this.resCache = res.data.content;
                         /* 组装（列表类型的）列表数据 */
-                        this.list_options.rows = this.dataToTableRows(res.data.content);
+                        this.listCache = this.dataToTableRows(res.data.content);
                         /* 更新列表的信息（分页/排序） */
                         this.updatePageRes(res.data);
                     }
@@ -194,10 +258,7 @@ export class StaffInfoComponent implements OnInit {
                     console.error(`分页查询失败!!!${err}`);
                     this.isSpinning = false;
                 },
-                () => {
-                    console.log('complete');
-                    this.isSpinning = false;
-                }
+                () => this.isSpinning = false
             );
     }
 
@@ -213,4 +274,5 @@ export class StaffInfoComponent implements OnInit {
     dataToTableRows(data: StaffRes[]): StaffListModel[] {
         return data.map((o: StaffRes) => ModelConverter.staffResToListModel(o));
     }
+
 }
