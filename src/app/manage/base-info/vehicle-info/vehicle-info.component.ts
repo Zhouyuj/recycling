@@ -3,8 +3,6 @@ import { Component, OnInit, EventEmitter } from '@angular/core';
 import { VehicleInfoFormComponent } from './vehicle-info-form/vehicle-info-form.component';
 import { VehicleInfoService } from './vehicle-info.service';
 
-import { DistrictsService } from '../../../shared/services/districts/districts.service';
-import { MessageService } from '../../../shared/services/message/message.service';
 import { NotificationService } from '../../../shared/services/notification/notification.service';
 import { NzDrawerService } from 'ng-zorro-antd';
 
@@ -16,7 +14,8 @@ import { Result } from '../../../shared/models/response/result.model';
 import { VehicleFormModel } from './vehicle-form.model';
 import { VehicleRes } from './vehicle-res.model';
 import { VehicleListModel } from './vehicle-list.model';
-import {VehicleCategoryEnum} from './models/vehicle-category.enum';
+import { VehicleCategoryEnum } from './models/vehicle-category.enum';
+import { ZHANGZHOU_OPTIONS } from '../../../shared/components/cascader/cascader-zhangzhou.config';
 
 @Component({
     selector   : 'app-vehicle-info',
@@ -44,15 +43,18 @@ export class VehicleInfoComponent implements OnInit {
 
     public pageReq = new PageReq();
     public pageRes = new PageRes();
-    public params: any = {};// 分页查询参数
-    public keywordType: string;
-    public keyword = '';
-
-    public vehicleCategoryList = [
-        { text: VehicleCategoryEnum.food5, value: VehicleCategoryEnum.food5Index },
-        { text: VehicleCategoryEnum.food8, value: VehicleCategoryEnum.food8Index },
-        { text: VehicleCategoryEnum.oil1, value: VehicleCategoryEnum.oil1Index },
-    ];
+    public params = {
+        area  : '',
+        typeId: '',
+        boxId: '',
+        driver: '',
+        plateNumber: '',
+    };// 分页查询参数
+    public sortMap = {
+        buyDate: '',
+    };   // 操作表格的排序参数
+    public vehicleCategoryFilterList;   // 表格中筛选项
+    public countyFilterList;   // 表格中筛选项
 
     public resCache: VehicleRes[];   // 分页接口获取的表格数据
     public selectedItemCache: VehicleRes;
@@ -60,14 +62,34 @@ export class VehicleInfoComponent implements OnInit {
     public formCache: VehicleFormModel;
 
     constructor(private vehicleInfoService: VehicleInfoService,
-                private districtsService: DistrictsService,
-                private messageService: MessageService,
                 private notificationService: NotificationService,
                 private drawerService: NzDrawerService) {
     }
 
     ngOnInit() {
+        this.initFilterOptions();
         this.getListByPage();
+    }
+
+    initFilterOptions() {
+        this.vehicleCategoryFilterList = [
+            { text: VehicleCategoryEnum.food5, value: VehicleCategoryEnum.food5Index },
+            { text: VehicleCategoryEnum.food8, value: VehicleCategoryEnum.food8Index },
+            { text: VehicleCategoryEnum.oil1, value: VehicleCategoryEnum.oil1Index },
+        ];
+        let zhangzhouDistricts = ZHANGZHOU_OPTIONS.map(province => {
+            let zhangzhouCity;
+            if (province.value === '350000') {
+                zhangzhouCity = province.children.find((city) => city.value === '350600');
+                return zhangzhouCity.children.map(district => {
+                    return {
+                        value: district.value,
+                        text : district.label,
+                    }
+                });
+            } else return [];
+        });
+        this.countyFilterList = zhangzhouDistricts[0];
     }
 
     onAdd() {
@@ -90,6 +112,7 @@ export class VehicleInfoComponent implements OnInit {
     }
 
     onExp() {
+        console.log('exp');
     }
 
     onSelect(e: boolean, item: VehicleListModel) {
@@ -112,35 +135,50 @@ export class VehicleInfoComponent implements OnInit {
         this.onSelect(true, item);
     }
 
-    onKeywordSearch($e, type?: string) {
-        let key = this.keywordType;
-        if (key) {
-            let o = {};
-            o[ key ] = this.keyword.replace(/\s/g, '');
-            this.params = ObjectUtils.extend(o);
-            this.getListByPage();
-        } else if (!key) {
-            this.messageService.create({
-                type   : 'warning',
-                content: '请先选择搜索类别',
-            });
+    /**
+     * @param e : string[] | string
+     * @param type
+     */
+    onFilter(e, type: string) {
+        switch (type) {
+            case 'roleId':
+                let result = (e && !e.length) ? '' : e.join(',');
+                if (this.params[ type ] === result) return;
+                this.params[ type ] = (e && !e.length) ? '' : e.join(',');
+                break;
+            case 'typeId':
+            case 'area':
+                if (!e && !this.params[ type ] || this.params[ type ] === e) return;
+                this.params[ type ] = e || '';
+                break;
         }
-    }
-
-    onPage(e) {
-        this.updatePage(e);
         this.getListByPage();
     }
 
     /**
-     * e.sorts = [{ dir: 'asc'|'desc', prop: '列名' }]
-     * @param e
+     * 关键字搜索
+     * 双向绑定 params
+     * @param type
      */
-    onSort(e) {
-        let sorts = e.sorts
-            .map(sort => `${sort.prop}.${sort.dir},`)
-            .join('');
-        this.pageReq.sort = sorts;
+    onKeywordSearch() {
+        this.getListByPage();
+    }
+
+    onPage(e) {
+        this.pageReq.page = e;
+        this.getListByPage();
+    }
+
+    /**
+     * 排序
+     * 双向绑定 sortMap
+     * @param e
+     * @param type
+     */
+    onSort(e, type: string) {
+        if (!e) return;
+        e = e.replace('end', '');
+        this.pageReq.sort = `${type}.${e},`;
         this.pageReq.page = 1;
         this.getListByPage();
     }
@@ -166,7 +204,6 @@ export class VehicleInfoComponent implements OnInit {
         });
 
         drawerRef.afterClose.subscribe(res => {
-            console.log('Drawer(Component) close');
             if (res) {
                 // 重新调分页接口
                 this.getListByPage();
@@ -198,11 +235,6 @@ export class VehicleInfoComponent implements OnInit {
 
     dataToTableRows(data: VehicleRes[]): VehicleListModel[] {
         return data.map((o: VehicleRes) => ModelConverter.vehicleResToListModel(o));
-    }
-
-    updatePage(pageInfo: { count: number, pageSize: number, limit: number, offset: number }): void {
-        this.pageReq.page = pageInfo.offset + 1;
-        this.pageReq.size = pageInfo.pageSize;
     }
 
     // 只存储分页信息,不包括数据

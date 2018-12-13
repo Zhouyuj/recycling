@@ -152,17 +152,35 @@
                     </th>
                     <th nzWidth="150px">
                         车牌号
+                        <br/>
+                        <input type="text" nz-input placeholder=""
+                               nzSize="small" style="width: 60%;"
+                               [(ngModel)]="params.plateNumber"
+                               (keyup)="$event.which === 13 && onKeywordSearch()">
                     </th>
-                    <th nzWidth="150px">
+                    <th nzWidth="150px"
+                        nzShowFilter
+                        [nzFilters]="countyFilterList"
+                        [nzFilterMultiple]="false"
+                        (nzFilterChange)="onFilter($event, 'area')">
                         所属区域
                     </th>
                     <th nzWidth="150px">
                         当前司机
+                        <br/>
+                        <input type="text" nz-input placeholder=""
+                               nzSize="small" style="width: 60%;"
+                               [(ngModel)]="params.driver"
+                               (keyup)="$event.which === 13 && onKeywordSearch()">
                     </th>
                     <th nzWidth="200px">
                         计划出车时间
                     </th>
-                    <th nzWidth="150px">
+                    <th nzWidth="150px"
+                        nzShowFilter
+                        [nzFilters]="vehicleCategoryFilterList"
+                        [nzFilterMultiple]="false"
+                        (nzFilterChange)="onFilter($event, 'typeId')">
                         车型
                     </th>
                     <th nzWidth="150px">
@@ -173,8 +191,16 @@
                     </th>
                     <th nzWidth="150px">
                         车载盒子ID
+                        <br/>
+                        <input type="text" nz-input placeholder=""
+                               nzSize="small" style="width: 60%;"
+                               [(ngModel)]="params.boxId"
+                               (keyup)="$event.which === 13 && onKeywordSearch()">
                     </th>
-                    <th nzWidth="200px">
+                    <th nzWidth="200px"
+                        nzShowSort
+                        [(nzSort)]="sortMap.buyDate"
+                        (nzSortChange)="onSort($event, 'buyDate')">
                         购买时间
                     </th>
                 </tr>
