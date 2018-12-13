@@ -280,7 +280,7 @@ export class VehicleInfoComponent implements OnInit {
 
     // 只存储分页信息,不包括数据
     updatePageRes(data: PageRes<VehicleRes[]>): void {
-        this.pageRes = new PageRes(data.page - 1, data.size, data.pages, data.total, data.last);
+        this.pageRes = new PageRes(data.page, data.size, data.pages, data.total, data.last);
     }
 
 }

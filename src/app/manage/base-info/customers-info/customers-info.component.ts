@@ -45,7 +45,7 @@ export class CustomersInfoComponent implements OnInit {
     // antd-table
     public isSpinning = false;
     public sortMap = {
-        createDate: '',
+        createdDate: '',
     };   // 操作表格的排序参数
     public params = {
         name       : '',
@@ -135,7 +135,8 @@ export class CustomersInfoComponent implements OnInit {
         this.drawerRef.afterClose.subscribe((res: boolean) => {
             if (res) {
                 // 重新调分页接口
-                this.onSortTh('createdDate', 'desc');
+                //this.onSortTh('createdDate', 'desc');
+                this.getListByPage({ isResetReq: true });
             }
         });
     }
@@ -288,7 +289,7 @@ export class CustomersInfoComponent implements OnInit {
     resetPageReq(): void {
         this.pageReq.page = 1;
         this.pageReq.size = this.pageRes.size;
-        this.pageReq.sort = 'createDate.desc';
+        this.pageReq.sort = 'createdDate.desc';
     }
 
     updateParams() {

@@ -22,7 +22,7 @@ export class ModelConverter {
             roles                : this.getRoleNames(res.roles) || '',
             entryTime            : DateUtil.dateFormat(new Date(res.entryTime), 'yyyy-MM-dd') || '',
             identity             : res.identity || null,
-            address              : `${res.address.city || ''}${res.address.county || ''}${res.address.street || ''}` || '',
+            address              : `${res.address.detailedAddress || ''}` || '',
             mobilePhone          : res.contactInfo.mobilePhone || '',
             landlinePhone        : res.contactInfo.landlinePhone || '',
             emergencyContact     : res.contactInfo.emergencyContact || '',

@@ -45,7 +45,8 @@ export class CustomersInfoFormComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.initForm();
+        //this.initForm();
+        this.initVehicles();
     }
 
     initForm() {
@@ -64,7 +65,6 @@ export class CustomersInfoFormComponent implements OnInit {
             this.formModelCluster.address = [ '350000', '350600', '350603', '350603100' ];   // 初始化地区为龙文区
             this.formModelCluster.category = 'Cluster';
         }
-        this.initVehicles();
     }
 
     /**
@@ -87,6 +87,7 @@ export class CustomersInfoFormComponent implements OnInit {
         optionList$.subscribe(data => {
             this.isVehiclesLoading = false;
             this.vehicles = data;
+            this.initForm();
         });
     }
 
@@ -282,7 +283,7 @@ export class CustomersInfoFormComponent implements OnInit {
                         content: '请选择是否自带钥匙',
                     });
                     return false;
-                } else if (!this.formModelSeparate.duration.food.length && !this.formModelSeparate.duration.oil.length) {
+                } else if (this.formModelSeparate.level && !this.formModelSeparate.duration.food.length && !this.formModelSeparate.duration.oil.length) {
                     this.notificationService.create({
                         type   : 'error',
                         title  : '抱歉,请检查输入内容',

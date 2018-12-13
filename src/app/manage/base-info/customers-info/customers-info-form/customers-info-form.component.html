@@ -146,12 +146,13 @@
                         </nz-form-explain>
                     </nz-form-control>
 
-                    <nz-form-label [nzSm]="3" [nzXs]="24" nzOffset="1" nzRequired nzFor="mobile">联系电话</nz-form-label>
+                    <nz-form-label [nzSm]="3" [nzXs]="24" nzOffset="1" nzRequired="{{!formModelSeparate.tel}}" nzFor="mobile">联系电话</nz-form-label>
                     <nz-form-control [nzSm]="5" [nzXs]="24">
                         <input nz-input
                                required
                                name="mobile"
                                id="'mobile'"
+                               required="{{!formModelSeparate.tel}}"
                                placeHolder="联系人移动电话"
                                [(ngModel)]="formModelSeparate.mobile"
                                #mobileSeparate="ngModel">
@@ -225,6 +226,7 @@
                     <nz-form-control [nzSm]="22" [nzXs]="24" nzOffset="1">
                         <nz-tabset [nzTabBarExtraContent]="addSeparateDurationTemplate">
                             <nz-tab [nzTitle]="'餐厨垃圾'" (nzSelect)="formModelSeparate.duration.tabType = 'food'">
+                                {{formModelSeparate.duration.food | json}}
                                 <!--餐厨垃圾-->
                                 <nz-form-item
                                         *ngFor="let item of formModelSeparate.duration.food;"
@@ -391,7 +393,7 @@
                                             <nz-select
                                                     required
                                                     name="vehicle-{{item.idx}}-oil-separate"
-                                                    [(ngModel)]="item.vehicle"
+                                                    [(ngModel)]="item.plateNumber"
                                                     nzPlaceHolder="请指定车辆"
                                                     nzAllowClear
                                                     nzShowSearch
@@ -619,7 +621,7 @@
                                             <nz-select
                                                     required
                                                     name="vehicle-{{item.idx}}-food-cluster"
-                                                    [(ngModel)]="item.vehicle"
+                                                    [(ngModel)]="item.plateNumber"
                                                     nzPlaceHolder="请指定车辆"
                                                     nzAllowClear
                                                     nzShowSearch
@@ -713,12 +715,15 @@
                                             <nz-select
                                                     required
                                                     name="vehicle-{{item.idx}}-oil-cluster"
-                                                    [(ngModel)]="item.vehicle"
+                                                    [(ngModel)]="item.plateNumber"
                                                     nzPlaceHolder="请指定车辆"
                                                     nzAllowClear
                                                     nzShowSearch
                                                     [nzServerSearch]="true"
                                                     (nzOnSearch)="onSearchVehicles($event)">
+                                                <nz-option *ngIf=""
+                                                           [nzValue]=""
+                                                           [nzLabel]=""></nz-option>
                                                 <ng-container *ngFor="let o of vehicles">
                                                     <nz-option *ngIf="!isVehiclesLoading" [nzValue]="o"
                                                                [nzLabel]="o"></nz-option>

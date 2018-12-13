@@ -1,7 +1,7 @@
 export const environment = {
-  production: true,
-    host: 'http://0.0.0.0:8877',    // TODO
-    api: 'http://0.0.0.0:8877/api/v1',  // TODO
+    production: false,
+    host: 'http://fjzz.3po-dwm.com:8080/web',
+    api: 'http://fjzz.3po-dwm.com:8080/web',
     // 高德 api key
     amapKey: '234f52ac0db9acffc06680a652bc86dc'
 };

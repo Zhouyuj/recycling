@@ -104,14 +104,14 @@
                     <th nzWidth="100px">派桶数</th>
                     <th nzWidth="200px"
                         nzShowSort
-                        [(nzSort)]="sortMap.createDate"
-                        (nzSortChange)="onSortTh('createDate',$event)">登记时间
+                        [(nzSort)]="sortMap.createdDate"
+                        (nzSortChange)="onSortTh('createdDate',$event)">登记时间
                         <br/>
                         <input type="text" nz-input placeholder=""
                                nzSize="small" style="width: 60%;"
                                [(ngModel)]="params.createdDate"
                                (focus)="onStopPropagation($event)"
-                               (keyup)="$event.which === 13 && onKeywordSearchTh('createDate')">
+                               (keyup)="$event.which === 13 && onKeywordSearchTh('createdDate')">
                     </th>
                     <th nzWidth="150px">联系人 <br/>
                         <input type="text" nz-input placeholder=""
