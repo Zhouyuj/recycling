@@ -147,7 +147,7 @@
                     </nz-form-control>
 
                     <nz-form-label [nzSm]="3" [nzXs]="24" nzOffset="1" nzRequired nzFor="mobile">联系电话</nz-form-label>
-                    <nz-form-control [nzSm]="4" [nzXs]="24">
+                    <nz-form-control [nzSm]="5" [nzXs]="24">
                         <input nz-input
                                required
                                name="mobile"
@@ -155,17 +155,10 @@
                                placeHolder="联系人移动电话"
                                [(ngModel)]="formModelSeparate.mobile"
                                #mobileSeparate="ngModel">
-                        <nz-form-explain [hidden]="mobileSeparate.valid || mobileSeparate.pristine">提示:移动电话必填,固话选填
+                        <nz-form-explain [hidden]="mobileSeparate.valid || mobileSeparate.pristine">固定电话和移动电话选填
                         </nz-form-explain>
                     </nz-form-control>
-                    <nz-form-control [nzSm]="5" [nzXs]="24" nzOffset="1">
-                        <!-- 固话选填 -->
-                        <input nz-input
-                               name="tel"
-                               id="'tel'"
-                               placeHolder="请输入固定电话"
-                               [(ngModel)]="formModelSeparate.tel">
-                    </nz-form-control>
+
                 </nz-form-item>
 
                 <nz-form-item>
@@ -182,6 +175,20 @@
                                 #dustbinCountsSeparate="ngModel">
                         </nz-input-number>
                         <nz-form-explain [hidden]="dustbinCountsSeparate.valid || dustbinCountsSeparate.pristine">请选择派发垃圾桶数量
+                        </nz-form-explain>
+                    </nz-form-control>
+
+                    <nz-form-label [nzSm]="3" [nzXs]="24" nzOffset="1" nzRequired="{{!formModelSeparate.mobile}}" nzFor="tel">固定电话</nz-form-label>
+                    <nz-form-control [nzSm]="5" [nzXs]="24">
+                        <!-- 固话选填 -->
+                        <input nz-input
+                               name="tel"
+                               id="'tel'"
+                               required="{{!formModelSeparate.mobile}}"
+                               placeHolder="请输入固定电话"
+                               [(ngModel)]="formModelSeparate.tel"
+                               #telSeparate="ngModel">
+                        <nz-form-explain [hidden]="telSeparate.valid || telSeparate.pristine">固定电话和移动电话选填
                         </nz-form-explain>
                     </nz-form-control>
                 </nz-form-item>

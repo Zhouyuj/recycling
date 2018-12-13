@@ -24,8 +24,8 @@ export class FormModel {
 
 export class Duration {
     tabType: 'food' | 'oil' = 'food';  // 该值只用于切换tab
-    food: DurationDetail[] = [ new DurationDetail() ];
-    oil: DurationDetail[] = [ new DurationDetail() ];
+    food: DurationDetail[] = [];
+    oil: DurationDetail[] = [];
 }
 
 export class DurationDetail {

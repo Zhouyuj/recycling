@@ -38,6 +38,9 @@ export class StaffInfoFormComponent implements OnInit {
     }
 
     onSubmitForm(): void {
+        if (!this.checkForm()) {
+            return;
+        }
         this.isSpinning = true;
         this.transformFormModelToRequest();
         switch (this.type) {
@@ -97,5 +100,67 @@ export class StaffInfoFormComponent implements OnInit {
 
     transformFormModelToRequest() {
         this.staffReq = ModelConverter.formModelToStaffReq(this.formData);
+    }
+
+    checkForm() {
+        if (!this.formData.name) {
+            this.notificationService.create({
+                type   : 'error',
+                title  : '抱歉,请检查输入内容',
+                content: '姓名不能为空',
+            });
+            return false;
+        } else if (!this.formData.sex) {
+            this.notificationService.create({
+                type   : 'error',
+                title  : '抱歉,请检查输入内容',
+                content: '请选择性别',
+            });
+            return false;
+        } else if (!this.formData.username) {
+            this.notificationService.create({
+                type   : 'error',
+                title  : '抱歉,请检查输入内容',
+                content: '工号不能为空',
+            });
+            return false;
+        } else if (!this.formData.password && this.type === 'add') {
+            this.notificationService.create({
+                type   : 'error',
+                title  : '抱歉,请检查输入内容',
+                content: '密码不能为空',
+            });
+            return false;
+        } else if (!this.formData.position) {
+            this.notificationService.create({
+                type   : 'error',
+                title  : '抱歉,请检查输入内容',
+                content: '请选择岗位',
+            });
+            return false;
+        } else if (!this.formData.entryTime) {
+            this.notificationService.create({
+                type   : 'error',
+                title  : '抱歉,请检查输入内容',
+                content: '请选择入职时间',
+            });
+            return false;
+        } else if (!this.formData.roles.length) {
+            this.notificationService.create({
+                type   : 'error',
+                title  : '抱歉,请检查输入内容',
+                content: '请选择系统角色',
+            });
+            return false;
+        } else if (!this.formData.landlinePhone && !this.formData.mobilePhone) {
+            this.notificationService.create({
+                type   : 'error',
+                title  : '抱歉,请检查输入内容',
+                content: '请选填固话或联系电话',
+            });
+            return false;
+        } else {
+            return true;
+        }
     }
 }

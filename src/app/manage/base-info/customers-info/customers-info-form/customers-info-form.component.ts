@@ -118,6 +118,9 @@ export class CustomersInfoFormComponent implements OnInit {
      * 3.调用服务（发起post请求）
      */
     onSubmitForm(): void {
+        if (!this.checkForm()) {
+            return;
+        }
         this.isSpinning = true;
         this.transformFormModelToRequest();
         switch (this.type) {
@@ -198,12 +201,12 @@ export class CustomersInfoFormComponent implements OnInit {
     onAddDuration(type: string): void {
         switch (this.selectedCategory) {
             case 'Separate':    /* 普通点 | 子收集点 */
-                const lengthS = this.formModelSeparate.duration[ type ].length || 0;
+                const lengthS = this.formModelSeparate.duration[ type ] ? this.formModelSeparate.duration[ type ].length : 0;
                 const newIdS = !lengthS ? 0 : this.formModelSeparate.duration[ type ][ lengthS - 1 ].idx + 1;
                 this.formModelSeparate.duration[ type ].push(new DurationDetail(newIdS));
                 break;
             case 'Cluster':     /* 聚类点 */
-                const lengthC = this.formModelCluster.duration[ type ].length || 0;
+                const lengthC = this.formModelCluster.duration[ type ] ? this.formModelCluster.duration[ type ].length : 0;
                 let newIdC = !lengthC ? 0 : this.formModelCluster.duration[ type ][ lengthC - 1 ].idx + 1;
                 this.formModelCluster.duration[ type ].push(new DurationDetail(newIdC));
                 break;
@@ -241,8 +244,149 @@ export class CustomersInfoFormComponent implements OnInit {
         this.formModelCluster.childCollections = result;
     }
 
-    checkFormValid(): boolean {
-
-        return null;
+    checkForm(): boolean {
+        switch (this.selectedCategory) {
+            case 'Separate':
+                if (!this.formModelSeparate.collectionName) {
+                    this.notificationService.create({
+                        type   : 'error',
+                        title  : '抱歉,请检查输入内容',
+                        content: '名称不能为空',
+                    });
+                    return false;
+                } else if (!this.formModelSeparate.collectionType) {
+                    this.notificationService.create({
+                        type   : 'error',
+                        title  : '抱歉,请检查输入内容',
+                        content: '请选择单位类型',
+                    });
+                    return false;
+                } else if (!this.formModelSeparate.contactPersonName) {
+                    this.notificationService.create({
+                        type   : 'error',
+                        title  : '抱歉,请检查输入内容',
+                        content: '请输入联系人',
+                    });
+                    return false;
+                } else if (!this.formModelSeparate.mobile && !this.formModelSeparate.tel) {
+                    this.notificationService.create({
+                        type   : 'error',
+                        title  : '抱歉,请检查输入内容',
+                        content: '请输入移动电话或固定电话',
+                    });
+                    return false;
+                } else if (parseInt(this.formModelSeparate.hasKey) !== 0 && parseInt(this.formModelSeparate.hasKey) !== 1) {
+                    this.notificationService.create({
+                        type   : 'error',
+                        title  : '抱歉,请检查输入内容',
+                        content: '请选择是否自带钥匙',
+                    });
+                    return false;
+                } else if (!this.formModelSeparate.duration.food.length && !this.formModelSeparate.duration.oil.length) {
+                    this.notificationService.create({
+                        type   : 'error',
+                        title  : '抱歉,请检查输入内容',
+                        content: '普通收集点请选择至少一个收运时间段',
+                    });
+                    return false;
+                } else if (this.formModelSeparate.duration.food.length) {
+                    let result = null;
+                    this.formModelSeparate.duration.food.forEach((item: DurationDetail) => {
+                        // 判断是否有未填的必填数据
+                        let needComplete = !(!!item.dateType && !!item.startTime && !!item.endTime && !!item.priorityType);
+                        if (needComplete) {
+                            this.notificationService.create({
+                                type   : 'error',
+                                title  : '抱歉,请检查输入内容',
+                                content: '请检查收运时间段必填项的信息是否完善:【餐厨垃圾】时间类型/时间区间/重要等级',
+                            });
+                            result = false;
+                            return; // 停止循环
+                        } else {
+                            result = true;
+                        }
+                    });
+                    return result;
+                } else if (this.formModelSeparate.duration.oil.length) {
+                    let result = null;
+                    this.formModelSeparate.duration.oil.forEach((item: DurationDetail) => {
+                        // 判断是否有未填的必填数据
+                        let needComplete = !(!!item.dateType && !!item.startTime && !!item.endTime && !!item.priorityType);
+                        if (needComplete) {
+                            this.notificationService.create({
+                                type   : 'error',
+                                title  : '抱歉,请检查输入内容',
+                                content: '请检查收运时间段必填项的信息是否完善:【油脂垃圾】时间类型/时间区间/重要等级',
+                            });
+                            result = false;
+                            return; // 停止循环
+                        } else {
+                            result = true;
+                        }
+                    });
+                    return result;
+                }
+                break;
+            case 'Cluster':
+                if (!this.formModelCluster.collectionName) {
+                    this.notificationService.create({
+                        type   : 'error',
+                        title  : '抱歉,请检查输入内容',
+                        content: '名称不能为空',
+                    });
+                    return false;
+                } else if (!this.formModelCluster.collectionType) {
+                    this.notificationService.create({
+                        type   : 'error',
+                        title  : '抱歉,请检查输入内容',
+                        content: '请选择单位类型',
+                    });
+                    return false;
+                } else if (!this.formModelCluster.duration.food.length && !this.formModelCluster.duration.oil.length) {
+                    this.notificationService.create({
+                        type   : 'error',
+                        title  : '抱歉,请检查输入内容',
+                        content: '聚类点请选择至少一个收运时间段',
+                    });
+                    return false;
+                } else if (this.formModelCluster.duration.food.length) {
+                    let result = null;
+                    this.formModelCluster.duration.food.forEach((item: DurationDetail) => {
+                        // 判断是否有未填的必填数据
+                        let needComplete = !(!!item.dateType && !!item.startTime && !!item.endTime && !!item.priorityType);
+                        if (needComplete) {
+                            this.notificationService.create({
+                                type   : 'error',
+                                title  : '抱歉,请检查输入内容',
+                                content: '请检查收运时间段必填项的信息是否完善:【餐厨垃圾】时间类型/时间区间/重要等级',
+                            });
+                            result = false;
+                            return; // 停止循环
+                        } else {
+                            result = true;
+                        }
+                    });
+                    return result;
+                } else if (this.formModelCluster.duration.oil.length) {
+                    let result = null;
+                    this.formModelCluster.duration.oil.forEach((item: DurationDetail) => {
+                        // 判断是否有未填的必填数据
+                        let needComplete = !(!!item.dateType && !!item.startTime && !!item.endTime && !!item.priorityType);
+                        if (needComplete) {
+                            this.notificationService.create({
+                                type   : 'error',
+                                title  : '抱歉,请检查输入内容',
+                                content: '请检查收运时间段必填项的信息是否完善:【油脂垃圾】时间类型/时间区间/重要等级',
+                            });
+                            result = false;
+                            return; // 停止循环
+                        } else {
+                            result = true;
+                        }
+                    });
+                    return result;
+                }
+                break;
+        }
     }
 }

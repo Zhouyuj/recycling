@@ -76,7 +76,7 @@ export class CustomersInfoComponent implements OnInit {
     ngOnInit() {
         this.districtsService.getDistricts('350600', 3).subscribe((res: any) => {
             this.countyNames = res.data.districts;
-            this.getListByPage();
+            this.getListByPage({ isResetReq: true });
         });
     }
 
@@ -89,14 +89,23 @@ export class CustomersInfoComponent implements OnInit {
     }
 
     onDel() {
-        this.customersInfoService.delCustomer(this.selectedId).subscribe(res => {
-            this.notificationService.create({
-                type   : 'success',
-                title  : '恭喜,删除成功',
-                content: '该提醒将自动消失',
-            });
-            this.onSortTh('createdDate', 'desc');
-        })
+        this.customersInfoService.delCustomer(this.selectedId).subscribe(
+            res => {
+                this.notificationService.create({
+                    type   : 'success',
+                    title  : '恭喜,删除成功',
+                    content: '该提醒将自动消失',
+                });
+                this.getListByPage({ isResetReq: true });
+            }, err => {
+                this.notificationService.create({
+                    type   : 'error',
+                    title  : '抱歉,删除失败',
+                    content: err ? err.error.message : '',
+                });
+                this.getListByPage({ isResetReq: true });
+            }
+        );
     }
 
     onExp() {
@@ -129,54 +138,6 @@ export class CustomersInfoComponent implements OnInit {
                 this.onSortTh('createdDate', 'desc');
             }
         });
-    }
-
-    /**
-     * 统一分页获取列表方法
-     */
-    getListByPage() {
-        this.isSpinning = true;
-        this.customersInfoService
-            .getCustomerList(this.pageReq, this.params)
-            .subscribe(
-                (res: Result<PageRes<CustomerRes[]>>) => {
-                    if (res.data.content.length > 0) {
-                        /* 缓存（返回值类型的）列表 */
-                        this.listResCache = res.data.content;
-                        /* 组装（列表类型的）列表数据 */
-                        this.listCache = this.dataToTableList(res.data.content);
-                        /* 更新列表的信息（分页/排序） */
-                        this.updatePageRes(res.data);
-                    } else {
-                        this.listCache = [];
-                    }
-                },
-                err => {
-                    console.warn(`分页查询失败!!! message:${err.error.message}`);
-                    this.isSpinning = false;
-                },
-                () => this.isSpinning = false
-            );
-    }
-
-    /**
-     * 将接口获取的数据转化成table rows data
-     * rows = [{
-     *  lngLat, images, name, countyCode, duration,
-     *  detailAddress, username, totalDustbins,
-     *  createTime, contactName, mobilePhone,
-     * }]
-     */
-    dataToTableList(data: CustomerRes[]): ListModel[] {
-        return data.map((o: CustomerRes) => ModelConverter.customerResToListModel(o));
-    }
-
-    /**
-     * 目前只存储分页信息,不包括数据
-     * @param data
-     */
-    updatePageRes(data: PageRes<CustomerRes[]>): void {
-        this.pageRes = new PageRes(data.page, data.size, data.pages, data.total, data.last);
     }
 
     /** antd table start **/
@@ -271,4 +232,82 @@ export class CustomersInfoComponent implements OnInit {
     }
 
     /** antd table end **/
+
+
+    /**
+     * 统一分页获取列表方法
+     */
+    getListByPage(option?: { isResetReq: boolean }) {
+        if (option && option.isResetReq) {
+            this.resetPageReq();
+        }
+        this.isSpinning = true;
+        // 分页接口
+        let paramsTemp = this.updateParams();
+        this.customersInfoService
+            .getCustomerList(this.pageReq, paramsTemp)
+            .subscribe(
+                (res: Result<PageRes<CustomerRes[]>>) => {
+                    if (res.data.content) {
+                        /* 缓存（返回值类型的）列表 */
+                        this.listResCache = res.data.content;
+                        /* 组装（列表类型的）列表数据 */
+                        this.listCache = this.dataToTableList(res.data.content);
+                        /* 更新列表的信息（分页/排序） */
+                        this.updatePageRes(res.data);
+                    }
+                },
+                err => {
+                    this.listResCache = [];
+                    this.listCache = [];
+                    this.isSpinning = false;
+                    console.warn(`分页查询失败!!! message:${err.error.message}`);
+                    this.notificationService.create({
+                        type   : 'error',
+                        title  : '抱歉,删除失败',
+                        content: err ? err.error.message : '',
+                    });
+                },
+                () => this.isSpinning = false
+            );
+    }
+
+    /**
+     * 将接口获取的数据转化成table rows data
+     * rows = [{
+     *  lngLat, images, name, countyCode, duration,
+     *  detailAddress, username, totalDustbins,
+     *  createTime, contactName, mobilePhone,
+     * }]
+     */
+    dataToTableList(data: CustomerRes[]): ListModel[] {
+        if (!data.length) return [];
+        return data.map((o: CustomerRes) => ModelConverter.customerResToListModel(o));
+    }
+
+    resetPageReq(): void {
+        this.pageReq.page = 1;
+        this.pageReq.size = this.pageRes.size;
+        this.pageReq.sort = 'createDate.desc';
+    }
+
+    updateParams() {
+        let paramsTemp = {};
+        for (let k in this.params) {
+            if (!this.params[ k ]) {
+                this.params[ k ] = null;
+            } else {
+                paramsTemp[ k ] = this.params[ k ];
+            }
+        }
+        return paramsTemp;
+    }
+
+    /**
+     * 目前只存储分页信息,不包括数据
+     * @param data
+     */
+    updatePageRes(data: PageRes<CustomerRes[]>): void {
+        this.pageRes = new PageRes(data.page, data.size, data.pages, data.total, data.last);
+    }
 }

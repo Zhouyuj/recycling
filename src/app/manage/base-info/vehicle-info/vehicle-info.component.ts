@@ -44,10 +44,10 @@ export class VehicleInfoComponent implements OnInit {
     public pageReq = new PageReq();
     public pageRes = new PageRes();
     public params = {
-        area  : '',
-        typeId: '',
-        boxId: '',
-        driver: '',
+        area       : '',
+        typeId     : '',
+        boxId      : '',
+        driver     : '',
         plateNumber: '',
     };// 分页查询参数
     public sortMap = {
@@ -89,7 +89,7 @@ export class VehicleInfoComponent implements OnInit {
                 });
             } else return [];
         });
-        this.countyFilterList = zhangzhouDistricts[0];
+        this.countyFilterList = zhangzhouDistricts[ 0 ];
     }
 
     onAdd() {
@@ -101,14 +101,23 @@ export class VehicleInfoComponent implements OnInit {
     }
 
     onDel() {
-        this.vehicleInfoService.delCustomer(this.selectedItemCache.id).subscribe(res => {
-            this.notificationService.create({
-                type   : 'success',
-                title  : '恭喜,删除成功',
-                content: '该提醒将自动消失',
-            });
-            this.getListByPage();
-        });
+        this.vehicleInfoService.delCustomer(this.selectedItemCache.id).subscribe(
+            res => {
+                this.notificationService.create({
+                    type   : 'success',
+                    title  : '恭喜,删除成功',
+                    content: '该提醒将自动消失',
+                });
+                this.getListByPage({ isResetReq: true });
+            }, err => {
+                this.notificationService.create({
+                    type   : 'error',
+                    title  : '抱歉,删除失败',
+                    content: err ? err.error.message : '',
+                });
+                this.getListByPage({ isResetReq: true });
+            }
+        );
     }
 
     onExp() {
@@ -206,19 +215,23 @@ export class VehicleInfoComponent implements OnInit {
         drawerRef.afterClose.subscribe(res => {
             if (res) {
                 // 重新调分页接口
-                this.getListByPage();
+                this.getListByPage({ isResetReq: true });
             }
         });
     }
 
-    getListByPage() {
+    getListByPage(option?: { isResetReq: boolean }) {
+        if (option && option.isResetReq) {
+            this.resetPageReq();
+        }
         this.isSpinning = true;
         // 分页接口
+        let paramsTemp = this.updateParams();
         this.vehicleInfoService
-            .getVehicleList(this.pageReq, this.params)
+            .getVehicleList(this.pageReq, paramsTemp)
             .subscribe(
                 (res: Result<PageRes<VehicleRes[]>>) => {
-                    if (res.data.content.length > 0) {
+                    if (res.data.content) {
                         /* 缓存（返回值类型的）列表 */
                         this.resCache = res.data.content;
                         /* 组装（列表类型的）列表数据 */
@@ -226,15 +239,43 @@ export class VehicleInfoComponent implements OnInit {
                         /* 更新列表的信息（分页/排序） */
                         this.updatePageRes(res.data);
                     }
-                    this.isSpinning = false;
                 },
-                err => console.warn(`分页查询失败!!! message:${err.error.message}`),
+                err => {
+                    this.resCache = [];
+                    this.listCache = [];
+                    this.isSpinning = false;
+                    console.warn(`分页查询失败!!! message:${err.error.message}`);
+                    this.notificationService.create({
+                        type   : 'error',
+                        title  : '抱歉,删除失败',
+                        content: err ? err.error.message : '',
+                    });
+                },
                 () => this.isSpinning = false
             );
     }
 
     dataToTableRows(data: VehicleRes[]): VehicleListModel[] {
+        if (!data.length) return [];
         return data.map((o: VehicleRes) => ModelConverter.vehicleResToListModel(o));
+    }
+
+    resetPageReq(): void {
+        this.pageReq.page = 1;
+        this.pageReq.size = this.pageRes.size;
+        this.pageReq.sort = 'buyDate.desc';
+    }
+
+    updateParams() {
+        let paramsTemp = {};
+        for (let k in this.params) {
+            if (!this.params[ k ]) {
+                this.params[ k ] = null;
+            } else {
+                paramsTemp[ k ] = this.params[ k ];
+            }
+        }
+        return paramsTemp;
     }
 
     // 只存储分页信息,不包括数据

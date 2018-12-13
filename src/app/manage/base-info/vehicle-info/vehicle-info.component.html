@@ -8,25 +8,6 @@
             </div>
             <div nz-col class="gutter-row" nzSpan="8" nzOffset="2">
                 <!-- 关键字搜索 -->
-                <div class="table-search">
-                    <nz-input-group nzSearch
-                                    nzCompact
-                                    nzSize="default">
-                        <nz-select id="anti-select"
-                                   style="min-width: 32px;"
-                                   [nzSize]="'default'"
-                                   [nzDropdownMatchSelectWidth]="false"
-                                   [(ngModel)]="keywordType">
-                            <nz-option nzValue="plateNumber" nzLabel="车牌号"></nz-option>
-                            <nz-option nzValue="driver" nzLabel="当前司机"></nz-option>
-                            <nz-option nzValue="planDepartureTime" nzLabel="计划出车时间"></nz-option>
-                            <nz-option nzValue="boxId" nzLabel="车载盒子ID"></nz-option>
-                            <nz-option nzValue="buyDate" nzLabel="购买时间"></nz-option>
-                        </nz-select>
-                        <input type="text" nz-input placeholder="键入关键字, 按ENTER搜索" [(ngModel)]="keyword"
-                               style="width: 60%;" (keyup)="$event.which == 13 && onKeywordSearch($event, keywordType)">
-                    </nz-input-group>
-                </div>
             </div>
             <div nz-col class="gutter-row" nzSpan="4">
                 <!-- CUDE: create,update,delete,export -->

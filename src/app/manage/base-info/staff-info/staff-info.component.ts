@@ -111,14 +111,14 @@ export class StaffInfoComponent implements OnInit {
                     title  : '恭喜,删除成功',
                     content: '该提醒将自动消失',
                 });
-                this.getListByPage();
+                this.getListByPage({ isResetReq: true });
             }, err => {
                 this.notificationService.create({
                     type   : 'error',
                     title  : '抱歉,删除失败',
                     content: err ? err.error.message : '',
                 });
-                this.getListByPage();
+                this.getListByPage({ isResetReq: true });
             }
         );
     }
@@ -231,19 +231,23 @@ export class StaffInfoComponent implements OnInit {
             console.log('Drawer(Component) close');
             if (res) {
                 // 重新调分页接口
-                this.getListByPage();
+                this.getListByPage({ isResetReq: true });
             }
         });
     }
 
-    getListByPage() {
+    getListByPage(option?: { isResetReq: boolean }) {
+        if (option && option.isResetReq) {
+            this.resetPageReq();
+        }
         this.isSpinning = true;
         // 分页接口
+        let paramsTemp = this.updateParams();
         this.staffInfoService
-            .getStaffList(this.pageReq, this.params)
+            .getStaffList(this.pageReq, paramsTemp)
             .subscribe(
                 (res: Result<PageRes<StaffRes[]>>) => {
-                    if (res.data.content.length > 0) {
+                    if (res.data.content) {
                         /* 缓存（返回值类型的）列表 */
                         this.resCache = res.data.content;
                         /* 组装（列表类型的）列表数据 */
@@ -253,8 +257,15 @@ export class StaffInfoComponent implements OnInit {
                     }
                 },
                 err => {
-                    console.warn(`分页查询失败!!! message:${err.error.message}`);
+                    this.resCache = [];
+                    this.listCache = [];
                     this.isSpinning = false;
+                    console.warn(`分页查询失败!!! message:${err.error.message}`);
+                    this.notificationService.create({
+                        type   : 'error',
+                        title  : '抱歉,删除失败',
+                        content: err ? err.error.message : '',
+                    });
                 },
                 () => this.isSpinning = false
             );
@@ -265,11 +276,26 @@ export class StaffInfoComponent implements OnInit {
         this.pageRes = new PageRes(data.page - 1, data.size, data.pages, data.total, data.last);
     }
 
-    updatePageReq(pageInfo: { count: number, pageSize: number, limit: number, offset: number }): void {
-        this.pageReq.page = pageInfo.offset + 1;
+    resetPageReq(): void {
+        this.pageReq.page = 1;
+        this.pageReq.size = this.pageRes.size;
+        this.pageReq.sort = 'entryTime.desc';
+    }
+
+    updateParams() {
+        let paramsTemp = {};
+        for (let k in this.params) {
+            if (!this.params[k]) {
+                this.params[k] = null;
+            } else {
+                paramsTemp[k] = this.params[k];
+            }
+        }
+        return paramsTemp;
     }
 
     dataToTableRows(data: StaffRes[]): StaffListModel[] {
+        if (!data.length) return [];
         return data.map((o: StaffRes) => ModelConverter.staffResToListModel(o));
     }
 
