@@ -16,4 +16,5 @@ export class VehicleListModel {
     engineModel: string = null;
     boxId: string = null;
     buyDate: string = null;
+    checked: boolean = null;
 }

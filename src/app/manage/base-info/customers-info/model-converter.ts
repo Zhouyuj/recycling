@@ -55,6 +55,7 @@ export class ModelConverter {
             createdDate  : DateUtil.dateFormat(new Date(o.createdDate), 'yyyy-MM-dd'),
             contactName  : o.contactInfo ? o.contactInfo.contactName : '',
             mobilePhone  : o.contactInfo ? o.contactInfo.mobilePhone : '',
+            landlinePhone  : o.contactInfo ? o.contactInfo.landlinePhone : '',
             category     : o.category,
             level        : o.level,
             customerList : o.customerList ? o.customerList.map(item => {

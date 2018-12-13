@@ -19,6 +19,16 @@
     }
 }
 
+.table-content {
+    th, td {
+        text-align: center;
+    }
+
+    .location {
+        cursor: pointer;
+    }
+}
+
 ngx-datatable.extra-css {
     min-height: 586px;
     position: relative;

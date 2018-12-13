@@ -9,6 +9,7 @@ import { BreadcrumbsComponent } from './breadcrumbs/breadcrumbs.component';
 import { CascaderComponent } from './cascader/cascader.component';
 import { HeaderComponent } from './header/header.component';
 import { SelectComponent } from './select/select.component';
+import { TimePickerComponent } from './time-picker/time-picker.component';
 
 @NgModule({
     imports     : [
@@ -23,12 +24,14 @@ import { SelectComponent } from './select/select.component';
         CascaderComponent,
         HeaderComponent,
         SelectComponent,
+        TimePickerComponent,
     ],
     declarations: [
         BreadcrumbsComponent,
         CascaderComponent,
         HeaderComponent,
         SelectComponent,
+        TimePickerComponent,
     ],
 })
 export class ComponentsModule {

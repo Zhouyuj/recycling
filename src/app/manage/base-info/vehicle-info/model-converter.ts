@@ -27,6 +27,7 @@ export class ModelConverter {
             engineModel      : v.engineModel,
             boxId            : v.boxId,
             buyDate          : DateUtil.dateFormat(new Date(v.buyDate), 'yyyy-MM-dd'),
+            checked          : false,
         };
         return l;
     }
@@ -41,9 +42,10 @@ export class ModelConverter {
             boxId            : v.boxId || null,
             buyDate          : new Date(v.buyDate) || null,
             planDepartureTime: this.convertSecondToDate(v.businessLine.planDepartureTime) || null,
-            planBackTime     : this.convertSecondToDate(v.businessLine.planBackTime) || null,
+            //planBackTime     : this.convertSecondToDate(v.businessLine.planBackTime) || null,
+            planBackTime     : this.numberToPlanBackTime(v.businessLine.planBackTime) || null,
             type             : v.businessLine.type.id + '' || null,
-            district         : v.areaCode ? [ v.areaCode ] : [''],
+            district         : v.areaCode ? [ v.areaCode ] : [ '' ],
             test             : v.businessLine.test ? '1' : '0',
         };
         return f;
@@ -55,7 +57,8 @@ export class ModelConverter {
             boxId       : f.boxId,
             businessLine: {
                 areaCode         : f.district[ 0 ],
-                planBackTime     : this.convertDateToSecond(f.planBackTime),
+                //planBackTime     : this.convertDateToSecond(f.planBackTime),
+                planBackTime     : this.planBackTimeToNumber(f.planBackTime),
                 planDepartureTime: this.convertDateToSecond(f.planDepartureTime),
                 test             : [ false, true ][ f.test ],
                 typeId           : parseInt(f.type),
@@ -87,6 +90,21 @@ export class ModelConverter {
         let min = date.getMinutes();
         let result: number = hour * 3600 + min * 60;
         return result;
+    }
+
+    public static planBackTimeToNumber(value: string[]): number {
+        let numArr = value.map(item => parseInt(item));
+        return numArr[0] * 3600 + numArr[1] * 60;
+    }
+
+    public static numberToPlanBackTime(sec: number): string[] {
+        let hour = Math.floor(sec / 3600);
+        let min = Math.floor((sec - hour * 3600) / 60);
+        return [
+            hour > 10 ? `${hour}` : `0${hour}`,
+            min > 10 ? `${min}` : `0${min}`,
+
+        ];
     }
 
 }

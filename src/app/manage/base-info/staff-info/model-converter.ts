@@ -24,6 +24,7 @@ export class ModelConverter {
             identity             : res.identity || null,
             address              : `${res.address.city || ''}${res.address.county || ''}${res.address.street || ''}` || '',
             mobilePhone          : res.contactInfo.mobilePhone || '',
+            landlinePhone        : res.contactInfo.landlinePhone || '',
             emergencyContact     : res.contactInfo.emergencyContact || '',
             emergencyContactPhone: res.contactInfo.emergencyContactPhone || '',
             email                : res.contactInfo.email || '',

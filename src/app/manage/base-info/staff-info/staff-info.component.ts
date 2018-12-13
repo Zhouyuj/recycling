@@ -128,7 +128,7 @@ export class StaffInfoComponent implements OnInit {
         console.log('exp');
     }
 
-    onSelected(e: boolean, item: StaffListModel) {
+    onSelect(e: boolean, item: StaffListModel) {
         if (!e) {
             this.selectedItemCache = null;
             return;
@@ -144,8 +144,8 @@ export class StaffInfoComponent implements OnInit {
         this.formCache = ModelConverter.staffResToFormModel(this.selectedItemCache);
     }
 
-    onSelectedTr(e, item: StaffListModel) {
-        this.onSelected(true, item);
+    onSelectTr(e, item: StaffListModel) {
+        this.onSelect(true, item);
     }
 
     onPage(e) {
@@ -172,20 +172,17 @@ export class StaffInfoComponent implements OnInit {
      * @param e : string[] | string
      * @param type
      */
-    onFilter(e, type?: string) {
+    onFilter(e, type: string) {
         switch (type) {
-            case 'sex':
-                if (this.params.sex === e) return;
-                this.params.sex = e || '';
-                break;
             case 'roleId':
                 let result = (e && !e.length) ? '' : e.join(',');
-                if (this.params.roleId === result) return;
-                this.params.roleId = (e && !e.length) ? '' : e.join(',');
+                if (this.params[type] === result) return;
+                this.params[type] = (e && !e.length) ? '' : e.join(',');
                 break;
+            case 'sex':
             case 'postId':
-                if (this.params.postId === e) return;
-                this.params.postId = e || '';
+                if (!e && !this.params[type] || this.params[type] === e) return;
+                this.params[type] = e || '';
                 break;
         }
         this.getListByPage();
@@ -206,7 +203,8 @@ export class StaffInfoComponent implements OnInit {
      */
     onStopPropagation(e) {
         console.log(e);
-        e.stopPropagation();
+        //e.stopPropagation();
+        e.stopImmediatePropagation();
     }
 
     /**
@@ -255,7 +253,7 @@ export class StaffInfoComponent implements OnInit {
                     }
                 },
                 err => {
-                    console.error(`分页查询失败!!!${err}`);
+                    console.warn(`分页查询失败!!! message:${err.error.message}`);
                     this.isSpinning = false;
                 },
                 () => this.isSpinning = false

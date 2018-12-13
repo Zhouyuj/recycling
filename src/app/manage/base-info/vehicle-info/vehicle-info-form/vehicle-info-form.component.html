@@ -31,7 +31,7 @@
             </nz-form-item>
 
             <nz-form-item>
-                <nz-form-label [nzSm]="3" [nzXs]="24" nzRequired nzFor="engineModel">发动机号</nz-form-label>
+                <nz-form-label [nzSm]="3" [nzXs]="24" nzFor="engineModel">发动机号</nz-form-label>
                 <nz-form-control [nzSm]="7">
                     <input nz-input
                            name="engineModel"
@@ -75,6 +75,7 @@
                             name="planDepartureTime"
                             required
                             [(ngModel)]="formData.planDepartureTime"
+                            (ngModelChange)="onPlanDepartureTimeChange($event)"
                             nzFormat="HH:mm"
                             #planDepartureTime="ngModel">
                     </nz-time-picker>
@@ -84,14 +85,27 @@
 
                 <nz-form-label [nzSm]="4" [nzXs]="24" nzRequired nzFor="planBackTime">最晚回厂时间</nz-form-label>
                 <nz-form-control [nzSm]="7" [nzXs]="24">
-                    <nz-time-picker
+                    <!--<nz-time-picker
                             name="planBackTime"
                             required
                             [(ngModel)]="formData.planBackTime"
                             nzFormat="HH:mm"
                             #planBackTime="ngModel">
                     </nz-time-picker>
-                    <nz-form-explain [hidden]="planBackTime.valid || planBackTime.pristine">请选择回厂时间</nz-form-explain>
+                    <nz-form-explain [hidden]="planBackTime.valid || planBackTime.pristine">请选择回厂时间</nz-form-explain>-->
+                    <app-time-picker
+                            [(values)]="formData.planBackTime"
+                            [disabledTimes]="disabledTimes"
+                            (changesEmitter)="onPlanBackTimeChange($event)">
+                    </app-time-picker>
+                    <!--<nz-range-picker
+                            name="dates"
+                            [ngModel]="dates"
+                            [nzFormat]="yyyy-MM-dd"
+                            [nzShowTime]="true"
+                    >
+                    </nz-range-picker>-->
+
                 </nz-form-control>
             </nz-form-item>
 
@@ -131,12 +145,11 @@
             </nz-form-item>
 
             <nz-form-item>
-                <nz-form-label [nzSm]="4" [nzXs]="24" nzRequired nzFor="isTestVehicle">是否测试车</nz-form-label>
+                <nz-form-label [nzSm]="4" [nzXs]="24" nzFor="isTestVehicle">是否测试车</nz-form-label>
                 <nz-form-control [nzSm]="7" [nzXs]="24">
                     <nz-radio-group
                             name="isTestVehicle"
                             id="isTestVehicle"
-                            required
                             [nzButtonStyle]="'solid'"
                             [(ngModel)]="formData.test"
                             #isTestVehicle="ngModel">
@@ -152,7 +165,6 @@
                 <nz-form-control [nzSpan]="3" nzOffset="17">
                     <button nz-button
                             nzType="primary"
-                            [disabled]="!myForm.valid"
                             style="width: 100%;"
                             type="submit">确认
                     </button>

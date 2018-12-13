@@ -1,0 +1,18 @@
+<!-- 由于需求实现 48小时的timepicker,nz-time-picker暂不支持,故使用级联实现 -->
+<nz-cascader
+        [(ngModel)]="values"
+        [nzExpandTrigger]="'hover'"
+        [nzPlaceHolder]="'可跨日:48小时制'"
+        [nzOptions]="nzOptions"
+        [nzShowArrow]="false"
+        [nzShowSearch]="true"
+        [nzLabelRender]="renderTpl"
+        (ngModelChange)="onChanges($event)">
+</nz-cascader>
+
+<ng-template #renderTpl let-labels="labels" let-selectedOptions="selectedOptions">
+    <ng-container *ngFor="let label of labels; let i = index; let isLast = last">
+        <span *ngIf="!isLast">{{label}} : </span>
+        <span *ngIf="isLast">{{label}}</span>
+    </ng-container>
+</ng-template>

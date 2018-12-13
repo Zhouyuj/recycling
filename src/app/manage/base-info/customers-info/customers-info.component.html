@@ -102,11 +102,15 @@
                                (keyup)="$event.which === 13 && onKeywordSearchTh('username')">
                     </th>
                     <th nzWidth="100px">派桶数</th>
-                    <th nzWidth="200px" nzShowSort [(nzSort)]="sortMap.createDate"
-                        (nzSortChange)="onSortTh('createDate',$event)">登记时间 <br/>
+                    <th nzWidth="200px"
+                        nzShowSort
+                        [(nzSort)]="sortMap.createDate"
+                        (nzSortChange)="onSortTh('createDate',$event)">登记时间
+                        <br/>
                         <input type="text" nz-input placeholder=""
                                nzSize="small" style="width: 60%;"
                                [(ngModel)]="params.createdDate"
+                               (focus)="onStopPropagation($event)"
                                (keyup)="$event.which === 13 && onKeywordSearchTh('createDate')">
                     </th>
                     <th nzWidth="150px">联系人 <br/>
@@ -149,13 +153,13 @@
                         <td>{{data.totalDustbins}}</td>
                         <td>{{data.createdDate | date:'yyyy-MM-dd'}}</td>
                         <td>{{data.contactName}}</td>
-                        <td>{{data.mobilePhone}}</td>
+                        <td>{{data.mobilePhone || data.landlinePhone}}</td>
                     </tr>
                     <ng-template *ngIf="data.expand" ngFor let-item [ngForOf]="data.customerList">
-                        <tr  (click)="onClickTr($event, item)">
+                        <tr  (click)="onSelectedTr($event, item)">
                             <td></td>
                             <td nzShowCheckbox [(nzChecked)]="item.checked" [nzDisabled]="item.disabled"
-                                (nzCheckedChange)="onCheckedChange($event, item)"></td>
+                                (nzCheckedChange)="onSelected($event, item)"></td>
                             <td>{{item.level ? '子收集点' : (item.customerList ? '聚类点' : '普通点')}}</td>
                             <td>
                                 <i nz-icon
@@ -172,7 +176,7 @@
                             <td>{{item.totalDustbins}}</td>
                             <td>{{item.createdDate | date:'yyyy-MM-dd'}}</td>
                             <td>{{item.contactName}}</td>
-                            <td>{{item.mobilePhone}}</td>
+                            <td>{{item.mobilePhone || item.landlinePhone}}</td>
                         </tr>
                     </ng-template>
 

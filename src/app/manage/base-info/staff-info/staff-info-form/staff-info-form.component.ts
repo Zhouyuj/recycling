@@ -40,7 +40,6 @@ export class StaffInfoFormComponent implements OnInit {
     onSubmitForm(): void {
         this.isSpinning = true;
         this.transformFormModelToRequest();
-        debugger;
         switch (this.type) {
             case 'add':
                 this.StaffInfoService.addStaff(this.staffReq).subscribe(

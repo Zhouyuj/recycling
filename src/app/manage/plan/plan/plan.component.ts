@@ -65,14 +65,21 @@ export class PlanComponent implements OnInit {
 
     getListByPage() {
         this.isSpinning = true;
-        this.planService.getPlanList(this.pageReq, this.params).subscribe((res: Result<PageRes<PlanRes[]>>) => {
-            if (res.data.content) {
+        this.planService.getPlanList(this.pageReq, this.params).subscribe(
+            (res: Result<PageRes<PlanRes[]>>) => {
+                if (res.data.content) {
+                    this.isSpinning = false;
+                    this.resCache = res.data.content;
+                    this.listCache = this.dataToTableList(res.data.content);
+                    this.updatePageRes(res.data);
+                }
+            },
+            err => {
+                console.warn(`分页查询失败!!! message:${err.error.message}`);
                 this.isSpinning = false;
-                this.resCache = res.data.content;
-                this.listCache = this.dataToTableList(res.data.content);
-                this.updatePageRes(res.data);
-            }
-        })
+            },
+            () => this.isSpinning = false
+        );
     }
 
     dataToTableList(data: PlanRes[]): PlanListModel[] {

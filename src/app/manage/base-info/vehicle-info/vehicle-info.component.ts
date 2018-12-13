@@ -16,6 +16,7 @@ import { Result } from '../../../shared/models/response/result.model';
 import { VehicleFormModel } from './vehicle-form.model';
 import { VehicleRes } from './vehicle-res.model';
 import { VehicleListModel } from './vehicle-list.model';
+import {VehicleCategoryEnum} from './models/vehicle-category.enum';
 
 @Component({
     selector   : 'app-vehicle-info',
@@ -39,15 +40,6 @@ export class VehicleInfoComponent implements OnInit {
         }
     ];
 
-    public list_options = {
-        rows               : [],
-        selectedRows       : [],
-        localizationMessage: {
-            emptyMessage   : '很抱歉, 未找到任何数据！',
-            totalMessage   : '条记录(共)',
-            selectedMessage: '已选中',
-        },
-    };
     public isSpinning = false;
 
     public pageReq = new PageReq();
@@ -56,8 +48,15 @@ export class VehicleInfoComponent implements OnInit {
     public keywordType: string;
     public keyword = '';
 
-    public listCache: VehicleRes[];
-    public itemCache: VehicleRes;
+    public vehicleCategoryList = [
+        { text: VehicleCategoryEnum.food5, value: VehicleCategoryEnum.food5Index },
+        { text: VehicleCategoryEnum.food8, value: VehicleCategoryEnum.food8Index },
+        { text: VehicleCategoryEnum.oil1, value: VehicleCategoryEnum.oil1Index },
+    ];
+
+    public resCache: VehicleRes[];   // 分页接口获取的表格数据
+    public selectedItemCache: VehicleRes;
+    public listCache: VehicleListModel[];
     public formCache: VehicleFormModel;
 
     constructor(private vehicleInfoService: VehicleInfoService,
@@ -80,7 +79,7 @@ export class VehicleInfoComponent implements OnInit {
     }
 
     onDel() {
-        this.vehicleInfoService.delCustomer(this.itemCache.id).subscribe(res => {
+        this.vehicleInfoService.delCustomer(this.selectedItemCache.id).subscribe(res => {
             this.notificationService.create({
                 type   : 'success',
                 title  : '恭喜,删除成功',
@@ -93,11 +92,24 @@ export class VehicleInfoComponent implements OnInit {
     onExp() {
     }
 
-    onSelect(e: VehicleListModel) {
-        this.itemCache = this.listCache.filter(item => item.id == this.list_options.selectedRows[ 0 ].id)[ 0 ];
-        this.formCache = ModelConverter.vehicleResToFormModel(this.itemCache);
-        console.log(this.itemCache);
-        console.log(this.formCache);
+    onSelect(e: boolean, item: VehicleListModel) {
+        if (!e) {
+            this.selectedItemCache = null;
+            return;
+        }
+        this.listCache.forEach((l: VehicleListModel) => {
+            if (l.id === item.id) {
+                l.checked = true;
+            } else {
+                l.checked = false;
+            }
+        });
+        this.selectedItemCache = this.resCache.filter((o: VehicleRes) => o.id === item.id)[ 0 ];
+        this.formCache = ModelConverter.vehicleResToFormModel(this.selectedItemCache);
+    }
+
+    onSelectTr(e, item: VehicleListModel) {
+        this.onSelect(true, item);
     }
 
     onKeywordSearch($e, type?: string) {
@@ -171,15 +183,15 @@ export class VehicleInfoComponent implements OnInit {
                 (res: Result<PageRes<VehicleRes[]>>) => {
                     if (res.data.content.length > 0) {
                         /* 缓存（返回值类型的）列表 */
-                        this.listCache = res.data.content;
+                        this.resCache = res.data.content;
                         /* 组装（列表类型的）列表数据 */
-                        this.list_options.rows = this.dataToTableRows(res.data.content);
+                        this.listCache = this.dataToTableRows(res.data.content);
                         /* 更新列表的信息（分页/排序） */
                         this.updatePageRes(res.data);
                     }
                     this.isSpinning = false;
                 },
-                err => console.warn(`分页查询失败!!!${err}`),
+                err => console.warn(`分页查询失败!!! message:${err.error.message}`),
                 () => this.isSpinning = false
             );
     }

@@ -118,7 +118,7 @@ export const ZHANGZHOU_OPTIONS = [
                         ],
                     },
                     {
-                        code    : "350622",
+                        value    : "350622",
                         label   : "云霄县",
                         children: [
                             {

@@ -47,38 +47,6 @@
     <!-- -------- 表格内容 -------- -->
     <div class="table-content">
         <nz-spin [nzSize]="'large'" [nzSpinning]="isSpinning">
-            <!--<ngx-datatable #dataTable class="material striped"
-                           [messages]="list_options.localizationMessage"
-                           [rows]="list_options.rows"
-                           [columnMode]="'force'"
-                           [headerHeight]="40"
-                           [rowHeight]="40"
-                           [footerHeight]="40"
-                           [scrollbarH]="true"
-                           [selected]="list_options.selectedRows"
-                           [selectionType]="'multi'"
-                           [sorts]="[{prop: 'entryTime', dir: 'desc'}]"
-                           [limit]="12"
-                           [externalPaging]="true"
-                           [count]="pageRes.total"
-                           [offset]="pageRes.page"
-                           (select)="onSelect($event)"
-                           (page)="onPage($event)"
-                           (sort)="onSort($event)"
-            >
-                <ngx-datatable-column name="姓名" prop="name" [sortable]="false"></ngx-datatable-column>
-                <ngx-datatable-column name="工号" prop="username" [sortable]="false"></ngx-datatable-column>
-                <ngx-datatable-column name="性别" prop="sex" [sortable]="false"></ngx-datatable-column>
-                <ngx-datatable-column name="岗位" prop="position" [sortable]="false"></ngx-datatable-column>
-                <ngx-datatable-column name="系统角色" prop="roles" [sortable]="false"></ngx-datatable-column>
-                <ngx-datatable-column name="入职时间" prop="entryTime"></ngx-datatable-column>
-                <ngx-datatable-column name="身份证" prop="identity" [sortable]="false"></ngx-datatable-column>
-                <ngx-datatable-column name="家庭住址" prop="address" [sortable]="false"></ngx-datatable-column>
-                <ngx-datatable-column name="联系电话" prop="mobilePhone" [sortable]="false"></ngx-datatable-column>
-                <ngx-datatable-column name="紧急联系人" prop="emergencyContact" [sortable]="false"></ngx-datatable-column>
-                <ngx-datatable-column name="紧急联系人电话" prop="emergencyContactPhone" [sortable]="false"></ngx-datatable-column>
-                <ngx-datatable-column name="邮箱" prop="email" [sortable]="false"></ngx-datatable-column>
-            </ngx-datatable>-->
 
             <nz-table #staffTable
                       [nzData]="listCache"
@@ -116,14 +84,14 @@
                     </th>
                     <th nzWidth="150px"
                         nzShowFilter
-                        [nzFilters]="roleList"
+                        [nzFilters]="postList"
                         [nzFilterMultiple]="false"
                         (nzFilterChange)="onFilter($event, 'postId')">
                         岗位
                     </th>
                     <th nzWidth="150px"
                         nzShowFilter
-                        [nzFilters]="postList"
+                        [nzFilters]="roleList"
                         [nzFilterMultiple]="true"
                         (nzFilterChange)="onFilter($event, 'roleId')">
                         系统角色
@@ -191,9 +159,9 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr *ngFor="let item of staffTable.data; index as i" (click)="onSelectedTr($event, item)">
+                <tr *ngFor="let item of staffTable.data; index as i" (click)="onSelectTr($event, item)">
                     <td nzShowCheckbox [(nzChecked)]="item.checked"
-                        (nzCheckedChange)="onSelected($event, item)"></td>
+                        (nzCheckedChange)="onSelect($event, item)"></td>
                     <td>{{item.name}}</td>
                     <td>{{item.username}}</td>
                     <td>{{item.sex}}</td>
@@ -202,7 +170,7 @@
                     <td>{{item.entryTime}}</td>
                     <td>{{item.identity}}</td>
                     <td>{{item.address}}</td>
-                    <td>{{item.mobilePhone}}</td>
+                    <td>{{item.mobilePhone || item.landlinePhone}}</td>
                     <td>{{item.emergencyContact}}</td>
                     <td>{{item.emergencyContactPhone}}</td>
                     <td>{{item.email}}</td>

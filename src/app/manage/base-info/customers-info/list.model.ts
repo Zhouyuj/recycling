@@ -18,6 +18,7 @@ export class ListModel {
     createdDate: string = null;
     contactName: string = null;
     mobilePhone: number = null;
+    landlinePhone: string = null;
     category: string = null;    // Cluster | Separate
     level: number = null; // 0 | 1（0:普通点/聚类点; 1:子收集点）
     customerList: ListModel[] = null; // 此字段与level用于展示 row detail

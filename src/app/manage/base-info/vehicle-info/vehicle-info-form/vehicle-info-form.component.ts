@@ -8,7 +8,9 @@ import { ModelConverter } from '../model-converter';
 import { ObjectUtils } from '../../../../shared/utils/object-utils';
 import { VehicleFormModel } from '../vehicle-form.model';
 import { VehicleReq } from '../vehicle-req.model';
-import {VerifyUtil} from '../../../../shared/utils/verify-utils';
+import { VerifyUtil } from '../../../../shared/utils/verify-utils';
+
+import { TIMES }from '../../../../shared/components/time-picker/time-picker-config';
 
 @Component({
     selector   : 'app-vehicle-info-form',
@@ -24,6 +26,8 @@ export class VehicleInfoFormComponent implements OnInit {
     public vehicleReq: VehicleReq;
     public cascaderOptions: any;
     public isSpinning = false;
+    //public planBackConfig = TIMES;
+    public disabledTimes;
 
     constructor(private drawerRef: NzDrawerRef<any>,
                 private districtsService: DistrictsService,
@@ -47,7 +51,25 @@ export class VehicleInfoFormComponent implements OnInit {
         this.drawerRef.close(false);
     }
 
+    /**
+     * @param e
+     */
+    onPlanBackTimeChange(e) {
+        this.formData.planBackTime = e;
+    }
+
+    /**
+     *
+     */
+    onPlanDepartureTimeChange(e) {
+        // TODO
+        //this.disabledTimes = e;
+    }
+
     onSubmitForm(): void {
+        if (!this.checkForm()) {
+            return;
+        }
         this.transformFormModelToRequest();
         switch (this.type) {
             case 'add':
@@ -65,11 +87,12 @@ export class VehicleInfoFormComponent implements OnInit {
                         this.notificationService.create({
                             type   : 'error',
                             title  : '抱歉,添加失败',
-                            content: err.message ? err.message : '该提醒将自动消失',
+                            content: err.error.message ? err.error.message : '该提醒将自动消失',
                         });
                         this.isSpinning = false;
                     },
-                    () => this.isSpinning = false);
+                    () => this.isSpinning = false
+                );
                 break;
             case 'edit':
                 this.vehicleInfoService.updateVehicle(this.vehicleReq, this.cache.id).subscribe(
@@ -86,11 +109,12 @@ export class VehicleInfoFormComponent implements OnInit {
                         this.notificationService.create({
                             type   : 'error',
                             title  : '抱歉,更新失败',
-                            content: err.message ? err.message : '该提醒将自动消失',
+                            content: err.error.message ? err.error.message : '该提醒将自动消失',
                         });
                         this.isSpinning = false;
                     },
-                    () => this.isSpinning = false);
+                    () => this.isSpinning = false
+                );
                 break;
         }
     }
@@ -111,11 +135,59 @@ export class VehicleInfoFormComponent implements OnInit {
     }
 
     checkForm() {
-        console.log(this.formData);
-        for (const k in this.formData) {
-            if (VerifyUtil.isNull(this.formData[ k ])) {
-                console.log(this.formData[ k ]);
-            }
+        if (!this.formData.plateNumber) {
+            this.notificationService.create({
+                type   : 'error',
+                title  : '抱歉,添加失败',
+                content: '车牌号不能为空',
+            });
+            return false;
+        } else if (!this.formData.buyDate) {
+            this.notificationService.create({
+                type   : 'error',
+                title  : '抱歉,请检查内容',
+                content: '购买时间不能为空',
+            });
+            return false;
+        } else if (!this.formData.planDepartureTime) {
+            this.notificationService.create({
+                type   : 'error',
+                title  : '抱歉,请检查内容',
+                content: '出车时间不能为空',
+            });
+            return false;
+        } else if (!this.formData.planBackTime) {
+            this.notificationService.create({
+                type   : 'error',
+                title  : '抱歉,请检查内容',
+                content: '回厂时间不能为空',
+            });
+            return false;
+        } else if (this.formData.planDepartureTime.getHours() > parseInt(this.formData.planBackTime[0])
+            || this.formData.planDepartureTime.getHours() === parseInt(this.formData.planBackTime[0])
+            && this.formData.planDepartureTime.getMinutes() > parseInt(this.formData.planBackTime[1])) {
+            this.notificationService.create({
+                type   : 'error',
+                title  : '抱歉,请检查内容',
+                content: '回厂时间不能早于出车时间',
+            });
+            return false;
+        } else if (!this.formData.type) {
+            this.notificationService.create({
+                type   : 'error',
+                title  : '抱歉,请检查内容',
+                content: '车型不能为空',
+            });
+            return false;
+        } else if (!this.formData.district) {
+            this.notificationService.create({
+                type   : 'error',
+                title  : '抱歉,请检查内容',
+                content: '所属区域不能为空',
+            });
+            return false;
+        } else {
+            return true;
         }
     }
 

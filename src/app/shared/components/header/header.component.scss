@@ -1,4 +1,5 @@
 #header-comp {
+    width: 100%;
     [nz-row] {
         background-color: #fff;
     }
@@ -12,6 +13,7 @@
 
 /* 覆盖 antd */
 #nav-menu {
+    overflow-x: scroll;
     ul li {
         .icon-box {
             height: 30px;

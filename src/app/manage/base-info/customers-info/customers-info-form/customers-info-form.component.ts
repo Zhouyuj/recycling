@@ -199,17 +199,12 @@ export class CustomersInfoFormComponent implements OnInit {
         switch (this.selectedCategory) {
             case 'Separate':    /* 普通点 | 子收集点 */
                 const lengthS = this.formModelSeparate.duration[ type ].length || 0;
-                const newIdS = this.formModelSeparate.duration[ type ][ lengthS - 1 ].idx + 1;
+                const newIdS = !lengthS ? 0 : this.formModelSeparate.duration[ type ][ lengthS - 1 ].idx + 1;
                 this.formModelSeparate.duration[ type ].push(new DurationDetail(newIdS));
                 break;
             case 'Cluster':     /* 聚类点 */
                 const lengthC = this.formModelCluster.duration[ type ].length || 0;
-                let newIdC;
-                if (!lengthC) {
-                    newIdC = 0;
-                } else {
-                    newIdC = this.formModelCluster.duration[ type ][ lengthC - 1 ].idx + 1;
-                }
+                let newIdC = !lengthC ? 0 : this.formModelCluster.duration[ type ][ lengthC - 1 ].idx + 1;
                 this.formModelCluster.duration[ type ].push(new DurationDetail(newIdC));
                 break;
         }
@@ -232,7 +227,7 @@ export class CustomersInfoFormComponent implements OnInit {
 
     onAddChildCollection(): void {
         let length = this.formModelCluster.childCollections.length || 0;
-        let newIdx = this.formModelCluster.childCollections[ length - 1 ].idx + 1;
+        let newIdx = !length ? 0 : this.formModelCluster.childCollections[ length - 1 ].idx + 1;
         this.formModelCluster.childCollections.push(new ChildCollections(newIdx));
     }
 

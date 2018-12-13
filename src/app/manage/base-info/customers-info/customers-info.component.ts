@@ -111,7 +111,7 @@ export class CustomersInfoComponent implements OnInit {
         this.drawerRef = this.drawerService.create<CustomersInfoFormComponent, { type: string, success: boolean, cache: FormModel, countyNames: [{ code: string, name: string }] }, boolean>({
             nzTitle        : { add: '添加', edit: '编辑' }[ type ] || '请编辑表单',
             nzContent      : CustomersInfoFormComponent,
-            nzWidth        : '55%',
+            nzWidth        : '60%',
             nzContentParams: {
                 type       : type,
                 success    : false,
@@ -152,7 +152,7 @@ export class CustomersInfoComponent implements OnInit {
                     }
                 },
                 err => {
-                    console.error(`分页查询失败!!!${err}`);
+                    console.warn(`分页查询失败!!! message:${err.error.message}`);
                     this.isSpinning = false;
                 },
                 () => this.isSpinning = false
@@ -199,7 +199,6 @@ export class CustomersInfoComponent implements OnInit {
             }
         }
     }
-
 
     /** checkable start **/
 
@@ -255,6 +254,15 @@ export class CustomersInfoComponent implements OnInit {
 
     onKeywordSearchTh(keywordType: string) {
         this.getListByPage();
+    }
+
+    /**
+     * 点击 登记时间 的关键字筛选框,会触发组件的排序,需要添加该方法
+     * @param e
+     */
+    onStopPropagation(e) {
+        console.log(e);
+        e.stopPropagation();
     }
 
     onPageV2(e) {

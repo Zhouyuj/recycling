@@ -14,6 +14,7 @@ export class StaffListModel {
     identity: string = null;
     address: string = null;
     mobilePhone: string = null;
+    landlinePhone: string = null;
     emergencyContact: string = null;
     emergencyContactPhone: string = null;
     email: string = null;
