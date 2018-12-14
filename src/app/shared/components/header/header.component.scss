@@ -14,6 +14,9 @@
 /* 覆盖 antd */
 #nav-menu {
     overflow-x: scroll;
+    &::-webkit-scrollbar {
+        display: none;
+    }
     ul li {
         .icon-box {
             height: 30px;

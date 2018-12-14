@@ -12,7 +12,42 @@
                 </div>
                 <div class="login_content">
                     <h4>登录</h4>
-                    <form nz-form [formGroup]="validateForm" class="login-form" (ngSubmit)="submitForm()">
+
+                    <form nz-form  class="login-form" (ngSubmit)="onSubmit()">
+                        <nz-form-item>
+                            <nz-form-control>
+                                <nz-input-group nzPrefixIcon="anticon anticon-user">
+                                    <input type="text"
+                                           name="username"
+                                           [(ngModel)]="formModel.username"
+                                           nz-input
+                                           placeholder="请输入您的用户名"
+                                           #usernameModel="ngModel">
+                                </nz-input-group>
+                                <nz-form-explain *ngIf="usernameModel.valid && usernameModel.pristine">请输入用户名</nz-form-explain>
+                            </nz-form-control>
+                        </nz-form-item>
+                        <nz-form-item>
+                            <nz-form-control>
+                                <nz-input-group nzPrefixIcon="anticon anticon-lock">
+                                    <input type="password"
+                                           name="password"
+                                           [(ngModel)]="formModel.password"
+                                           nz-input
+                                           placeholder="请输入您的密码"
+                                           #passwordModel="ngModel">
+                                </nz-input-group>
+                                <nz-form-explain *ngIf="passwordModel.valid && passwordModel.pristine">请输入密码</nz-form-explain>
+                            </nz-form-control>
+                        </nz-form-item>
+                        <nz-form-item>
+                            <nz-form-control>
+                                <button nz-button class="login-form-button" [nzType]="'primary'">登录</button>
+                            </nz-form-control>
+                        </nz-form-item>
+                    </form>
+
+                    <!--<form nz-form [formGroup]="validateForm" class="login-form" (ngSubmit)="submitForm()">
                         <nz-form-item>
                             <nz-form-control>
                                 <nz-input-group nzPrefixIcon="anticon anticon-user">
@@ -31,13 +66,13 @@
                         </nz-form-item>
                         <nz-form-item>
                             <nz-form-control>
-                                <!--<label nz-checkbox formControlName="remember">
+                                &lt;!&ndash;<label nz-checkbox formControlName="remember">
                                     <span>记住我</span>
-                                </label>-->
+                                </label>&ndash;&gt;
                                 <button nz-button class="login-form-button" [nzType]="'primary'">登录</button>
                             </nz-form-control>
                         </nz-form-item>
-                    </form>
+                    </form>-->
                 </div>
             </div>
         </div>

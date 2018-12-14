@@ -1,0 +1,53 @@
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs/index';
+
+import { Base64Utils } from '../../../shared/utils/base64-utils';
+import { RebirthHttp, RebirthHttpProvider, Headers, POST, Body, Query, BaseUrl } from 'rebirth-http';
+import { StorageType } from '../storage/storage-type.enum';
+import { StorageService } from '../storage/storage.service';
+import { Token, PASSWORD, USERNAME } from './token';
+import { environment } from '../../../../environments/environment';
+import {} from 'rebirth-http/rebirth-http';
+
+@BaseUrl(environment.api)
+@Injectable({
+    providedIn: 'root'
+})
+export class TokenService extends RebirthHttp {
+    private static STORAGE_POOL_KEY = 'community-authorization';
+    private static STORAGE_KEY = 'auth-token';
+    token: { 'Authorization': string };
+
+    constructor(http: HttpClient,
+                private storageService: StorageService) {
+        super(http);
+        this.storageService.setDefaultStorageType(StorageType.localStorage);
+    }
+
+    @POST('/auth')
+    //@Headers({ 'Authorization': 'Basic ' + new Buffer(USERNAME + ':' + PASSWORD).toString('base64') })
+    @Headers({ 'Authorization': 'Basic ' + Base64Utils.encode(USERNAME + ':' + PASSWORD) })
+    public refreshToken(@Body obj: { grant_type: string, refresh_token: string }): Observable<Token> {
+        return null;
+    }
+
+    @POST('/auth')
+    //@Headers({ 'Authorization': 'Basic ' + new Buffer(USERNAME + ':' + PASSWORD).toString('base64') })
+    //@Headers({ 'Authorization': 'Basic ' + Base64Utils.encode(USERNAME + ':' + PASSWORD) })
+    public getTokenInfo(@Body obj: { username: string, password: string, grant_type?: string }): Observable<any> {
+        return null;
+    }
+
+    public clearToken(): void {
+        this.storageService.remove({ pool: TokenService.STORAGE_POOL_KEY, key: TokenService.STORAGE_KEY });
+    }
+
+    public setToken(token: Token): void {
+        this.storageService.put({ pool: TokenService.STORAGE_POOL_KEY, key: TokenService.STORAGE_KEY }, token);
+    }
+
+    public getToken(): Token {
+        return this.storageService.get({ pool: TokenService.STORAGE_POOL_KEY, key: TokenService.STORAGE_KEY }) as Token;
+    }
+}

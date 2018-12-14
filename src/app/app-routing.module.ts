@@ -8,13 +8,14 @@ import { LoginComponent } from './login/login.component';
 
 const ROUTER_CONFIG: Routes = [
     { path: '', pathMatch: 'full', redirectTo: '/manage/baseInfo/staffs' },
+    { path: 'home', pathMatch: 'full', redirectTo: '/manage/baseInfo/staffs' },
     {
-        path: 'login',
+        path        : 'login',
         loadChildren: './login/login.module#LoginModule',
-        data: { title: '登录' },
+        data        : { title: '登录' },
     },
     {
-        path: 'manage',
+        path        : 'manage',
         loadChildren: './manage/manage-app.module#ManageAppModule',
     },
     { path: '**', redirectTo: '/manage/baseInfo/staffs' },

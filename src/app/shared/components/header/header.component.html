@@ -130,13 +130,13 @@
             <!-- welcome -->
             <div nz-col nzSpan="12">
                 <div class="personal-menu-item">
-                    <i class="anticon anticon-smile-o"></i> 欢迎您, 张敬轩
+                    <i class="anticon anticon-smile-o"></i> 欢迎您, {{name}}
                 </div>
             </div>
             <!-- logout -->
             <div nz-col nzSpan="6">
                 <div class="personal-menu-item">
-                    <a routerLink="/login">
+                    <a routerLink="/login" (click)="onLogout($event)">
                         <i class="anticon anticon-logout"></i> 退出
                     </a>
                     &nbsp;

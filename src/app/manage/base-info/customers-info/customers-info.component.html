@@ -137,7 +137,7 @@
                             [(nzChecked)]="data.checked"
                             [nzDisabled]="data.disabled"
                             (nzCheckedChange)="onSelected($event, data)"></td>
-                        <td>{{data.level ? '子收集点' : (data.customerList ? '聚类点' : '普通点')}}</td>
+                        <td>{{data.level ? '子收集点' : (data.category === 'Cluster' ? '聚类点' : '普通点')}}</td>
                         <td>
                             <i nz-icon
                                class="anticon anticon-environment location"
@@ -160,7 +160,7 @@
                             <td></td>
                             <td nzShowCheckbox [(nzChecked)]="item.checked" [nzDisabled]="item.disabled"
                                 (nzCheckedChange)="onSelected($event, item)"></td>
-                            <td>{{item.level ? '子收集点' : (item.customerList ? '聚类点' : '普通点')}}</td>
+                            <td>'子收集点'</td>
                             <td>
                                 <i nz-icon
                                    class="anticon anticon-environment location"

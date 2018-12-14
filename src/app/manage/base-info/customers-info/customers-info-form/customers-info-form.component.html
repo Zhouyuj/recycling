@@ -226,7 +226,6 @@
                     <nz-form-control [nzSm]="22" [nzXs]="24" nzOffset="1">
                         <nz-tabset [nzTabBarExtraContent]="addSeparateDurationTemplate">
                             <nz-tab [nzTitle]="'餐厨垃圾'" (nzSelect)="formModelSeparate.duration.tabType = 'food'">
-                                {{formModelSeparate.duration.food | json}}
                                 <!--餐厨垃圾-->
                                 <nz-form-item
                                         *ngFor="let item of formModelSeparate.duration.food;"
@@ -305,6 +304,12 @@
                                                     [nzServerSearch]="true"
                                                     (nzOnSearch)="onSearchVehicles($event)"
                                                     (nzOpenChange)="onVehicleSearchOpen($event)">
+                                                <!-- 这个option 为了防止初始化表单时,车辆没有显示出值 -->
+                                                <nz-option *ngIf="item.plateNumber && !vehicles"
+                                                           [nzValue]="item.plateNumber"
+                                                           [nzLabel]="item.plateNumber">
+                                                </nz-option>
+
                                                 <ng-container *ngFor="let o of vehicles">
                                                     <nz-option *ngIf="!isVehiclesLoading" [nzValue]="o"
                                                                [nzLabel]="o"></nz-option>
@@ -399,6 +404,12 @@
                                                     nzShowSearch
                                                     [nzServerSearch]="true"
                                                     (nzOnSearch)="onSearchVehicles($event)">
+                                                <!-- 这个option 为了防止初始化表单时,车辆没有显示出值 -->
+                                                <nz-option *ngIf="item.plateNumber && !vehicles"
+                                                           [nzValue]="item.plateNumber"
+                                                           [nzLabel]="item.plateNumber">
+                                                </nz-option>
+
                                                 <ng-container *ngFor="let o of vehicles">
                                                     <nz-option *ngIf="!isVehiclesLoading" [nzValue]="o"
                                                                [nzLabel]="o"></nz-option>
@@ -627,6 +638,12 @@
                                                     nzShowSearch
                                                     [nzServerSearch]="true"
                                                     (nzOnSearch)="onSearchVehicles($event)">
+                                                <!-- 这个option 为了防止初始化表单时,车辆没有显示出值 -->
+                                                <nz-option *ngIf="item.plateNumber && !vehicles"
+                                                           [nzValue]="item.plateNumber"
+                                                           [nzLabel]="item.plateNumber">
+                                                </nz-option>
+
                                                 <ng-container *ngFor="let o of vehicles">
                                                     <nz-option *ngIf="!isVehiclesLoading" [nzValue]="o"
                                                                [nzLabel]="o"></nz-option>
@@ -721,9 +738,12 @@
                                                     nzShowSearch
                                                     [nzServerSearch]="true"
                                                     (nzOnSearch)="onSearchVehicles($event)">
-                                                <nz-option *ngIf=""
-                                                           [nzValue]=""
-                                                           [nzLabel]=""></nz-option>
+                                                <!-- 这个option 为了防止初始化表单时,车辆没有显示出值 -->
+                                                <nz-option *ngIf="item.plateNumber && !vehicles"
+                                                           [nzValue]="item.plateNumber"
+                                                           [nzLabel]="item.plateNumber">
+                                                </nz-option>
+
                                                 <ng-container *ngFor="let o of vehicles">
                                                     <nz-option *ngIf="!isVehiclesLoading" [nzValue]="o"
                                                                [nzLabel]="o"></nz-option>
@@ -752,7 +772,7 @@
 
             <nz-divider></nz-divider>
 
-            <nz-form-item nz-row>
+            <nz-form-item nz-row style="margin-bottom: 150px;">
                 <nz-form-control [nzSpan]="3" nzOffset="17">
                     <button nz-button
                             nzType="primary"

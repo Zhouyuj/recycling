@@ -45,8 +45,7 @@ export class CustomersInfoFormComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        //this.initForm();
-        this.initVehicles();
+        this.initForm();
     }
 
     initForm() {
@@ -65,6 +64,7 @@ export class CustomersInfoFormComponent implements OnInit {
             this.formModelCluster.address = [ '350000', '350600', '350603', '350603100' ];   // 初始化地区为龙文区
             this.formModelCluster.category = 'Cluster';
         }
+        this.initVehicles();
     }
 
     /**
@@ -74,7 +74,7 @@ export class CustomersInfoFormComponent implements OnInit {
     initVehicles() {
         const getRandomNameList = ({ districtCode, plateNumber }) => {
             districtCode = districtCode || '350603';
-            return this.customersInfoService.getCustomerVehicles(new PageReq(), districtCode, 'Available', plateNumber)
+            return this.customersInfoService.getCustomerVehicles(new PageReq(1, 20), districtCode, 'Available', plateNumber)
                 .pipe(map((res: Result<PageRes<VehicleRes[]>>) => res.data.content))
                 .pipe(map((list: VehicleRes[]) => {
                     return list.map(item => `${item.plateNumber}`);
@@ -87,7 +87,6 @@ export class CustomersInfoFormComponent implements OnInit {
         optionList$.subscribe(data => {
             this.isVehiclesLoading = false;
             this.vehicles = data;
-            this.initForm();
         });
     }
 
@@ -283,7 +282,7 @@ export class CustomersInfoFormComponent implements OnInit {
                         content: '请选择是否自带钥匙',
                     });
                     return false;
-                } else if (this.formModelSeparate.level && !this.formModelSeparate.duration.food.length && !this.formModelSeparate.duration.oil.length) {
+                } else if ((this.formModelSeparate.level === null || this.formModelSeparate.level === 0) && !this.formModelSeparate.duration.food.length && !this.formModelSeparate.duration.oil.length) {
                     this.notificationService.create({
                         type   : 'error',
                         title  : '抱歉,请检查输入内容',
@@ -343,7 +342,7 @@ export class CustomersInfoFormComponent implements OnInit {
                         content: '请选择单位类型',
                     });
                     return false;
-                } else if (!this.formModelCluster.duration.food.length && !this.formModelCluster.duration.oil.length) {
+                } else if ((this.formModelCluster.level === null || this.formModelCluster.level === 0) && !this.formModelCluster.duration.food.length && !this.formModelCluster.duration.oil.length) {
                     this.notificationService.create({
                         type   : 'error',
                         title  : '抱歉,请检查输入内容',
@@ -389,5 +388,6 @@ export class CustomersInfoFormComponent implements OnInit {
                 }
                 break;
         }
+        return true;
     }
 }

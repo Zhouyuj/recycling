@@ -5,8 +5,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpRequest } from '@angular/common/http';
 import { Observable } from 'rxjs/index';
 /* 第三方 */
-import { RebirthHttpProvider } from 'rebirth-http';
-import { GET, Query, RebirthHttp } from 'rebirth-http';
+import { RebirthHttpProvider, GET, Query, RebirthHttp } from 'rebirth-http';
 /* 自定义 */
 import { environment } from '../../../../environments/environment';
 
@@ -56,6 +55,6 @@ export class InterceptorServices extends RebirthHttp {
                 },
             });
 
-        console.log('registInterceptor successfully');
+        console.log('register interceptor successfully');
     }
 }
