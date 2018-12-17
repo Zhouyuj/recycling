@@ -11,6 +11,7 @@ import {AuthorizationService} from '../../../core/services/authorization/authori
 })
 export class HeaderComponent implements OnInit {
 
+    bellCounts: number;
     menus: any;
     name: string;
     constructor(private authorizationService: AuthorizationService) {

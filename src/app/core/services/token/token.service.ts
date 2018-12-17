@@ -15,7 +15,7 @@ import {} from 'rebirth-http/rebirth-http';
     providedIn: 'root'
 })
 export class TokenService extends RebirthHttp {
-    private static STORAGE_POOL_KEY = 'community-authorization';
+    private static STORAGE_POOL_KEY = 'fjzz-authorization';
     private static STORAGE_KEY = 'auth-token';
     token: { 'Authorization': string };
 

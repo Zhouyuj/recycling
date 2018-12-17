@@ -5,10 +5,11 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ManageAppComponent } from './manage-app/manage-app.component';
 import { TestMapComponent } from './test-map/test-map.component';
+import { AuthRoutingGuardService } from '../core/services/authorization/auth-routing-guard.service';
 
 const ROUTER_CONFIG: Routes = [
     {
-        path    : '', component: ManageAppComponent,
+        path    : '', component: ManageAppComponent, canActivate: [AuthRoutingGuardService],
         children: [
             {
                 path        : 'plan',

@@ -19,12 +19,14 @@
                                 <nz-input-group nzPrefixIcon="anticon anticon-user">
                                     <input type="text"
                                            name="username"
+                                           maxlength="20"
+                                           required
                                            [(ngModel)]="formModel.username"
                                            nz-input
                                            placeholder="请输入您的用户名"
                                            #usernameModel="ngModel">
                                 </nz-input-group>
-                                <nz-form-explain *ngIf="usernameModel.valid && usernameModel.pristine">请输入用户名</nz-form-explain>
+                                <nz-form-explain [hidden]="usernameModel.valid || usernameModel.pristine">请输入正确的用户名</nz-form-explain>
                             </nz-form-control>
                         </nz-form-item>
                         <nz-form-item>
@@ -32,12 +34,14 @@
                                 <nz-input-group nzPrefixIcon="anticon anticon-lock">
                                     <input type="password"
                                            name="password"
+                                           maxlength="20"
+                                           required
                                            [(ngModel)]="formModel.password"
                                            nz-input
                                            placeholder="请输入您的密码"
                                            #passwordModel="ngModel">
                                 </nz-input-group>
-                                <nz-form-explain *ngIf="passwordModel.valid && passwordModel.pristine">请输入密码</nz-form-explain>
+                                <nz-form-explain [hidden]="passwordModel.valid || passwordModel.pristine">请输入正确的密码</nz-form-explain>
                             </nz-form-control>
                         </nz-form-item>
                         <nz-form-item>

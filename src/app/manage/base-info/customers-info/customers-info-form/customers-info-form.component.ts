@@ -182,11 +182,49 @@ export class CustomersInfoFormComponent implements OnInit {
         }
     }
 
+    /**
+     * 地址选择修改后,详细地址和选择车辆 清空,需要重新选择.
+     * @param $e
+     */
     onAddressChange($e): void {
         if (this.selectedCategory === 'Separate') {
-            this.formModelSeparate.address = $e;
+            if (this.formModelSeparate.address.join(',') == $e.join(',')) {
+                return;
+            } else {
+                this.formModelSeparate.address = $e;
+                this.formModelSeparate.detailAddress = null;
+                if (this.formModelSeparate.duration && this.formModelSeparate.duration.food) {
+                    this.formModelSeparate.duration.food = this.formModelSeparate.duration.food.map((duration: DurationDetail) => {
+                        duration.plateNumber = null;
+                        return duration;
+                    });
+                }
+                if (this.formModelSeparate.duration && this.formModelSeparate.duration.oil) {
+                    this.formModelSeparate.duration.oil = this.formModelSeparate.duration.oil.map((duration: DurationDetail) => {
+                        duration.plateNumber = null;
+                        return duration;
+                    });
+                }
+            }
         } else if (this.selectedCategory === 'Cluster') {
-            this.formModelCluster.address = $e;
+            if (this.formModelCluster.address.join(',') == $e.join(',')) {
+                return;
+            } else {
+                this.formModelSeparate.address = $e;
+                this.formModelCluster.detailAddress = null;
+                if (this.formModelCluster.duration && this.formModelCluster.duration.food) {
+                    this.formModelCluster.duration.food = this.formModelCluster.duration.food.map((duration: DurationDetail) => {
+                        duration.plateNumber = null;
+                        return duration;
+                    });
+                }
+                if (this.formModelCluster.duration && this.formModelCluster.duration.oil) {
+                    this.formModelCluster.duration.oil = this.formModelCluster.duration.oil.map((duration: DurationDetail) => {
+                        duration.plateNumber = null;
+                        return duration;
+                    });
+                }
+            }
         }
     }
 
@@ -216,12 +254,12 @@ export class CustomersInfoFormComponent implements OnInit {
     onRemoveDuration(durationType: string, idx: number) {
         switch (this.selectedCategory) {
             case 'Separate':
-                if (this.formModelSeparate.duration[ durationType ].length == 1) return;
+                if (!this.formModelSeparate.duration[ durationType ].length) return;
                 let durationS = this.formModelSeparate.duration[ durationType ].filter(item => item.idx !== idx);
                 this.formModelSeparate.duration[ durationType ] = durationS;
                 break;
             case 'Cluster':
-                if (this.formModelCluster.duration[ durationType ].length == 1) return;
+                if (!this.formModelCluster.duration[ durationType ].length) return;
                 let durationC = this.formModelCluster.duration[ durationType ].filter(item => item.idx !== idx);
                 this.formModelCluster.duration[ durationType ] = durationC;
                 break;
@@ -235,9 +273,7 @@ export class CustomersInfoFormComponent implements OnInit {
     }
 
     onRemoveChildCollections(idx: number) {
-        if (this.formModelCluster.childCollections.length == 1) {
-            return;
-        }
+        if (!this.formModelCluster.childCollections.length) return;
         let result = this.formModelCluster.childCollections.filter(item => {
             return item.idx !== idx;
         });
@@ -254,42 +290,48 @@ export class CustomersInfoFormComponent implements OnInit {
                         content: '名称不能为空',
                     });
                     return false;
-                } else if (!this.formModelSeparate.collectionType) {
+                }
+                if (!this.formModelSeparate.collectionType) {
                     this.notificationService.create({
                         type   : 'error',
                         title  : '抱歉,请检查输入内容',
                         content: '请选择单位类型',
                     });
                     return false;
-                } else if (!this.formModelSeparate.contactPersonName) {
+                }
+                if (!this.formModelSeparate.contactPersonName) {
                     this.notificationService.create({
                         type   : 'error',
                         title  : '抱歉,请检查输入内容',
                         content: '请输入联系人',
                     });
                     return false;
-                } else if (!this.formModelSeparate.mobile && !this.formModelSeparate.tel) {
+                }
+                if (!this.formModelSeparate.mobile && !this.formModelSeparate.tel) {
                     this.notificationService.create({
                         type   : 'error',
                         title  : '抱歉,请检查输入内容',
                         content: '请输入移动电话或固定电话',
                     });
                     return false;
-                } else if (parseInt(this.formModelSeparate.hasKey) !== 0 && parseInt(this.formModelSeparate.hasKey) !== 1) {
+                }
+                if (parseInt(this.formModelSeparate.hasKey) !== 0 && parseInt(this.formModelSeparate.hasKey) !== 1) {
                     this.notificationService.create({
                         type   : 'error',
                         title  : '抱歉,请检查输入内容',
                         content: '请选择是否自带钥匙',
                     });
                     return false;
-                } else if ((this.formModelSeparate.level === null || this.formModelSeparate.level === 0) && !this.formModelSeparate.duration.food.length && !this.formModelSeparate.duration.oil.length) {
+                }
+                if ((this.formModelSeparate.level === null || this.formModelSeparate.level === 0) && !this.formModelSeparate.duration.food.length && !this.formModelSeparate.duration.oil.length) {
                     this.notificationService.create({
                         type   : 'error',
                         title  : '抱歉,请检查输入内容',
                         content: '普通收集点请选择至少一个收运时间段',
                     });
                     return false;
-                } else if (this.formModelSeparate.duration.food.length) {
+                }
+                if (this.formModelSeparate.duration.food.length) {
                     let result = null;
                     this.formModelSeparate.duration.food.forEach((item: DurationDetail) => {
                         // 判断是否有未填的必填数据
@@ -306,8 +348,9 @@ export class CustomersInfoFormComponent implements OnInit {
                             result = true;
                         }
                     });
-                    return result;
-                } else if (this.formModelSeparate.duration.oil.length) {
+                    if (!result) return;    // 停止验证
+                }
+                if (this.formModelSeparate.duration.oil.length) {
                     let result = null;
                     this.formModelSeparate.duration.oil.forEach((item: DurationDetail) => {
                         // 判断是否有未填的必填数据
@@ -324,7 +367,7 @@ export class CustomersInfoFormComponent implements OnInit {
                             result = true;
                         }
                     });
-                    return result;
+                    if (!result) return;    // 停止验证
                 }
                 break;
             case 'Cluster':
@@ -335,24 +378,35 @@ export class CustomersInfoFormComponent implements OnInit {
                         content: '名称不能为空',
                     });
                     return false;
-                } else if (!this.formModelCluster.collectionType) {
+                }
+                if (!this.formModelCluster.collectionType) {
                     this.notificationService.create({
                         type   : 'error',
                         title  : '抱歉,请检查输入内容',
                         content: '请选择单位类型',
                     });
                     return false;
-                } else if ((this.formModelCluster.level === null || this.formModelCluster.level === 0) && !this.formModelCluster.duration.food.length && !this.formModelCluster.duration.oil.length) {
+                }
+                if (!this.formModelCluster.childCollections.length || !this.formModelCluster.childCollections.filter(item => !!item.name).length) {
+                    this.notificationService.create({
+                        type   : 'error',
+                        title  : '抱歉,请检查输入内容',
+                        content: '聚类点请至少输入一个子收集点',
+                    });
+                    return false;
+                }
+                if ((this.formModelCluster.level === null || this.formModelCluster.level === 0) && !this.formModelCluster.duration.food.length && !this.formModelCluster.duration.oil.length) {
                     this.notificationService.create({
                         type   : 'error',
                         title  : '抱歉,请检查输入内容',
                         content: '聚类点请选择至少一个收运时间段',
                     });
                     return false;
-                } else if (this.formModelCluster.duration.food.length) {
+                }
+                if (this.formModelCluster.duration.food.length) {
                     let result = null;
                     this.formModelCluster.duration.food.forEach((item: DurationDetail) => {
-                        // 判断是否有未填的必填数据
+                        // 判断 收运时间段中 是否有未填的必填数据
                         let needComplete = !(!!item.dateType && !!item.startTime && !!item.endTime && !!item.priorityType);
                         if (needComplete) {
                             this.notificationService.create({
@@ -366,11 +420,12 @@ export class CustomersInfoFormComponent implements OnInit {
                             result = true;
                         }
                     });
-                    return result;
-                } else if (this.formModelCluster.duration.oil.length) {
+                    if (!result) return;    // 停止验证
+                }
+                if (this.formModelCluster.duration.oil.length) {
                     let result = null;
                     this.formModelCluster.duration.oil.forEach((item: DurationDetail) => {
-                        // 判断是否有未填的必填数据
+                        // 判断 收运时间段中 是否有未填的必填数据
                         let needComplete = !(!!item.dateType && !!item.startTime && !!item.endTime && !!item.priorityType);
                         if (needComplete) {
                             this.notificationService.create({
@@ -384,7 +439,7 @@ export class CustomersInfoFormComponent implements OnInit {
                             result = true;
                         }
                     });
-                    return result;
+                    if (!result) return;    // 停止验证
                 }
                 break;
         }

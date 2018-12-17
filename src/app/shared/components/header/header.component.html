@@ -6,7 +6,7 @@
             </div>
         </div>-->
 
-        <div nz-col nzSpan="20" nzXl="20" nzLg="20" id="nav-menu"><!-- nav-menu -->
+        <div nz-col nzSpan="20" nzXl="18" nzLg="20" id="nav-menu"><!-- nav-menu -->
             <ul nz-menu [nzMode]="'horizontal'">
                 <li nz-menu-item>
                     <div class="icon-box">
@@ -117,10 +117,10 @@
             </ul>
         </div>
 
-        <div nz-col nzSpan="4" nzXl="4" nzLg="4" id="personal-menu" nz-row ><!-- personal-menu -->
+        <div nz-col nzSpan="4" nzXl="6" nzLg="4" id="personal-menu" nz-row ><!-- personal-menu -->
             <!-- 小铃铛 -->
             <div nz-col nzSpan="6">
-                <div class="personal-menu-item">
+                <div class="personal-menu-item" *ngIf="!!bellCounts">
                     <div class="bell">
                         <i class="anticon anticon-bell"></i>
                         <nz-tag [nzColor]="'red'" class="bell-total">12</nz-tag>
@@ -130,7 +130,7 @@
             <!-- welcome -->
             <div nz-col nzSpan="12">
                 <div class="personal-menu-item">
-                    <i class="anticon anticon-smile-o"></i> 欢迎您, {{name}}
+                    <i class="anticon anticon-smile-o"></i> 欢迎, {{name}}
                 </div>
             </div>
             <!-- logout -->

@@ -124,6 +124,20 @@ export class StaffInfoFormComponent implements OnInit {
                 content: '工号不能为空',
             });
             return false;
+        } else if (!(/^(([a-zA-Z]|\d){3,17})$/.test(this.formData.username))) {
+            this.notificationService.create({
+                type   : 'error',
+                title  : '抱歉,请检查输入内容',
+                content: '工号长度在3-18之间，只能包含字母、数字',
+            });
+            return false;
+        } else if (this.formData.password && !(/^(([a-zA-Z]|\d){3,17})$/.test(this.formData.password))) {
+            this.notificationService.create({
+                type   : 'error',
+                title  : '抱歉,请检查输入内容',
+                content: '密码长度在3-18之间，只能包含字母、数字',
+            });
+            return false;
         } else if (!this.formData.password && this.type === 'add') {
             this.notificationService.create({
                 type   : 'error',

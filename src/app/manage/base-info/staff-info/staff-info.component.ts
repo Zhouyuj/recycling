@@ -58,6 +58,7 @@ export class StaffInfoComponent implements OnInit {
         emergencyContact     : '',
         email                : '',
         detailedAddress      : '',
+        homeAddress          : '',
         identity             : '',
     };// 分页查询参数
     public roleList = [
@@ -176,16 +177,16 @@ export class StaffInfoComponent implements OnInit {
         switch (type) {
             case 'roleId':
                 let result = (e && !e.length) ? '' : e.join(',');
-                if (this.params[type] === result) return;
-                this.params[type] = (e && !e.length) ? '' : e.join(',');
+                if (this.params[ type ] === result) return;
+                this.params[ type ] = (e && !e.length) ? '' : e.join(',');
                 break;
             case 'sex':
             case 'postId':
-                if (!e && !this.params[type] || this.params[type] === e) return;
-                this.params[type] = e || '';
+                if (!e && !this.params[ type ] || this.params[ type ] === e) return;
+                this.params[ type ] = e || '';
                 break;
         }
-        this.getListByPage();
+        this.getListByPage({ isResetReq: true });
     }
 
     /**
@@ -194,7 +195,7 @@ export class StaffInfoComponent implements OnInit {
      * @param type
      */
     onKeywordSearch() {
-        this.getListByPage();
+        this.getListByPage({ isResetReq: true });
     }
 
     /**
@@ -231,7 +232,11 @@ export class StaffInfoComponent implements OnInit {
             console.log('Drawer(Component) close');
             if (res) {
                 // 重新调分页接口
-                this.getListByPage({ isResetReq: true });
+                if (type === 'add') {
+                    this.getListByPage({ isResetReq: true });
+                } else {
+                    this.getListByPage();
+                }
             }
         });
     }
@@ -261,10 +266,10 @@ export class StaffInfoComponent implements OnInit {
                     this.resCache = [];
                     this.listCache = [];
                     this.isSpinning = false;
-                    console.warn(`分页查询失败!!! message:${err.error.message}`);
+                    console.error(`分页查询失败!!! message:${err.error.message}`);
                     this.notificationService.create({
                         type   : 'error',
-                        title  : '抱歉,删除失败',
+                        title  : '抱歉,数据查询(分页)失败',
                         content: err ? err.error.message : '',
                     });
                 },
@@ -286,10 +291,10 @@ export class StaffInfoComponent implements OnInit {
     updateParams() {
         let paramsTemp = {};
         for (let k in this.params) {
-            if (!this.params[k]) {
-                this.params[k] = null;
+            if (!this.params[ k ]) {
+                this.params[ k ] = null;
             } else {
-                paramsTemp[k] = this.params[k];
+                paramsTemp[ k ] = this.params[ k ];
             }
         }
         return paramsTemp;

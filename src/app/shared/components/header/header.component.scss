@@ -41,6 +41,8 @@
     display: flex;
     align-content: center;
     justify-content: center;
+    word-break: keep-all;
+    text-overflow: ellipsis;
 
     .personal-menu-item {
         position: relative;

@@ -135,8 +135,11 @@ export class CustomersInfoComponent implements OnInit {
         this.drawerRef.afterClose.subscribe((res: boolean) => {
             if (res) {
                 // 重新调分页接口
-                //this.onSortTh('createdDate', 'desc');
-                this.getListByPage({ isResetReq: true });
+                if (type === 'add') {
+                    this.getListByPage({ isResetReq: true });
+                } else {
+                    this.getListByPage();
+                }
             }
         });
     }
@@ -215,7 +218,7 @@ export class CustomersInfoComponent implements OnInit {
     }
 
     onKeywordSearchTh(keywordType: string) {
-        this.getListByPage();
+        this.getListByPage({ isResetReq: true });
     }
 
     /**
@@ -262,10 +265,10 @@ export class CustomersInfoComponent implements OnInit {
                     this.listResCache = [];
                     this.listCache = [];
                     this.isSpinning = false;
-                    console.warn(`分页查询失败!!! message:${err.error.message}`);
+                    console.error(`分页查询失败!!! message:${err.error.message}`);
                     this.notificationService.create({
                         type   : 'error',
-                        title  : '抱歉,删除失败',
+                        title  : '抱歉,数据查询(分页)失败',
                         content: err ? err.error.message : '',
                     });
                 },

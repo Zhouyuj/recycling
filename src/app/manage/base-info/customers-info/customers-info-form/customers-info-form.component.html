@@ -511,7 +511,7 @@
                 </nz-form-item>
 
                 <nz-form-item style="margin-bottom: -5px;">
-                    <nz-form-label [nzSm]="23" [nzXs]="23" nzOffset="1" style="text-align: left;">
+                    <nz-form-label [nzSm]="23" [nzXs]="23" nzOffset="1" nzRequired style="text-align: left;">
                         子收集点
                     </nz-form-label>
                 </nz-form-item>
@@ -521,6 +521,7 @@
                         <nz-form-control [nzSm]="16" [nzXs]="20" nzOffset="3">
                             <input type="text"
                                    style="text-align: center;"
+                                   required
                                    nz-input
                                    name="childCollections-{{item.idx}}"
                                    placeHolder="点击输入子收集点名称"

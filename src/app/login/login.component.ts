@@ -40,10 +40,8 @@ export class LoginComponent implements OnInit {
                     let token = res.data.token;
                     let payload = token.split('.')[ 1 ];
                     let deCodePayload = Base64Utils.decode(payload);
-                    console.log(deCodePayload);
-                    let obj1 = JSON.parse(deCodePayload);
-                    //let obj1 = eval('(' + deCodePayload + ')');
-                    this.authorizationService.setCurrentUser(obj1);
+                    let obj = JSON.parse(deCodePayload);
+                    this.authorizationService.setCurrentUser(obj);
 
                     this.redirectToHome();
                     this.messageService.create({ type: 'success', content: '登陆成功' });
@@ -53,25 +51,25 @@ export class LoginComponent implements OnInit {
                 this.notificationService.create({
                     type: 'error',
                     title  : '抱歉,用户名或密码错误',
-                    content: '以字母开头，长度在3-18之间，只能包含字符、数字',
+                    content: '长度在3-18之间，只能包含字符、数字',
                 });
             }
         );
     }
 
     checkForm(): boolean {
-        if (!(/^[a-zA-Z](([a-zA-Z]|\d){3,17})$/.test(this.formModel.username))) {   // 以字母开头，长度在3-18之间，只能包含字符、数字和下划线
+        if (!(/^(([a-zA-Z]|\d){3,17})$/.test(this.formModel.username))) {   // 以字母开头，长度在3-18之间，只能包含字符、数字和下划线 (/^[a-zA-Z](([a-zA-Z]|\d){3,17})$/
             this.notificationService.create({
                 type   : 'error',
                 title  : '抱歉,请检查用户名',
-                content: '以字母开头，长度在3-18之间，只能包含字符、数字',
+                content: '长度在3-18之间，只能包含字母、数字',
             });
             return false;
         } else if (!(/^([a-zA-Z]|\d)+$/.test(this.formModel.password))) {
             this.notificationService.create({
                 type   : 'error',
                 title  : '抱歉,请检查密码',
-                content: '只能包含字符、数字',
+                content: '只能包含字母、数字',
             });
             return false;
         } else return true;

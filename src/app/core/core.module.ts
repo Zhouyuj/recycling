@@ -11,6 +11,7 @@ import { NgZorroAntdModule } from 'ng-zorro-antd';
 import { SharedModule } from '../shared/shared.module';
 
 import { AuthorizationService } from './services/authorization/authorization.service';
+import { AuthRoutingGuardService } from './services/authorization/auth-routing-guard.service';
 import { InterceptorServices } from './services/interceptors/interceptors.service';
 import { StorageService } from './services/storage/storage.service';
 import { TitleService } from './services/title/title.service';
@@ -25,6 +26,7 @@ import { TokenService } from './services/token/token.service';
     exports: [],
     providers: [
         AuthorizationService,
+        AuthRoutingGuardService,
         InterceptorServices,
         StorageService,
         TitleService,

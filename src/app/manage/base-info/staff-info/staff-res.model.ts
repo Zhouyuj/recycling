@@ -21,6 +21,7 @@ export class AddressRes {
     county: string = null;
     countyCode: string = null;
     detailedAddress: string = null;
+    homeAddress: string = null;
     province: string = null;
     provinceCode: string = null;
     street: string = null;

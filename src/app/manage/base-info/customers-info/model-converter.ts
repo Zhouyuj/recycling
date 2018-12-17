@@ -55,7 +55,7 @@ export class ModelConverter {
             createdDate  : DateUtil.dateFormat(new Date(o.createdDate), 'yyyy-MM-dd'),
             contactName  : o.contactInfo ? o.contactInfo.contactName : '',
             mobilePhone  : o.contactInfo ? o.contactInfo.mobilePhone : '',
-            landlinePhone  : o.contactInfo ? o.contactInfo.landlinePhone : '',
+            landlinePhone: o.contactInfo ? o.contactInfo.landlinePhone : '',
             category     : o.category,
             level        : o.level,
             customerList : o.customerList ? o.customerList.map(item => {
@@ -105,9 +105,13 @@ export class ModelConverter {
         let customerList = f.childCollections
             .filter((o: ChildCollections) => o.name && o.name !== null)
             .map((cc: ChildCollections) => {
+                let collectionNamePrefix = '';
+                if (cc.name.indexOf(f.collectionName)) {
+                    collectionNamePrefix = f.collectionName;
+                }
                 return {
                     id  : cc.id || null,
-                    name: cc.name
+                    name: collectionNamePrefix + cc.name,
                 }
             });
         customerList = customerList.length > 0 ? customerList : null;
