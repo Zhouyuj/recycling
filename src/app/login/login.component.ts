@@ -40,11 +40,12 @@ export class LoginComponent implements OnInit {
                     let token = res.data.token;
                     let payload = token.split('.')[ 1 ];
                     let deCodePayload = Base64Utils.decode(payload);
+                    deCodePayload = deCodePayload.substr(0, deCodePayload.length - 2) + '}';    // 解决JSON.parse报错问题
                     let obj = JSON.parse(deCodePayload);
                     this.authorizationService.setCurrentUser(obj);
 
+                    this.messageService.create({ type: 'success', content: '登陆成功,页面正在跳转' });
                     this.redirectToHome();
-                    this.messageService.create({ type: 'success', content: '登陆成功' });
                 }
             },
             err => {

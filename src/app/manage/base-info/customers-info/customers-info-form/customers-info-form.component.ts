@@ -29,7 +29,7 @@ export class CustomersInfoFormComponent implements OnInit {
     @Input() type: string;
     @Input() success: boolean;
     @Input() cache: FormModel;
-    @Input() countyNames: [{ code: string, name: string }];
+    @Input() parentName: string;    // 当编辑子收集点时,需要添加上该prefix
     public vehicles: string[];
     public isVehiclesLoading = false;
     public selectedCategory: 'Separate' | 'Cluster' | string;
@@ -210,7 +210,7 @@ export class CustomersInfoFormComponent implements OnInit {
             if (this.formModelCluster.address.join(',') == $e.join(',')) {
                 return;
             } else {
-                this.formModelSeparate.address = $e;
+                this.formModelCluster.address = $e;
                 this.formModelCluster.detailAddress = null;
                 if (this.formModelCluster.duration && this.formModelCluster.duration.food) {
                     this.formModelCluster.duration.food = this.formModelCluster.duration.food.map((duration: DurationDetail) => {
@@ -274,6 +274,29 @@ export class CustomersInfoFormComponent implements OnInit {
 
     onRemoveChildCollections(idx: number) {
         if (!this.formModelCluster.childCollections.length) return;
+        if (this.formModelCluster.childCollections.length === 1 && this.type === 'edit') {  // 编辑时:删除了最后一个子收集点,即删除该聚类点
+            this.isSpinning = true;
+            this.customersInfoService.delCustomer(this.formModelCluster.id).subscribe(
+                res => {
+                    this.notificationService.create({
+                        type   : 'success',
+                        title  : '删除聚类点成功',
+                        content: '该提醒将自动消失',
+                    });
+                    this.drawerRef.close(true);
+                },
+                err => {
+                    console.log(err);
+                    this.notificationService.create({
+                        type   : 'error',
+                        title  : '抱歉,删除失败',
+                        content: err.error.message ? err.error.message : '该提醒将自动消失',
+                    });
+                    this.isSpinning = false;
+                },
+                () => this.isSpinning = false
+            );
+        }
         let result = this.formModelCluster.childCollections.filter(item => {
             return item.idx !== idx;
         });

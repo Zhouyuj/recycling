@@ -6,8 +6,6 @@ import { NzDrawerService } from 'ng-zorro-antd';
 
 import { CustomersInfoFormComponent } from './customers-info-form/customers-info-form.component';
 import { CustomersInfoService } from './customers-info.service';
-import { DistrictsService } from '../../../shared/services/districts/districts.service';
-import { MessageService } from '../../../shared/services/message/message.service';
 import { NotificationService } from '../../../shared/services/notification/notification.service';
 import { CustomerRes } from './customer-res.model';
 import { PageReq } from '../../../shared/models/page/page-req.model';
@@ -61,23 +59,18 @@ export class CustomersInfoComponent implements OnInit {
 
     /* 表格的缓存 */
     public listResCache: CustomerRes[];
-    public itemResCache: CustomerRes;
     public listCache: ListModel[];
     public formCache: FormModel;
+    public parentName: '';  // 选中的是子收集点时,值为其聚类点的名称
     public selectedId: number;
 
     constructor(private customersInfoService: CustomersInfoService,
-                private districtsService: DistrictsService,
                 private drawerService: NzDrawerService,
-                private messageService: MessageService,
                 private notificationService: NotificationService) {
     }
 
     ngOnInit() {
-        this.districtsService.getDistricts('350600', 3).subscribe((res: any) => {
-            this.countyNames = res.data.districts;
-            this.getListByPage({ isResetReq: true });
-        });
+        this.getListByPage({ isResetReq: true });
     }
 
     onAdd() {
@@ -117,7 +110,7 @@ export class CustomersInfoComponent implements OnInit {
      * form 表单
      */
     onOpenForm(type?: 'add' | 'edit'): void {
-        this.drawerRef = this.drawerService.create<CustomersInfoFormComponent, { type: string, success: boolean, cache: FormModel, countyNames: [{ code: string, name: string }] }, boolean>({
+        this.drawerRef = this.drawerService.create<CustomersInfoFormComponent, { type: string, success: boolean, cache: FormModel, parentName: string }, boolean>({
             nzTitle        : { add: '添加', edit: '编辑' }[ type ] || '请编辑表单',
             nzContent      : CustomersInfoFormComponent,
             nzWidth        : '60%',
@@ -125,7 +118,7 @@ export class CustomersInfoComponent implements OnInit {
                 type       : type,
                 success    : false,
                 cache      : type === 'edit' ? this.formCache : null,
-                countyNames: this.countyNames,
+                parentName : this.parentName,
             }
         });
 
@@ -177,11 +170,11 @@ export class CustomersInfoComponent implements OnInit {
         // 单选
         this.listCache.forEach((item: ListModel) => {
             item.checked = false;
-            if (item.id === target.id) {
+            if (item.id === target.id) {    // 选中聚类点/普通收集点
                 item.checked = true;
                 this.formCache = ModelConverter.customerResToFormModel(this.listResCache.find(l => l.id === target.id));
             }
-            if (item.customerList && item.customerList.length) {
+            if (item.customerList && item.customerList.length) {    // 选中子收集点
                 item.customerList.forEach((l: ListModel) => {
                     l.checked = false;  // 所有子收集点改为 false
                     if (l.id === target.id) {
@@ -189,8 +182,10 @@ export class CustomersInfoComponent implements OnInit {
                         this.formCache = ModelConverter.customerResToFormModel(
                             this.listResCache
                                 .find(l => l.id === item.id).customerList
-                                .find(l => l.id === target.id)
+                                .find(l => l.id === target.id),
+                            item.name
                         );
+                        console.log(this.formCache.collectionName);
                     }
                 })
             }

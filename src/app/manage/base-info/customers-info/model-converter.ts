@@ -10,11 +10,11 @@ import { DateUtil } from '../../../shared/utils/date-utils';
 
 export class ModelConverter {
 
-    public static customerResToFormModel(o: CustomerRes): FormModel {
+    public static customerResToFormModel(o: CustomerRes, parentName: string = ''): FormModel {
         let f: FormModel;
         f = {
             id               : o.id,
-            collectionName   : o.name || '',
+            collectionName   : o.name.indexOf(parentName) >= 0 ? o.name : parentName + o.name,
             category         : o.category,
             address          : [
                 `${o.address.provinceCode || ''}`,

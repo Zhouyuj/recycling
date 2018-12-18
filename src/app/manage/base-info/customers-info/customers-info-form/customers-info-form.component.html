@@ -530,7 +530,11 @@
                         <nz-form-control [nzSm]="2" [nzXs]="2" nzOffset="1">
                             <i nz-icon type="minus-circle-o"
                                class="anticon dynamic-delete-button anticon-minus-circle-o"
-                               (click)="onRemoveChildCollections(item.idx)"></i>
+                               nz-popconfirm
+                               nzTitle="聚类点要求至少存在一个子收集点,删除最后一个子收集点时,该聚类点将被删除"
+                               [nzCondition]="formModelCluster.childCollections.length > 1"
+                               (nzOnConfirm)="onRemoveChildCollections(item.idx)">
+                            </i>
                         </nz-form-control>
                     </nz-form-item>
                     <nz-form-item>
