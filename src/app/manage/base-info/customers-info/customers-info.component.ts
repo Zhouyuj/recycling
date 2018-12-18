@@ -34,13 +34,12 @@ export class CustomersInfoComponent implements OnInit {
         },
         {
             link : '/manage/baseInfo/customers',
-            title: '收集点管理',
+            title: '收运单位管理',
         }
     ];
-    public countyNames: [{ code: string, name: string }];
-    public drawerRef: any;
 
     // antd-table
+    public drawerRef: any;
     public isSpinning = false;
     public sortMap = {
         createdDate: '',
@@ -61,7 +60,7 @@ export class CustomersInfoComponent implements OnInit {
     public listResCache: CustomerRes[];
     public listCache: ListModel[];
     public formCache: FormModel;
-    public parentName: '';  // 选中的是子收集点时,值为其聚类点的名称
+    public parentCache: ListModel;    // 选中子点时,存在值为聚类点,否则为null
     public selectedId: number;
 
     constructor(private customersInfoService: CustomersInfoService,
@@ -82,6 +81,9 @@ export class CustomersInfoComponent implements OnInit {
     }
 
     onDel() {
+        if (this.parentCache && this.parentCache.customerList.length === 1) {
+            this.selectedId = this.parentCache.id;
+        }
         this.customersInfoService.delCustomer(this.selectedId).subscribe(
             res => {
                 this.notificationService.create({
@@ -110,7 +112,7 @@ export class CustomersInfoComponent implements OnInit {
      * form 表单
      */
     onOpenForm(type?: 'add' | 'edit'): void {
-        this.drawerRef = this.drawerService.create<CustomersInfoFormComponent, { type: string, success: boolean, cache: FormModel, parentName: string }, boolean>({
+        this.drawerRef = this.drawerService.create<CustomersInfoFormComponent, { type: string, success: boolean, cache: FormModel, parentCache: ListModel }, boolean>({
             nzTitle        : { add: '添加', edit: '编辑' }[ type ] || '请编辑表单',
             nzContent      : CustomersInfoFormComponent,
             nzWidth        : '60%',
@@ -118,7 +120,7 @@ export class CustomersInfoComponent implements OnInit {
                 type       : type,
                 success    : false,
                 cache      : type === 'edit' ? this.formCache : null,
-                parentName : this.parentName,
+                parentCache: this.parentCache || null,
             }
         });
 
@@ -165,6 +167,8 @@ export class CustomersInfoComponent implements OnInit {
             this.formCache = null;
             return;
         }
+        // 用于重置,因为当选择子收集点时,该值为其父
+        this.parentCache = null;
         // 用于删除
         this.selectedId = target.id;
         // 单选
@@ -185,7 +189,7 @@ export class CustomersInfoComponent implements OnInit {
                                 .find(l => l.id === target.id),
                             item.name
                         );
-                        console.log(this.formCache.collectionName);
+                        this.parentCache = item;
                     }
                 })
             }

@@ -18,6 +18,7 @@ import { PageReq } from '../../../../shared/models/page/page-req.model';
 import { Result } from '../../../../shared/models/response/result.model';
 import { VehicleRes } from '../../vehicle-info/vehicle-res.model';
 import { VerifyUtil } from '../../../../shared/utils/verify-utils';
+import { ListModel } from '../list.model';
 
 @Component({
     selector   : 'app-customers-info-form',
@@ -29,15 +30,16 @@ export class CustomersInfoFormComponent implements OnInit {
     @Input() type: string;
     @Input() success: boolean;
     @Input() cache: FormModel;
-    @Input() parentName: string;    // 当编辑子收集点时,需要添加上该prefix
+    @Input() parentCache: ListModel;    // 只用于在提交表单时,判断是否加上（若存在）其聚类点的前缀
+    public oldClusterName: string;  // 当选择的为聚类点时,该值为初始化表单的聚类点名称,在修改聚类点时为子点添加前缀使用到
     public vehicles: string[];
     public isVehiclesLoading = false;
     public selectedCategory: 'Separate' | 'Cluster' | string;
-    public formModelSeparate: FormModel = new FormModel();   // 普通收集点/子收集点
+    public formModelSeparate: FormModel = new FormModel();   // 普通收运单位/子收运单位
     public formModelCluster: FormModel = new FormModel();   // 聚类点
     public customerReq: CustomerReq;
     public isSpinning = false;
-    searchChange$ = new BehaviorSubject({});
+    searchChange$ = new BehaviorSubject({});    // 选择车辆的函数防抖
 
     constructor(private drawerRef: NzDrawerRef<boolean>,
                 private customersInfoService: CustomersInfoService,
@@ -50,8 +52,9 @@ export class CustomersInfoFormComponent implements OnInit {
 
     initForm() {
         if (this.cache) {
+            this.oldClusterName = this.cache.collectionName;
             this.selectedCategory = this.cache.category;
-            this.formModelSeparate = ObjectUtils.extend(this.cache);
+            this.formModelSeparate = ObjectUtils.cloneDeep(this.cache);
             this.formModelCluster = ObjectUtils.extend(this.cache);
         } else {
             this.selectedCategory = 'Separate';
@@ -113,7 +116,7 @@ export class CustomersInfoFormComponent implements OnInit {
 
     /**
      * 处理流程:
-     * 1.判断收集点类型(category:Cluster|Separate)
+     * 1.判断收运单位类型(category:Cluster|Separate)
      * 2.组装相应数据(body)
      * 3.调用服务（发起post请求）
      */
@@ -174,10 +177,10 @@ export class CustomersInfoFormComponent implements OnInit {
     transformFormModelToRequest() {
         switch (this.selectedCategory) {
             case 'Separate':
-                this.customerReq = ModelConverter.formModelToCustomerReq(this.formModelSeparate);
+                this.customerReq = ModelConverter.formModelToCustomerReq(this.formModelSeparate, this.parentCache && this.parentCache.name || '');
                 break;
             case 'Cluster':
-                this.customerReq = ModelConverter.formModelToCustomerReq(this.formModelCluster);
+                this.customerReq = ModelConverter.formModelToCustomerReq(this.formModelCluster, '', this.oldClusterName);
                 break;
         }
     }
@@ -238,7 +241,7 @@ export class CustomersInfoFormComponent implements OnInit {
      */
     onAddDuration(type: string): void {
         switch (this.selectedCategory) {
-            case 'Separate':    /* 普通点 | 子收集点 */
+            case 'Separate':    /* 普通点 | 子收运单位 */
                 const lengthS = this.formModelSeparate.duration[ type ] ? this.formModelSeparate.duration[ type ].length : 0;
                 const newIdS = !lengthS ? 0 : this.formModelSeparate.duration[ type ][ lengthS - 1 ].idx + 1;
                 this.formModelSeparate.duration[ type ].push(new DurationDetail(newIdS));
@@ -274,29 +277,6 @@ export class CustomersInfoFormComponent implements OnInit {
 
     onRemoveChildCollections(idx: number) {
         if (!this.formModelCluster.childCollections.length) return;
-        if (this.formModelCluster.childCollections.length === 1 && this.type === 'edit') {  // 编辑时:删除了最后一个子收集点,即删除该聚类点
-            this.isSpinning = true;
-            this.customersInfoService.delCustomer(this.formModelCluster.id).subscribe(
-                res => {
-                    this.notificationService.create({
-                        type   : 'success',
-                        title  : '删除聚类点成功',
-                        content: '该提醒将自动消失',
-                    });
-                    this.drawerRef.close(true);
-                },
-                err => {
-                    console.log(err);
-                    this.notificationService.create({
-                        type   : 'error',
-                        title  : '抱歉,删除失败',
-                        content: err.error.message ? err.error.message : '该提醒将自动消失',
-                    });
-                    this.isSpinning = false;
-                },
-                () => this.isSpinning = false
-            );
-        }
         let result = this.formModelCluster.childCollections.filter(item => {
             return item.idx !== idx;
         });
@@ -350,7 +330,7 @@ export class CustomersInfoFormComponent implements OnInit {
                     this.notificationService.create({
                         type   : 'error',
                         title  : '抱歉,请检查输入内容',
-                        content: '普通收集点请选择至少一个收运时间段',
+                        content: '普通收运单位请选择至少一个收运时间段',
                     });
                     return false;
                 }
@@ -414,7 +394,7 @@ export class CustomersInfoFormComponent implements OnInit {
                     this.notificationService.create({
                         type   : 'error',
                         title  : '抱歉,请检查输入内容',
-                        content: '聚类点请至少输入一个子收集点',
+                        content: '聚类点请至少输入一个子收运单位',
                     });
                     return false;
                 }

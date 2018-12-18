@@ -5,7 +5,6 @@ import { ApkRes } from './models/apk-res.model';
 import { ApkService } from './apk.service';
 import { NotificationService } from '../../../shared/services/notification/notification.service';
 import { Result } from '../../../shared/models/response/result.model';
-import { MessageService } from '../../../shared/services/message/message.service';
 import { environment } from '../../../../environments/environment';
 import {ApkServiceV2} from './apk.service-v2';
 
@@ -43,8 +42,7 @@ export class ApkComponent implements OnInit {
     env = environment;
 
     constructor(private apkService: ApkServiceV2,
-                private notificationService: NotificationService,
-                private messageService: MessageService) {
+                private notificationService: NotificationService) {
     }
 
     ngOnInit() {
@@ -77,8 +75,9 @@ export class ApkComponent implements OnInit {
     // TODO
     onSubmit() {
         if (!this.formCache.version || !this.formCache.description || !this.fileList) {
-            this.messageService.create({
+            this.notificationService.create({
                 type   : 'warning',
+                title  : '',
                 content: '请输入完整信息: 版本号, 描述和文件',
             });
             return;
@@ -108,7 +107,7 @@ export class ApkComponent implements OnInit {
                 this.notificationService.create({
                     type   : 'error',
                     title  : '抱歉,上传失败',
-                    content: `${err.message}`,
+                    content: err ? err.error.message : '',
                 });
                 this.isFormSpinning = false;
             }

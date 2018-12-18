@@ -61,7 +61,7 @@
     </div>
 </div>
 
-<nz-drawer [nzClosable]="false"
+<nz-drawer [nzClosable]="true"
            [nzVisible]="isFormVisible"
            [nzWidth]="'40%'"
            (nzOnClose)="onCloseForm()"
@@ -72,12 +72,15 @@
             <nz-form-item>
                 <nz-form-label [nzSpan]="6" nzFor="version">版本号</nz-form-label>
                 <nz-form-control [nzSpan]="16" nzOffset="1">
-                    <input nz-input
-                           id="version"
-                           name="version"
-                           type="text"
-                           placeholder="例如: 2.1"
-                           [(ngModel)]="formCache.version">
+                    <nz-input-number
+                            style="width: 100%;"
+                            id="version"
+                            name="version"
+                            [(ngModel)]="formCache.version"
+                            [nzMin]="0.1"
+                            [nzStep]="0.1"
+                            [nzPlaceHolder]="'请输入一位小数的版本号, 例如: 2.1'">
+                    </nz-input-number>
                 </nz-form-control>
             </nz-form-item>
             <nz-form-item>
@@ -96,6 +99,7 @@
                 <nz-form-control [nzSpan]="16" nzOffset="1">
                     <nz-upload
                             [(nzFileList)]="fileList"
+                            [nzAccept]="'.apk'"
                             [nzBeforeUpload]="onBeforeUpload">
                         <button nz-button type="button">
                             <i nz-icon type="upload" class="anticon anticon-upload"></i>

@@ -12,7 +12,11 @@
                 </nz-divider>
                 <div nz-row class="table-container">
                     <nz-input-group class="keyword-search-input" nzSearch [nzSuffix]="suffixIconButton">
-                        <input type="text" nz-input [(ngModel)]="params.name" placeholder="请输入方案名称关键字">
+                        <input type="text"
+                               nz-input
+                               [(ngModel)]="params.name"
+                               placeholder="请输入方案名称关键字"
+                               (keyup)="$event.which === 13 && onKeywordSearch()">
                     </nz-input-group>
                     <ng-template #suffixIconButton>
                         <button nz-button
@@ -55,11 +59,12 @@
             </div>
         </div>
         <div nz-col nzSpan="6" class="table-form">
-            <form nz-form (ngSubmit)="onSubmitExistPlan()">
+            <form nz-form (ngSubmit)="onSubmitExistPlan()" #myForm="ngForm">
                 <nz-form-item>
-                    <nz-form-label [nzSpan]="7" nzFor="plan-name" class="table-form-label">方案名称</nz-form-label>
+                    <nz-form-label [nzSpan]="7" nzFor="plan-name" class="table-form-label" nzRequired>方案名称</nz-form-label>
                     <nz-form-control [nzSpan]="17">
                         <input nz-input
+                               required
                                name="plan-name"
                                type="text"
                                id="plan-name"
@@ -67,9 +72,10 @@
                     </nz-form-control>
                 </nz-form-item>
                 <nz-form-item>
-                    <nz-form-label [nzSpan]="7" nzForm="plan-type" class="table-form-label">方案类型</nz-form-label>
+                    <nz-form-label [nzSpan]="7" nzForm="plan-type" class="table-form-label" nzRequired>方案类型</nz-form-label>
                     <nz-form-control [nzSpan]="17">
                         <nz-radio-group
+                                nzRequired
                                 name="category-exist"
                                 id="category-exist"
                                 [(ngModel)]="formDataExist.category"
@@ -81,7 +87,7 @@
                 </nz-form-item>
                 <nz-form-item>
                     <nz-form-control [nzSpan]="8" [nzOffset]="7">
-                        <button nz-button nzType="primary" type="submit">生成方案</button>
+                        <button nz-button nzType="primary" type="submit" [disabled]="!myForm.valid">生成方案</button>
                     </nz-form-control>
                 </nz-form-item>
             </form>

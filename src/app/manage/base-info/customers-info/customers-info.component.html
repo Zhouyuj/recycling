@@ -35,13 +35,15 @@
                     &nbsp;
                     <button nz-button
                             nz-popconfirm
-                            nzTitle="确认删除该信息吗?"
+                            nzTitle="{{parentCache && parentCache.customerList.length === 1
+                            ? '聚类点要求至少存在一个子收运单位,删除最后一个子收运单位后,该聚类点将被删除'
+                            : '确认删除该信息吗?'}}"
                             (nzOnConfirm)="onDel()"
+
+
                             [disabled]="!formCache"
                             nzType="default"
-                            nzShape="circle"
-                            nzPlacement="topCenter"
-                            nz-tooltip>
+                            nzShape="circle">
                         <i class="anticon anticon-minus-circle-o"></i>
                     </button>
                     &nbsp;
@@ -137,7 +139,7 @@
                             [(nzChecked)]="data.checked"
                             [nzDisabled]="data.disabled"
                             (nzCheckedChange)="onSelected($event, data)"></td>
-                        <td>{{data.level ? '子收集点' : (data.category === 'Cluster' ? '聚类点' : '普通点')}}</td>
+                        <td>{{data.level ? '子收运单位' : (data.category === 'Cluster' ? '聚类点' : '普通点')}}</td>
                         <td>
                             <i nz-icon
                                class="anticon anticon-environment location"
@@ -160,7 +162,7 @@
                             <td></td>
                             <td nzShowCheckbox [(nzChecked)]="item.checked" [nzDisabled]="item.disabled"
                                 (nzCheckedChange)="onSelected($event, item)"></td>
-                            <td>子收集点</td>
+                            <td>子收运单位</td>
                             <td>
                                 <i nz-icon
                                    class="anticon anticon-environment location"

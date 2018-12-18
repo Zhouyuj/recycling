@@ -1,9 +1,13 @@
 /**
  * Created by wujiahui on 2018/11/9.
  */
+
+import {LodashUtils} from './lodash-utils';
+
 export class ObjectUtils {
-    public static deepClone(obj: any): any {
-        return JSON.parse(JSON.stringify(obj));
+    public static cloneDeep(obj: any): any {
+        //return JSON.parse(JSON.stringify(obj));
+        return LodashUtils.cloneDeep(obj);
     }
 
     /**

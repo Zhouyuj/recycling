@@ -74,7 +74,7 @@ export class ModelConverter {
      * @param f
      * @returns {CustomerReq}
      */
-    public static formModelToCustomerReq(f: FormModel): CustomerReq {
+    public static formModelToCustomerReq(f: FormModel, parentName: string = '', oldCusterName: string = ''): CustomerReq {
         let c: CustomerReq;
         let foodPeriod = f.duration.food
             .filter((o: DurationDetail) => o.dateType !== null)   /* 过滤为空的数据,因为有默认的值 */
@@ -105,8 +105,12 @@ export class ModelConverter {
         let customerList = f.childCollections
             .filter((o: ChildCollections) => o.name && o.name !== null)
             .map((cc: ChildCollections) => {
-                let collectionNamePrefix = '';
-                if (cc.name.indexOf(f.collectionName)) {
+                let collectionNamePrefix = '';  // 前缀
+                if (oldCusterName) {    // 如果修改的是聚类点,需要将子收集点的前缀（旧聚类点名称)替换为新的聚类点名称作为前缀
+                    let reg = new RegExp(oldCusterName, 'g');
+                    cc.name = cc.name.replace(reg, '');
+                }
+                if (cc.name.indexOf(f.collectionName) < 0) {  // 子收集点添加前缀
                     collectionNamePrefix = f.collectionName;
                 }
                 return {
@@ -134,7 +138,7 @@ export class ModelConverter {
             customerList        : customerList,
             collectionPeriodList: [ ...foodPeriod, ...oilPeriod ],
             dustbin             : f.dustbinCounts || null,
-            name                : f.collectionName || null,
+            name                : f.collectionName.indexOf(parentName) >= 0 ? f.collectionName : parentName + f.collectionName,
             password            : f.password || null,
             needKey             : f.hasKey === '1' ? true : false,
             typeId              : parseInt(f.collectionType) || null,
@@ -211,8 +215,8 @@ export class ModelConverter {
     }
 
     public static calSecondFromHourAndMin(time: Date): number {
-        let hour = time.getHours();
-        let min = time.getMinutes();
+        let hour = time ? time.getHours() : 0;
+        let min = time ? time.getMinutes() : 0;
         let result = hour * 3600 + min * 60;
         return result;
     }

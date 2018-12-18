@@ -2,12 +2,8 @@
     <nz-spin [nzSize]="'large'" [nzSpinning]="isSpinning">
         <!-- 模板驱动表单 -->
 
-        <nz-row>
-            <nz-col></nz-col>
-        </nz-row>
-        <form #ClusterForm></form>
-        <form #SeparateForm></form>
-
+        <!--<form #ClusterForm></form>-->
+        <!--<form #SeparateForm></form>-->
         <form nz-form
               (ngSubmit)="onSubmitForm()"
               #myForm="ngForm">
@@ -28,7 +24,7 @@
                             [(ngModel)]="selectedCategory"
                             #category="ngModel">
                         <label nz-radio-button nzValue='Separate' [nzDisabled]="type === 'edit'">普通收集点</label>
-                        <label nz-radio-button nzValue='Cluster'  [nzDisabled]="type === 'edit'">广场点</label>
+                        <label nz-radio-button nzValue='Cluster' [nzDisabled]="type === 'edit'">广场点</label>
                     </nz-radio-group>
                     <nz-form-explain [hidden]="category.valid || category.pristine">请选择类别</nz-form-explain>
                 </nz-form-control>
@@ -71,11 +67,13 @@
                                placeHolder="请输入名称"
                                [(ngModel)]="formModelSeparate.collectionName"
                                #collectionNameSeparate="ngModel">
-                        <nz-form-explain [hidden]="collectionNameSeparate.valid || collectionNameSeparate.pristine">请输入收运单位名称
+                        <nz-form-explain [hidden]="collectionNameSeparate.valid || collectionNameSeparate.pristine">
+                            请输入收运单位名称
                         </nz-form-explain>
                     </nz-form-control>
 
-                    <nz-form-label [nzSm]="3" [nzXs]="24" nzOffset="1" nzRequired nzFor="collectionTypeSeparate">单位类型</nz-form-label>
+                    <nz-form-label [nzSm]="3" [nzXs]="24" nzOffset="1" nzRequired nzFor="collectionTypeSeparate">单位类型
+                    </nz-form-label>
                     <nz-form-control [nzSm]="7" [nzXs]="24">
                         <nz-select
                                 name="collectionTypeSeparate"
@@ -92,7 +90,8 @@
                             <nz-option nzLabel="企业" nzValue="5"></nz-option>
                             <nz-option nzLabel="其他" nzValue="6"></nz-option>
                         </nz-select>
-                        <nz-form-explain [hidden]="collectionTypeSeparate.valid || collectionTypeSeparate.pristine">请选择单位类型
+                        <nz-form-explain [hidden]="collectionTypeSeparate.valid || collectionTypeSeparate.pristine">
+                            请选择单位类型
                         </nz-form-explain>
                     </nz-form-control>
                 </nz-form-item>
@@ -142,11 +141,15 @@
                                placeHolder="请输入名称"
                                [(ngModel)]="formModelSeparate.contactPersonName"
                                #contactPersonNameSeparate="ngModel">
-                        <nz-form-explain [hidden]="contactPersonNameSeparate.valid || contactPersonNameSeparate.pristine">请输入联系人名称
+                        <nz-form-explain
+                                [hidden]="contactPersonNameSeparate.valid || contactPersonNameSeparate.pristine">
+                            请输入联系人名称
                         </nz-form-explain>
                     </nz-form-control>
 
-                    <nz-form-label [nzSm]="3" [nzXs]="24" nzOffset="1" nzRequired="{{!formModelSeparate.tel}}" nzFor="mobile">联系电话</nz-form-label>
+                    <nz-form-label [nzSm]="3" [nzXs]="24" nzOffset="1" nzRequired="{{!formModelSeparate.tel}}"
+                                   nzFor="mobile">联系电话
+                    </nz-form-label>
                     <nz-form-control [nzSm]="5" [nzXs]="24">
                         <input nz-input
                                required
@@ -175,11 +178,14 @@
                                 [(ngModel)]="formModelSeparate.dustbinCounts"
                                 #dustbinCountsSeparate="ngModel">
                         </nz-input-number>
-                        <nz-form-explain [hidden]="dustbinCountsSeparate.valid || dustbinCountsSeparate.pristine">请选择派发垃圾桶数量
+                        <nz-form-explain [hidden]="dustbinCountsSeparate.valid || dustbinCountsSeparate.pristine">
+                            请选择派发垃圾桶数量
                         </nz-form-explain>
                     </nz-form-control>
 
-                    <nz-form-label [nzSm]="3" [nzXs]="24" nzOffset="1" nzRequired="{{!formModelSeparate.mobile}}" nzFor="tel">固定电话</nz-form-label>
+                    <nz-form-label [nzSm]="3" [nzXs]="24" nzOffset="1" nzRequired="{{!formModelSeparate.mobile}}"
+                                   nzFor="tel">固定电话
+                    </nz-form-label>
                     <nz-form-control [nzSm]="5" [nzXs]="24">
                         <!-- 固话选填 -->
                         <input nz-input
@@ -216,12 +222,13 @@
                         <nz-form-explain [hidden]="hasKey.valid || hasKey.pristine">请选择是否</nz-form-explain>
                     </nz-form-control>
                 </nz-form-item>
-                <nz-form-item style="margin-bottom: -5px;" *ngIf="type === 'add' || (cache ? cache.level : formModelSeparate.level) === 0">
+                <nz-form-item style="margin-bottom: -5px;"
+                              *ngIf="type === 'add' || (cache ? cache.level : formModelSeparate.level) === 0">
                     <nz-form-label [nzSm]="24" [nzXs]="24" nzRequired style="text-align: left;">
                         要求收运时间段(至少选择一个)
                     </nz-form-label>
                 </nz-form-item>
-                <nz-form-item  *ngIf="type === 'add' || formModelSeparate.level === 0">
+                <nz-form-item *ngIf="type === 'add' || formModelSeparate.level === 0">
                     <!-- 餐厨垃圾 和 废弃油脂 标签页 -->
                     <nz-form-control [nzSm]="22" [nzXs]="24" nzOffset="1">
                         <nz-tabset [nzTabBarExtraContent]="addSeparateDurationTemplate">
@@ -272,7 +279,8 @@
                                     </nz-form-item>
 
                                     <nz-form-item style="margin-bottom: 5px;">
-                                        <nz-form-label [nzSm]="3" [nzXs]="24" nzRequired nzFor="level-{{item.idx}}-food">
+                                        <nz-form-label [nzSm]="3" [nzXs]="24" nzRequired
+                                                       nzFor="level-{{item.idx}}-food">
                                             重要等级
                                         </nz-form-label>
                                         <nz-form-control [nzSm]="4" [nzXs]="24">
@@ -373,7 +381,8 @@
                                     </nz-form-item>
 
                                     <nz-form-item style="margin-bottom: 5px;">
-                                        <nz-form-label [nzSm]="3" [nzXs]="24" nzRequired nzFor="level-{{item.idx}}-oil-separate">
+                                        <nz-form-label [nzSm]="3" [nzXs]="24" nzRequired
+                                                       nzFor="level-{{item.idx}}-oil-separate">
                                             重要等级
                                         </nz-form-label>
                                         <nz-form-control [nzSm]="4" [nzXs]="24">
@@ -403,7 +412,8 @@
                                                     nzAllowClear
                                                     nzShowSearch
                                                     [nzServerSearch]="true"
-                                                    (nzOnSearch)="onSearchVehicles($event)">
+                                                    (nzOnSearch)="onSearchVehicles($event)"
+                                                    (nzOpenChange)="onVehicleSearchOpen($event)">
                                                 <!-- 这个option 为了防止初始化表单时,车辆没有显示出值 -->
                                                 <nz-option *ngIf="item.plateNumber && !vehicles"
                                                            [nzValue]="item.plateNumber"
@@ -448,11 +458,13 @@
                                placeHolder="请输入名称"
                                [(ngModel)]="formModelCluster.collectionName"
                                #collectionNameCluster="ngModel">
-                        <nz-form-explain [hidden]="collectionNameCluster.valid || collectionNameCluster.pristine">请输入收运单位名称
+                        <nz-form-explain [hidden]="collectionNameCluster.valid || collectionNameCluster.pristine">
+                            请输入收运单位名称
                         </nz-form-explain>
                     </nz-form-control>
 
-                    <nz-form-label [nzSm]="3" [nzXs]="24" nzOffset="1" nzRequired nzFor="collectionTypeCluster">单位类型</nz-form-label>
+                    <nz-form-label [nzSm]="3" [nzXs]="24" nzOffset="1" nzRequired nzFor="collectionTypeCluster">单位类型
+                    </nz-form-label>
                     <nz-form-control [nzSm]="7" [nzXs]="24">
                         <nz-select
                                 name="collectionTypeCluster"
@@ -469,7 +481,8 @@
                             <nz-option nzLabel="企业" nzValue="5"></nz-option>
                             <nz-option nzLabel="其他" nzValue="6"></nz-option>
                         </nz-select>
-                        <nz-form-explain [hidden]="collectionTypeCluster.valid || collectionTypeCluster.pristine">请选择单位类型
+                        <nz-form-explain [hidden]="collectionTypeCluster.valid || collectionTypeCluster.pristine">
+                            请选择单位类型
                         </nz-form-explain>
                     </nz-form-control>
                 </nz-form-item>
@@ -531,9 +544,10 @@
                             <i nz-icon type="minus-circle-o"
                                class="anticon dynamic-delete-button anticon-minus-circle-o"
                                nz-popconfirm
-                               nzTitle="聚类点要求至少存在一个子收集点,删除最后一个子收集点时,该聚类点将被删除"
+                               nzTitle="聚类点要求至少存在一个子收集点,删除最后一个子收集点后,提交表单时,该聚类点将被删除"
                                [nzCondition]="formModelCluster.childCollections.length > 1"
-                               (nzOnConfirm)="onRemoveChildCollections(item.idx)">
+                               (nzOnConfirm)="onRemoveChildCollections(item.idx)"
+                               (click)="onRemoveChildCollections(item.idx)">
                             </i>
                         </nz-form-control>
                     </nz-form-item>
@@ -612,7 +626,8 @@
                                     </nz-form-item>
 
                                     <nz-form-item style="margin-bottom: 5px;">
-                                        <nz-form-label [nzSm]="3" [nzXs]="24" nzRequired nzFor="level-{{item.idx}}-food-cluster">
+                                        <nz-form-label [nzSm]="3" [nzXs]="24" nzRequired
+                                                       nzFor="level-{{item.idx}}-food-cluster">
                                             重要等级
                                         </nz-form-label>
                                         <nz-form-control [nzSm]="4" [nzXs]="24">
@@ -642,7 +657,8 @@
                                                     nzAllowClear
                                                     nzShowSearch
                                                     [nzServerSearch]="true"
-                                                    (nzOnSearch)="onSearchVehicles($event)">
+                                                    (nzOnSearch)="onSearchVehicles($event)"
+                                                    (nzOpenChange)="onVehicleSearchOpen($event)">
                                                 <!-- 这个option 为了防止初始化表单时,车辆没有显示出值 -->
                                                 <nz-option *ngIf="item.plateNumber && !vehicles"
                                                            [nzValue]="item.plateNumber"
@@ -712,7 +728,8 @@
                                     </nz-form-item>
 
                                     <nz-form-item style="margin-bottom: 5px;">
-                                        <nz-form-label [nzSm]="3" [nzXs]="24" nzRequired nzFor="level-{{item.idx}}-oil-cluster">
+                                        <nz-form-label [nzSm]="3" [nzXs]="24" nzRequired
+                                                       nzFor="level-{{item.idx}}-oil-cluster">
                                             重要等级
                                         </nz-form-label>
                                         <nz-form-control [nzSm]="4" [nzXs]="24">
@@ -742,7 +759,8 @@
                                                     nzAllowClear
                                                     nzShowSearch
                                                     [nzServerSearch]="true"
-                                                    (nzOnSearch)="onSearchVehicles($event)">
+                                                    (nzOnSearch)="onSearchVehicles($event)"
+                                                    (nzOpenChange)="onVehicleSearchOpen($event)">
                                                 <!-- 这个option 为了防止初始化表单时,车辆没有显示出值 -->
                                                 <nz-option *ngIf="item.plateNumber && !vehicles"
                                                            [nzValue]="item.plateNumber"
