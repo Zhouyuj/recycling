@@ -2,7 +2,7 @@
  * Created by wujiahui on 2018/11/9.
  */
 
-import {LodashUtils} from './lodash-utils';
+import { LodashUtils } from './lodash-utils';
 
 export class ObjectUtils {
     public static cloneDeep(obj: any): any {

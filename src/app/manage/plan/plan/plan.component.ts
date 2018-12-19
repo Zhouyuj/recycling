@@ -63,41 +63,6 @@ export class PlanComponent implements OnInit {
         this.getListByPage();
     }
 
-    getListByPage() {
-        this.isSpinning = true;
-        this.planService.getPlanList(this.pageReq, this.params).subscribe(
-            (res: Result<PageRes<PlanRes[]>>) => {
-                if (res.data.content) {
-                    this.isSpinning = false;
-                    this.resCache = res.data.content;
-                    this.listCache = this.dataToTableList(res.data.content);
-                    this.updatePageRes(res.data);
-                }
-            },
-            err => {
-                console.warn(`分页查询失败!!! message:${err.error.message}`);
-                this.isSpinning = false;
-            },
-            () => this.isSpinning = false
-        );
-    }
-
-    dataToTableList(data: PlanRes[]): PlanListModel[] {
-        return data.map(item => ModelConverter.planResToPlanListModel(item));
-    }
-
-    updatePageRes(data: PageRes<PlanRes[]>): void {
-        this.pageRes = new PageRes(data.page, data.size, data.pages, data.total, data.last);
-    }
-
-    getRouteList(name?: string, planId?: number, lateNumber?: string) {
-        this.planService.getRouteList(name || null, planId || null, lateNumber || null).subscribe((res: Result<RouteRes[]>) => {
-            if (res.data) {
-                this.routesListCache = res.data;
-            }
-        });
-    }
-
     onSelected(e?: boolean, item?: PlanListModel) {
         if (!e) {
             this.selectedItem = null;
@@ -163,5 +128,58 @@ export class PlanComponent implements OnInit {
         // 判断是否被锁定
 
         //this.router.navigateByUrl('/manage/plan/edit');
+    }
+
+    getListByPage() {
+        this.isSpinning = true;
+        this.planService.getPlanList(this.pageReq, this.params).subscribe(
+            (res: Result<PageRes<PlanRes[]>>) => {
+                if (res.data.content) {
+                    this.isSpinning = false;
+                    this.resCache = res.data.content;
+                    this.listCache = this.dataToTableList(res.data.content);
+                    this.updatePageRes(res.data);
+                }
+            },
+            err => {
+                console.warn(`分页查询失败!!! message:${err.error.message}`);
+                this.isSpinning = false;
+            },
+            () => this.isSpinning = false
+        );
+    }
+
+    updatePageRes(data: PageRes<PlanRes[]>): void {
+        this.pageRes = new PageRes(data.page, data.size, data.pages, data.total, data.last);
+    }
+
+    updateParams() {
+        let paramsTemp = {};
+        for (let k in this.params) {
+            if (!this.params[ k ]) {
+                this.params[ k ] = null;
+            } else {
+                paramsTemp[ k ] = this.params[ k ];
+            }
+        }
+        return paramsTemp;
+    }
+
+    resetPageReq(): void {
+        this.pageReq.page = 1;
+        this.pageReq.size = this.pageRes.size;
+        this.pageReq.sort = 'entryTime.desc';
+    }
+
+    dataToTableList(data: PlanRes[]): PlanListModel[] {
+        return data.map(item => ModelConverter.planResToPlanListModel(item));
+    }
+
+    getRouteList(name?: string, planId?: number, lateNumber?: string) {
+        this.planService.getRouteList(name || null, planId || null, lateNumber || null).subscribe((res: Result<RouteRes[]>) => {
+            if (res.data) {
+                this.routesListCache = res.data;
+            }
+        });
     }
 }

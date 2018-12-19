@@ -8,6 +8,7 @@ import { Result } from '../shared/models/response/result.model';
 import { MessageService } from '../shared/services/message/message.service';
 import { NotificationService } from '../shared/services/notification/notification.service';
 import { Base64Utils } from '../shared/utils/base64-utils';
+import {JwtUtils} from '../shared/utils/jwt-utils';
 
 @Component({
     selector   : 'app-login',
@@ -38,11 +39,19 @@ export class LoginComponent implements OnInit {
             (res: Result<{ token: string }>) => {
                 if (res.data.token) {
                     let token = res.data.token;
-                    let payload = token.split('.')[ 1 ];
-                    let deCodePayload = Base64Utils.decode(payload);
-                    deCodePayload = deCodePayload.substr(0, deCodePayload.length - 2) + '}';    // 解决JSON.parse报错问题
-                    let obj = JSON.parse(deCodePayload);
-                    this.authorizationService.setCurrentUser(obj);
+                    let deCodePayload = {};
+                    try {
+                        deCodePayload = JwtUtils.decode(token);
+                    } catch (e) {
+                        console.log(e);
+                        this.notificationService.create({
+                            type: 'error',
+                            title: e,
+                        });
+                        return;
+                    } finally {
+                    }
+                    this.authorizationService.setCurrentUser(deCodePayload);
 
                     this.messageService.create({ type: 'success', content: '登陆成功,页面正在跳转' });
                     this.redirectToHome();

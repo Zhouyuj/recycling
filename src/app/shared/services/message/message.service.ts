@@ -23,11 +23,11 @@ export class MessageService {
      */
     public create(opts: {
         type: 'success' | 'error' | 'info' | 'warning' | 'loading',
-        content: string,
+        content?: string,
         options?: MessageOptions
     }): string {
 
-        const id = this.message[ opts.type ](opts.content, opts.options).messageId;
+        const id = this.message[ opts.type ](opts.content || '', opts.options).messageId;
         return id;
     }
 

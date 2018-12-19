@@ -5,7 +5,6 @@ import { StaffInfoFormComponent } from './staff-info-form/staff-info-form.compon
 
 import { NzDrawerService } from 'ng-zorro-antd';
 
-import { DistrictsService } from '../../../shared/services/districts/districts.service';
 import { NotificationService } from '../../../shared/services/notification/notification.service';
 import { PageReq } from '../../../shared/models/page/page-req.model';
 import { PageRes } from '../../../shared/models/page/page-res.model';
@@ -85,15 +84,12 @@ export class StaffInfoComponent implements OnInit {
     public pageRes = new PageRes();
 
     constructor(private staffInfoService: StaffInfoService,
-                private districtsService: DistrictsService,
                 private notificationService: NotificationService,
                 private drawerService: NzDrawerService) {
     }
 
     ngOnInit() {
-        this.districtsService.getDistricts('350600', 1).subscribe(res => {
-            this.getListByPage();
-        });
+        this.getListByPage({ isResetReq: true });
     }
 
     onAdd() {

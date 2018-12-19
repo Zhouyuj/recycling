@@ -68,7 +68,7 @@ export class VehicleInfoComponent implements OnInit {
 
     ngOnInit() {
         this.initFilterOptions();
-        this.getListByPage();
+        this.getListByPage({ isResetReq: true });
     }
 
     initFilterOptions() {

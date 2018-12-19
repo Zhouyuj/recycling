@@ -19,7 +19,8 @@ export class HeaderComponent implements OnInit {
 
     ngOnInit() {
         this.menus = this.initMenus();
-        this.name = this.authorizationService.getCurrentUser().name;
+        let currentUser = this.authorizationService.getCurrentUser();
+        this.name = currentUser ? currentUser.name : '';
     }
 
     private initMenus() {

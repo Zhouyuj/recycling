@@ -87,7 +87,13 @@
                                [(ngModel)]="params.name"
                                (keyup)="$event.which === 13 && onKeywordSearchTh('name')">
                     </th>
-                    <th nzWidth="200px">所属区域</th>
+                    <th nzWidth="200px"
+                        nzShowFilter
+                        [nzFilters]="districtsFilterList"
+                        [nzFilterMultiple]="true"
+                        (nzFilterChange)="onFilter($event)">
+                        所属区域
+                    </th>
                     <th nzWidth="250px">收运时间段</th>
                     <th nzWidth="200px">地址
                         <br/>

@@ -15,6 +15,7 @@ import { DateUtil } from '../../../shared/utils/date-utils';
 import { ModelConverter } from './model-converter';
 import { FormModel } from './form.model';
 import { ListModel } from './list.model';
+import { ZHANGZHOU_OPTIONS } from '../../../shared/components/cascader/cascader-zhangzhou.config';
 
 @Component({
     selector   : 'app-customers-info',
@@ -51,7 +52,9 @@ export class CustomersInfoComponent implements OnInit {
         createdDate: '',
         contactName: '',
         mobilePhone: '',
+        // TODO 添加所属区域字段
     };
+    public districtsFilterList;
 
     public pageReq = new PageReq(1, 12);
     public pageRes = new PageRes(1, 12);
@@ -69,7 +72,18 @@ export class CustomersInfoComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.initFilterOption();
         this.getListByPage({ isResetReq: true });
+    }
+
+    initFilterOption() {
+        let dis = ZHANGZHOU_OPTIONS
+            .filter(item => item.label === '福建省')[0].children
+            .filter(item => item.label === '漳州市')[0].children
+            .map(item => {
+                return { value: item.value, text: item.label };
+            });
+        this.districtsFilterList = [...dis];
     }
 
     onAdd() {
@@ -214,6 +228,29 @@ export class CustomersInfoComponent implements OnInit {
         this.pageReq.sort = `${type}.${e},`;
         this.pageReq.page = 1;
         this.getListByPage();
+    }
+
+    /**
+     * @param e : string[] | string
+     * @param type
+     */
+    onFilter(e, type?: string) {
+        console.log(e);
+        this.notificationService.create({type: 'warning', title: '区域筛选暂不支持'});
+        return;
+        /*switch (type) {
+            case 'roleId':
+                let result = (e && !e.length) ? '' : e.join(',');
+                if (this.params[ type ] === result) return;
+                this.params[ type ] = (e && !e.length) ? '' : e.join(',');
+                break;
+            case 'sex':
+            case 'postId':
+                if (!e && !this.params[ type ] || this.params[ type ] === e) return;
+                this.params[ type ] = e || '';
+                break;
+        }
+        this.getListByPage({ isResetReq: true });*/
     }
 
     onKeywordSearchTh(keywordType: string) {
