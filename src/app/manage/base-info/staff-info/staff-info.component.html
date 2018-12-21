@@ -9,8 +9,14 @@
             <div nz-col class="gutter-row" nzSpan="8" nzOffset="2"></div>
             <div nz-col class="gutter-row" nzSpan="4">
                 <div class="table-CUDE">
-                    <button nz-button nzType="default" nzShape="circle" (click)="onAdd()" nzTitle="添加" nzPlacement="topCenter" nz-tooltip>
-                        <i class="anticon anticon-plus-circle-o"></i>
+                    <button nz-button
+                            nzType="default"
+                            nzShape="circle"
+                            (click)="onAdd()"
+                            nzTitle="添加"
+                            nzPlacement="topCenter"
+                            nz-tooltip>
+                        <i nz-icon type="plus-circle" theme="outline"></i>
                     </button>
                     &nbsp;
                     <button nz-button
@@ -21,23 +27,28 @@
                             nzTitle="编辑"
                             nzPlacement="topCenter"
                             nz-tooltip>
-                        <i class="anticon anticon-edit"></i>
+                        <i nz-icon type="edit" theme="outline"></i>
                     </button>
                     &nbsp;
                     <button nz-button
-                            [disabled]="!formCache"
-                            nz-popconfirm
-                            nzTitle="确认删除该信息吗?"
-                            (nzOnConfirm)="onDel()"
                             nzType="default"
+                            [disabled]="!formCache"
+                            (click)="isDelModalVisible = true"
+                            nzTitle="删除"
                             nzShape="circle"
                             nzPlacement="topCenter"
                             nz-tooltip>
-                        <i class="anticon anticon-minus-circle-o"></i>
+                        <i nz-icon type="delete" theme="outline"></i>
                     </button>
                     &nbsp;
-                    <button nz-button nzType="default" nzShape="circle" (click)="onExp()" nzTitle="导出" nzPlacement="topCenter" nz-tooltip>
-                        <i class="anticon anticon-file-excel"></i>
+                    <button nz-button
+                            nzType="default"
+                            nzShape="circle"
+                            (click)="onExp()"
+                            nzTitle="导出"
+                            nzPlacement="topCenter"
+                            nz-tooltip>
+                        <i nz-icon type="download" theme="outline"></i>
                     </button>
                     &nbsp;
                 </div>
@@ -156,6 +167,12 @@
                                [(ngModel)]="params.email"
                                (keyup)="$event.which === 13 && onKeywordSearch()">
                     </th>
+                    <th nzWidth="200px"
+                        nzShowSort
+                        [(nzSort)]="sortMap.createTime"
+                        (nzSortChange)="onSort($event, 'createTime')">
+                        创建时间
+                    </th>
                 </tr>
                 </thead>
                 <tbody>
@@ -174,9 +191,14 @@
                     <td>{{item.emergencyContact}}</td>
                     <td>{{item.emergencyContactPhone}}</td>
                     <td>{{item.email}}</td>
+                    <td>{{item.createTime}}</td>
                 </tr>
                 </tbody>
             </nz-table>
         </nz-spin>
     </div>
 </div>
+
+<nz-modal [(nzVisible)]="isDelModalVisible" nzTitle="删除人员信息" (nzOnCancel)="isDelModalVisible = false" (nzOnOk)="onDel()" [nzOkLoading]="isDelOkLoading">
+    <p>确认删除该人员?</p>
+</nz-modal>

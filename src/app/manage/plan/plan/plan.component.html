@@ -6,7 +6,7 @@
                 <!-- 面包屑导航 -->
                 <app-breadcrumbs [options]="breadcrumbs"></app-breadcrumbs>
             </div>
-            <div nz-col class="gutter-row" nzSpan="2" nzOffset="12">
+            <div nz-col class="gutter-row" nzSpan="8" nzOffset="6">
                 <!-- CUDE: create,update,delete,export -->
                 <div class="table-CUDE">
                     <button nz-button
@@ -16,61 +16,55 @@
                             nzTitle="添加"
                             nzPlacement="topCenter"
                             nz-tooltip>
-                        <i class="anticon anticon-plus-circle-o"></i>
+                        <i nz-icon type="plus-circle" theme="outline"></i>
                     </button>
                     &nbsp;
                     <button nz-button
                             nzType="default"
                             nzShape="circle"
-                            [disabled]="!formCache"
+                            nzTitle="计算过程"
+                            nzPlacement="topCenter"
+                            nz-tooltip>
+                        <i nz-icon type="calculator" theme="outline"></i>
+                    </button>
+                    &nbsp;
+                    <button nz-button
+                            nzType="default"
+                            nzShape="circle"
                             (click)="onNavigateToEdit()"
                             nzTitle="编辑"
                             nzPlacement="topCenter"
                             nz-tooltip>
-                        <i class="anticon anticon-edit"></i>
+                        <i nz-icon type="edit" theme="outline"></i>
                     </button>
                     &nbsp;
-                    <!--<button nz-button
+                    <button nz-button
                             nz-popconfirm
-                            nzTitle="确认删除该信息吗?"
-                            (nzOnConfirm)="onDel()"
-                            [disabled]="!formCache"
+                            nzTitle="删除"
                             nzType="default"
                             nzShape="circle"
                             nzPlacement="topCenter"
                             nz-tooltip>
-                        <i class="anticon anticon-minus-circle-o"></i>
+                        <i nz-icon type="delete" theme="outline"></i>
                     </button>
                     &nbsp;
                     <button nz-button
                             nzType="default"
                             nzShape="circle"
-                            (click)="onEdit()"
-                            nzTitle="计算"
-                            nzPlacement="topCenter"
-                            nz-tooltip>
-                        <i class="anticon anticon-line-chart"></i>
-                    </button>
-                    &nbsp;
-                    <button nz-button
-                            nzType="default"
-                            nzShape="circle"
-                            (click)="onExp()"
                             nzTitle="执行"
                             nzPlacement="topCenter"
                             nz-tooltip>
-                        <i class="anticon anticon-play-circle-o"></i>
+                        <i nz-icon type="play-circle" theme="outline"></i>
                     </button>
                     &nbsp;
                     <button nz-button
                             nzType="default"
                             nzShape="circle"
-                            (click)="onExp()"
                             nzTitle="停止"
                             nzPlacement="topCenter"
                             nz-tooltip>
-                        <i class="anticon anticon-close-circle-o"></i>
-                    </button>-->
+                        <i nz-icon type="stop" theme="outline"></i>
+                    </button>
                     &nbsp;
                 </div>
             </div>

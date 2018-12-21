@@ -23,14 +23,14 @@
                             [nzButtonStyle]="'solid'"
                             [(ngModel)]="selectedCategory"
                             #category="ngModel">
-                        <label nz-radio-button nzValue='Separate' [nzDisabled]="type === 'edit'">普通收集点</label>
+                        <label nz-radio-button nzValue='Separate' [nzDisabled]="type === 'edit'">普通收运单位</label>
                         <label nz-radio-button nzValue='Cluster' [nzDisabled]="type === 'edit'">广场点</label>
                     </nz-radio-group>
                     <nz-form-explain [hidden]="category.valid || category.pristine">请选择类别</nz-form-explain>
                 </nz-form-control>
             </nz-form-item>
 
-            <!-- 当选择类别为普通收集点时 Separate start -->
+            <!-- 当选择类别为普通收运单位时 Separate start -->
             <div *ngIf="selectedCategory === 'Separate'">
                 <!-- 先预留账号密码,日后添加商家功能使用 -->
                 <!--<nz-form-item>
@@ -72,9 +72,10 @@
                         </nz-form-explain>
                     </nz-form-control>
 
-                    <nz-form-label [nzSm]="3" [nzXs]="24" nzOffset="1" nzRequired nzFor="collectionTypeSeparate">单位类型
+                    <nz-form-label [nzSm]="3" [nzXs]="24" nzOffset="1" nzRequired
+                                   nzFor="collectionTypeSeparate" *ngIf="!parentCache ? true : false">单位类型
                     </nz-form-label>
-                    <nz-form-control [nzSm]="7" [nzXs]="24">
+                    <nz-form-control [nzSm]="7" [nzXs]="24" *ngIf="!parentCache ? true : false">
                         <nz-select
                                 name="collectionTypeSeparate"
                                 required
@@ -96,7 +97,7 @@
                     </nz-form-control>
                 </nz-form-item>
 
-                <nz-form-item style="margin-bottom: 5px;">
+                <nz-form-item style="margin-bottom: 5px;"  *ngIf="!parentCache ? true : false">
                     <nz-form-label [nzSm]="3" [nzXs]="24" nzFor="address">地址</nz-form-label>
                     <nz-form-control [nzSm]="18" [nzXs]="24">
                         <app-cascader [(values)]="formModelSeparate.address"
@@ -104,7 +105,7 @@
                     </nz-form-control>
                 </nz-form-item>
 
-                <nz-form-item style="margin-bottom: 5px;">
+                <nz-form-item style="margin-bottom: 5px;"  *ngIf="!parentCache ? true : false">
                     <nz-form-label [nzSm]="3" [nzXs]="24" nzFor="detailAddressSeparate">详细地址</nz-form-label>
                     <nz-form-control [nzSm]="18" [nzXs]="24">
                         <nz-input-group [nzSuffix]="suffixTemplateCluster">
@@ -525,7 +526,7 @@
 
                 <nz-form-item style="margin-bottom: -5px;">
                     <nz-form-label [nzSm]="23" [nzXs]="23" nzOffset="1" nzRequired style="text-align: left;">
-                        子收集点
+                        子收运单位
                     </nz-form-label>
                 </nz-form-item>
                 <nz-form-item>
@@ -537,14 +538,14 @@
                                    required
                                    nz-input
                                    name="childCollections-{{item.idx}}"
-                                   placeHolder="点击输入子收集点名称"
+                                   placeHolder="点击输入子收运单位名称"
                                    [(ngModel)]="item.name">
                         </nz-form-control>
                         <nz-form-control [nzSm]="2" [nzXs]="2" nzOffset="1">
                             <i nz-icon type="minus-circle-o"
                                class="anticon dynamic-delete-button anticon-minus-circle-o"
                                nz-popconfirm
-                               nzTitle="聚类点要求至少存在一个子收集点,删除最后一个子收集点后,提交表单时,该聚类点将被删除"
+                               nzTitle="聚类点要求至少存在一个子收运单位,删除最后一个子收运单位后,提交表单时,该聚类点将被删除"
                                [nzCondition]="formModelCluster.childCollections.length > 1"
                                (nzOnConfirm)="onRemoveChildCollections(item.idx)"
                                (click)="onRemoveChildCollections(item.idx)">

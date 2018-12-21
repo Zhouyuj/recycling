@@ -18,5 +18,6 @@ export class StaffListModel {
     emergencyContact: string = null;
     emergencyContactPhone: string = null;
     email: string = null;
+    createTime: string = null;
     checked: boolean;   // 可选   -- 非接口数据
 }

@@ -28,6 +28,7 @@ export class ModelConverter {
             emergencyContact     : res.contactInfo.emergencyContact || '',
             emergencyContactPhone: res.contactInfo.emergencyContactPhone || '',
             email                : res.contactInfo.email || '',
+            createTime           : DateUtil.dateFormat(new Date(res.createTime), 'yyyy-MM-dd') || '',
             checked              : false,
         };
         return l;

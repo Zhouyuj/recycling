@@ -76,7 +76,10 @@ export class CustomersInfoFormComponent implements OnInit {
      */
     initVehicles() {
         const getRandomNameList = ({ districtCode, plateNumber }) => {
-            districtCode = districtCode || '350603';
+            // 若需要根据地区来选择车辆,只要打开一下这行代码,使districtCode存在 区/市 的code即可
+            //districtCode = districtCode || '350603';
+            // 若需要根据地区选择车辆,删除一下行代码
+            districtCode = '';
             return this.customersInfoService.getCustomerVehicles(new PageReq(1, 20), districtCode, 'Available', plateNumber)
                 .pipe(map((res: Result<PageRes<VehicleRes[]>>) => res.data.content))
                 .pipe(map((list: VehicleRes[]) => {
@@ -187,6 +190,7 @@ export class CustomersInfoFormComponent implements OnInit {
 
     /**
      * 地址选择修改后,详细地址和选择车辆 清空,需要重新选择.
+     * 2018.12.20 需求改为 不需要清空:目前漳州车辆没有分地区
      * @param $e
      */
     onAddressChange($e): void {
@@ -196,7 +200,7 @@ export class CustomersInfoFormComponent implements OnInit {
             } else {
                 this.formModelSeparate.address = $e;
                 this.formModelSeparate.detailAddress = null;
-                if (this.formModelSeparate.duration && this.formModelSeparate.duration.food) {
+                /*if (this.formModelSeparate.duration && this.formModelSeparate.duration.food) {
                     this.formModelSeparate.duration.food = this.formModelSeparate.duration.food.map((duration: DurationDetail) => {
                         duration.plateNumber = null;
                         return duration;
@@ -207,7 +211,7 @@ export class CustomersInfoFormComponent implements OnInit {
                         duration.plateNumber = null;
                         return duration;
                     });
-                }
+                }*/
             }
         } else if (this.selectedCategory === 'Cluster') {
             if (this.formModelCluster.address.join(',') == $e.join(',')) {
@@ -215,7 +219,7 @@ export class CustomersInfoFormComponent implements OnInit {
             } else {
                 this.formModelCluster.address = $e;
                 this.formModelCluster.detailAddress = null;
-                if (this.formModelCluster.duration && this.formModelCluster.duration.food) {
+                /*if (this.formModelCluster.duration && this.formModelCluster.duration.food) {
                     this.formModelCluster.duration.food = this.formModelCluster.duration.food.map((duration: DurationDetail) => {
                         duration.plateNumber = null;
                         return duration;
@@ -226,13 +230,13 @@ export class CustomersInfoFormComponent implements OnInit {
                         duration.plateNumber = null;
                         return duration;
                     });
-                }
+                }*/
             }
         }
     }
 
     onShowMap() {
-        console.log('onShowMap');
+        console.log('onShowMap'); // TODO
     }
 
     /**

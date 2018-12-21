@@ -10,7 +10,7 @@ import { ModelConverter } from './../models/model-converter';
 import { NzModalService, NzDrawerService } from 'ng-zorro-antd';
 import { AddPlanComponent } from '../add-plan/add-plan.component';
 import { PlanStateEnum,PlanStateEnumChinese } from '../models/plan.enum';
-import { RouteRes } from '../models/route-res.model';
+import { RouteModel } from '../models/route.model';
 
 @Component({
     selector   : 'app-plan',
@@ -52,7 +52,7 @@ export class PlanComponent implements OnInit {
     selectedItem: PlanRes;
     listCache: PlanListModel[];
     formCache: any;
-    routesListCache: RouteRes[];
+    routesListCache: RouteModel[];
 
     constructor(private router: Router,
                 private planService: PlanService,
@@ -125,9 +125,9 @@ export class PlanComponent implements OnInit {
     }
 
     onNavigateToEdit() {
-        // 判断是否被锁定
+        // async 判断是否被锁定 TODO
 
-        //this.router.navigateByUrl('/manage/plan/edit');
+        this.router.navigateByUrl('/manage/plan/edit/1');
     }
 
     getListByPage() {
@@ -176,7 +176,7 @@ export class PlanComponent implements OnInit {
     }
 
     getRouteList(name?: string, planId?: number, lateNumber?: string) {
-        this.planService.getRouteList(name || null, planId || null, lateNumber || null).subscribe((res: Result<RouteRes[]>) => {
+        this.planService.getRouteList(name || null, planId || null, lateNumber || null).subscribe((res: Result<RouteModel[]>) => {
             if (res.data) {
                 this.routesListCache = res.data;
             }

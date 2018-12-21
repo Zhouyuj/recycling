@@ -5,6 +5,8 @@
 export enum PlanCategoryEnum {
     Formal = 'Formal',  // 正式的
     Demo = 'Demo',      // 演示的
+    FormalChinese = '正式',
+    DemoChinese = '演示',
 }
 export enum PlanCategoryEnumChinese {
     Formal = '正式',
@@ -16,6 +18,10 @@ export enum PlanStateEnum {
     Executing = 'Executing',    // 执行中
     Stopped = 'Stopped',        // 已停止
     Completed = 'Completed',    // 已完成
+    UnExecutedChinese = '未执行',
+    ExecutingChinese = '执行中',
+    StoppedChinese = '已停止',
+    CompletedChinese = '已完成',
 }
 export enum PlanStateEnumChinese {
     UnExecuted = '未执行',  // 未执行

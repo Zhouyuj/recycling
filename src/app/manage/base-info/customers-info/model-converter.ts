@@ -49,7 +49,7 @@ export class ModelConverter {
             name         : o.name,
             countyName   : `${o.address.county || ''}${o.address.street || ''}`,
             duration     : o.collectionPeriodList ? o.collectionPeriodList.length : 0,
-            detailAddress: o.address.detailedAddress,
+            fullAddress  : o.address.fullAddress,
             username     : o.username || '',
             totalDustbins: o.dustbin || 0,
             createdDate  : DateUtil.dateFormat(new Date(o.createdDate), 'yyyy-MM-dd'),

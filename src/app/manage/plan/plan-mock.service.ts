@@ -45,5 +45,6 @@ export class PlanMockService {
         });
     }
 
-    addPlan() {}
+    addPlan() {
+    }
 }

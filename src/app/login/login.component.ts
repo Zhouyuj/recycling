@@ -7,8 +7,7 @@ import { TokenService } from '../core/services/token/token.service';
 import { Result } from '../shared/models/response/result.model';
 import { MessageService } from '../shared/services/message/message.service';
 import { NotificationService } from '../shared/services/notification/notification.service';
-import { Base64Utils } from '../shared/utils/base64-utils';
-import {JwtUtils} from '../shared/utils/jwt-utils';
+import { JwtUtils } from '../shared/utils/jwt-utils';
 
 @Component({
     selector   : 'app-login',

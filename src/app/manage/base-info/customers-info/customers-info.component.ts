@@ -42,6 +42,8 @@ export class CustomersInfoComponent implements OnInit {
     // antd-table
     public drawerRef: any;
     public isSpinning = false;
+    public isDelModalVisible = false;
+    public isDelOkLoading = false;
     public sortMap = {
         createdDate: '',
     };   // 操作表格的排序参数
@@ -98,8 +100,11 @@ export class CustomersInfoComponent implements OnInit {
         if (this.parentCache && this.parentCache.customerList.length === 1) {
             this.selectedId = this.parentCache.id;
         }
+        this.isDelOkLoading = true;
         this.customersInfoService.delCustomer(this.selectedId).subscribe(
             res => {
+                this.isDelOkLoading = false;
+                this.isDelModalVisible = false;
                 this.notificationService.create({
                     type   : 'success',
                     title  : '恭喜,删除成功',
@@ -107,6 +112,8 @@ export class CustomersInfoComponent implements OnInit {
                 });
                 this.getListByPage({ isResetReq: true });
             }, err => {
+                this.isDelOkLoading = false;
+                this.isDelModalVisible = false;
                 this.notificationService.create({
                     type   : 'error',
                     title  : '抱歉,删除失败',
@@ -236,7 +243,7 @@ export class CustomersInfoComponent implements OnInit {
      */
     onFilter(e, type?: string) {
         console.log(e);
-        this.notificationService.create({type: 'warning', title: '区域筛选暂不支持'});
+        this.notificationService.create({type: 'warning', title: '抱歉,区域筛选暂不支持'});
         return;
         /*switch (type) {
             case 'roleId':

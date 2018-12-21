@@ -32,6 +32,7 @@ export class Address {
     public lng: string;
     public lat: string;
     public detailedAddress: string;
+    public fullAddress: string;
 }
 
 export class CollectionPeriod {

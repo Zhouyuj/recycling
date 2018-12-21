@@ -9,7 +9,7 @@ import { PageRes } from '../../shared/models/page/page-res.model';
 import { PlanReq } from './models/plan-req.model';
 import { PlanRes } from './models/plan-res.model';
 import { Result } from '../../shared/models/response/result.model';
-import { RouteRes } from './models/route-res.model';
+import { RouteModel } from './models/route.model';
 
 @Injectable({
     providedIn: 'root'
@@ -40,7 +40,7 @@ export class PlanService extends RebirthHttp {
     @GET('/routes')
     getRouteList(@Query('name') name?: string,
                  @Query('planId') planId?: number,
-                 @Query('plateNumber') plateNumber?: string): Observable<Result<RouteRes[]>> {
+                 @Query('plateNumber') plateNumber?: string): Observable<Result<RouteModel[]>> {
         return null;
     }
 

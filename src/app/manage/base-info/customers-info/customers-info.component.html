@@ -6,10 +6,10 @@
                 <!-- 面包屑导航 -->
                 <app-breadcrumbs [options]="breadcrumbs"></app-breadcrumbs>
             </div>
-            <div nz-col class="gutter-row" nzSpan="8" nzOffset="2">
+            <div nz-col class="gutter-row" nzSpan="4" nzOffset="2">
 
             </div>
-            <div nz-col class="gutter-row" nzSpan="4">
+            <div nz-col class="gutter-row" nzSpan="8">
                 <!-- CUDE: create,update,delete,export -->
                 <div class="table-CUDE">
                     <button nz-button
@@ -19,7 +19,7 @@
                             nzTitle="添加"
                             nzPlacement="topCenter"
                             nz-tooltip>
-                        <i class="anticon anticon-plus-circle-o"></i>
+                        <i nz-icon type="plus-circle" theme="outline"></i>
                     </button>
                     &nbsp;
                     <button nz-button
@@ -30,21 +30,18 @@
                             nzTitle="编辑"
                             nzPlacement="topCenter"
                             nz-tooltip>
-                        <i class="anticon anticon-edit"></i>
+                        <i nz-icon type="edit" theme="outline"></i>
                     </button>
                     &nbsp;
                     <button nz-button
-                            nz-popconfirm
-                            nzTitle="{{parentCache && parentCache.customerList.length === 1
-                            ? '聚类点要求至少存在一个子收运单位,删除最后一个子收运单位后,该聚类点将被删除'
-                            : '确认删除该信息吗?'}}"
-                            (nzOnConfirm)="onDel()"
-
-
+                            nzTitle="删除"
                             [disabled]="!formCache"
+                            (click)="isDelModalVisible = true"
                             nzType="default"
-                            nzShape="circle">
-                        <i class="anticon anticon-minus-circle-o"></i>
+                            nzShape="circle"
+                            nzPlacement="topCenter"
+                            nz-tooltip>
+                        <i nz-icon type="delete" theme="outline"></i>
                     </button>
                     &nbsp;
                     <button nz-button
@@ -54,7 +51,7 @@
                             nzTitle="导出"
                             nzPlacement="topCenter"
                             nz-tooltip>
-                        <i class="anticon anticon-file-excel"></i>
+                        <i nz-icon type="download" theme="outline"></i>
                     </button>
                     &nbsp;
                 </div>
@@ -87,13 +84,14 @@
                                [(ngModel)]="params.name"
                                (keyup)="$event.which === 13 && onKeywordSearchTh('name')">
                     </th>
-                    <th nzWidth="200px"
+                    <!--<th nzWidth="200px"
                         nzShowFilter
                         [nzFilters]="districtsFilterList"
                         [nzFilterMultiple]="true"
                         (nzFilterChange)="onFilter($event)">
                         所属区域
-                    </th>
+                    </th>-->
+                    <th nzWidth="200px">所属区域</th>
                     <th nzWidth="250px">收运时间段</th>
                     <th nzWidth="200px">地址
                         <br/>
@@ -156,7 +154,7 @@
                         <td>{{data.name}}</td>
                         <td>{{data.countyName}}</td>
                         <td>{{data.duration}}</td>
-                        <td>{{data.detailAddress}}</td>
+                        <td>{{data.fullAddress}}</td>
                         <td>{{data.username}}</td>
                         <td>{{data.totalDustbins}}</td>
                         <td>{{data.createdDate | date:'yyyy-MM-dd'}}</td>
@@ -179,7 +177,7 @@
                             <td>{{item.name}}</td>
                             <td>{{item.countyName}}</td>
                             <td>{{item.duration}}</td>
-                            <td>{{item.detailAddress}}</td>
+                            <td>{{item.fullAddress}}</td>
                             <td>{{item.username}}</td>
                             <td>{{item.totalDustbins}}</td>
                             <td>{{item.createdDate | date:'yyyy-MM-dd'}}</td>
@@ -194,3 +192,9 @@
         </nz-spin>
     </div>
 </div>
+
+<nz-modal [(nzVisible)]="isDelModalVisible" nzTitle="删除收运点" (nzOnCancel)="isDelModalVisible = false" (nzOnOk)="onDel()" [nzOkLoading]="isDelOkLoading">
+    <p>{{parentCache && parentCache.customerList.length === 1
+        ? '聚类点要求至少存在一个子收运单位,删除最后一个子收运单位后,该聚类点将被删除'
+        : '确认删除该单位?'}}</p>
+</nz-modal>

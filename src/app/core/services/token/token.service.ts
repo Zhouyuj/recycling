@@ -27,14 +27,12 @@ export class TokenService extends RebirthHttp {
 
     @POST('/auth')
     //@Headers({ 'Authorization': 'Basic ' + new Buffer(USERNAME + ':' + PASSWORD).toString('base64') })
-    @Headers({ 'Authorization': 'Basic ' + Base64Utils.encode(USERNAME + ':' + PASSWORD) })
     public refreshToken(@Body obj: { grant_type: string, refresh_token: string }): Observable<Token> {
         return null;
     }
 
     @POST('/auth')
     //@Headers({ 'Authorization': 'Basic ' + new Buffer(USERNAME + ':' + PASSWORD).toString('base64') })
-    //@Headers({ 'Authorization': 'Basic ' + Base64Utils.encode(USERNAME + ':' + PASSWORD) })
     public getTokenInfo(@Body obj: { username: string, password: string, grant_type?: string }): Observable<any> {
         return null;
     }

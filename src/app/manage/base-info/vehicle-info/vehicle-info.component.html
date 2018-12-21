@@ -19,7 +19,7 @@
                             nzTitle="添加"
                             nzPlacement="topCenter"
                             nz-tooltip>
-                        <i class="anticon anticon-plus-circle-o"></i>
+                        <i nz-icon type="plus-circle" theme="outline"></i>
                     </button>
                     &nbsp;
                     <button nz-button
@@ -30,19 +30,18 @@
                             nzTitle="编辑"
                             nzPlacement="topCenter"
                             nz-tooltip>
-                        <i class="anticon anticon-edit"></i>
+                        <i nz-icon type="edit" theme="outline"></i>
                     </button>
                     &nbsp;
                     <button nz-button
-                            nz-popconfirm
-                            nzTitle="确认删除该信息吗?"
-                            (nzOnConfirm)="onDel()"
+                            nzTitle="删除"
+                            (click)="isDelModalVisible = true"
                             [disabled]="!formCache"
                             nzType="default"
                             nzShape="circle"
                             nzPlacement="topCenter"
                             nz-tooltip>
-                        <i class="anticon anticon-minus-circle-o"></i>
+                        <i nz-icon type="delete" theme="outline"></i>
                     </button>
                     &nbsp;
                     <button nz-button
@@ -52,7 +51,7 @@
                             nzTitle="导出"
                             nzPlacement="topCenter"
                             nz-tooltip>
-                        <i class="anticon anticon-file-excel"></i>
+                        <i nz-icon type="download" theme="outline"></i>
                     </button>
                     &nbsp;
                 </div>
@@ -213,3 +212,7 @@
         </nz-spin>
     </div>
 </div>
+
+<nz-modal [(nzVisible)]="isDelModalVisible" nzTitle="删除车辆" (nzOnCancel)="isDelModalVisible = false" (nzOnOk)="onDel()" [nzOkLoading]="isDelOkLoading">
+    <p>确认删除该车辆?</p>
+</nz-modal>

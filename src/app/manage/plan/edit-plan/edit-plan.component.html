@@ -1,14 +1,13 @@
-<!--
 <div class="wrap">
-    &lt;!&ndash; &#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45; 表格操作 &#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45; &ndash;&gt;
+    <!-- -------- 表格操作 -------- -->
     <div class="table-operations">
         <div nz-row nzGutter="16">
             <div nz-col nzSpan="10">
-                &lt;!&ndash; 面包屑导航 &ndash;&gt;
+                <!-- 面包屑导航 -->
                 <app-breadcrumbs [options]="breadcrumbs"></app-breadcrumbs>
             </div>
             <div nz-col nzSpan="6" nzOffset="8">
-                &lt;!&ndash; CUDE: create,update,delete,export &ndash;&gt;
+                <!-- CUDE: create,update,delete,export -->
                 <div class="table-CUDE">
                     <button nz-button
                             nzType="default"
@@ -16,7 +15,7 @@
                             nzTitle="保存"
                             nzPlacement="topCenter"
                             nz-tooltip>
-                        <i class="anticon anticon-plus-circle-o"></i>
+                        <i nz-icon type="plus-circle" theme="outline"></i>
                     </button>
                     &nbsp;
                     <button nz-button
@@ -25,58 +24,20 @@
                             nzTitle="方案预测"
                             nzPlacement="topCenter"
                             nz-tooltip>
-                        <i class="anticon anticon-bar-chart"></i>
+                        <i nz-icon type="bar-chart" theme="outline"></i>
                     </button>
-                    &nbsp;
-                    &lt;!&ndash;<button nz-button
-                            nz-popconfirm
-                            nzTitle="确认删除该信息吗?"
-                            (nzOnConfirm)="onDel()"
-                            [disabled]="!formCache"
-                            nzType="default"
-                            nzShape="circle"
-                            nzPlacement="topCenter"
-                            nz-tooltip>
-                        <i class="anticon anticon-minus-circle-o"></i>
-                    </button>
-                    &nbsp;
-                    <button nz-button
-                            nzType="default"
-                            nzShape="circle"
-                            (click)="onEdit()"
-                            nzTitle="计算"
-                            nzPlacement="topCenter"
-                            nz-tooltip>
-                        <i class="anticon anticon-line-chart"></i>
-                    </button>
-                    &nbsp;
-                    <button nz-button
-                            nzType="default"
-                            nzShape="circle"
-                            (click)="onExp()"
-                            nzTitle="执行"
-                            nzPlacement="topCenter"
-                            nz-tooltip>
-                        <i class="anticon anticon-play-circle-o"></i>
-                    </button>
-                    &nbsp;
-                    <button nz-button
-                            nzType="default"
-                            nzShape="circle"
-                            (click)="onExp()"
-                            nzTitle="停止"
-                            nzPlacement="topCenter"
-                            nz-tooltip>
-                        <i class="anticon anticon-close-circle-o"></i>
-                    </button>&ndash;&gt;
                     &nbsp;
                 </div>
             </div>
         </div>
     </div>
-    &lt;!&ndash; &#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45; 表格内容 &#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45; &ndash;&gt;
+    <!-- -------- 表格内容 -------- -->
     <div class="table-content">
         <div nz-row nzGutter="16">
+
+
+
+            <!-- ******** 路线 start ******** -->
             <div nz-col nzSpan="7">
                 <div class="inner-table-opt">
                     <div nz-row>
@@ -86,39 +47,36 @@
                         </div>
                         <div nz-col nzSpan="19" nzOffset="1" class="inner-table-btns">
                             <button nz-button
-                                    nzType="default">
-                                <i class="anticon anticon-plus-circle-o"></i>新增
+                                    nzType="default"
+                                    (click)="isAddRouteFormVisible = true">
+                                新增
                             </button>
                             &nbsp;
                             <button nz-button
                                     nzType="default">
-                                <i class="anticon anticon-car"></i>选择车辆
+                                选择车辆
                             </button>
                             &nbsp;
                             <button nz-button
                                     nz-popconfirm
-                                    nzTitle="确认删除该信息吗?"
+                                    nzTitle="删除"
                                     (nzOnConfirm)="onDelRoutes()"
                                     nzType="default"
                                     nzPlacement="topCenter">
-                                <i class="anticon anticon-minus-circle-o"></i>删除
+                                删除
                             </button>
                         </div>
                     </div>
                 </div>
                 <nz-spin [nzSize]="'large'" [nzSpinning]="isRoutesSpinning">
                     <nz-table #routesTable
-                              [nzData]="listCache"
-                              [nzScroll]="{ y: '500px' }"
+                              [nzData]="routeListCache"
+                              [nzScroll]="{ x: '500px', y: '500px' }"
                               [nzFrontPagination]="false"
-                              [nzTotal]="pageRes.total"
-                              [nzPageIndex]="pageRes.page"
-                              [nzPageSize]="pageRes.size"
-                              (nzPageIndexChange)="onPage($event)"
-                              (nzPageSizeChange)="onPage($event)">
+                              [nzShowPagination]="false">
                         <thead>
                         <tr>
-                            <th nzWidth="62px"></th>&lt;!&ndash; 此表头为checkbox &ndash;&gt;
+                            <th nzWidth="62px"></th><!-- 此表头为checkbox -->
                             <th nzWidth="70px">
                                 锁定
                             </th>
@@ -134,11 +92,60 @@
                         </tr>
                         </thead>
                         <tbody>
-
+                        <tr *ngFor="let item of routeListCache; index as i" (click)="onSelectRoute($event, item)">
+                            <td nzShowCheckbox [(nzChecked)]="item.checked"
+                                (nzCheckedChange)="onSelected($event, item)"></td>
+                            <td>
+                                <i nz-icon type="lock" theme="outline" style="cursor: pointer;"
+                                   *ngIf="item.lock">
+                                </i>
+                                <i nz-icon type="unlock" theme="outline"  style="cursor: pointer;"
+                                   *ngIf="!item.lock">
+                                </i>
+                            </td>
+                            <td>{{item.name}}</td>
+                            <td>{{item.plateNumber}}</td>
+                            <td>{{item.priority}}</td>
+                        </tr>
                         </tbody>
                     </nz-table>
                 </nz-spin>
             </div>
+            <!--    新增路线    -->
+            <nz-drawer
+                    [nzPlacement]="'left'"
+                    [nzWidth]="400"
+                    [nzClosable]="true"
+                    [nzVisible]="isAddRouteFormVisible"
+                    nzTitle="新建路线"
+                    (nzOnClose)="onCloseAddRouteForm()">
+                <form nz-form #routeForm="ngForm">
+                    <nz-form-item>
+                        <nz-form-label [nzSpan]="7" nzFor="route-name-new">路线名称</nz-form-label>
+                        <nz-form-control [nzSpan]="17">
+                            <input nz-input
+                                   name="route-name-new"
+                                   required
+                                   type="text"
+                                   id="route-name-new"
+                                   [ngModel]="formDataRoute.name">
+                        </nz-form-control>
+                    </nz-form-item>
+                    <nz-form-item>
+                        <nz-form-control [nzSpan]="8" [nzOffset]="7">
+                            <button nz-button
+                                    nzType="primary"
+                                    [disabled]="!routeForm.valid"
+                                    (click)="onAddRoute()">确认</button>
+                        </nz-form-control>
+                    </nz-form-item>
+                </form>
+            </nz-drawer>
+            <!-- ******** 路线 end ******** -->
+
+
+
+            <!-- ******** 已派发 start ******** -->
             <div nz-col nzSpan="7">
                 <div class="inner-table-opt">
                     <div nz-row>
@@ -160,7 +167,7 @@
                 </div>
                 <nz-spin [nzSize]="'large'" [nzSpinning]="isDistributeSpinning">
                     <nz-table #routesTable
-                              [nzData]="listCache"
+                              [nzData]="distributedListCache"
                               [nzScroll]="{ y: '500px' }"
                               [nzFrontPagination]="false"
                               [nzTotal]="pageRes.total"
@@ -170,7 +177,7 @@
                               (nzPageSizeChange)="onPage($event)">
                         <thead>
                         <tr>
-                            <th nzWidth="62px"></th>&lt;!&ndash; 此表头为checkbox &ndash;&gt;
+                            <th nzWidth="62px"></th><!-- 此表头为checkbox -->
                             <th nzWidth="70px">
                                 名称
                             </th>
@@ -191,6 +198,11 @@
                     </nz-table>
                 </nz-spin>
             </div>
+            <!-- ******** 已派发 end ******** -->
+
+
+
+            <!-- ******** 请求 start ******** -->
             <div nz-col nzSpan="10">
                 <div class="inner-table-opt">
                     <div nz-row>
@@ -230,10 +242,10 @@
                         </div>
                     </div>
                 </div>
-                <nz-spin [nzSize]="'large'" [nzSpinning]="isRoutesSpinning">
+                <nz-spin [nzSize]="'large'" [nzSpinning]="isDemandSpinning">
                     <nz-table #routesTable
-                              [nzData]="listCache"
-                              [nzScroll]="{ y: '500px' }"
+                              [nzData]="demandListCache"
+                              [nzScroll]="{ x: '600px', y: '500px' }"
                               [nzFrontPagination]="false"
                               [nzTotal]="pageRes.total"
                               [nzPageIndex]="pageRes.page"
@@ -242,7 +254,7 @@
                               (nzPageSizeChange)="onPage($event)">
                         <thead>
                         <tr>
-                            <th nzWidth="62px"></th>&lt;!&ndash; 此表头为checkbox &ndash;&gt;
+                            <th nzWidth="62px"></th><!-- 此表头为checkbox -->
                             <th nzWidth="100px">
                                 名称
                             </th>
@@ -269,6 +281,7 @@
                     </nz-table>
                 </nz-spin>
             </div>
+            <!-- ******** 请求 start ******** -->
         </div>
     </div>
-</div>-->
+</div>

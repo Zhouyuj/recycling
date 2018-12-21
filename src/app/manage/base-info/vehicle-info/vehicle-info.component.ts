@@ -40,6 +40,8 @@ export class VehicleInfoComponent implements OnInit {
     ];
 
     public isSpinning = false;
+    public isDelModalVisible = false;
+    public isDelOkLoading = false;
 
     public pageReq = new PageReq();
     public pageRes = new PageRes();
@@ -101,8 +103,11 @@ export class VehicleInfoComponent implements OnInit {
     }
 
     onDel() {
+        this.isDelOkLoading = true;
         this.vehicleInfoService.delCustomer(this.selectedItemCache.id).subscribe(
             res => {
+                this.isDelOkLoading = false;
+                this.isDelModalVisible = false;
                 this.notificationService.create({
                     type   : 'success',
                     title  : '恭喜,删除成功',
@@ -110,6 +115,8 @@ export class VehicleInfoComponent implements OnInit {
                 });
                 this.getListByPage({ isResetReq: true });
             }, err => {
+                this.isDelOkLoading = false;
+                this.isDelModalVisible = false;
                 this.notificationService.create({
                     type   : 'error',
                     title  : '抱歉,删除失败',

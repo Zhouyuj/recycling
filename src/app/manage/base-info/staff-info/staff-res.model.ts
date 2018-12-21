@@ -13,6 +13,7 @@ export class StaffRes {
     roles: [ { id: number,name: string } ];
     sex: string = null;
     username: string = null;
+    createTime: number = null;
 }
 
 export class AddressRes {

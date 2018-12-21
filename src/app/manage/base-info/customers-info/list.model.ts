@@ -12,7 +12,7 @@ export class ListModel {
     name: string = null;
     countyName: string = null;
     duration: number = null;
-    detailAddress: string = null;
+    fullAddress: string = null;
     username: string = null;
     totalDustbins: number = null;
     createdDate: string = null;

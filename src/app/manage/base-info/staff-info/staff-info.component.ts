@@ -40,6 +40,8 @@ export class StaffInfoComponent implements OnInit {
     ];
 
     public isSpinning = false;
+    public isDelModalVisible = false;
+    public isDelOkLoading = false;
 
     public resCache: StaffRes[];   // 分页接口获取的表格数据
     public selectedItemCache: StaffRes;
@@ -79,6 +81,7 @@ export class StaffInfoComponent implements OnInit {
     ];
     public sortMap = {
         entryTime: '',
+        createTime: '',
     };   // 操作表格的排序参数
     public pageReq = new PageReq();
     public pageRes = new PageRes();
@@ -101,8 +104,11 @@ export class StaffInfoComponent implements OnInit {
     }
 
     onDel() {
+        this.isDelOkLoading = true;
         this.staffInfoService.delStaff(this.selectedItemCache.id).subscribe(
             res => {
+                this.isDelOkLoading = false;
+                this.isDelModalVisible = false;
                 this.notificationService.create({
                     type   : 'success',
                     title  : '恭喜,删除成功',
@@ -110,6 +116,8 @@ export class StaffInfoComponent implements OnInit {
                 });
                 this.getListByPage({ isResetReq: true });
             }, err => {
+                this.isDelOkLoading = false;
+                this.isDelModalVisible = false;
                 this.notificationService.create({
                     type   : 'error',
                     title  : '抱歉,删除失败',
@@ -281,7 +289,7 @@ export class StaffInfoComponent implements OnInit {
     resetPageReq(): void {
         this.pageReq.page = 1;
         this.pageReq.size = this.pageRes.size;
-        this.pageReq.sort = 'entryTime.desc';
+        this.pageReq.sort = 'createTime.desc';
     }
 
     updateParams() {
