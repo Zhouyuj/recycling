@@ -12,7 +12,7 @@ export class VehicleReq {
 }
 
 export class BusinessLineReq {
-    areaCode: string = null;
+    //areaCode: string = null;
     planBackTime: number = null;
     planDepartureTime: number = null;
     test: boolean = null;

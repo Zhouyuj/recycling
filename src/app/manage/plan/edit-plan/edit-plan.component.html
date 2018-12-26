@@ -15,7 +15,7 @@
                             nzTitle="保存"
                             nzPlacement="topCenter"
                             nz-tooltip>
-                        <i nz-icon type="plus-circle" theme="outline"></i>
+                        <i nz-icon type="save" theme="outline"></i>
                     </button>
                     &nbsp;
                     <button nz-button
@@ -26,6 +26,7 @@
                             nz-tooltip>
                         <i nz-icon type="bar-chart" theme="outline"></i>
                     </button>
+                    &nbsp;
                     &nbsp;
                 </div>
             </div>
@@ -53,48 +54,52 @@
                             </button>
                             &nbsp;
                             <button nz-button
-                                    nzType="default">
+                                    nzType="default"
+                                    (click)="onSelectVehicle()">
                                 选择车辆
                             </button>
                             &nbsp;
                             <button nz-button
                                     nz-popconfirm
                                     nzTitle="删除"
-                                    (nzOnConfirm)="onDelRoutes()"
+                                    (nzOnConfirm)="onDelRoute()"
                                     nzType="default"
                                     nzPlacement="topCenter">
                                 删除
                             </button>
+                            &nbsp;
                         </div>
                     </div>
                 </div>
                 <nz-spin [nzSize]="'large'" [nzSpinning]="isRoutesSpinning">
                     <nz-table #routesTable
                               [nzData]="routeListCache"
-                              [nzScroll]="{ x: '500px', y: '500px' }"
+                              [nzScroll]="{ x: '450px', y: '500px' }"
                               [nzFrontPagination]="false"
                               [nzShowPagination]="false">
                         <thead>
                         <tr>
-                            <th nzWidth="62px"></th><!-- 此表头为checkbox -->
-                            <th nzWidth="70px">
+                            <!--<th nzWidth="62px"></th>&lt;!&ndash; 此表头为checkbox &ndash;&gt;-->
+                            <th nzWidth="50px">
                                 锁定
                             </th>
                             <th nzWidth="100px">
                                 路线名称
                             </th>
-                            <th nzWidth="100px">
+                            <th nzWidth="80px">
                                 车牌号
                             </th>
-                            <th nzWidth="100px">
+                            <th nzWidth="50px">
                                 优先级
                             </th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr *ngFor="let item of routeListCache; index as i" (click)="onSelectRoute($event, item)">
-                            <td nzShowCheckbox [(nzChecked)]="item.checked"
-                                (nzCheckedChange)="onSelected($event, item)"></td>
+                        <tr *ngFor="let item of routeListCache; index as i"
+                            [ngClass]="{ 'table-row-selected': item.checked }"
+                            (click)="onSelectRoute($event, item)">
+                            <!--<td nzShowCheckbox [(nzChecked)]="item.checked"
+                                (nzCheckedChange)="onSelected($event, item)"></td>-->
                             <td>
                                 <i nz-icon type="lock" theme="outline" style="cursor: pointer;"
                                    *ngIf="item.lock">
@@ -149,11 +154,11 @@
             <div nz-col nzSpan="7">
                 <div class="inner-table-opt">
                     <div nz-row>
-                        <div nz-col nzSpan="4" class="inner-table-title">
+                        <div nz-col nzSpan="7" class="inner-table-title">
                             <i nz-icon class="anticon anticon-check location"></i>
                             已派发
                         </div>
-                        <div nz-col nzSpan="19" nzOffset="1" class="inner-table-btns">
+                        <div nz-col nzSpan="16" nzOffset="1" class="inner-table-btns">
                             <button nz-button
                                     nz-popconfirm
                                     nzTitle="确认取消派发?"
@@ -162,11 +167,12 @@
                                     nzPlacement="topCenter">
                                 取消派发
                             </button>
+                            &nbsp;
                         </div>
                     </div>
                 </div>
                 <nz-spin [nzSize]="'large'" [nzSpinning]="isDistributeSpinning">
-                    <nz-table #routesTable
+                    <nz-table #distributeTable
                               [nzData]="distributedListCache"
                               [nzScroll]="{ y: '500px' }"
                               [nzFrontPagination]="false"
@@ -212,7 +218,8 @@
                         </div>
                         <div nz-col nzSpan="19" nzOffset="1" class="inner-table-btns">
                             <button nz-button
-                                    nzType="default">
+                                    nzType="default"
+                                    (click)="onAddDemand()">
                                 新增
                             </button>
                             &nbsp;
@@ -227,11 +234,6 @@
                             &nbsp;
                             <button nz-button
                                     nzType="default">
-                                选择车辆
-                            </button>
-                            &nbsp;
-                            <button nz-button
-                                    nzType="default">
                                 规划
                             </button>
                             &nbsp;
@@ -239,13 +241,14 @@
                                     nzType="default">
                                 派发
                             </button>
+                            &nbsp;
                         </div>
                     </div>
                 </div>
                 <nz-spin [nzSize]="'large'" [nzSpinning]="isDemandSpinning">
-                    <nz-table #routesTable
+                    <nz-table #demandTable
                               [nzData]="demandListCache"
-                              [nzScroll]="{ x: '600px', y: '500px' }"
+                              [nzScroll]="{ x: '700px', y: '500px' }"
                               [nzFrontPagination]="false"
                               [nzTotal]="pageRes.total"
                               [nzPageIndex]="pageRes.page"
@@ -254,29 +257,37 @@
                               (nzPageSizeChange)="onPage($event)">
                         <thead>
                         <tr>
-                            <th nzWidth="62px"></th><!-- 此表头为checkbox -->
-                            <th nzWidth="100px">
+                            <th nzWidth="200px">
                                 名称
                             </th>
-                            <th nzWidth="100px">
+                            <th nzWidth="120px">
                                 收运时间
                             </th>
-                            <th nzWidth="100px">
+                            <th nzWidth="120px">
                                 收运量
                             </th>
-                            <th nzWidth="100px">
+                            <th nzWidth="120px">
                                 日期类型
                             </th>
-                            <th nzWidth="100px">
+                            <th nzWidth="120px">
                                 超时等级
                             </th>
-                            <th nzWidth="100px">
+                            <th nzWidth="120px">
                                 指定车辆
                             </th>
                         </tr>
                         </thead>
                         <tbody>
-
+                        <tr *ngFor="let item of demandListCache; index as i"
+                            [ngClass]="{ 'table-row-selected': item.checked }"
+                            (click)="onSelectDemand($event, item)">
+                            <td>{{item.name}}</td>
+                            <td>收运时间</td>
+                            <td>收运量TODO</td>
+                            <td>{{item.collectionPeriod.dateType}}</td>
+                            <td>{{item.collectionPeriod.priorityType}}</td>
+                            <td>{{item.plateNumber}}</td>
+                        </tr>
                         </tbody>
                     </nz-table>
                 </nz-spin>

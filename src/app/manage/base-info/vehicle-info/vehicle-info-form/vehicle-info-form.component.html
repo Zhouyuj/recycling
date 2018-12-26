@@ -127,11 +127,11 @@
                     <nz-form-explain [hidden]="vehicleType.valid || vehicleType.pristine">请选择车型</nz-form-explain>
                 </nz-form-control>
 
-                <nz-form-label [nzSm]="4" [nzXs]="24" nzRequired nzFor="district">所属区域</nz-form-label>
+                <!--<nz-form-label [nzSm]="4" [nzXs]="24" nzRequired nzFor="district">所属区域</nz-form-label>
                 <nz-form-control [nzSm]="7" [nzXs]="24">
-                    <!--<app-cascader [(values)]="formData.district"
+                    &lt;!&ndash;<app-cascader [(values)]="formData.district"
                                   [options]="cascaderOptions"
-                                  (changesEmitter)="onAddressChange($event)"></app-cascader>-->
+                                  (changesEmitter)="onAddressChange($event)"></app-cascader>&ndash;&gt;
                     <nz-cascader
                             name="district"
                             [nzExpandTrigger]="'hover'"
@@ -141,7 +141,7 @@
                             #district="ngModel">
                     </nz-cascader>
                     <nz-form-explain [hidden]="district.valid || district.pristine">请选择区域</nz-form-explain>
-                </nz-form-control>
+                </nz-form-control>-->
             </nz-form-item>
 
             <nz-form-item>

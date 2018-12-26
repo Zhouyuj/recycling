@@ -1,3 +1,5 @@
+@import "../../../../assets/styles/customer-global";
+
 .wrap {
     width: 100%;
     height: 100%;
@@ -20,17 +22,20 @@
 
 }
 
+.table-content {
+    th, td {
+        text-align: center;
+    }
+}
+
 .inner-table-opt {
     margin-bottom: 2px;
-
-    .location {
-        cursor: pointer;
-    }
 
     .inner-table-title {
         height: 32px;
         line-height: 32px;
         font-size: 1.5rem;
+        color: #83bf46;
     }
 
     .inner-table-btns {

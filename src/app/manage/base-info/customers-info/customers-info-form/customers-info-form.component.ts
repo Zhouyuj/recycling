@@ -180,10 +180,15 @@ export class CustomersInfoFormComponent implements OnInit {
     transformFormModelToRequest() {
         switch (this.selectedCategory) {
             case 'Separate':
-                this.customerReq = ModelConverter.formModelToCustomerReq(this.formModelSeparate, this.parentCache && this.parentCache.name || '');
+                this.customerReq = ModelConverter
+                    .formModelToCustomerReq(this.formModelSeparate,
+                        this.type === 'edit' && this.parentCache && this.parentCache.name || '');
                 break;
             case 'Cluster':
-                this.customerReq = ModelConverter.formModelToCustomerReq(this.formModelCluster, '', this.oldClusterName);
+                this.customerReq = ModelConverter
+                    .formModelToCustomerReq(this.formModelCluster,
+                        '',
+                        this.oldClusterName);
                 break;
         }
     }

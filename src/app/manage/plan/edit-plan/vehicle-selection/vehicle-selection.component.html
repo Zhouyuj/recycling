@@ -1,0 +1,65 @@
+<div class="wrap">
+    <nz-spin [nzSize]="'large'" [nzSpinning]="isSpinning">
+
+        <nz-table #vehicleTable
+                  [nzData]="listCache"
+                  [nzScroll]="{ y: '500px' }"
+                  [nzFrontPagination]="false"
+                  [nzTotal]="pageRes.total"
+                  [nzPageIndex]="pageRes.page"
+                  [nzPageSize]="pageRes.size"
+                  (nzPageIndexChange)="onPage($event)"
+                  (nzPageSizeChange)="onPage($event)">
+            <thead>
+            <tr>
+                <th nzWidth="50px">序号</th>
+                <th nzWidth="150px">
+                    车牌号
+                    <br/>
+                    <input type="text" nz-input placeholder=""
+                           nzSize="small" style="width: 60%;"
+                           [(ngModel)]="params.plateNumber"
+                           (keyup)="$event.which === 13 && onKeywordSearch()">
+                </th>
+                <!--<th nzWidth="150px">
+                    所属区域
+                </th>-->
+                <th nzWidth="150px"
+                    nzShowFilter
+                    [nzFilters]="vehicleCategoryFilterList"
+                    [nzFilterMultiple]="false"
+                    (nzFilterChange)="onFilter($event, 'typeId')">
+                    车型
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let item of vehicleTable.data; index as i"
+                (mousedown)="onSelectTr($event, item)"
+                [ngClass]="{ 'table-row-selected': item.checked }">
+                <td>{{i}}</td>
+                <td>{{item.plateNumber}}</td>
+                <!--<td>{{item.district}}</td>-->
+                <td>{{item.vehicleType}}</td>
+            </tr>
+            </tbody>
+        </nz-table>
+
+        <nz-row>
+            <nz-col nzSpan="3" nzOffset="17">
+                <button nz-button
+                        nzType="default"
+                        (click)="onClose()">
+                    取消
+                </button>
+            </nz-col>
+            <nz-col nzSpan="3" nzOffset="1">
+                <button nz-button
+                        nzType="primary"
+                        (click)="onSubmit()">
+                    确认
+                </button>
+            </nz-col>
+        </nz-row>
+    </nz-spin>
+</div>

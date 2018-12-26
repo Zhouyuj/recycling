@@ -39,10 +39,10 @@ export class VehicleInfoFormComponent implements OnInit {
         this.districtsService.getDistricts('350600', 1).subscribe(res => {
             this.cascaderOptions = this.convertDataToDistricts(res.data.districts);
             if (this.cache) {
-                this.formData = ObjectUtils.extend(this.cache);
+                this.formData = ObjectUtils.cloneDeep(this.cache);
             } else {
                 this.formData = new VehicleFormModel();
-                this.formData.district = [ '350603' ];
+                //this.formData.district = [ '350603' ];
             }
         });
     }
@@ -179,14 +179,14 @@ export class VehicleInfoFormComponent implements OnInit {
                 content: '车型不能为空',
             });
             return false;
-        } else if (!this.formData.district) {
+        }/* else if (!this.formData.district) {
             this.notificationService.create({
                 type   : 'error',
                 title  : '抱歉,请检查内容',
                 content: '所属区域不能为空',
             });
             return false;
-        } else {
+        }*/ else {
             return true;
         }
     }

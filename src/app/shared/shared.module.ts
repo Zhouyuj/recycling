@@ -13,6 +13,7 @@ import { NgZorroAntdModule } from 'ng-zorro-antd';
 import { RebirthNGModule } from 'rebirth-ng';
 /* 自定义 */
 import { ComponentsModule } from './components/components.module';
+import { DirectivesModule } from './directives/directives.module';
 import { PipesModule } from './pipes/pipes.module';
 import { ServicesModule } from './services/services.module';
 
@@ -29,6 +30,7 @@ import { ServicesModule } from './services/services.module';
         RebirthNGModule,
 
         ComponentsModule,
+        DirectivesModule,
         PipesModule,
         ServicesModule,
     ],
@@ -44,6 +46,7 @@ import { ServicesModule } from './services/services.module';
         RebirthNGModule,
 
         ComponentsModule,
+        DirectivesModule,
         PipesModule,
         ServicesModule,
     ],

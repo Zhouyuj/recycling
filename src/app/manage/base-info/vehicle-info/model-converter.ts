@@ -18,7 +18,7 @@ export class ModelConverter {
             plan             : v.businessLine.plan,
             available        : v.state == 'Available' ? true : false,
             plateNumber      : v.plateNumber,
-            district         : v.area,
+            //district         : v.area,
             driver           : v.driver,
             planDepartureTime: DateUtil
                 .dateFormat(new Date(this.convertSecondToDate(v.businessLine.planDepartureTime)), 'hh:mm'),
@@ -45,7 +45,7 @@ export class ModelConverter {
             //planBackTime     : this.convertSecondToDate(v.businessLine.planBackTime) || null,
             planBackTime     : this.numberToPlanBackTime(v.businessLine.planBackTime) || null,
             type             : v.businessLine.type.id + '' || null,
-            district         : v.areaCode ? [ v.areaCode ] : [ '' ],
+            //district         : v.areaCode ? [ v.areaCode ] : [ '' ],
             test             : v.businessLine.test ? '1' : '0',
         };
         return f;
@@ -56,7 +56,7 @@ export class ModelConverter {
         v = {
             boxId       : f.boxId,
             businessLine: {
-                areaCode         : f.district[ 0 ],
+                //areaCode         : f.district[ 0 ],
                 //planBackTime     : this.convertDateToSecond(f.planBackTime),
                 planBackTime     : this.planBackTimeToNumber(f.planBackTime),
                 planDepartureTime: this.convertDateToSecond(f.planDepartureTime),

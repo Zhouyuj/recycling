@@ -31,31 +31,6 @@ a:hover{color:#C81623;}
 s,i,em{font-style:normal;text-decoration:none;}
 .col-red{color: #C81623!important;}
 
-/*公共类*/
-.w {  /*版心 提取 */
-    width: 1210px;margin:0 auto;
-}
-.fl {
-    float:left
-}
-.fr {
-    float:right
-}
-.al {
-    text-align:left
-}
-.ac {
-    text-align:center
-}
-.ar {
-    text-align:right
-}
-.hide {
-    display:none
-}
-.font12{ font-size: 12px;}
-.font14{ font-size: 14px;}
-.font16{ font-size: 16px;}
 /* ---- base end ---- */
 
 /* ---- body start ---- */
@@ -69,15 +44,3 @@ body {
     overflow-y: scroll;
 }
 /* ---- body end ---- */
-
-/* angular 官网中介绍不需在index中导入,在此导入bootstrap即可 */
-//@import url('https://unpkg.com/bootstrap@3.3.7/dist/css/bootstrap.min.css');
-
-/* ngx-datatable */
-//@import '../node_modules/@swimlane/ngx-datatable/release/index.css';
-//@import '../node_modules/@swimlane/ngx-datatable/release/themes/material.css';
-//@import '../node_modules/@swimlane/ngx-datatable/release/themes/bootstrap.css';
-//@import '../node_modules/@swimlane/ngx-datatable/release/assets/icons.css';
-
-/* font-awesome */
-@import "../node_modules/font-awesome/css/font-awesome.min.css";

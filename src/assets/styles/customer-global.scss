@@ -1,0 +1,9 @@
+/* 主色调 */
+$main-color: #83bf46;
+
+/* ng-zorro table 选中行的颜色 table selected color */
+$tableSelected-color: #e6f7ff;
+
+.table-row-selected {
+    background-color: $tableSelected-color;
+}

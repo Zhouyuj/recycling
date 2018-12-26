@@ -138,13 +138,13 @@
                                [(ngModel)]="params.plateNumber"
                                (keyup)="$event.which === 13 && onKeywordSearch()">
                     </th>
-                    <th nzWidth="150px"
+                    <!--<th nzWidth="150px"
                         nzShowFilter
                         [nzFilters]="countyFilterList"
                         [nzFilterMultiple]="false"
                         (nzFilterChange)="onFilter($event, 'area')">
                         所属区域
-                    </th>
+                    </th>-->
                     <th nzWidth="150px">
                         当前司机
                         <br/>
@@ -188,7 +188,7 @@
                 <tbody>
                 <tr *ngFor="let item of staffTable.data; index as i" (click)="onSelectTr($event, item)">
                     <td nzShowCheckbox [(nzChecked)]="item.checked"
-                        (nzCheckedChange)="onSelected($event, item)"></td>
+                        (nzCheckedChange)="onSelect($event, item)"></td>
                     <td>
                         <i nz-icon
                            class="anticon anticon-environment location"
@@ -198,7 +198,7 @@
                     <td>{{item.plan ? '是' : '否'}}</td>
                     <td>{{item.available ? '是' : '否'}}</td>
                     <td>{{item.plateNumber}}</td>
-                    <td>{{item.district}}</td>
+                    <!--<td>{{item.district}}</td>-->
                     <td>{{item.driver}}</td>
                     <td>{{item.planDepartureTime}}</td>
                     <td>{{item.vehicleType}}</td>

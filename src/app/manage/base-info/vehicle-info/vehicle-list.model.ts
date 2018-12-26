@@ -8,7 +8,7 @@ export class VehicleListModel {
     plan: boolean = null;
     available: boolean = null;
     plateNumber: string = null;
-    district: string = null;
+    //district: string = null;
     driver: string = null;
     planDepartureTime: string = null;
     vehicleType: string = null;

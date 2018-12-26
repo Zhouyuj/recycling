@@ -3,8 +3,8 @@
  */
 
 export class VehicleRes {
-    areaCode: string = null;
-    area: string = null;
+    //areaCode: string = null;
+    //area: string = null;
     boxId: string = null;
     businessLine: BusinessLineRes = null;
     buyDate: number = null;

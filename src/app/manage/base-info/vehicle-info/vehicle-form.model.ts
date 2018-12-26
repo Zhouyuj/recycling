@@ -12,6 +12,6 @@ export class VehicleFormModel {
     planDepartureTime: Date;    // required
     planBackTime: string[];         // required
     type: string;               // 1-5吨餐厨车 = null; 2-8吨餐厨车 = null; 3-1吨油脂车 required
-    district: string[];         // code required
+    //district: string[];         // code required
     test: string;               // '1', '0'
 }

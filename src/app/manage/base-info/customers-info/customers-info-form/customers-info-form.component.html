@@ -73,9 +73,9 @@
                     </nz-form-control>
 
                     <nz-form-label [nzSm]="3" [nzXs]="24" nzOffset="1" nzRequired
-                                   nzFor="collectionTypeSeparate" *ngIf="!parentCache ? true : false">单位类型
+                                   nzFor="collectionTypeSeparate" *ngIf="type == 'add' || !parentCache ? true : false">单位类型
                     </nz-form-label>
-                    <nz-form-control [nzSm]="7" [nzXs]="24" *ngIf="!parentCache ? true : false">
+                    <nz-form-control [nzSm]="7" [nzXs]="24" *ngIf="type == 'add' || !parentCache ? true : false">
                         <nz-select
                                 name="collectionTypeSeparate"
                                 required
@@ -97,7 +97,7 @@
                     </nz-form-control>
                 </nz-form-item>
 
-                <nz-form-item style="margin-bottom: 5px;"  *ngIf="!parentCache ? true : false">
+                <nz-form-item style="margin-bottom: 5px;"  *ngIf="type == 'add' || !parentCache ? true : false">
                     <nz-form-label [nzSm]="3" [nzXs]="24" nzFor="address">地址</nz-form-label>
                     <nz-form-control [nzSm]="18" [nzXs]="24">
                         <app-cascader [(values)]="formModelSeparate.address"
@@ -105,7 +105,7 @@
                     </nz-form-control>
                 </nz-form-item>
 
-                <nz-form-item style="margin-bottom: 5px;"  *ngIf="!parentCache ? true : false">
+                <nz-form-item style="margin-bottom: 5px;"  *ngIf="type == 'add' || !parentCache ? true : false">
                     <nz-form-label [nzSm]="3" [nzXs]="24" nzFor="detailAddressSeparate">详细地址</nz-form-label>
                     <nz-form-control [nzSm]="18" [nzXs]="24">
                         <nz-input-group [nzSuffix]="suffixTemplateCluster">
