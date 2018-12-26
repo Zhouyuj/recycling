@@ -6,6 +6,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 /* 第三方 */
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { NgxEchartsModule } from 'ngx-echarts';
@@ -23,6 +24,7 @@ import { ServicesModule } from './services/services.module';
         FormsModule,
         ReactiveFormsModule,
         RouterModule,
+        DragDropModule,
 
         NgxDatatableModule,
         NgxEchartsModule,
@@ -39,6 +41,7 @@ import { ServicesModule } from './services/services.module';
         FormsModule,
         ReactiveFormsModule,
         RouterModule,
+        DragDropModule,
 
         NgxDatatableModule,
         NgxEchartsModule,

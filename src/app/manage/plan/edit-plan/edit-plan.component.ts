@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 import { NzDrawerService } from 'ng-zorro-antd';
 
@@ -12,9 +13,9 @@ import { Result } from '../../../shared/models/response/result.model';
 import { RouteModel } from '../models/route.model';
 import { RouteListModel } from '../models/route.model';
 import { VehicleSelectionComponent } from './vehicle-selection/vehicle-selection.component';
-import {DemandListModel} from '../models/demand.model';
-import {DemandRes} from '../models/demand.model';
-import {AddDemandComponent} from './add-demand/add-demand.component';
+import { DemandListModel } from '../models/demand.model';
+import { DemandRes } from '../models/demand.model';
+import { AddDemandComponent } from './add-demand/add-demand.component';
 
 @Component({
     selector   : 'app-edit-plan',
@@ -173,6 +174,12 @@ export class EditPlanComponent implements OnInit {
     }
 
     /** 已派发 **/
+
+    onDrop(event: CdkDragDrop<any>) {
+        console.log(event);
+        moveItemInArray(this.routeListCache, event.previousIndex, event.currentIndex);
+        console.log(this.routeListCache);
+    }
 
     onCancelDistribute() {
     }

@@ -94,10 +94,11 @@
                             </th>
                         </tr>
                         </thead>
-                        <tbody>
+                        <tbody cdkDropList (cdkDropListDropped)="onDrop($event)">
                         <tr *ngFor="let item of routeListCache; index as i"
                             [ngClass]="{ 'table-row-selected': item.checked }"
-                            (click)="onSelectRoute($event, item)">
+                            (click)="onSelectRoute($event, item)"
+                            cdkDrag>
                             <!--<td nzShowCheckbox [(nzChecked)]="item.checked"
                                 (nzCheckedChange)="onSelected($event, item)"></td>-->
                             <td>
