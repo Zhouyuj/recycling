@@ -37,7 +37,6 @@
         <div nz-row nzGutter="16">
 
 
-
             <!-- ******** 路线 start ******** -->
             <div nz-col nzSpan="7">
                 <div class="inner-table-opt">
@@ -94,18 +93,17 @@
                             </th>
                         </tr>
                         </thead>
-                        <tbody cdkDropList (cdkDropListDropped)="onDrop($event)">
+                        <tbody>
                         <tr *ngFor="let item of routeListCache; index as i"
                             [ngClass]="{ 'table-row-selected': item.checked }"
-                            (click)="onSelectRoute($event, item)"
-                            cdkDrag>
+                            (click)="onSelectRoute($event, item)">
                             <!--<td nzShowCheckbox [(nzChecked)]="item.checked"
                                 (nzCheckedChange)="onSelected($event, item)"></td>-->
                             <td>
                                 <i nz-icon type="lock" theme="outline" style="cursor: pointer;"
                                    *ngIf="item.lock">
                                 </i>
-                                <i nz-icon type="unlock" theme="outline"  style="cursor: pointer;"
+                                <i nz-icon type="unlock" theme="outline" style="cursor: pointer;"
                                    *ngIf="!item.lock">
                                 </i>
                             </td>
@@ -142,13 +140,13 @@
                             <button nz-button
                                     nzType="primary"
                                     [disabled]="!routeForm.valid"
-                                    (click)="onAddRoute()">确认</button>
+                                    (click)="onAddRoute()">确认
+                            </button>
                         </nz-form-control>
                     </nz-form-item>
                 </form>
             </nz-drawer>
             <!-- ******** 路线 end ******** -->
-
 
 
             <!-- ******** 已派发 start ******** -->
@@ -208,7 +206,6 @@
             <!-- ******** 已派发 end ******** -->
 
 
-
             <!-- ******** 请求 start ******** -->
             <div nz-col nzSpan="10">
                 <div class="inner-table-opt">
@@ -249,7 +246,7 @@
                 <nz-spin [nzSize]="'large'" [nzSpinning]="isDemandSpinning">
                     <nz-table #demandTable
                               [nzData]="demandListCache"
-                              [nzScroll]="{ x: '700px', y: '500px' }"
+                              [nzScroll]="{ x: '900px', y: '500px' }"
                               [nzFrontPagination]="false"
                               [nzTotal]="pageRes.total"
                               [nzPageIndex]="pageRes.page"
@@ -258,8 +255,14 @@
                               (nzPageSizeChange)="onPage($event)">
                         <thead>
                         <tr>
-                            <th nzWidth="200px">
+                            <th nzWidth="50px"></th>   <!-- 是否展示子列表按钮 -->
+                            <th nzWidth="200px" nzCustomFilter>
                                 名称
+                                <br/>
+                                <input type="text" nz-input placeholder=""
+                                       nzSize="small" style="width: 60%;"
+                                       [(ngModel)]="params.demand.name"
+                                       (keyup)="$event.which === 13 && getDemandList()">
                             </th>
                             <th nzWidth="120px">
                                 收运时间
@@ -279,16 +282,45 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr *ngFor="let item of demandListCache; index as i"
-                            [ngClass]="{ 'table-row-selected': item.checked }"
-                            (click)="onSelectDemand($event, item)">
-                            <td>{{item.name}}</td>
-                            <td>收运时间</td>
-                            <td>收运量TODO</td>
-                            <td>{{item.collectionPeriod.dateType}}</td>
-                            <td>{{item.collectionPeriod.priorityType}}</td>
-                            <td>{{item.plateNumber}}</td>
-                        </tr>
+                        <ng-template ngFor let-item [ngForOf]="demandListCache">
+                            <tr [ngClass]="{ 'table-row-selected': item.checked }"
+                                (click)="onSelectDemand($event, item)">
+                                <td [nzShowExpand]="item.subTaskList && item.subTaskList.length > 0"
+                                    [(nzExpand)]="item.expand"
+                                    (nzExpandChange)="onCollapse(item, $event)" (click)="onCollapseStopPro($event)"></td>
+                                <td>{{item.name}}</td>
+                                <td>收运时间TODO</td>
+                                <td>
+                                    <nz-input-number [(ngModel)]="item.amountOfGarbage"
+                                                     [nzSize]="'small'"
+                                                     [nzMin]="0"
+                                                     [nzStep]="0.1">
+                                    </nz-input-number>
+                                </td>
+                                <td>日期类型TODO</td>
+                                <td>超时等级TODO</td>
+                                <td>{{item.vehiclePlate}}</td>
+                            </tr>
+                            <ng-template *ngIf="item.expand" ngFor let-child [ngForOf]="item.subTaskList">
+                                <tr [ngClass]="{ 'table-row-selected': child.checked }"
+                                    (click)="onSelectDemand($event, child, item)">
+                                    <td></td>
+                                    <td>{{child.name}}</td>
+                                    <td>收运时间TODO</td>
+                                    <td>
+                                        <nz-input-number [(ngModel)]="child.amountOfGarbage"
+                                                         [nzSize]="'small'"
+                                                         [nzMin]="0"
+                                                         [nzStep]="0.1"
+                                                         [nzPrecision]="0.1">
+                                        </nz-input-number>
+                                    </td>
+                                    <td>日期类型TODO</td>
+                                    <td>超时等级TODO</td>
+                                    <td></td>
+                                </tr>
+                            </ng-template>
+                        </ng-template>
                         </tbody>
                     </nz-table>
                 </nz-spin>

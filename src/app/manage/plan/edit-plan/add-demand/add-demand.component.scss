@@ -4,4 +4,26 @@
     th, td {
         text-align: center;
     }
+    .cluster-operation {
+        padding: 2rem 0;
+        .navigator {
+            min-height: 2rem;
+            color: #1890ff;
+            i, span {
+                cursor: pointer;
+            }
+            div.nav-content {
+                height: 2rem;
+                display: flex;
+                align-content: center;
+            }
+        }
+    }
+
+    .cluster {
+        color: #1890ff;
+        td:nth-child(2) {
+            cursor: pointer;
+        }
+    }
 }

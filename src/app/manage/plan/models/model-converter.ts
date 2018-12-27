@@ -6,6 +6,7 @@ import { PlanListModel } from './plan-list.model';
 import { PlanStateEnumChinese } from './plan.enum';
 import { PlanCategoryEnumChinese } from './plan.enum';
 import { DemandModel } from './demand.model';
+import {DemandListModel} from './demand.model';
 
 export class ModelConverter {
 
@@ -26,7 +27,8 @@ export class ModelConverter {
 
     }
 
-    public static demandResToListModel(r: DemandModel) {
-
+    public static demandResToListModel(r: DemandModel): DemandListModel {
+        let l: DemandListModel;
+        return l;
     }
 }

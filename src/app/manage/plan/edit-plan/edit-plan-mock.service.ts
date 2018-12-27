@@ -225,49 +225,54 @@ export class EditPlanMockService {
                     "total": 3,
                     content: [
                         {
-                            "id"              : 1,
-                            "name"            : "小学1",
-                            "collectionPeriod": [
+                            "id": 1,    /* 请求 id */
+                            "amountOfGarbage": 1,
+                            "collectionPeriodId": 11,
+                            "collectionPeriods": [
                                 {
-                                    "dateType"    : "Working",
-                                    "startTime"   : 10800,
-                                    "endTime"     : 36000,
-                                    "priorityType": "Hard",
-                                },
+                                    "id": 11,   /* 请求收运时间 id */
+                                    "dateType": "Working",
+                                    "endTime": 36000,
+                                    "garbageCategory": "KitchenWaste,WasteGrease",
+                                    "priority": "Hard",
+                                    "startTime": 10800,
+                                }
                             ],
-                            "amountOfGarbage" : 2.5,
-                            "garbageCategory" : "KitchenWaste,WasteGrease",
-                            "plateNumber"     : "闽A88888",
+                            "name": "小学1",
+                            "subTaskList": [
+                                {
+                                    "id": 111,    /* 子请求 id */
+                                    "amountOfGarbage": 2.5,
+                                    "collectionPeriod": {
+                                        "id": 1111,    /* 子请求收运时间 id */
+                                        "dateType": "Working",
+                                        "endTime": 36000,
+                                        "garbageCategory": "KitchenWaste,WasteGrease",
+                                        "priority": "Hard",
+                                        "startTime": 10800
+                                    },
+                                    "name": "小学1饭堂1"
+                                }
+                            ],
+                            "vehiclePlate": "闽Y88888",
                         },
                         {
-                            "id"              : 2,
-                            "name"            : "小学2",
-                            "collectionPeriod": [
+                            "id": 2,    /* 请求 id */
+                            "amountOfGarbage": 3.5,
+                            "collectionPeriodId": 21,
+                            "collectionPeriods": [
                                 {
-                                    "dateType"    : "Holiday",
-                                    "startTime"   : 20800,
-                                    "endTime"     : 36000,
-                                    "priorityType": "Hard",
-                                },
+                                    "id": 21,   /* 请求收运时间 id */
+                                    "dateType": "Working",
+                                    "endTime": 36000,
+                                    "garbageCategory": "KitchenWaste,WasteGrease",
+                                    "priority": "Hard",
+                                    "startTime": 10800,
+                                }
                             ],
-                            "amountOfGarbage" : 3,
-                            "garbageCategory" : "KitchenWaste,WasteGrease",
-                            "plateNumber"     : "闽A77777",
-                        },
-                        {
-                            "id"              : 3,
-                            "name"            : "小学3",
-                            "collectionPeriod": [
-                                {
-                                    "dateType"    : "Working",
-                                    "startTime"   : 10800,
-                                    "endTime"     : 36000,
-                                    "priorityType": "Hard",
-                                },
-                            ],
-                            "amountOfGarbage" : 4.5,
-                            "garbageCategory" : "KitchenWaste,WasteGrease",
-                            "plateNumber"     : "闽A11111",
+                            "name": "我是普通请求",
+                            "subTaskList": [],
+                            "vehiclePlate": "闽Y22222",
                         },
                     ],
                 },

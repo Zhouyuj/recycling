@@ -1,29 +1,79 @@
 <div class="add-demand">
-    <nz-row style="text-align: center; margin-bottom: 2rem; padding: 0 2rem;">
-        <nz-input-group nzSearch [nzSuffix]="suffixIconButton">
-            <input type="text"
-                   nz-input
-                   (keyup)="$event.which === 13 && onSearch()">
-        </nz-input-group>
-        <ng-template #suffixIconButton>
-            <button nz-button
-                    nzSearch
-                    nzType="primary"
-                    (click)="onSearch()">
-                <i nz-icon type="search"></i>
-            </button>
-        </ng-template>
+    <nz-row style="text-align: center;">
+        <nz-col nzSpan="10" nzOffset="7">
+            <nz-input-group nzSearch [nzSuffix]="suffixIconButton">
+                <input type="text"
+                       nz-input
+                       (keyup)="$event.which === 13 && onSearch()">
+            </nz-input-group>
+            <ng-template #suffixIconButton>
+                <button nz-button
+                        nzSearch
+                        nzType="primary"
+                        (click)="onSearch()">
+                    <i nz-icon type="search"></i>
+                </button>
+            </ng-template>
+        </nz-col>
+    </nz-row>
+
+    <nz-row class="cluster-operation">
+        <nz-col nzSpan="5" class="navigator">
+            <div *ngIf="isShowCluster" class="nav-content">
+                <i nz-icon type="left" theme="outline" *ngIf="selectedCluster"></i>&nbsp;
+                <span (click)="isShowCluster = false">
+                    {{selectedCluster.name || ''}}
+                </span>
+            </div>
+        </nz-col>
+        <nz-col nzSpan="18">
+            <nz-row *ngIf="isShowCluster">
+                <nz-col nzSpan="6">
+                    收运时间:
+                    <nz-select style="width: 100px;" [(ngModel)]="selectedValue"
+                               nzSize="small"
+                               nzAllowClear>
+                        <nz-option nzValue="jack" nzLabel="Jack"></nz-option>
+                        <nz-option nzValue="lucy" nzLabel="Lucy"></nz-option>
+                    </nz-select>
+                </nz-col>
+                <nz-col nzSpan="6">
+                    日期类型:
+                    <nz-select style="width: 100px;" [(ngModel)]="selectedValue"
+                               nzSize="small"
+                               nzAllowClear>
+                        <nz-option nzValue="jack" nzLabel="Jack"></nz-option>
+                        <nz-option nzValue="lucy" nzLabel="Lucy"></nz-option>
+                    </nz-select>
+                </nz-col>
+                <nz-col nzSpan="6">
+                    优先等级: {{selectedCluster.priority}}
+                </nz-col>
+                <nz-col nzSpan="6">
+                    指定车辆: {{selectedCluster.vehiclePlate}}
+                </nz-col>
+            </nz-row>
+        </nz-col>
     </nz-row>
 
     <nz-row>
         <nz-spin [nzSize]="'large'" [nzSpinning]="isDemandSpinning">
             <nz-table #demandTable
                       [nzData]="demandListCache"
-                      [nzScroll]="{ x: '700px', y: '500px' }">
+                      [nzScroll]="{ x: '1000px', y: '500px' }">
                 <thead>
                 <tr>
+                    <th nzWidth="62px"
+                        nzShowCheckbox
+                        [(nzChecked)]="allSelected"
+                        [nzIndeterminate]="indeterminate"
+                        (nzCheckedChange)="onSelectAll($event)">
+                    </th>
                     <th nzWidth="200px">
                         名称
+                    </th>
+                    <th nzWidth="200px">
+                        账号
                     </th>
                     <th nzWidth="120px">
                         收运时间
@@ -43,18 +93,72 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr *ngFor="let item of demandListCache; index as i"
-                    [ngClass]="{ 'table-row-selected': item.checked }"
-                    (click)="onSelectDemand($event, item)">
-                    <td>{{item.name}}</td>
-                    <td>收运时间</td>
-                    <td>收运量TODO</td>
-                    <td>{{item.collectionPeriod.dateType}}</td>
-                    <td>{{item.collectionPeriod.priorityType}}</td>
-                    <td>{{item.plateNumber}}</td>
-                </tr>
+                <ng-template ngFor let-item [ngForOf]="demandListCache">
+                    <!-- 普通请求 -->
+                    <tr *ngIf="!item.subTaskList || !item.subTaskList.length"
+                        [ngClass]="{ 'table-row-selected': item.checked }"
+                        (click)="onSelectDemand($event, item)">
+                        <td></td>
+                        <td>{{item.name}}</td>
+                        <td>账号TODO</td>
+                        <td>收运时间</td>
+                        <td>收运量TODO</td>
+                        <td>日期类型TODO</td>
+                        <td>超时等级TODO</td>
+                        <td>指定车辆TODO</td>
+                    </tr>
+                    <!-- 聚类请求 -->
+                    <tr *ngIf="item.subTaskList && item.subTaskList.length > 0"
+                        [ngClass]="{ 'table-row-selected': item.checked, 'cluster': true }">
+                        <td></td>
+                        <td (click)="onShowCluster(item)">{{item.name}}</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </ng-template>
                 </tbody>
             </nz-table>
         </nz-spin>
+    </nz-row>
+
+    <nz-row *ngIf="selectedCluster">
+        <nz-table #demandTable
+                  [nzData]="selectedCluster.subTaskList"
+                  [nzScroll]="{ y: '500px' }">
+            <thead>
+            <tr>
+                <th nzWidth="62px"
+                    nzShowCheckbox
+                    [(nzChecked)]="allSelectedSub"
+                    [nzIndeterminate]="indeterminateSub"
+                    (nzCheckedChange)="onSelectSubAll($event)">
+                </th>
+                <th nzWidth="120px">
+                    名称
+                </th>
+                <th nzWidth="120px">
+                    账号
+                </th>
+                <th nzWidth="100px">
+                    收运量
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <ng-template ngFor let-item [ngForOf]="selectedCluster.subTaskList">
+                <tr [ngClass]="{ 'table-row-selected': item.checked }"
+                    (click)="onSelectDemandSub($event, item, selectedCluster.id)">
+                    <td></td>
+                    <td>{{item.name}}{{item.checked}}</td>
+                    <td>账号TODO</td>
+                    <td>收运量TODO</td>
+                </tr>
+            </ng-template>
+            </tbody>
+        </nz-table>
     </nz-row>
 </div>
