@@ -49,7 +49,7 @@ export class PlanComponent implements OnInit {
     ];
 
     resCache: PlanRes[];
-    selectedItem: PlanRes;
+    selectedItem: PlanListModel;
     listCache: PlanListModel[];
     formCache: any;
     routesListCache: RouteModel[];
@@ -63,7 +63,18 @@ export class PlanComponent implements OnInit {
         this.getListByPage();
     }
 
-    onSelected(e?: boolean, item?: PlanListModel) {
+    onSelected(e: boolean, item: PlanListModel) {
+        this.listCache.forEach((r: PlanListModel) => {
+            if (r.id === item.id) {
+                r.checked = !item.checked;
+                this.selectedItem = r;
+                this.selectedItem = r.checked ? r : null;
+            } else {
+                r.checked = false;
+            }
+        });
+        console.log(this.selectedItem);
+/*
         if (!e) {
             this.selectedItem = null;
             return;
@@ -75,7 +86,7 @@ export class PlanComponent implements OnInit {
             } else {
                 l.checked = false;
             }
-        });
+        });*/
     }
 
     onClickListItem(e, item: PlanListModel) {

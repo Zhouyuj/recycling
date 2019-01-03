@@ -13,8 +13,8 @@ import { AddDemandComponent } from './add-demand/add-demand.component';
     ],
     declarations: [ EditPlanComponent, VehicleSelectionComponent, AddDemandComponent ],
     providers   : [
-        { provide: EditPlanService, useClass: EditPlanMockService },
-        //EditPlanService,
+        //{ provide: EditPlanService, useClass: EditPlanMockService },
+        EditPlanService,
     ],
     entryComponents: [ VehicleSelectionComponent, AddDemandComponent ],
 })

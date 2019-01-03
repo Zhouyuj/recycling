@@ -4,6 +4,7 @@
             <nz-input-group nzSearch [nzSuffix]="suffixIconButton">
                 <input type="text"
                        nz-input
+                       [(ngModel)]="keyword"
                        (keyup)="$event.which === 13 && onSearch()">
             </nz-input-group>
             <ng-template #suffixIconButton>
@@ -20,43 +21,42 @@
     <nz-row class="cluster-operation">
         <nz-col nzSpan="5" class="navigator">
             <div *ngIf="isShowCluster" class="nav-content">
-                <i nz-icon type="left" theme="outline" *ngIf="selectedCluster"></i>&nbsp;
-                <span (click)="isShowCluster = false">
+                <span nz-popconfirm
+                      nzTitle="返回将撤销当前操作"
+                      (nzOnConfirm)="onHideCluster()">
+                    <i nz-icon type="left" theme="outline"></i>
                     {{selectedCluster.name || ''}}
                 </span>
             </div>
         </nz-col>
         <nz-col nzSpan="18">
             <nz-row *ngIf="isShowCluster">
-                <nz-col nzSpan="6">
+                <nz-col nzSpan="14">
                     收运时间:
-                    <nz-select style="width: 100px;" [(ngModel)]="selectedValue"
+                    <nz-select style="width: 75%;"
                                nzSize="small"
-                               nzAllowClear>
-                        <nz-option nzValue="jack" nzLabel="Jack"></nz-option>
-                        <nz-option nzValue="lucy" nzLabel="Lucy"></nz-option>
+                               [(ngModel)]="selectedCluster.collectionPeriodId"
+                               (ngModelChange)="onChangeClusterTime($event)">
+                        <nz-option
+                                *ngFor="let op of selectedCluster.collectionPeriods"
+                                [nzValue]="op.id"
+                                nzLabel="{{op.dateType | collectionDateType}} - {{op.startTime | secondToHourMinute}} ~ {{op.endTime | secondToHourMinute}}">
+                        </nz-option>
                     </nz-select>
                 </nz-col>
-                <nz-col nzSpan="6">
-                    日期类型:
-                    <nz-select style="width: 100px;" [(ngModel)]="selectedValue"
-                               nzSize="small"
-                               nzAllowClear>
-                        <nz-option nzValue="jack" nzLabel="Jack"></nz-option>
-                        <nz-option nzValue="lucy" nzLabel="Lucy"></nz-option>
-                    </nz-select>
+                <nz-col nzSpan="4">
+                    优先等级: {{selectedCluster.selectedPeriod && selectedCluster.selectedPeriod.priority || '' |
+                    collectionPeriodPriority}}
                 </nz-col>
                 <nz-col nzSpan="6">
-                    优先等级: {{selectedCluster.priority}}
-                </nz-col>
-                <nz-col nzSpan="6">
-                    指定车辆: {{selectedCluster.vehiclePlate}}
+                    指定车辆: {{selectedCluster.selectedPeriod && selectedCluster.selectedPeriod.vehicle || ''}}
+                    <!--指定车辆: {{selectedCluster.vehiclePlate || ''}}-->
                 </nz-col>
             </nz-row>
         </nz-col>
     </nz-row>
 
-    <nz-row>
+    <nz-row *ngIf="!isShowCluster">
         <nz-spin [nzSize]="'large'" [nzSpinning]="isDemandSpinning">
             <nz-table #demandTable
                       [nzData]="demandListCache"
@@ -72,18 +72,18 @@
                     <th nzWidth="200px">
                         名称
                     </th>
-                    <th nzWidth="200px">
+                    <!--<th nzWidth="200px">
                         账号
-                    </th>
-                    <th nzWidth="120px">
+                    </th>-->
+                    <th nzWidth="200px">
                         收运时间
                     </th>
                     <th nzWidth="120px">
                         收运量
                     </th>
-                    <th nzWidth="120px">
+                    <!--<th nzWidth="120px">
                         日期类型
-                    </th>
+                    </th>-->
                     <th nzWidth="120px">
                         超时等级
                     </th>
@@ -100,12 +100,34 @@
                         (click)="onSelectDemand($event, item)">
                         <td></td>
                         <td>{{item.name}}</td>
-                        <td>账号TODO</td>
-                        <td>收运时间</td>
-                        <td>收运量TODO</td>
-                        <td>日期类型TODO</td>
-                        <td>超时等级TODO</td>
-                        <td>指定车辆TODO</td>
+                        <td>
+                            <nz-select style="width: 90%;"
+                                       nzSize="small"
+                                       [(ngModel)]="item.collectionPeriodId"
+                                       (ngModelChange)="onChangeTime($event, item)"
+                                       (click)="onStopPro($event)">
+                                <nz-option
+                                        *ngFor="let op of item.collectionPeriods"
+                                        [nzValue]="op.id"
+                                        nzLabel="{{op.dateType | collectionDateType}} - {{op.startTime | secondToHourMinute}} ~ {{op.endTime | secondToHourMinute}}">
+                                </nz-option>
+                            </nz-select>
+                        </td>
+                        <td>
+                            <nz-input-number [(ngModel)]="item.amountOfGarbage"
+                                             [nzSize]="'small'"
+                                             [nzMin]="0"
+                                             [nzStep]="0.1"
+                                             (click)="onStopPro($event)">
+                            </nz-input-number>
+                        </td>
+                        <td>
+                            {{item.selectedPeriod && item.selectedPeriod.priority || '' | collectionPeriodPriority}}
+                        </td>
+                        <td>
+                            {{item.selectedPeriod.vehicle}}
+                            <!--{{item.vehiclePlate}}-->
+                        </td>
                     </tr>
                     <!-- 聚类请求 -->
                     <tr *ngIf="item.subTaskList && item.subTaskList.length > 0"
@@ -113,9 +135,7 @@
                         <td></td>
                         <td (click)="onShowCluster(item)">{{item.name}}</td>
                         <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <td><!-- 聚类请求不给予修改收运量 --></td>
                         <td></td>
                         <td></td>
                     </tr>
@@ -125,7 +145,7 @@
         </nz-spin>
     </nz-row>
 
-    <nz-row *ngIf="selectedCluster">
+    <nz-row *ngIf="isShowCluster">
         <nz-table #demandTable
                   [nzData]="selectedCluster.subTaskList"
                   [nzScroll]="{ y: '500px' }">
@@ -135,14 +155,14 @@
                     nzShowCheckbox
                     [(nzChecked)]="allSelectedSub"
                     [nzIndeterminate]="indeterminateSub"
-                    (nzCheckedChange)="onSelectSubAll($event)">
+                    (nzCheckedChange)="onSelectSubAll($event, selectedCluster)">
                 </th>
                 <th nzWidth="120px">
                     名称
                 </th>
-                <th nzWidth="120px">
+                <!--<th nzWidth="120px">
                     账号
-                </th>
+                </th>-->
                 <th nzWidth="100px">
                     收运量
                 </th>
@@ -152,13 +172,41 @@
             <ng-template ngFor let-item [ngForOf]="selectedCluster.subTaskList">
                 <tr [ngClass]="{ 'table-row-selected': item.checked }"
                     (click)="onSelectDemandSub($event, item, selectedCluster.id)">
+                    <!--<td nzShowCheckbox
+                        [(nzChecked)]="item.checked"
+                        (nzCheckedChange)="refreshSelectStatus(2)">
+                    </td>-->
                     <td></td>
-                    <td>{{item.name}}{{item.checked}}</td>
-                    <td>账号TODO</td>
-                    <td>收运量TODO</td>
+                    <td>{{item.name}}-{{item.checked}}</td>
+                    <!--<td>账号TODO</td>-->
+                    <td>
+                        <nz-input-number [(ngModel)]="item.amountOfGarbage"
+                                         [nzSize]="'small'"
+                                         [nzMin]="0"
+                                         [nzStep]="0.1"
+                                         (click)="onStopPro($event)">
+                        </nz-input-number>
+                    </td>
                 </tr>
             </ng-template>
             </tbody>
         </nz-table>
+    </nz-row>
+
+    <nz-row>
+        <nz-col nzSpan="3" nzOffset="17">
+            <button nz-button
+                    style="width: 100%;"
+                    nzType="default"
+                    (click)="onCancel()">取消
+            </button>
+        </nz-col>
+        <nz-col nzSpan="3" nzOffset="1">
+            <button nz-button
+                    style="width: 100%;"
+                    nzType="primary"
+                    (click)="onSubmit()">确定
+            </button>
+        </nz-col>
     </nz-row>
 </div>

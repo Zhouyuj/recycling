@@ -6,7 +6,7 @@
     "start": "ng serve --host 0.0.0.0",
     "start-test": "ng serve --host 0.0.0.0 --configuration=test",
     "start-prod": "ng serve --host 0.0.0.0 --configuration=production",
-    "build-test": "ng build --configuration=test",
+    "build-test": "node --max-old-space-size=8000 node_modules/@angular/cli/bin/ng build --configuration=test",
     "build-prod": "ng build --configuration=production",
     "test": "ng lint && ng test --code-coverage",
     "deploy-test": "npm run build-test && node ./deploy/deploy-test.js",

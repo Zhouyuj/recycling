@@ -17,6 +17,7 @@ import { DemandListModel } from '../models/demand.model';
 import { AddDemandComponent } from './add-demand/add-demand.component';
 import { DemandModel } from '../models/demand.model';
 import {SubDemandModel} from '../models/demand.model';
+import {CollectionPeriod} from '../models/demand.model';
 
 @Component({
     selector   : 'app-edit-plan',
@@ -29,11 +30,18 @@ export class EditPlanComponent implements OnInit {
     isRoutesSpinning = false;       // 表格加载图
     isDistributeSpinning = false;   // 表格加载图
     isDemandSpinning = false;       // 表格加载图
+    canCancelDistribute = false;    // 取消派发按钮 TODO
+
     pageReq = new PageReq();
     pageRes = new PageRes();
     params = {  // 查询参数
-        route     : {},
-        distribute: {},
+        route     : {
+            name: '',
+            plateNumber: '',
+        },
+        distribute: {
+            name: '',
+        },
         demand    : {
             name       : '',
             createdDate: '',
@@ -45,13 +53,14 @@ export class EditPlanComponent implements OnInit {
 
     routeListCache: RouteModel[];        // 表格:路线数据
     distributedListCache: any;           // 表格:派发请求数据
-    demandListCache: DemandModel[];      // 表格:收运请求数据
+    demandListCache: DemandListModel[];  // 表格:收运请求数据
 
     selectedRoutesCache: RouteModel;      // 选中的路线
     selectedDistributeCache: any;         // 选中的派发
     selectedDemandCache: DemandModel[];   // 选中的请求
+    selectedDemandsCache: DemandModel[];   // 选中的请求（多个)
 
-    formDataRoute: any = { name: '' };   // 表单:新增路线
+    formDataRoute = { name: '' };   // 表单:新增路线
     isAddRouteFormVisible = false;
 
     constructor(private route: ActivatedRoute,
@@ -62,7 +71,8 @@ export class EditPlanComponent implements OnInit {
 
     ngOnInit() {
         this.initRouteList()
-            .initDemandList();
+            .initDemandList()
+            .initDistributeList();
     }
 
     initBreadcrumbs() {
@@ -89,16 +99,7 @@ export class EditPlanComponent implements OnInit {
                 this.planId = parseInt(planId);
                 this.initBreadcrumbs();
             });
-        this.editPlanService.getRouteList('').subscribe(
-            (res: Result<RouteModel[]>) => {
-                this.routeListCache = res.data.map((item: RouteModel) => {
-                    return {
-                        ...item,
-                        checked: false,
-                    };
-                });
-            }
-        );
+        this.getRouteList();
         return this;
     }
 
@@ -107,8 +108,15 @@ export class EditPlanComponent implements OnInit {
         return this;
     }
 
+    initDistributeList() {
+        this.getDistributeList();
+    }
+
     /** 路线 start **/
     onAddRoute() {
+        this.editPlanService.addRoute(this.formDataRoute, this.planId).subscribe((res: Result<number>) => {
+            console.log(res);
+        });
     }
 
     onDelRoute() {
@@ -161,11 +169,17 @@ export class EditPlanComponent implements OnInit {
         console.log(this.selectedRoutesCache);
     }
 
+    onRouteStatusChange($e, item: RouteListModel) {
+        this.onStopPro($e);
+    }
+
+    /**
+     * 根据 planId
+     */
     getRouteList() {
-        this.route.paramMap
-            .pipe(switchMap((params: ParamMap) => params.get('id')))
-            .subscribe((planId: string) => this.planId = parseInt(planId));
-        this.editPlanService.getRouteList('').subscribe(
+        // 分页查询参数 TODO
+        let paramsTemp = this.updateParams('route');
+        this.editPlanService.getRouteList(this.planId).subscribe(
             (res: Result<RouteModel[]>) => {
                 this.routeListCache = res.data.map((item: RouteModel) => {
                     return {
@@ -184,18 +198,35 @@ export class EditPlanComponent implements OnInit {
 
     /** 已派发 start **/
 
+    onSelectDistribute($e, item) {
+        this.onStopPro($e);
+        item.checked = !item.checked;
+    }
+
     onDrop(event: CdkDragDrop<any>) {
-        console.log(event);
-        moveItemInArray(this.routeListCache, event.previousIndex, event.currentIndex);
-        console.log(this.routeListCache);
+        moveItemInArray(this.distributedListCache, event.previousIndex, event.currentIndex);
+        console.log(this.distributedListCache);
     }
 
     onCancelDistribute() {
     }
 
+    getDistributeList() {
+        // 分页查询参数 TODO
+        let paramsTemp = this.updateParams('demand');
+        let routeId = '1';
+        this.editPlanService.getDistributeList(routeId).subscribe(res => {
+            this.distributedListCache = res.data.map((item) => {
+                return {
+                    ...item,
+                    checked: false,
+                }
+            });
+        });
+    }
     /** 已派发 start **/
 
-    /** 收运请求 **/
+    /** 收运请求 start **/
     onAddDemand() {
         const drawerRef = this.drawerService
             .create<AddDemandComponent>(
@@ -217,8 +248,8 @@ export class EditPlanComponent implements OnInit {
      * @param data
      * @param $event
      */
-    onCollapse(data: DemandModel, $event: boolean): void {
-        this.demandListCache.forEach((d: DemandModel) => {
+    onCollapse(data: DemandListModel, $event: boolean): void {
+        this.demandListCache.forEach((d: DemandListModel) => {
             if (d.id === data.id) {
                 d.expand = $event;
                 return;
@@ -226,16 +257,15 @@ export class EditPlanComponent implements OnInit {
         });
     }
 
-    onCollapseStopPro($e) {
-        $e.stopPropagation();
-    }
-
-    onSelectDemand($e, item: DemandModel, parent?: DemandModel) {
+    onSelectDemand($e, item: DemandListModel, parent?: DemandListModel) {
         this.demandListCache.forEach((r: DemandModel) => {
             if (parent && r.id === parent.id) {   // 选中的为子
+                let selectParent = false;
                 r.subTaskList.forEach((sub: SubDemandModel) => {
                     if (sub.id === item.id) sub.checked = !item.checked;
-                })
+                    if (sub.checked) selectParent = true;
+                });
+                parent.checked = selectParent;
             } else if (r.id === item.id) {           // 选中的为普通/父(所有子跟随父)
                 r.checked = !item.checked;
                 r.subTaskList
@@ -248,33 +278,58 @@ export class EditPlanComponent implements OnInit {
         console.log(this.demandListCache);
     }
 
+    onChangeDuration(e, item: DemandListModel) {
+        console.log(e, item);
+        if (e !== null) {
+            item.selectedPeriod = item.collectionPeriods.find((p: CollectionPeriod) => p.id == e);
+        } else {
+            item.selectedPeriod = null;
+        }
+    }
+
+    onGarbageAmountChange(e, parent?: DemandListModel) {
+        if (parent) {   // 修改子,需要累加
+            parent.amountOfGarbage = Number(parent.subTaskList.map((sub: SubDemandModel) => sub.amountOfGarbage).reduce((a, b) => a + b).toFixed(1));
+        }
+    }
+
+    onStopPro($e) {
+        $e.stopPropagation();
+    }
+
     getDemandList() {
         // 分页查询参数 TODO
         let paramsTemp = this.updateParams('demand');
         this.editPlanService.getDemandList(new PageReq(), '').subscribe((res: Result<PageRes<DemandModel[]>>) => {
             if (res.data) {
                 this.demandListCache = this.demandResToTableRows(res.data.content);
+                console.log(this.demandListCache);
             }
         });
     }
 
     // TODO 当需求增加级层后需要改为递归
-    demandResToTableRows(list: DemandModel[]): DemandModel[] {
+    demandResToTableRows(list: DemandModel[]): DemandListModel[] {
         return list.map((item: DemandModel) => {
             if (item.subTaskList && item.subTaskList.length > 0) {
                 item.subTaskList = item.subTaskList.map((sub: SubDemandModel) => {
                     return {
-                        ...sub, checked: false,
+                        ...sub,
+                        checked: false,
+                        selectedPeriod: item.collectionPeriods.find((p) => p.id === item.collectionPeriodId),
                     };
                 });
             }
             return {
-                ...item, checked: false, expand: false,
+                ...item,
+                checked: false,
+                expand: false,
+                selectedPeriod: item.collectionPeriods.find((p) => p.id === item.collectionPeriodId),
             };
         });
     }
 
-    updateParams(type: string) {
+    updateParams(type: string): any {
         let paramsTemp = {};
         for (let k in this.params[ type ]) {
             if (!this.params[ type ][ k ]) {
