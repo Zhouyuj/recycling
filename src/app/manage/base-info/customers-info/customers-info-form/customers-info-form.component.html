@@ -117,12 +117,12 @@
                                    #detailAddressSeparate="ngModel">
                         </nz-input-group>
                         <ng-template #suffixTemplateSeparate>
-                            <i class="anticon anticon-close-circle"
+                            <i nz-icon type="close-circle" theme="outline"
                                style="margin-right: 5px;cursor: pointer;"
                                *ngIf="formModelSeparate.detailAddress"
                                (click)="formModelSeparate.detailAddress=null">
                             </i>
-                            <i class="anticon anticon-environment-o"
+                            <i nz-icon type="environment" theme="outline"
                                style="cursor: pointer;"
                                nzTitle="展开地图选点"
                                nzPlacement="right"
@@ -238,7 +238,8 @@
                                 <nz-form-item
                                         *ngFor="let item of formModelSeparate.duration.food;"
                                         style="background-color: #eee; padding: 7px 5px 0;margin-bottom: 10px;">
-                                    <i class="anticon anticon-minus-circle-o dynamic-delete-button"
+                                    <i nz-icon type="minus-circle" theme="outline"
+                                       class="dynamic-delete-button"
                                        style="position: absolute; top: -2px;right: 0;z-index: 1;font-size: 1.4rem; cursor: pointer;"
                                        (click)="onRemoveDuration(formModelSeparate.duration.tabType, item.idx)">
                                     </i>
@@ -337,7 +338,8 @@
                                 <nz-form-item
                                         *ngFor="let item of formModelSeparate.duration.oil;"
                                         style="background-color: #eee; padding: 7px 5px 0;margin-bottom: 10px;">
-                                    <i class="anticon anticon-minus-circle-o dynamic-delete-button"
+                                    <i nz-icon type="minus-circle" theme="outline"
+                                       class="dynamic-delete-button"
                                        style="position: absolute; top: -2px;right: 0;z-index: 1;font-size: 1.4rem; cursor: pointer;"
                                        (click)="onRemoveDuration(formModelSeparate.duration.tabType, item.idx)">
                                     </i>
@@ -440,7 +442,7 @@
                                     type="button"
                                     nzType="dashed"
                                     (click)="onAddDuration(formModelSeparate.duration.tabType)">
-                                <i class="anticon anticon-plus"></i> 添加
+                                <i nz-icon type="plus" theme="outline"></i> 添加
                             </button>
                         </ng-template>
                     </nz-form-control>
@@ -508,12 +510,12 @@
                                    #detailAddressCluster="ngModel">
                         </nz-input-group>
                         <ng-template #suffixTemplateCluster>
-                            <i class="anticon anticon-close-circle"
+                            <i nz-icon type="close-circle" theme="outline"
                                style="margin-right: 5px;cursor: pointer;"
                                *ngIf="formModelCluster.detailAddress"
                                (click)="formModelCluster.detailAddress=null">
                             </i>
-                            <i class="anticon anticon-environment-o"
+                            <i nz-icon type="environment" theme="outline"
                                style="cursor: pointer;"
                                nzTitle="展开地图选点"
                                nzPlacement="right"
@@ -559,7 +561,7 @@
                                     type="button"
                                     nzType="dashed"
                                     (click)="onAddChildCollection()">
-                                <i class="anticon anticon-plus"></i> 添加
+                                <i nz-icon type="plus" theme="outline"></i> 添加
                             </button>
                         </nz-form-control>
                     </nz-form-item>
@@ -585,7 +587,8 @@
                                 <nz-form-item
                                         *ngFor="let item of formModelCluster.duration.food"
                                         style="background-color: #eee; padding: 7px 5px 0;margin-bottom: 10px;">
-                                    <i class="anticon anticon-minus-circle-o dynamic-delete-button"
+                                    <i nz-icon type="minus-circle" theme="outline"
+                                       class="dynamic-delete-button"
                                        style="position: absolute; top: -2px;right: 0;z-index: 1;font-size: 1.4rem; cursor: pointer;"
                                        (click)="onRemoveDuration(formModelCluster.duration.tabType, item.idx)">
                                     </i>
@@ -684,7 +687,9 @@
                                 <nz-form-item
                                         *ngFor="let item of formModelCluster.duration.oil"
                                         style="background-color: #eee; padding: 7px 5px 0;margin-bottom: 10px;">
-                                    <i class="anticon anticon-minus-circle-o dynamic-delete-button"
+
+                                    <i nz-icon type="minus-circle" theme="outline"
+                                       class="dynamic-delete-button"
                                        id="dynamic-delete-duration"
                                        (click)="onRemoveDuration(formModelCluster.duration.tabType, item.idx)">
                                     </i>
@@ -787,7 +792,7 @@
                                     type="button"
                                     nzType="dashed"
                                     (click)="onAddDuration(formModelCluster.duration.tabType)">
-                                <i class="anticon anticon-plus"></i> 添加
+                                <i nz-icon type="plus" theme="outline"></i> 添加
                             </button>
                         </ng-template>
                     </nz-form-control>

@@ -10,19 +10,19 @@
             <ul nz-menu [nzMode]="'horizontal'">
                 <li nz-menu-item>
                     <div class="icon-box">
-                        <i class="anticon anticon-desktop"></i>
+                        <i nz-icon type="desktop" theme="outline"></i>
                     </div>
                     <p class="menu-title">实时监控</p>
                 </li>
                 <li nz-menu-item>
                     <div class="icon-box">
-                        <i class="anticon anticon-file-ppt"></i>
+                        <i nz-icon type="file-ppt" theme="outline"></i>
                     </div>
                     <a class="menu-title" routerLink="/manage/plan">方案管理</a>
                 </li>
                 <li nz-submenu>
                     <div class="icon-box" title>
-                        <i class="anticon anticon-idcard"></i>
+                        <i nz-icon type="idcard" theme="outline"></i>
                     </div>
                     <p class="menu-title" title>基础信息</p>
                     <ul>
@@ -39,7 +39,7 @@
                 </li>
                 <li nz-submenu>
                     <div class="icon-box" title>
-                        <i class="anticon anticon-car"></i>
+                        <i nz-icon type="car" theme="outline"></i>
                     </div>
                     <p class="menu-title" title>车队管理</p>
                     <ul>
@@ -50,7 +50,7 @@
                 </li>
                 <li nz-submenu>
                     <div class="icon-box" title>
-                        <i class="anticon anticon-profile"></i>
+                        <i nz-icon type="profile" theme="outline"></i>
                     </div>
                     <p class="menu-title" title>历史记录</p>
                     <ul>
@@ -61,7 +61,7 @@
                 </li>
                 <li nz-submenu>
                     <div class="icon-box" title>
-                        <i class="anticon anticon-table"></i>
+                        <i nz-icon type="table" theme="outline"></i>
                     </div>
                     <p class="menu-title" title>数据统计</p>
                     <ul>
@@ -72,7 +72,7 @@
                 </li>
                 <li nz-submenu>
                     <div class="icon-box" title>
-                        <i class="anticon anticon-safety"></i>
+                        <i nz-icon type="safety" theme="outline"></i>
                     </div>
                     <p class="menu-title" title>排查管理</p>
                     <ul>
@@ -83,7 +83,7 @@
                 </li>
                 <li nz-submenu>
                     <div class="icon-box" title>
-                        <i class="anticon anticon-switcher"></i>
+                        <i nz-icon type="switcher" theme="outline"></i>
                     </div>
                     <p class="menu-title" title>卡的管理</p>
                     <ul>
@@ -94,7 +94,7 @@
                 </li>
                 <li nz-submenu>
                     <div class="icon-box" title>
-                        <i class="anticon anticon-pay-circle-o"></i>
+                        <i nz-icon type="pay-circle" theme="outline"></i>
                     </div>
                     <p class="menu-title" title>签约管理</p>
                     <ul>
@@ -105,7 +105,7 @@
                 </li>
                 <li nz-submenu>
                     <div class="icon-box" title>
-                        <i class="anticon anticon-setting"></i>
+                        <i nz-icon type="setting" theme="outline"></i>
                     </div>
                     <p class="menu-title" title>系统设置</p>
                     <ul>
@@ -122,7 +122,7 @@
             <div nz-col nzSpan="6">
                 <div class="personal-menu-item" *ngIf="!!bellCounts">
                     <div class="bell">
-                        <i class="anticon anticon-bell"></i>
+                        <i nz-icon type="bell" theme="outline"></i>
                         <nz-tag [nzColor]="'red'" class="bell-total">12</nz-tag>
                     </div>
                 </div>
@@ -130,14 +130,14 @@
             <!-- welcome -->
             <div nz-col nzSpan="12">
                 <div class="personal-menu-item">
-                    <i class="anticon anticon-smile-o"></i> 欢迎{{name ? ', ' + name : ''}}
+                    <i nz-icon type="smile" theme="outline"></i> 欢迎{{name ? ', ' + name : ''}}
                 </div>
             </div>
             <!-- logout -->
             <div nz-col nzSpan="6">
                 <div class="personal-menu-item">
                     <a routerLink="/login" (click)="onLogout($event)">
-                        <i class="anticon anticon-logout"></i> 退出
+                        <i nz-icon type="logout" theme="outline"></i> 退出
                     </a>
                     &nbsp;
                 </div>
