@@ -12,7 +12,7 @@ import { LoginService } from './login.service';
 
 @NgModule({
     imports: [
-        CoreModule,
+        //CoreModule,
         SharedModule,
         LoginRoutingModule,
     ],

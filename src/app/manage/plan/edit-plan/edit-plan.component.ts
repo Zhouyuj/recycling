@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+//import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 import { NzDrawerService } from 'ng-zorro-antd';
 
@@ -16,8 +16,8 @@ import { VehicleSelectionComponent } from './vehicle-selection/vehicle-selection
 import { DemandListModel } from '../models/demand.model';
 import { AddDemandComponent } from './add-demand/add-demand.component';
 import { DemandModel } from '../models/demand.model';
-import {SubDemandModel} from '../models/demand.model';
-import {CollectionPeriod} from '../models/demand.model';
+import { SubDemandModel } from '../models/demand.model';
+import { CollectionPeriod } from '../models/demand.model';
 
 @Component({
     selector   : 'app-edit-plan',
@@ -32,11 +32,11 @@ export class EditPlanComponent implements OnInit {
     isDemandSpinning = false;       // 表格加载图
     canCancelDistribute = false;    // 取消派发按钮 TODO
 
-    pageReq = new PageReq();
-    pageRes = new PageRes();
+    pageReq = new PageReq();    // 只有收运请求存在分页
+    pageRes = new PageRes();    // 只有收运请求存在分页
     params = {  // 查询参数
         route     : {
-            name: '',
+            name       : '',
             plateNumber: '',
         },
         distribute: {
@@ -48,10 +48,10 @@ export class EditPlanComponent implements OnInit {
         },
     };
 
-    planId: number; // 所编辑的方案id
-    routeId: number;
+    planId = ''; // 所编辑的方案id
+    routeId: string;
 
-    routeListCache: RouteModel[];        // 表格:路线数据
+    routeListCache: RouteListModel[];    // 表格:路线数据
     distributedListCache: any;           // 表格:派发请求数据
     demandListCache: DemandListModel[];  // 表格:收运请求数据
 
@@ -62,6 +62,9 @@ export class EditPlanComponent implements OnInit {
 
     formDataRoute = { name: '' };   // 表单:新增路线
     isAddRouteFormVisible = false;
+
+    // 同一车辆的路线
+    sameVehicleRoutes = {};
 
     constructor(private route: ActivatedRoute,
                 private editPlanService: EditPlanService,
@@ -93,18 +96,17 @@ export class EditPlanComponent implements OnInit {
     }
 
     initRouteList() {
-        this.route.paramMap
-            .pipe(switchMap((params: ParamMap) => params.get('id')))
-            .subscribe((planId: string) => {
-                this.planId = parseInt(planId);
-                this.initBreadcrumbs();
-            });
+        this.route.paramMap.subscribe((params: ParamMap) => {
+            this.planId = params.get('id');
+            this.initBreadcrumbs();
+        });
         this.getRouteList();
         return this;
     }
 
     initDemandList() {
-        this.getDemandList();
+        // TODO
+        //this.getDemandList();
         return this;
     }
 
@@ -114,9 +116,16 @@ export class EditPlanComponent implements OnInit {
 
     /** 路线 start **/
     onAddRoute() {
-        this.editPlanService.addRoute(this.formDataRoute, this.planId).subscribe((res: Result<number>) => {
-            console.log(res);
-        });
+        this.editPlanService.addRoute(this.formDataRoute, this.planId).subscribe(
+            (res) => {
+                this.isAddRouteFormVisible = false;
+                this.notificationService.create({
+                    type : 'success',
+                    title: '恭喜,路线添加成功',
+                });
+                this.getRouteList();
+            }
+        );
     }
 
     onDelRoute() {
@@ -128,15 +137,9 @@ export class EditPlanComponent implements OnInit {
         //this.editPlanService.delRoute(this.selectedRoutesCache.id)
     }
 
-    needSelectRoute(): boolean {
-        if (!this.selectedRoutesCache) {
-            return true;
-        } else return false;
-    }
-
     onSelectVehicle() {
         const drawerRef = this.drawerService
-            .create<VehicleSelectionComponent, { success: boolean, planId: number, routeId: number }, boolean>(
+            .create<VehicleSelectionComponent, { success: boolean, planId: string, routeId: string }, boolean>(
                 {
                     nzTitle        : '请为线路选择车辆',
                     nzContent      : VehicleSelectionComponent,
@@ -144,11 +147,16 @@ export class EditPlanComponent implements OnInit {
                     nzPlacement    : 'left',
                     nzContentParams: {
                         success: false,
-                        planId : 1,
-                        routeId: 11,
+                        planId : this.planId,
+                        routeId: this.selectedRoutesCache.id,
                     }
                 }
             );
+        drawerRef.afterClose.subscribe((res: boolean) => {
+            if (res) {
+                this.getRouteList();
+            }
+        });
 
     }
 
@@ -166,20 +174,32 @@ export class EditPlanComponent implements OnInit {
                 r.checked = false;
             }
         });
-        console.log(this.selectedRoutesCache);
+        this.getDistributeList();
     }
 
     onRouteStatusChange($e, item: RouteListModel) {
         this.onStopPro($e);
     }
 
+
+    onChangeRoutePriority($e, item: RouteListModel) {
+        this.editPlanService.updateRoute(
+            { name: item.name, priority: item.priority, vehicle: item.plateNumber },
+            this.planId,
+            item.id
+        ).subscribe((res) => {
+            this.getRouteList();
+        });
+    }
+
     /**
      * 根据 planId
      */
     getRouteList() {
+        this.isRoutesSpinning = true;
         // 分页查询参数 TODO
         let paramsTemp = this.updateParams('route');
-        this.editPlanService.getRouteList(this.planId).subscribe(
+        this.editPlanService.getRouteList(this.planId, paramsTemp).subscribe(
             (res: Result<RouteModel[]>) => {
                 this.routeListCache = res.data.map((item: RouteModel) => {
                     return {
@@ -187,8 +207,40 @@ export class EditPlanComponent implements OnInit {
                         checked: false,
                     };
                 });
+                this.isRoutesSpinning = false;
+                this.classifySameVehicleRoutes(this.routeListCache);
+            },
+            err => {
+                this.isRoutesSpinning = false;
+                this.notificationService.create({
+                    type   : 'error',
+                    title  : '抱歉,获取路线列表失败',
+                    content: err.error.messege || '请联系管理员',
+                });
             }
         );
+    }
+
+    // 统计同一车辆的路线
+    // sameVehicleRoutes = { '闽Y11111': [ RouteListModel ], }
+    classifySameVehicleRoutes(routes: RouteListModel[]) {
+        this.sameVehicleRoutes = {};
+        routes.forEach((r: RouteListModel) => {
+            if (r.plateNumber) {
+                if (this.sameVehicleRoutes[ r.plateNumber ]) {
+                    this.sameVehicleRoutes[ r.plateNumber ].push(r);
+                } else {
+                    this.sameVehicleRoutes[ r.plateNumber ] = [ r ];
+                }
+            }
+        });
+        console.log(this.sameVehicleRoutes);
+    }
+
+    needSelectRoute(): boolean {
+        if (!this.selectedRoutesCache) {
+            return true;
+        } else return false;
     }
 
     /** 路线 end **/
@@ -203,18 +255,21 @@ export class EditPlanComponent implements OnInit {
         item.checked = !item.checked;
     }
 
-    onDrop(event: CdkDragDrop<any>) {
+    /*onDrop(event: CdkDragDrop<any>) {
         moveItemInArray(this.distributedListCache, event.previousIndex, event.currentIndex);
         console.log(this.distributedListCache);
-    }
+    }*/
 
     onCancelDistribute() {
     }
 
     getDistributeList() {
+        if (!this.selectedRoutesCache) {
+            return;
+        }
         // 分页查询参数 TODO
         let paramsTemp = this.updateParams('demand');
-        let routeId = '1';
+        let routeId = this.selectedRoutesCache.id;
         this.editPlanService.getDistributeList(routeId).subscribe(res => {
             this.distributedListCache = res.data.map((item) => {
                 return {
@@ -224,7 +279,8 @@ export class EditPlanComponent implements OnInit {
             });
         });
     }
-    /** 已派发 start **/
+
+    /** 已派发 end **/
 
     /** 收运请求 start **/
     onAddDemand() {
@@ -237,6 +293,10 @@ export class EditPlanComponent implements OnInit {
                     nzPlacement: 'right',
                 }
             );
+
+        drawerRef.afterClose.subscribe((res: boolean) => {
+            this.getDemandList();
+        });
     }
 
     onDelDemand() {
@@ -300,7 +360,7 @@ export class EditPlanComponent implements OnInit {
     getDemandList() {
         // 分页查询参数 TODO
         let paramsTemp = this.updateParams('demand');
-        this.editPlanService.getDemandList(new PageReq(), '').subscribe((res: Result<PageRes<DemandModel[]>>) => {
+        this.editPlanService.getDemandList(new PageReq(), paramsTemp).subscribe((res: Result<PageRes<DemandModel[]>>) => {
             if (res.data) {
                 this.demandListCache = this.demandResToTableRows(res.data.content);
                 console.log(this.demandListCache);
@@ -315,15 +375,15 @@ export class EditPlanComponent implements OnInit {
                 item.subTaskList = item.subTaskList.map((sub: SubDemandModel) => {
                     return {
                         ...sub,
-                        checked: false,
+                        checked       : false,
                         selectedPeriod: item.collectionPeriods.find((p) => p.id === item.collectionPeriodId),
                     };
                 });
             }
             return {
                 ...item,
-                checked: false,
-                expand: false,
+                checked       : false,
+                expand        : false,
                 selectedPeriod: item.collectionPeriods.find((p) => p.id === item.collectionPeriodId),
             };
         });

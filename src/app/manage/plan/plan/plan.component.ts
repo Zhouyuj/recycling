@@ -11,6 +11,10 @@ import { NzModalService, NzDrawerService } from 'ng-zorro-antd';
 import { AddPlanComponent } from '../add-plan/add-plan.component';
 import { PlanStateEnum,PlanStateEnumChinese } from '../models/plan.enum';
 import { RouteModel } from '../models/route.model';
+import {Observable} from 'rxjs/index';
+import {PlanOperationEnum} from '../models/plan.enum';
+import {map} from 'rxjs/internal/operators/map';
+import {NotificationService} from '../../../shared/services/notification/notification.service';
 
 @Component({
     selector   : 'app-plan',
@@ -56,7 +60,8 @@ export class PlanComponent implements OnInit {
 
     constructor(private router: Router,
                 private planService: PlanService,
-                private drawerService: NzDrawerService) {
+                private drawerService: NzDrawerService,
+                private notificationService: NotificationService) {
     }
 
     ngOnInit() {
@@ -73,20 +78,6 @@ export class PlanComponent implements OnInit {
                 r.checked = false;
             }
         });
-        console.log(this.selectedItem);
-/*
-        if (!e) {
-            this.selectedItem = null;
-            return;
-        }
-        this.selectedItem = this.resCache.filter((o: PlanRes) => o.id === item.id)[ 0 ];
-        this.listCache.forEach((l: PlanListModel) => {
-            if (l.id === item.id) {
-                l.checked = true;
-            } else {
-                l.checked = false;
-            }
-        });*/
     }
 
     onClickListItem(e, item: PlanListModel) {
@@ -99,7 +90,8 @@ export class PlanComponent implements OnInit {
     }
 
     onKeywordSearch(keywordType: string) {
-        this.getListByPage();
+        //this.getListByPage();
+        this.getListByPage({ isResetReq: true });
     }
 
     onKeywordFilter(e: string[]) {
@@ -111,7 +103,7 @@ export class PlanComponent implements OnInit {
             if (this.params.status === result) return;
             this.params.status = e.join(',');
         }
-        this.getListByPage();
+        this.getListByPage({ isResetReq: true });
     }
 
     onAdd(): void {
@@ -130,20 +122,35 @@ export class PlanComponent implements OnInit {
         this.drawerRef.afterClose.subscribe((res: boolean) => {
             if (res) {
                 // 重新调分页接口
-                this.getListByPage();
+                this.getListByPage({ isResetReq: true });
             }
         });
     }
 
     onNavigateToEdit() {
-        // async 判断是否被锁定 TODO
-
-        this.router.navigateByUrl('/manage/plan/edit/1');
+        this.planService.operatingPlan(this.selectedItem.id, PlanOperationEnum.EDIT).subscribe(
+            (res: Result<{ status: number }>) => {
+                this.router.navigateByUrl('/manage/plan/edit/' + this.selectedItem.id);
+            },
+            (err) => {
+                if (err.error.status === 0) {
+                    this.notificationService.create({
+                        type: 'error',
+                        title: '抱歉,编辑失败',
+                        content: err.error.message,
+                    })
+                }
+            }
+        );
     }
 
-    getListByPage() {
+    getListByPage(option?: { isResetReq: boolean }) {
+        if (option && option.isResetReq) {
+            this.resetPageReq();
+        }
         this.isSpinning = true;
-        this.planService.getPlanList(this.pageReq, this.params).subscribe(
+        let paramsTemp = this.updateParams();
+        this.planService.getPlanList(this.pageReq, paramsTemp).subscribe(
             (res: Result<PageRes<PlanRes[]>>) => {
                 if (res.data.content) {
                     this.isSpinning = false;
@@ -164,6 +171,12 @@ export class PlanComponent implements OnInit {
         this.pageRes = new PageRes(data.page, data.size, data.pages, data.total, data.last);
     }
 
+    resetPageReq(): void {
+        this.pageReq.page = 1;
+        this.pageReq.size = this.pageRes.size;
+        this.pageReq.sort = 'entryTime.desc';
+    }
+
     updateParams() {
         let paramsTemp = {};
         for (let k in this.params) {
@@ -174,12 +187,6 @@ export class PlanComponent implements OnInit {
             }
         }
         return paramsTemp;
-    }
-
-    resetPageReq(): void {
-        this.pageReq.page = 1;
-        this.pageReq.size = this.pageRes.size;
-        this.pageReq.sort = 'entryTime.desc';
     }
 
     dataToTableList(data: PlanRes[]): PlanListModel[] {

@@ -9,6 +9,7 @@ import { Result } from '../../../../shared/models/response/result.model';
 import { VehicleRes } from '../../../base-info/vehicle-info/vehicle-res.model';
 import { ModelConverter } from './model-converter';
 import { NotificationService } from '../../../../shared/services/notification/notification.service';
+import {EditPlanService} from '../edit-plan.service';
 
 @Component({
     selector   : 'app-vehicle-selection',
@@ -18,8 +19,8 @@ import { NotificationService } from '../../../../shared/services/notification/no
 export class VehicleSelectionComponent implements OnInit {
 
     @Input() success: boolean;
-    @Input() planId: number;
-    @Input() routeId: number;
+    @Input() planId: string;
+    @Input() routeId: string;
     isSpinning = false;
     pageReq = new PageReq();
     pageRes = new PageRes();
@@ -37,6 +38,7 @@ export class VehicleSelectionComponent implements OnInit {
 
     constructor(private drawerRef: NzDrawerRef<any>,
                 private vehicleInfoService: VehicleInfoService,
+                private editPlanService: EditPlanService,
                 private notificationService: NotificationService) {
 
     }
@@ -59,8 +61,8 @@ export class VehicleSelectionComponent implements OnInit {
         this.getListByPage({ isResetReq: true });
     }
 
-    onClose() {
-        this.drawerRef.close(this.success);
+    onClose(b: boolean) {
+        this.drawerRef.close(b);
     }
 
     onFilter(e, type: string) {
@@ -115,6 +117,21 @@ export class VehicleSelectionComponent implements OnInit {
         if (!this.selectedItemCache) {
             this.notificationService.create({ type: 'warning', 'title': '抱歉,请至少选择一辆车' });
             return;
+        }
+        if (this.planId && this.routeId) {
+            this.editPlanService.updateRoute(
+                { vehicle: this.selectedItemCache.plateNumber },
+                this.planId,
+                this.routeId
+            ).subscribe(
+                (res: Result<number>) => {
+                    console.log('选择车辆成功', res);
+                    this.onClose(true);
+                },
+                err => {
+                    console.warn(err.error.message);
+                }
+            );
         }
     }
 

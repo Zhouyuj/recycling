@@ -4,7 +4,7 @@
             <nz-input-group nzSearch [nzSuffix]="suffixIconButton">
                 <input type="text"
                        nz-input
-                       [(ngModel)]="keyword"
+                       [(ngModel)]="params.name"
                        (keyup)="$event.which === 13 && onSearch()">
             </nz-input-group>
             <ng-template #suffixIconButton>
@@ -20,7 +20,7 @@
 
     <nz-row class="cluster-operation">
         <nz-col nzSpan="5" class="navigator">
-            <div *ngIf="isShowCluster" class="nav-content">
+            <div *ngIf="isShowSub" class="nav-content">
                 <span nz-popconfirm
                       nzTitle="返回将撤销当前操作"
                       (nzOnConfirm)="onHideCluster()">
@@ -30,7 +30,7 @@
             </div>
         </nz-col>
         <nz-col nzSpan="18">
-            <nz-row *ngIf="isShowCluster">
+            <nz-row *ngIf="isShowSub">
                 <nz-col nzSpan="14">
                     收运时间:
                     <nz-select style="width: 75%;"
@@ -56,14 +56,20 @@
         </nz-col>
     </nz-row>
 
-    <nz-row *ngIf="!isShowCluster">
+    <nz-row *ngIf="!isShowSub">
         <nz-spin [nzSize]="'large'" [nzSpinning]="isDemandSpinning">
             <nz-table #demandTable
                       [nzData]="demandListCache"
-                      [nzScroll]="{ x: '1000px', y: '500px' }">
+                      [nzScroll]="{ x: '900px', y: '500px' }"
+                      [nzFrontPagination]="false"
+                      [nzTotal]="pageRes.total"
+                      [nzPageIndex]="pageRes.page"
+                      [nzPageSize]="pageRes.size"
+                      (nzPageIndexChange)="onPage($event)"
+                      (nzPageSizeChange)="onPage($event)">
                 <thead>
                 <tr>
-                    <th nzWidth="62px"
+                    <th nzWidth="64px"
                         nzShowCheckbox
                         [(nzChecked)]="allSelected"
                         [nzIndeterminate]="indeterminate"
@@ -75,10 +81,10 @@
                     <!--<th nzWidth="200px">
                         账号
                     </th>-->
-                    <th nzWidth="200px">
+                    <th nzWidth="250px">
                         收运时间
                     </th>
-                    <th nzWidth="120px">
+                    <th nzWidth="80px">
                         收运量
                     </th>
                     <!--<th nzWidth="120px">
@@ -87,7 +93,7 @@
                     <th nzWidth="120px">
                         超时等级
                     </th>
-                    <th nzWidth="120px">
+                    <th>
                         指定车辆
                     </th>
                 </tr>
@@ -133,7 +139,9 @@
                     <tr *ngIf="item.subTaskList && item.subTaskList.length > 0"
                         [ngClass]="{ 'table-row-selected': item.checked, 'cluster': true }">
                         <td></td>
-                        <td (click)="onShowCluster(item)">{{item.name}}</td>
+                        <td>
+                            <span (click)="onShowCluster(item)">{{item.name}}</span>
+                        </td>
                         <td></td>
                         <td><!-- 聚类请求不给予修改收运量 --></td>
                         <td></td>
@@ -145,25 +153,25 @@
         </nz-spin>
     </nz-row>
 
-    <nz-row *ngIf="isShowCluster">
+    <nz-row *ngIf="isShowSub">
         <nz-table #demandTable
                   [nzData]="selectedCluster.subTaskList"
                   [nzScroll]="{ y: '500px' }">
             <thead>
             <tr>
-                <th nzWidth="62px"
+                <th nzWidth="20%"
                     nzShowCheckbox
                     [(nzChecked)]="allSelectedSub"
                     [nzIndeterminate]="indeterminateSub"
                     (nzCheckedChange)="onSelectSubAll($event, selectedCluster)">
                 </th>
-                <th nzWidth="120px">
+                <th nzWidth="40%">
                     名称
                 </th>
                 <!--<th nzWidth="120px">
                     账号
                 </th>-->
-                <th nzWidth="100px">
+                <th nzWidth="40%">
                     收运量
                 </th>
             </tr>
@@ -198,7 +206,7 @@
             <button nz-button
                     style="width: 100%;"
                     nzType="default"
-                    (click)="onCancel()">取消
+                    (click)="onClose(false)">取消
             </button>
         </nz-col>
         <nz-col nzSpan="3" nzOffset="1">

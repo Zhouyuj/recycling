@@ -8,12 +8,16 @@ import { Observable } from 'rxjs/index';
 import { RebirthHttpProvider, GET, Query, RebirthHttp } from 'rebirth-http';
 /* 自定义 */
 import { environment } from '../../../../environments/environment';
+import { AuthorizationService } from '../authorization/authorization.service';
+import {TokenService} from '../token/token.service';
 
 @Injectable()
 export class InterceptorServices extends RebirthHttp {
 
     constructor(http: HttpClient,
-                private rebirthHttpProvider: RebirthHttpProvider) {
+                private rebirthHttpProvider: RebirthHttpProvider,
+                private authorizationService: AuthorizationService,
+                private tokenService: TokenService) {
         super(http);
     }
 
@@ -50,9 +54,20 @@ export class InterceptorServices extends RebirthHttp {
             .baseUrl(environment.api)
             .addInterceptor({
                 request: (request: HttpRequest<any>) => {
-                     //console.log('Global interceptors(request)', request);
+                    const token = this.tokenService.getToken();
+                    if (token) {
+                        return request.clone({
+                            setHeaders: { Authorization: 'Bearer ' + token },
+                        })
+                    }
                     return request;
                 },
+            })
+            /** 无认证响应错误拦截 **/
+            .addResponseErrorInterceptor((err) => {
+                if (err.status === 401) {
+                    console.error(`401::${err}`);
+                }
             });
 
         console.log('register interceptor successfully');

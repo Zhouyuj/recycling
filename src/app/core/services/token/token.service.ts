@@ -41,11 +41,13 @@ export class TokenService extends RebirthHttp {
         this.storageService.remove({ pool: TokenService.STORAGE_POOL_KEY, key: TokenService.STORAGE_KEY });
     }
 
-    public setToken(token: Token): void {
+    // TODO 应该传入的是 Token 类型
+    public setToken(token: any): void {
         this.storageService.put({ pool: TokenService.STORAGE_POOL_KEY, key: TokenService.STORAGE_KEY }, token);
     }
 
-    public getToken(): Token {
-        return this.storageService.get({ pool: TokenService.STORAGE_POOL_KEY, key: TokenService.STORAGE_KEY }) as Token;
+    // TODO 应该返回 Token 类型
+    public getToken(): any {
+        return this.storageService.get({ pool: TokenService.STORAGE_POOL_KEY, key: TokenService.STORAGE_KEY });
     }
 }

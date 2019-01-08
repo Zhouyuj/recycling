@@ -51,6 +51,7 @@
                     </button>
                     &nbsp;
                     <button nz-button
+                            [disabled]="!selectedItem"
                             nzType="default"
                             nzShape="circle"
                             nzTitle="执行"
@@ -60,6 +61,7 @@
                     </button>
                     &nbsp;
                     <button nz-button
+                            [disabled]="!selectedItem"
                             nzType="default"
                             nzShape="circle"
                             nzTitle="停止"

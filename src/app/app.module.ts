@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 /* 第三方模块 */
-import { RebirthNGModule } from 'rebirth-ng/rebirth-ng.module';
+import { OverlayModule } from "@angular/cdk/overlay";
 
 /* antd start */
 import { NZ_I18N, zh_CN } from 'ng-zorro-antd';
@@ -26,11 +26,11 @@ import { AppComponent } from './app.component';
     ],
     imports     : [
         BrowserModule,
+        BrowserAnimationsModule,
+        AppRoutingModule,
         CoreModule,
         SharedModule,
-        AppRoutingModule,
-        RebirthNGModule.forRoot(),
-        BrowserAnimationsModule,
+        OverlayModule,
     ],
     providers   : [
     /** 配置 ng-zorro-antd 国际化 **/

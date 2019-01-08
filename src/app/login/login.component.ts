@@ -39,18 +39,9 @@ export class LoginComponent implements OnInit {
                 if (res.data.token) {
                     let token = res.data.token;
                     let deCodePayload = {};
-                    try {
-                        deCodePayload = JwtUtils.decode(token);
-                    } catch (e) {
-                        console.log(e);
-                        this.notificationService.create({
-                            type: 'error',
-                            title: e,
-                        });
-                        return;
-                    } finally {
-                    }
+                    deCodePayload = JwtUtils.decode(token);
                     this.authorizationService.setCurrentUser(deCodePayload);
+                    this.tokenService.setToken(token);
 
                     this.messageService.create({ type: 'success', content: '登陆成功,页面正在跳转' });
                     this.redirectToHome();
@@ -58,9 +49,9 @@ export class LoginComponent implements OnInit {
             },
             err => {
                 this.notificationService.create({
-                    type: 'error',
+                    type   : 'error',
                     title  : '抱歉,用户名或密码错误',
-                    content: '长度在3-18之间，只能包含字符、数字',
+                    content: '只能包含字符、数字',
                 });
             }
         );
@@ -71,7 +62,7 @@ export class LoginComponent implements OnInit {
             this.notificationService.create({
                 type   : 'error',
                 title  : '抱歉,请检查用户名',
-                content: '长度在3-18之间，只能包含字母、数字',
+                content: '只能包含字母、数字',
             });
             return false;
         } else if (!(/^([a-zA-Z]|\d)+$/.test(this.formModel.password))) {

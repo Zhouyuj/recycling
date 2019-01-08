@@ -77,10 +77,10 @@
                               [nzShowPagination]="false">
                         <thead>
                         <tr>
-                            <th nzWidth="50px">
+                            <th nzWidth="64px">
                                 锁定
                             </th>
-                            <th nzWidth="100px">
+                            <th nzWidth="120px">
                                 路线
                                 <br/>
                                 <input type="text" nz-input placeholder=""
@@ -88,7 +88,7 @@
                                        [(ngModel)]="params.route.name"
                                        (keyup)="$event.which === 13 && getRouteList()">
                             </th>
-                            <th nzWidth="80px">
+                            <th nzWidth="120px">
                                 车牌号
                                 <br/>
                                 <input type="text" nz-input placeholder=""
@@ -96,7 +96,7 @@
                                        [(ngModel)]="params.route.plateNumber"
                                        (keyup)="$event.which === 13 && getRouteList()">
                             </th>
-                            <th nzWidth="50px">
+                            <th nzWidth="100px">
                                 优先级
                             </th>
                         </tr>
@@ -121,7 +121,18 @@
                             </td>
                             <td>{{item.name}}</td>
                             <td>{{item.plateNumber}}</td>
-                            <td>{{item.priority}}</td>
+                            <td>
+                                <nz-select *ngIf="item.plateNumber && sameVehicleRoutes[item.plateNumber].length > 1"
+                                           style="width: 100%"
+                                           [(ngModel)]="item.priority"
+                                           [nzSize]="'small'"
+                                           (click)="onStopPro($event)"
+                                           (ngModelChange)="onChangeRoutePriority($event, item)">
+                                    <ng-container *ngFor="let o of sameVehicleRoutes[item.plateNumber]; index as i">
+                                        <nz-option [nzValue]="i + 1" [nzLabel]="i + 1"></nz-option>
+                                    </ng-container>
+                                </nz-select>
+                            </td>
                         </tr>
                         </tbody>
                     </nz-table>
@@ -211,17 +222,17 @@
                             </th>
                         </tr>
                         </thead>
-                        <tbody cdkDropList (cdkDropListDropped)="onDrop($event)">
-                            <tr *ngFor="let item of distributedListCache; index as i"
-                                [ngClass]="{ 'table-row-selected': item.checked }"
-                                cdkDrag
-                                (click)="onSelectDistribute($event, item)">
-                                <td>名称名称名称{{item.id}}</td>
-                                <td>收运时间收运时间收运</td>
-                                <td>收运量</td>
-                                <td>状态状态</td>
-                            </tr>
-                        </tbody>
+                        <!--<tbody cdkDropList (cdkDropListDropped)="onDrop($event)">
+                        <tr *ngFor="let item of distributedListCache; index as i"
+                            [ngClass]="{ 'table-row-selected': item.checked }"
+                            cdkDrag
+                            (click)="onSelectDistribute($event, item)">
+                            <td>名称名称名称{{item.id}}</td>
+                            <td>收运时间收运时间收运</td>
+                            <td>收运量</td>
+                            <td>状态状态</td>
+                        </tr>
+                        </tbody>-->
                     </nz-table>
                 </nz-spin>
             </div>

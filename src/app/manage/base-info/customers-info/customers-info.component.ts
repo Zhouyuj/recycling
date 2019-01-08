@@ -110,7 +110,7 @@ export class CustomersInfoComponent implements OnInit {
                     title  : '恭喜,删除成功',
                     content: '该提醒将自动消失',
                 });
-                this.getListByPage({ isResetReq: true });
+                this.getListByPage();
             }, err => {
                 this.isDelOkLoading = false;
                 this.isDelModalVisible = false;
@@ -119,7 +119,7 @@ export class CustomersInfoComponent implements OnInit {
                     title  : '抱歉,删除失败',
                     content: err ? err.error.message : '',
                 });
-                this.getListByPage({ isResetReq: true });
+                this.getListByPage();
             }
         );
     }

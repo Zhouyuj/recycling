@@ -5,10 +5,10 @@
 import { NgModule } from '@angular/core';
 /* 第三方 */
 import { RebirthHttpModule } from 'rebirth-http';
-import { NgZorroAntdModule } from 'ng-zorro-antd';
+//import { NgZorroAntdModule } from 'ng-zorro-antd';
 
 /* 自定义 */
-import { SharedModule } from '../shared/shared.module';
+//import { SharedModule } from '../shared/shared.module';
 
 import { AuthorizationService } from './services/authorization/authorization.service';
 import { AuthRoutingGuardService } from './services/authorization/auth-routing-guard.service';
@@ -19,9 +19,7 @@ import { TokenService } from './services/token/token.service';
 
 @NgModule({
     imports: [
-        RebirthHttpModule,
-        NgZorroAntdModule,
-        SharedModule,
+        RebirthHttpModule
     ],
     exports: [],
     providers: [

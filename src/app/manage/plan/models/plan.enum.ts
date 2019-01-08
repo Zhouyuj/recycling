@@ -29,3 +29,10 @@ export enum PlanStateEnumChinese {
     Stopped = '已停止',        // 已停止
     Completed = '已完成',    // 已完成
 }
+
+export enum PlanOperationEnum {
+    EXECUTE = 'EXECUTE',
+    STOP = 'STOP',
+    EDIT = 'EDIT',
+    PLANNING = 'PLANNING',
+}

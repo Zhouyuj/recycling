@@ -5,7 +5,7 @@
 import { TaskEnum } from './task.enum';
 
 export interface RouteModel {
-    id: number;
+    id: string;
     lock: boolean;
     name: string;
     plateNumber: string;
@@ -13,7 +13,7 @@ export interface RouteModel {
 }
 
 export interface RouteListModel {
-    id: number;
+    id: string;
     lock: boolean;
     name: string;
     plateNumber: string;

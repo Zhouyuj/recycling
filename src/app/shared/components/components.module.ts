@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { OverlayModule } from '@angular/cdk/overlay';
 
 import { NgZorroAntdModule } from 'ng-zorro-antd';
 
@@ -18,6 +19,7 @@ import { TimePickerComponent } from './time-picker/time-picker.component';
         FormsModule,
         ReactiveFormsModule,
         NgZorroAntdModule,
+        OverlayModule,
     ],
     exports     : [
         BreadcrumbsComponent,

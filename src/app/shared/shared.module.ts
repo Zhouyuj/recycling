@@ -8,10 +8,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 /* 第三方 */
-import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { NgxEchartsModule } from 'ngx-echarts';
 import { NgZorroAntdModule } from 'ng-zorro-antd';
-import { RebirthNGModule } from 'rebirth-ng';
 /* 自定义 */
 import { ComponentsModule } from './components/components.module';
 import { DirectivesModule } from './directives/directives.module';
@@ -26,10 +24,8 @@ import { ServicesModule } from './services/services.module';
         RouterModule,
         DragDropModule,
 
-        NgxDatatableModule,
         NgxEchartsModule,
         NgZorroAntdModule,
-        RebirthNGModule,
 
         ComponentsModule,
         DirectivesModule,
@@ -43,10 +39,8 @@ import { ServicesModule } from './services/services.module';
         RouterModule,
         DragDropModule,
 
-        NgxDatatableModule,
         NgxEchartsModule,
         NgZorroAntdModule,
-        RebirthNGModule,
 
         ComponentsModule,
         DirectivesModule,

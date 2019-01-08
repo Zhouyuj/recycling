@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpRequest } from '@angular/common/http';
 import { Observable } from 'rxjs/index';
 
-import { RebirthHttp, GET, Query, POST, Body } from 'rebirth-http';
+import { RebirthHttp, GET, Query, POST, Body, Path } from 'rebirth-http';
 
 import { PageReq } from '../../shared/models/page/page-req.model';
 import { PageRes } from '../../shared/models/page/page-res.model';
@@ -41,6 +41,11 @@ export class PlanService extends RebirthHttp {
     getRouteList(@Query('name') name?: string,
                  @Query('planId') planId?: number,
                  @Query('plateNumber') plateNumber?: string): Observable<Result<RouteModel[]>> {
+        return null;
+    }
+
+    @POST('/plans/:id/operations')
+    operatingPlan(@Path('id') id: string, @Query('operate') operate: string): Observable<Result<{ status: number }>> {
         return null;
     }
 

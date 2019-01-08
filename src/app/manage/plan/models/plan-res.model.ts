@@ -8,7 +8,7 @@ export class PlanRes {
     category: PlanCategoryEnum; // Formal：正式的,Demo：演示的
     createdDate: number;
     editUser: string;   // 编辑人员
-    id: number;
+    id: string;
     name: string; // 方案名字
     numberOfRoutes: number; // 路线总数
     numberOfTasks: number; // 收集点总数

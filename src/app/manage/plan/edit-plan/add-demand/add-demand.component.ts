@@ -12,6 +12,8 @@ import { ModelConverter } from '../../models/model-converter';
 import {DemandReq} from '../../models/demand.model';
 import {VerifyUtil} from '../../../../shared/utils/verify-utils';
 import { NotificationService } from '../../../../shared/services/notification/notification.service';
+import {CustomersInfoService} from '../../../base-info/customers-info/customers-info.service';
+import {CustomerRes} from '../../../base-info/customers-info/customer-res.model';
 
 @Component({
     selector   : 'app-add-demand',
@@ -20,13 +22,17 @@ import { NotificationService } from '../../../../shared/services/notification/no
 })
 export class AddDemandComponent implements OnInit {
     isDemandSpinning = false;
-    isShowCluster = false;
+    isShowSub = false;
     allSelected = false;
     allSelectedSub = false;
     indeterminate = false;
     indeterminateSub = false;
 
-    keyword = '';
+    pageReq = new PageReq(1, 12);
+    pageRes = new PageRes(1, 12);
+    params = {
+        name: '',
+    };
 
     selectedCluster: DemandListModel;   // 选中聚类请求
 
@@ -36,18 +42,19 @@ export class AddDemandComponent implements OnInit {
 
     constructor(private drawerRef: NzDrawerRef<any>,
                 private editPlanService: EditPlanService,
+                private customersInfoService: CustomersInfoService,
                 private notificationService: NotificationService) {
     }
 
     ngOnInit() {
-        this.getDemandList();
+        this.getCustomerList({ isResetReq: true });
     }
 
     /**
      * 关键字搜索 TODO
      */
     onSearch() {
-        console.log(this.keyword);
+        this.getCustomerList({ isResetReq: true });
     }
 
     /**
@@ -65,7 +72,7 @@ export class AddDemandComponent implements OnInit {
      * @param item
      */
     onShowCluster(item: DemandListModel) {
-        this.isShowCluster = true;
+        this.isShowSub = true;
         this.demandListCache.forEach((d: DemandListModel) => {
             d.checked = false;
         });
@@ -78,7 +85,7 @@ export class AddDemandComponent implements OnInit {
 
     onHideCluster() {
         // 与 onShowCluster 互斥
-        this.isShowCluster = false;
+        this.isShowSub = false;
         this.demandListCache.forEach((item: DemandListModel) => {   // 撤销选中的子请求
             if (item.id === this.selectedCluster.id) {
                 item.checked = false;
@@ -117,7 +124,6 @@ export class AddDemandComponent implements OnInit {
             this.selectedCluster.selectedPeriod = null;
         }
     }
-
 
     /**
      * 当前页全选
@@ -166,23 +172,44 @@ export class AddDemandComponent implements OnInit {
         this.refreshSelectStatus(2);
     }
 
+    onPage(e) {
+        this.pageReq.page = e;
+        this.getCustomerList();
+    }
+
     onSubmit() {
         if (!this.isValid()) {
             this.notificationService.create({
                 type   : 'warning',
                 title  : '抱歉,添加失败',
-                content: '请至少选择一项, 检查所选项是否已经选择时间段与收运量',
+                content: '请至少选择一项, 检查所选项是否已经选择时间段与填写收运量',
             });
             return;
         }
+
+        this.isDemandSpinning = true;
         // 筛选出checked==true的父/子,保存时间段/收运量,组装req
         let selections: DemandListModel[] = this.demandListCache.filter((item: DemandListModel) => item.checked);
-        let req: DemandReq[] = selections.map((item: DemandListModel) => ModelConverter.listModelToReq(item));
+        let req: DemandReq[] = selections.map((item: DemandListModel) => ModelConverter.demandListModelToReq(item));
         console.log(req);
+        this.editPlanService.addDemands(req).subscribe(
+            (res: Result<{ id: number }>) => {
+                this.onClose(true);
+                this.isDemandSpinning = false;
+            },
+            err => {
+                this.isDemandSpinning = false;
+                this.notificationService.create({
+                    type   : 'error',
+                    title  : '添加失败',
+                    content: err.error.message || '请联系系统管理员',
+                })
+            }
+        );
     }
 
-    onCancel() {
-        this.drawerRef.close(null);
+    onClose(b: boolean) {
+        this.drawerRef.close(b);
     }
 
     onStopPro($e) {
@@ -192,6 +219,7 @@ export class AddDemandComponent implements OnInit {
     /**
      * 刷新全选radio状态
      * 是否模糊/全选/全不选
+     * 1-普通/聚类  2-子类
      */
     refreshSelectStatus(type: number): void {
         switch (type) {
@@ -210,21 +238,55 @@ export class AddDemandComponent implements OnInit {
         }
     }
 
-    getDemandList() {
-        // TODO 关键字 this.keyword
-        this.editPlanService
-            .getDemandList(new PageReq(), '')
-            .subscribe((res: Result<PageRes<DemandRes[]>>) => {
+    getCustomerList(option?: { isResetReq: boolean }) {
+        this.isDemandSpinning = true;
+        if (option && option.isResetReq) {
+            this.resetPageReq();
+        }
+        let paramsTemp = this.updateParams();
+        this.customersInfoService.getCustomerList(this.pageReq, paramsTemp).subscribe(
+            (res: Result<PageRes<CustomerRes[]>>) => {
                 if (res.data) {
-                    this.demandListCache = this.demandResToTableRows(res.data.content);
+                    this.demandListCache = this.customerResToTableRows(res.data.content);
                 }
-            });
+                this.isDemandSpinning = false;
+            },
+            err => {
+                this.isDemandSpinning = false;
+            }
+        );
     }
+
+    customerResToTableRows(res: CustomerRes[]): DemandListModel[] {
+        return res.map((item: CustomerRes) => ModelConverter.customerResToListModel(item));
+    }
+
 
     demandResToTableRows(res: DemandModel[]): DemandListModel[] {
         return res.map((item: DemandModel) => ModelConverter.demandResToListModel(item));
     }
 
+    updateParams(): any {
+        let paramsTemp = {};
+        for (let k in this.params) {
+            if (!this.params[ k ]) {
+                this.params[ k ] = null;
+            } else {
+                paramsTemp[ k ] = this.params[ k ];
+            }
+        }
+        return paramsTemp;
+    }
+
+    updatePageRes(data: PageRes<DemandRes[]>): void {
+        this.pageRes = new PageRes(data.page, data.size, data.pages, data.total, data.last);
+    }
+
+    resetPageReq(): void {
+        this.pageReq.page = 1;
+        this.pageReq.size = this.pageRes.size;
+        this.pageReq.sort = 'createdDate.desc';
+    }
 
     /**
      * 检查所选项: 1.时间段; 2.收运量
@@ -233,7 +295,7 @@ export class AddDemandComponent implements OnInit {
         let valid: boolean;
         let tempList = this.demandListCache.filter((item: DemandListModel) => item.checked);
         if (tempList.length === 0) {
-            valid = false;
+            return valid = false;
         }
         tempList.forEach((item: DemandListModel) => {
             if (!item.collectionPeriodId) { // 无选中时间段
@@ -244,7 +306,7 @@ export class AddDemandComponent implements OnInit {
                     if (child.checked && VerifyUtil.isEmpty(child.amountOfGarbage)) { // 子请求无输入收运量
                         valid = false;
                         return;
-                    }
+                    } else valid = true;
                 });
             } else if ((!item.subTaskList || item.subTaskList.length === 0) && VerifyUtil.isEmpty(item.amountOfGarbage)) { // 非聚类请求无输入收运量
                 valid = false;

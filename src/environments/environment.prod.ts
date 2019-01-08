@@ -2,7 +2,7 @@
  * Created by wujiahui on 2018/11/22.
  */
 export const environment = {
-    production: false,
+    production: true,
     host: 'http://fjzz.3po-dwm.com:8888',
     api: 'http://fjzz.3po-dwm.com:8888/api',
     // 高德 api key
