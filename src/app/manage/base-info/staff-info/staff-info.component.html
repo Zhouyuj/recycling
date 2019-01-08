@@ -61,7 +61,7 @@
 
             <nz-table #staffTable
                       [nzData]="listCache"
-                      [nzScroll]="{x: '2200px', y: '500px'}"
+                      [nzScroll]="{x: '2800px', y: '500px'}"
                       [nzFrontPagination]="false"
                       [nzTotal]="pageRes.total"
                       [nzPageIndex]="pageRes.page"
@@ -70,7 +70,7 @@
                       (nzPageSizeChange)="onPage($event)">
                 <thead>
                 <tr>
-                    <th nzWidth="62px"></th><!-- 此表头为checkbox -->
+                    <th nzWidth="64px"></th><!-- 此表头为checkbox -->
                     <th nzWidth="250px">姓名
                         <br/>
                         <input type="text" nz-input placeholder=""
@@ -143,7 +143,7 @@
                                [(ngModel)]="params.mobilePhone"
                                (keyup)="$event.which === 13 && onKeywordSearch()">
                     </th>
-                    <th nzWidth="250px">
+                    <th nzWidth="150px">
                         紧急联系人
                         <br/>
                         <input type="text" nz-input placeholder=""
@@ -167,7 +167,7 @@
                                [(ngModel)]="params.email"
                                (keyup)="$event.which === 13 && onKeywordSearch()">
                     </th>
-                    <th nzWidth="200px"
+                    <th
                         nzShowSort
                         [(nzSort)]="sortMap.createTime"
                         (nzSortChange)="onSort($event, 'createTime')">

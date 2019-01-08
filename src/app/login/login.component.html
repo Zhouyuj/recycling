@@ -16,7 +16,8 @@
                     <form nz-form  class="login-form" (ngSubmit)="onSubmit()">
                         <nz-form-item>
                             <nz-form-control>
-                                <nz-input-group nzPrefixIcon="anticon anticon-user">
+                                <ng-template #prefixUser><i nz-icon type="user"></i></ng-template>
+                                <nz-input-group [nzPrefix]="prefixUser">
                                     <input type="text"
                                            name="username"
                                            maxlength="20"
@@ -31,7 +32,8 @@
                         </nz-form-item>
                         <nz-form-item>
                             <nz-form-control>
-                                <nz-input-group nzPrefixIcon="anticon anticon-lock">
+                                <ng-template #prefixLock><i nz-icon type="lock"></i></ng-template>
+                                <nz-input-group [nzPrefix]="prefixLock">
                                     <input type="password"
                                            name="password"
                                            maxlength="20"
@@ -50,33 +52,6 @@
                             </nz-form-control>
                         </nz-form-item>
                     </form>
-
-                    <!--<form nz-form [formGroup]="validateForm" class="login-form" (ngSubmit)="submitForm()">
-                        <nz-form-item>
-                            <nz-form-control>
-                                <nz-input-group nzPrefixIcon="anticon anticon-user">
-                                    <input type="text" nz-input formControlName="userName" placeholder="请输入您的用户名">
-                                </nz-input-group>
-                                <nz-form-explain *ngIf="validateForm.get('userName').dirty && validateForm.get('userName').errors">用户名不正确</nz-form-explain>
-                            </nz-form-control>
-                        </nz-form-item>
-                        <nz-form-item>
-                            <nz-form-control>
-                                <nz-input-group nzPrefixIcon="anticon anticon-lock">
-                                    <input type="password" nz-input formControlName="password" placeholder="请输入您的密码">
-                                </nz-input-group>
-                                <nz-form-explain *ngIf="validateForm.get('password').dirty && validateForm.get('password').errors">密码不正确</nz-form-explain>
-                            </nz-form-control>
-                        </nz-form-item>
-                        <nz-form-item>
-                            <nz-form-control>
-                                &lt;!&ndash;<label nz-checkbox formControlName="remember">
-                                    <span>记住我</span>
-                                </label>&ndash;&gt;
-                                <button nz-button class="login-form-button" [nzType]="'primary'">登录</button>
-                            </nz-form-control>
-                        </nz-form-item>
-                    </form>-->
                 </div>
             </div>
         </div>

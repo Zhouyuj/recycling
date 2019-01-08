@@ -37,7 +37,7 @@ export class LoginComponent implements OnInit {
         this.loginService.auth(this.formModel).subscribe(
             (res: Result<{ token: string }>) => {
                 if (res.data.token) {
-                    let token = res.data.token;
+                    const token = res.data.token;
                     let deCodePayload = {};
                     deCodePayload = JwtUtils.decode(token);
                     this.authorizationService.setCurrentUser(deCodePayload);
@@ -76,6 +76,6 @@ export class LoginComponent implements OnInit {
     }
 
     redirectToHome(): void {
-        this.router.navigateByUrl('/home');
+        this.router.navigateByUrl('/');
     }
 }

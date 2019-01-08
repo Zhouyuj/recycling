@@ -9,7 +9,7 @@ import { AuthRoutingGuardService } from '../core/services/authorization/auth-rou
 
 const ROUTER_CONFIG: Routes = [
     {
-        path    : '', component: ManageAppComponent, canActivate: [AuthRoutingGuardService],
+        path    : '', component: ManageAppComponent, canActivate: [ AuthRoutingGuardService ],
         children: [
             {
                 path        : 'plan',

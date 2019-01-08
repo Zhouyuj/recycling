@@ -8,22 +8,31 @@ import { VerifyUtil } from '../shared/utils/verify-utils';
 import { Token } from '../core/services/token/token';
 import { TokenService } from '../core/services/token/token.service';
 
-/*@Injectable({
+@Injectable({
     providedIn: 'root'
 })
 export class LoginService extends RebirthHttp {
 
-    constructor(http: HttpClient) {
+    constructor(http: HttpClient,
+                private tokenService: TokenService) {
         super(http);
+    }
+
+    isLogin(): boolean {
+        let token: Token = this.tokenService.getToken();
+        if (VerifyUtil.isNotEmpty(token)) {
+            return true;
+        }
+        return false;
     }
 
     @POST('/auth')
     auth(@Body body: { username?: string, password?: string }): Observable<Result<{ token: string }>> {
         return null;
     }
-}*/
+}
 
-@Injectable({
+/*@Injectable({
     providedIn: 'root'
 })
 export class LoginService {
@@ -47,4 +56,4 @@ export class LoginService {
         );
     }
 
-}
+}*/

@@ -146,7 +146,8 @@
                         <td>{{data.level ? '子收运单位' : (data.category === 'Cluster' ? '聚类点' : '普通点')}}</td>
                         <td>
                             <i nz-icon
-                               class="anticon anticon-environment location"
+                               type="environment" theme="outline"
+                               class="location"
                                *ngIf="data.lngLat">
                             </i>
                         </td>
@@ -169,7 +170,8 @@
                             <td>子收运单位</td>
                             <td>
                                 <i nz-icon
-                                   class="anticon anticon-environment location"
+                                   type="environment" theme="outline"
+                                   class="location"
                                    *ngIf="item.lngLat">
                                 </i>
                             </td>

@@ -190,8 +190,9 @@
                     <td nzShowCheckbox [(nzChecked)]="item.checked"
                         (nzCheckedChange)="onSelect($event, item)"></td>
                     <td>
-                        <i nz-icon
-                           class="anticon anticon-environment location"
+                        <i nz-icon ></i>
+                        <i nz-icon type="environment" theme="outline"
+                           class="location"
                            *ngIf="item.lngLat">
                         </i>
                     </td>

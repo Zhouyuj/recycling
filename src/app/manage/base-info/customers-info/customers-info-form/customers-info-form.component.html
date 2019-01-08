@@ -544,8 +544,8 @@
                                    [(ngModel)]="item.name">
                         </nz-form-control>
                         <nz-form-control [nzSm]="2" [nzXs]="2" nzOffset="1">
-                            <i nz-icon type="minus-circle-o"
-                               class="anticon dynamic-delete-button anticon-minus-circle-o"
+                            <i nz-icon type="minus-circle" theme="outline"
+                               class="dynamic-delete-button"
                                nz-popconfirm
                                nzTitle="聚类点要求至少存在一个子收运单位,删除最后一个子收运单位后,提交表单时,该聚类点将被删除"
                                [nzCondition]="formModelCluster.childCollections.length > 1"

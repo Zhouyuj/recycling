@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { StorageType } from '../storage/storage-type.enum';
 import { StorageService } from '../storage/storage.service';
+import { TokenService } from '../token/token.service';
 import { VerifyUtil } from '../../../shared/utils/verify-utils';
 
 @Injectable({
@@ -13,7 +14,8 @@ export class AuthorizationService {
     private storageType: StorageType;
     private currentUser: any;   // TODO
 
-    constructor(private storageService: StorageService) {
+    constructor(private storageService: StorageService,
+                private tokenService: TokenService) {
         this.storageType = VerifyUtil.isEmpty(this.storageType) ? StorageType.localStorage : this.storageType;
     }
 
@@ -31,8 +33,8 @@ export class AuthorizationService {
             return this.currentUser;
         }
         this.currentUser = this.storageService.get({
-            pool: AuthorizationService.STORAGE_POOL_KEY,
-            key: AuthorizationService.STORAGE_KEY,
+            pool       : AuthorizationService.STORAGE_POOL_KEY,
+            key        : AuthorizationService.STORAGE_KEY,
             storageType: this.storageType
         });
         return this.currentUser;
@@ -41,10 +43,11 @@ export class AuthorizationService {
     logout() {
         this.currentUser = null;
         this.storageService.remove({
-            pool: AuthorizationService.STORAGE_POOL_KEY,
-            key: AuthorizationService.STORAGE_KEY,
+            pool       : AuthorizationService.STORAGE_POOL_KEY,
+            key        : AuthorizationService.STORAGE_KEY,
             storageType: this.storageType
         });
+        this.tokenService.clearToken();
     }
 
     isLogin() {
