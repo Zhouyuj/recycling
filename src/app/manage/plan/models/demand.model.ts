@@ -20,6 +20,7 @@ export interface SubDemandModel {
     amountOfGarbage: number;
     collectionPeriod: CollectionPeriod;
     checked?: boolean;
+    editable?: boolean;
 }
 
 export interface CollectionPeriod {
@@ -38,6 +39,7 @@ export interface DemandRes extends DemandModel {
 export interface DemandListModel extends DemandModel {
     // 选中的收运时间段 提供给列表中编辑使用
     selectedPeriod?: CollectionPeriod;
+    editable?: boolean;
 }
 
 export interface DemandReq {

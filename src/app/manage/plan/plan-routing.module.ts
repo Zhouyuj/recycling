@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { PlanComponent } from './plan/plan.component';
+import { PlanComponent } from './plan.component';
 import { EditPlanComponent } from './edit-plan/edit-plan.component';
 
 export const ROUTER_CONFIG: Routes = [

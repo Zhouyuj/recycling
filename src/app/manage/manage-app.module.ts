@@ -12,7 +12,7 @@ import { TestMapComponent } from './test-map/test-map.component';
 import { TestMapDemoService } from './test-map/test-map-demo.service';
 import { TestMarkerDemoService } from './test-map/test-marker-demo.service';
 
-import { ManageAppComponent } from './manage-app/manage-app.component';
+import { ManageAppComponent } from './manage-app.component';
 
 @NgModule({
     imports     : [

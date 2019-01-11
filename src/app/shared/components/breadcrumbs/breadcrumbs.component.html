@@ -3,7 +3,7 @@
         <nz-breadcrumb-item *ngFor="let item of options; index as i">
             <i nz-icon type="home" theme="outline" *ngIf="item.link == '/'"></i>
             <!-- 以下两个标签互斥 a,span -->
-            <a *ngIf="item.link != ''" routerLink="[item.link]" [ngStyle]="{color: item.length - 1 == i ? '#83bf46' : 'rbga(0,0,0, .45)'}">
+            <a *ngIf="item.link != ''" [routerLink]="item.link" [ngStyle]="{color: item.length - 1 == i ? '#83bf46' : 'rbga(0,0,0, .45)'}">
                 {{item.title}}
             </a>
             <span *ngIf="item.link == ''" [ngStyle]="{color: item.length - 1 == i ? '#83bf46' : 'rbga(0,0,0, .45)'}">

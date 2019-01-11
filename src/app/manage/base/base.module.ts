@@ -4,7 +4,7 @@ import { SharedModule } from '../../shared/shared.module';
 import { StaffInfoModule } from './staff-info/staff-info.module';
 import { VehicleInfoModule } from './vehicle-info/vehicle-info.module';
 import { CustomersInfoModule } from './customers-info/customers-info.module';
-import { BaseInfoRoutingModule } from './base-info-routing.module';
+import { BaseInfoRoutingModule } from './base-routing.module';
 
 @NgModule({
     imports: [

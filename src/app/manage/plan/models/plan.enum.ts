@@ -33,6 +33,8 @@ export enum PlanStateEnumChinese {
 export enum PlanOperationEnum {
     EXECUTE = 'EXECUTE',
     STOP = 'STOP',
+    SAVE = 'SAVE',
     EDIT = 'EDIT',
     PLANNING = 'PLANNING',
+    COMPLETE = 'COMPLETE',
 }

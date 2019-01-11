@@ -11,7 +11,8 @@ import {CollectionPeriod} from './demand.model';
 import {SubDemandModel} from './demand.model';
 import {DemandReq} from './demand.model';
 import {VerifyUtil} from '../../../shared/utils/verify-utils';
-import {CustomerRes, CollectionPeriod as CollectionPeriodOfCustomerRes} from '../../base-info/customers-info/customer-res.model';
+import {CustomerRes, CollectionPeriod as CollectionPeriodOfCustomerRes} from '../../base/customers-info/customer-res.model';
+import {DemandRes} from './demand.model';
 
 export class ModelConverter {
 
@@ -28,21 +29,8 @@ export class ModelConverter {
         return l;
     }
 
-    public static planResToFormModel(r: PlanRes) {
-
-    }
-
-    public static demandResToListModel(r: DemandModel): DemandListModel {
+    public static demandResToListModel(r: DemandRes): DemandListModel {
         let l: DemandListModel;
-        l = r;
-        l.selectedPeriod = r.collectionPeriods.find((p: CollectionPeriod) => p.id === r.collectionPeriodId);
-        //l.collectionPeriodId = null;
-        l.checked = false;
-        if (l.subTaskList && l.subTaskList.length > 0) {
-            l.subTaskList.forEach((child: SubDemandModel) => {
-                child.checked = false;
-            });
-        }
         return l;
     }
 

@@ -26,6 +26,54 @@
     th, td {
         text-align: center;
     }
+
+    /* start of 收运请求表格 */
+    .editable-cell {
+        position: relative;
+    }
+
+    .editable-cell-text-wrapper {
+        padding-right: 35px;
+    }
+
+    .editable-cell-icon,
+    .editable-cell-icon-check {
+        position: absolute;
+        right: 0;
+        width: 20px;
+        cursor: pointer;
+    }
+
+    .editable-cell-icon-close {
+        position: absolute;
+        right: 20px;
+        width: 20px;
+        cursor: pointer;
+    }
+
+    .editable-cell-icon {
+        line-height: 24px;
+        display: none;
+    }
+    /* 行hover时出现图标 */
+    .editable-tr:hover .editable-cell-icon,
+    .editable-tr:hover .editable-cell-icon-check,
+    .editable-tr:hover .editable-cell-icon-close {
+        display: inline-block;
+    }
+
+    .editable-cell-icon-check,
+    .editable-cell-icon-close {
+        line-height: 24px;
+        display: inline-block;
+    }
+
+    .editable-cell-icon:hover,
+    .editable-cell-icon-check:hover,
+    .editable-cell-icon-close:hover {
+        color: #108ee9;
+    }
+    /* end of 收运请求表格 */
 }
 
 .inner-table-opt {

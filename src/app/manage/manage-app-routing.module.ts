@@ -3,7 +3,7 @@
  */
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ManageAppComponent } from './manage-app/manage-app.component';
+import { ManageAppComponent } from './manage-app.component';
 import { TestMapComponent } from './test-map/test-map.component';
 import { AuthRoutingGuardService } from '../core/services/authorization/auth-routing-guard.service';
 
@@ -18,7 +18,7 @@ const ROUTER_CONFIG: Routes = [
             },
             {
                 path        : 'baseInfo',
-                loadChildren: './base-info/base-info.module#BaseInfoModule',
+                loadChildren: './base/base.module#BaseInfoModule',
                 data        : { title: '基础信息' },
             },
             {

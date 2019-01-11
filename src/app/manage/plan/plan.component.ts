@@ -1,20 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PlanListModel } from './../models/plan-list.model';
-import { PageRes } from '../../../shared/models/page/page-res.model';
-import { PageReq } from '../../../shared/models/page/page-req.model';
-import { PlanService } from './../plan.service';
-import { PlanRes } from './../models/plan-res.model';
-import { Result } from '../../../shared/models/response/result.model';
-import { ModelConverter } from './../models/model-converter';
+import { Observable } from 'rxjs/index';
+import { map } from 'rxjs/internal/operators/map';
 import { NzModalService, NzDrawerService } from 'ng-zorro-antd';
-import { AddPlanComponent } from '../add-plan/add-plan.component';
-import { PlanStateEnum,PlanStateEnumChinese } from '../models/plan.enum';
-import { RouteModel } from '../models/route.model';
-import {Observable} from 'rxjs/index';
-import {PlanOperationEnum} from '../models/plan.enum';
-import {map} from 'rxjs/internal/operators/map';
-import {NotificationService} from '../../../shared/services/notification/notification.service';
+
+import { AddPlanComponent } from './add-plan/add-plan.component';
+import { ModelConverter } from './models/model-converter';
+import { NotificationService } from '../../shared/services/notification/notification.service';
+import { PlanListModel } from './models/plan-list.model';
+import { PageRes } from '../../shared/models/page/page-res.model';
+import { PageReq } from '../../shared/models/page/page-req.model';
+import { PlanOperationEnum } from './models/plan.enum';
+import { PlanRes } from './models/plan-res.model';
+import { PlanService } from './plan.service';
+import { PlanStateEnum, PlanStateEnumChinese } from './models/plan.enum';
+import { Result } from '../../shared/models/response/result.model';
+import { RouteModel } from './models/route.model';
 
 @Component({
     selector   : 'app-plan',

@@ -9,11 +9,11 @@ import { PageRes } from '../../../../shared/models/page/page-res.model';
 import { Result } from '../../../../shared/models/response/result.model';
 import { DemandModel, DemandListModel, SubDemandModel, CollectionPeriod } from '../../models/demand.model';
 import { ModelConverter } from '../../models/model-converter';
-import {DemandReq} from '../../models/demand.model';
-import {VerifyUtil} from '../../../../shared/utils/verify-utils';
+import { DemandReq } from '../../models/demand.model';
+import { VerifyUtil } from '../../../../shared/utils/verify-utils';
 import { NotificationService } from '../../../../shared/services/notification/notification.service';
-import {CustomersInfoService} from '../../../base-info/customers-info/customers-info.service';
-import {CustomerRes} from '../../../base-info/customers-info/customer-res.model';
+import { CustomersInfoService } from '../../../base/customers-info/customers-info.service';
+import { CustomerRes } from '../../../base/customers-info/customer-res.model';
 
 @Component({
     selector   : 'app-add-demand',
@@ -35,10 +35,7 @@ export class AddDemandComponent implements OnInit {
     };
 
     selectedCluster: DemandListModel;   // 选中聚类请求
-
     demandListCache: DemandListModel[];
-
-    selectedDemandsCache: DemandReq[];  // 保存已选请求
 
     constructor(private drawerRef: NzDrawerRef<any>,
                 private editPlanService: EditPlanService,
@@ -71,7 +68,7 @@ export class AddDemandComponent implements OnInit {
      * 显示该聚类下的子请求
      * @param item
      */
-    onShowCluster(item: DemandListModel) {
+    onShowSub(item: DemandListModel) {
         this.isShowSub = true;
         this.demandListCache.forEach((d: DemandListModel) => {
             d.checked = false;
@@ -83,7 +80,7 @@ export class AddDemandComponent implements OnInit {
         }
     }
 
-    onHideCluster() {
+    onHideSub() {
         // 与 onShowCluster 互斥
         this.isShowSub = false;
         this.demandListCache.forEach((item: DemandListModel) => {   // 撤销选中的子请求
@@ -96,6 +93,8 @@ export class AddDemandComponent implements OnInit {
         });
         this.refreshSelectStatus(2);
         this.selectedCluster = null;
+        //this.getCustomerList();
+        console.log(this.demandListCache);
     }
 
     /**
@@ -191,7 +190,6 @@ export class AddDemandComponent implements OnInit {
         // 筛选出checked==true的父/子,保存时间段/收运量,组装req
         let selections: DemandListModel[] = this.demandListCache.filter((item: DemandListModel) => item.checked);
         let req: DemandReq[] = selections.map((item: DemandListModel) => ModelConverter.demandListModelToReq(item));
-        console.log(req);
         this.editPlanService.addDemands(req).subscribe(
             (res: Result<{ id: number }>) => {
                 this.onClose(true);
@@ -259,11 +257,6 @@ export class AddDemandComponent implements OnInit {
 
     customerResToTableRows(res: CustomerRes[]): DemandListModel[] {
         return res.map((item: CustomerRes) => ModelConverter.customerResToListModel(item));
-    }
-
-
-    demandResToTableRows(res: DemandModel[]): DemandListModel[] {
-        return res.map((item: DemandModel) => ModelConverter.demandResToListModel(item));
     }
 
     updateParams(): any {

@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { SharedModule } from '../../shared/shared.module';
 import { PlanRoutingModule } from './plan-routing.module';
 import { PlanService } from './plan.service';
-import { PlanComponent } from './plan/plan.component';
+import { PlanComponent } from './plan.component';
 import { PlanMockService } from './plan-mock.service';
 import { AddPlanComponent } from './add-plan/add-plan.component';
 import { EditPlanService } from './edit-plan/edit-plan.service';

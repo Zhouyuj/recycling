@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 
-import { OverlayModule } from "@angular/cdk/overlay";
 
 import { SharedModule } from '../../../shared/shared.module';
 import { EditPlanComponent } from './edit-plan.component';
@@ -11,7 +10,6 @@ import { AddDemandComponent } from './add-demand/add-demand.component';
 
 @NgModule({
     imports        : [
-        OverlayModule,
         SharedModule,
     ],
     declarations   : [
