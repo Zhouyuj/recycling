@@ -421,8 +421,8 @@ export class EditPlanComponent implements OnInit {
             (res: Result<any>) => {
                 this.getDemandList();
                 this.notificationService.create({
-                    type   : 'success',
-                    title  : '删除成功',
+                    type : 'success',
+                    title: '删除成功',
                 });
             },
             err => {
