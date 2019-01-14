@@ -45,6 +45,13 @@ export class EditPlanService extends RebirthHttp {
         return null;
     }
 
+    @POST('/plans/:id/routes/:routeId/operations')
+    changeRouteStatus(@Path('id') id: string,
+                      @Path('routeId') routeId: string,
+                      @Query('operate') operate: string): Observable<Result<any>> {
+        return null;
+    }
+
     /**
      * 为线路添加任务
      * @param id
@@ -52,7 +59,7 @@ export class EditPlanService extends RebirthHttp {
      * @returns {null}
      */
     @POST('/routes/:id/tasks')
-    addDemandsOnRoute(@Path('id') id: string, @Query('taskIds') taskIds: string): Observable<Result<any>> {
+    addTasksOnRoute(@Path('id') id: string, @Query('taskIds') taskIds: string): Observable<Result<any>> {
         return null;
     }
 
@@ -63,11 +70,24 @@ export class EditPlanService extends RebirthHttp {
      * @returns {null}
      */
     @DELETE('/routes/:id/tasks')
-    delDemandsOnRoute(@Path('id') id: string, @Query('taskIds') taskIds: string): Observable<Result<any>> {
+    delTasksOnRoute(@Path('id') id: string, @Query('taskIds') taskIds: string): Observable<Result<any>> {
+        return null;
+    }
+
+    /**
+     * 修改任务优先级
+     */
+    @PATCH('/routes/:id/tasks')
+    updateTasksPriorityOnRoute(@Path('id') id: string,
+                               @Body taskPriorityList: { id: number, priority: number }[]): Observable<Result<any>> {
         return null;
     }
 
     /** end of routes **/
+
+
+
+
 
 
     /** start of tasks/demands **/

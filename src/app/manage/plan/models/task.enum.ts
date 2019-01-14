@@ -3,17 +3,17 @@
  */
 
 export enum TaskEnum {
-    Pending = 'Pending',
+    ToDo = 'ToDo',
+    Going = 'Going',
     Collecting = 'Collecting',
-    Suspend = 'Suspend',
+    Delay = 'Delay',
     Skipped = 'Skipped',
-    NoCollecting = 'NoCollecting',
     Completed = 'Completed',
 
-    PendingChinese = '待收集',
+    ToDoChinese = '待收集',
+    GoingChinese = '正在前往',
     CollectingChinese = '收集中',
-    SuspendChinese = '挂起',
+    DelayChinese = '挂起',
     SkippedChinese = '跳过',
-    NoCollectingChinese = '没有收集',
     CompletedChinese = '完成收集',
 }

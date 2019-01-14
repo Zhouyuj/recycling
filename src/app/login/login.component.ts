@@ -16,6 +16,7 @@ import { JwtUtils } from '../shared/utils/jwt-utils';
 })
 export class LoginComponent implements OnInit {
     formModel: LoginModel;
+    submitBtnValid = false;
 
     constructor(private router: Router,
                 private loginService: LoginService,
@@ -34,16 +35,20 @@ export class LoginComponent implements OnInit {
         if (!this.checkForm()) {
             return;
         }
+        this.submitBtnValid = true;
+        let msgId = this.messageService.create({ type: 'loading', content: '正在登陆,请稍后' });
         this.loginService.auth(this.formModel).subscribe(
             (res: Result<{ token: string }>) => {
                 if (res.data.token) {
+                    this.messageService.remove(msgId);
+                    this.messageService.create({ type: 'success', content: '登陆成功,页面正在跳转' });
+
                     const token = res.data.token;
                     let deCodePayload = {};
                     deCodePayload = JwtUtils.decode(token);
                     this.authorizationService.setCurrentUser(deCodePayload);
                     this.tokenService.setToken(token);
 
-                    this.messageService.create({ type: 'success', content: '登陆成功,页面正在跳转' });
                     this.redirectToHome();
                 }
             },
@@ -53,7 +58,9 @@ export class LoginComponent implements OnInit {
                     title  : '抱歉,用户名或密码错误',
                     content: '只能包含字符、数字',
                 });
-            }
+                this.submitBtnValid = false;
+            },
+            () => this.submitBtnValid = false
         );
     }
 

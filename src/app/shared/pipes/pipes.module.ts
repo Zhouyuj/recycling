@@ -1,21 +1,29 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DistrictCodeToNamePipe } from './districts/district-code-to-name.pipe';
-import { SecondToHourMinutePipe } from './time/second-to-hour-minute.pipe';
 import { CollectionDateTypePipe } from './time/collection-date-type.pipe';
 import { CollectionPeriodPriorityPipe } from './priority/collection-period-priority.pipe';
+import { DistrictCodeToNamePipe } from './districts/district-code-to-name.pipe';
+import { SecondToHourMinutePipe } from './time/second-to-hour-minute.pipe';
+import { TaskStateToChinesePipe } from './plan/plan.pipe';
 
 @NgModule({
     imports     : [
         CommonModule
     ],
-    exports: [
-        DistrictCodeToNamePipe,
-        SecondToHourMinutePipe,
+    exports     : [
         CollectionDateTypePipe,
         CollectionPeriodPriorityPipe,
+        DistrictCodeToNamePipe,
+        SecondToHourMinutePipe,
+        TaskStateToChinesePipe,
     ],
-    declarations: [ DistrictCodeToNamePipe, SecondToHourMinutePipe, CollectionDateTypePipe, CollectionPeriodPriorityPipe ],
+    declarations: [
+        CollectionDateTypePipe,
+        CollectionPeriodPriorityPipe,
+        DistrictCodeToNamePipe,
+        SecondToHourMinutePipe,
+        TaskStateToChinesePipe,
+    ],
 })
 export class PipesModule {
 }

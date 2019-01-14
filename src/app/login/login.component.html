@@ -48,7 +48,13 @@
                         </nz-form-item>
                         <nz-form-item>
                             <nz-form-control>
-                                <button nz-button class="login-form-button" [nzType]="'primary'">登录</button>
+                                <nz-spin [nzSpinning]="submitBtnValid">
+                                    <button nz-button
+                                            class="login-form-button"
+                                            [nzType]="'primary'">
+                                        登录
+                                    </button>
+                                </nz-spin>
                             </nz-form-control>
                         </nz-form-item>
                     </form>

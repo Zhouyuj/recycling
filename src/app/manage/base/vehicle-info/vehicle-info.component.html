@@ -186,7 +186,9 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr *ngFor="let item of staffTable.data; index as i" (click)="onSelectTr($event, item)">
+                <tr *ngFor="let item of listCache; index as i"
+                    [ngClass]="{ 'table-row-selected': item.checked }"
+                    (click)="onSelectTr($event, item)">
                     <td nzShowCheckbox [(nzChecked)]="item.checked"
                         (nzCheckedChange)="onSelect($event, item)"></td>
                     <td>

@@ -62,7 +62,7 @@
     <div class="table-content">
         <nz-spin [nzSize]="'large'" [nzSpinning]="isSpinning">
             <nz-table #nzTable
-                      [nzScroll]="{x: '2200px', y: '500px'}"
+                      [nzScroll]="{x: '1900px', y: '500px'}"
                       [nzData]="listCache"
                       [nzFrontPagination]="false"
                       [nzTotal]="pageRes.total"
@@ -77,8 +77,8 @@
                         <div></div>
                     </th><!-- 此th与下面的th(全选)互斥,当前先不实现全选 -->
                     <th nzWidth="100px">类型</th>
-                    <th nzWidth="100px">定位</th>
-                    <th nzWidth="100px">图片</th>
+                    <th nzWidth="70px">定位</th>
+                    <th nzWidth="70px">图片</th>
                     <th nzWidth="200px" nzCustomFilter>名称
                         <br/>
                         <input type="text" nz-input placeholder=""
@@ -93,8 +93,8 @@
                         (nzFilterChange)="onFilter($event)">
                         所属区域
                     </th>-->
-                    <th nzWidth="200px">所属区域</th>
-                    <th nzWidth="250px">收运时间段</th>
+                    <th nzWidth="150px">所属区域</th>
+                    <th nzWidth="120px">收运时间段</th>
                     <th nzWidth="200px">地址
                         <br/>
                         <input type="text" nz-input placeholder=""
@@ -127,7 +127,7 @@
                                [(ngModel)]="params.contactName"
                                (keyup)="$event.which === 13 && onKeywordSearchTh('contactName')">
                     </th>
-                    <th nzWidth="200px">联系电话 <br/>
+                    <th>联系电话 <br/>
                         <input type="text" nz-input placeholder=""
                                nzSize="small" style="width: 60%;"
                                [(ngModel)]="params.mobilePhone"
@@ -137,7 +137,9 @@
                 </thead>
                 <tbody>
                 <ng-template ngFor let-data [ngForOf]="nzTable.data">
-                    <tr *ngIf="data.level === 0" (click)="onSelectedTr($event, data)">
+                    <tr *ngIf="data.level === 0"
+                        [ngClass]="{ 'table-row-selected': data.checked }"
+                        (click)="onSelectedTr($event, data)">
                         <td [nzShowExpand]="data.customerList && data.customerList.length > 0"
                             [(nzExpand)]="data.expand"
                             (nzExpandChange)="onCollapse(data, $event)"></td>
@@ -154,11 +156,11 @@
                             </i>
                         </td>
                         <td>
-                            <span class="show-image-cell"
-                                  *ngIf="data.category === 'Separate'"
+                            <div class="show-image-cell"
+                                  *ngIf="data.category === 'Separate' && data.images.length > 0"
                                   (click)="onShowImage($event, data, tplImageModalContent)">
-                                {{data.images.length}}
-                            </span>
+                                <i nz-icon type="picture" theme="outline"></i>
+                            </div>
                         </td>
                         <td>{{data.name}}</td>
                         <td>{{data.countyName}}</td>
@@ -171,7 +173,8 @@
                         <td>{{data.mobilePhone || data.landlinePhone}}</td>
                     </tr>
                     <ng-template *ngIf="data.expand" ngFor let-item [ngForOf]="data.customerList">
-                        <tr (click)="onSelectedTr($event, item)">
+                        <tr [ngClass]="{ 'table-row-selected': item.checked }"
+                                (click)="onSelectedTr($event, item)">
                             <td></td>
                             <td nzShowCheckbox [(nzChecked)]="item.checked" [nzDisabled]="item.disabled"
                                 (nzCheckedChange)="onSelected($event, item)"></td>
@@ -187,7 +190,7 @@
                                 <span class="show-image-cell"
                                       *ngIf="item.category === 'Separate' && item.images.length"
                                       (click)="onShowImage($event, item, tplImageModalContent)">
-                                    {{item.images.length}}
+                                    <i nz-icon type="picture" theme="outline"></i>
                                 </span>
                             </td>
                             <td>{{item.name}}</td>

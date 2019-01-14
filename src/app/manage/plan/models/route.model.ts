@@ -10,13 +10,16 @@ export interface RouteModel {
     name: string;
     plateNumber: string;
     priority: number;
+    state: RouteState;
 }
 
-export interface RouteListModel {
-    id: string;
-    lock: boolean;
-    name: string;
-    plateNumber: string;
-    priority: number;
-    checked: boolean;   // 是否被选中
+export interface RouteListModel extends RouteModel {
+    checked?: boolean;   // 是否被选中
+}
+
+export enum RouteState {
+    Stopped = 'Stopped',
+    UnExecuted = 'UnExecuted',
+    Executing = 'Executing',
+    Completed = 'Completed',
 }

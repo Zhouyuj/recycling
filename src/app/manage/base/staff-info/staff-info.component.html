@@ -61,7 +61,7 @@
 
             <nz-table #staffTable
                       [nzData]="listCache"
-                      [nzScroll]="{x: '2800px', y: '500px'}"
+                      [nzScroll]="{x: '2300px', y: '500px'}"
                       [nzFrontPagination]="false"
                       [nzTotal]="pageRes.total"
                       [nzPageIndex]="pageRes.page"
@@ -71,14 +71,14 @@
                 <thead>
                 <tr>
                     <th nzWidth="64px"></th><!-- 此表头为checkbox -->
-                    <th nzWidth="250px">姓名
+                    <th nzWidth="150px">姓名
                         <br/>
                         <input type="text" nz-input placeholder=""
                                nzSize="small" style="width: 60%;"
                                [(ngModel)]="params.name"
                                (keyup)="$event.which === 13 && onKeywordSearch()">
                     </th>
-                    <th nzWidth="250px">
+                    <th nzWidth="150px">
                         工号
                         <br/>
                         <input type="text" nz-input placeholder=""
@@ -107,7 +107,7 @@
                         (nzFilterChange)="onFilter($event, 'roleId')">
                         系统角色
                     </th>
-                    <th nzWidth="200px"
+                    <th nzWidth="150px"
                         nzShowSort
                         [(nzSort)]="sortMap.entryTime"
                         (nzSortChange)="onSort($event, 'entryTime')">
@@ -135,7 +135,7 @@
                                [(ngModel)]="params.homeAddress"
                                (keyup)="$event.which === 13 && onKeywordSearch()">
                     </th>
-                    <th nzWidth="250px">
+                    <th nzWidth="200px">
                         联系电话
                         <br/>
                         <input type="text" nz-input placeholder=""
@@ -151,7 +151,7 @@
                                [(ngModel)]="params.emergencyContact"
                                (keyup)="$event.which === 13 && onKeywordSearch()">
                     </th>
-                    <th nzWidth="250px">
+                    <th nzWidth="200px">
                         紧急联系人电话
                         <br/>
                         <input type="text" nz-input placeholder=""
@@ -159,7 +159,7 @@
                                [(ngModel)]="params.emergencyContactPhone"
                                (keyup)="$event.which === 13 && onKeywordSearch()">
                     </th>
-                    <th nzWidth="250px">
+                    <th nzWidth="200px">
                         邮箱
                         <br/>
                         <input type="text" nz-input placeholder=""
@@ -176,7 +176,9 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr *ngFor="let item of staffTable.data; index as i" (click)="onSelectTr($event, item)">
+                <tr *ngFor="let item of listCache; index as i"
+                    [ngClass]="{ 'table-row-selected': item.checked }"
+                    (click)="onSelectTr($event, item)">
                     <td nzShowCheckbox [(nzChecked)]="item.checked"
                         (nzCheckedChange)="onSelect($event, item)"></td>
                     <td>{{item.name}}</td>

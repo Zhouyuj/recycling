@@ -2,7 +2,6 @@
  * Created by wujiahui on 2019/1/2.
  */
 
-
 export interface TaskModel {
     id             : number;
     name           : string;
@@ -12,8 +11,9 @@ export interface TaskModel {
     // 完成/跳过 不可取消派发
     state          : string;
     // 缺少时间段
-    collectionPeriod: {
+    collectionPeriod?: {
         startTime: number,
         endTime: number,
     }
+    checked?: boolean;
 }

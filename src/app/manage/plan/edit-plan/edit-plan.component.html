@@ -108,18 +108,24 @@
                             [ngClass]="{ 'table-row-selected': item.checked }"
                             (click)="onSelectRoute($event, item)">
                             <td>
-                                <i nz-icon type="lock"
-                                   theme="outline"
-                                   style="cursor: pointer;"
-                                   *ngIf="item.lock"
-                                   (click)="onRouteStatusChange($event, item)">
-                                </i>
-                                <i nz-icon type="unlock"
-                                   theme="outline"
-                                   style="cursor: pointer;"
-                                   *ngIf="!item.lock"
-                                   (click)="onRouteStatusChange($event, item)">
-                                </i>
+                                <div class="status-cell" *ngIf="item.state === 'Executing'">
+                                    <i nz-icon type="lock" theme="outline"
+                                       style="cursor: pointer;"
+                                       nz-tooltip
+                                       nzTitle="已锁定"
+                                       nzPlacement="topCenter"
+                                       *ngIf="item.lock"
+                                       (click)="onChangeRouteStatus($event, item)">
+                                    </i>
+                                    <i nz-icon type="unlock" theme="outline"
+                                       style="cursor: pointer;"
+                                       nz-tooltip
+                                       nzTitle="已解锁"
+                                       nzPlacement="topCenter"
+                                       *ngIf="!item.lock"
+                                       (click)="onChangeRouteStatus($event, item)">
+                                    </i>
+                                </div>
                             </td>
                             <td>{{item.name}}</td>
                             <td>{{item.plateNumber}}</td>
@@ -186,7 +192,7 @@
                             <button nz-button
                                     (click)="onCancelDistribute()"
                                     nzType="default"
-                                    nzPlacement="topCenter">
+                                    [disabled]="!distributedListCache">
                                 取消派发
                             </button>
                             &nbsp;
@@ -227,11 +233,12 @@
                         <tr *ngFor="let item of distributedListCache; index as i"
                             [ngClass]="{ 'table-row-selected': item.checked }"
                             cdkDrag
+                            cdkDragDisabled="{{selectedRoutesCache.lock || item.state !== 'ToDo'}}"
                             (click)="onSelectDistribute($event, item)">
-                            <td>名称名称名称{{item.id}}</td>
+                            <td>{{item.name}}-{{item.id}}</td>
                             <td>收运时间收运时间收运</td>
-                            <td>收运量</td>
-                            <td>状态状态</td>
+                            <td>{{item.amountOfGarbage}}</td>
+                            <td>{{item.state | taskStateToChinese}}</td>
                         </tr>
                         </tbody>
                     </nz-table>

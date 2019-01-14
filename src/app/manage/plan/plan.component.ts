@@ -91,7 +91,6 @@ export class PlanComponent implements OnInit {
     }
 
     onKeywordSearch(keywordType: string) {
-        //this.getListByPage();
         this.getListByPage({ isResetReq: true });
     }
 
@@ -136,8 +135,8 @@ export class PlanComponent implements OnInit {
             (err) => {
                 if (err.error.status === 0) {
                     this.notificationService.create({
-                        type: 'error',
-                        title: '抱歉,编辑失败',
+                        type   : 'error',
+                        title  : '抱歉,编辑失败',
                         content: err.error.message,
                     })
                 }
@@ -194,11 +193,13 @@ export class PlanComponent implements OnInit {
         return data.map(item => ModelConverter.planResToPlanListModel(item));
     }
 
-    getRouteList(name?: string, planId?: number, lateNumber?: string) {
-        this.planService.getRouteList(name || null, planId || null, lateNumber || null).subscribe((res: Result<RouteModel[]>) => {
-            if (res.data) {
-                this.routesListCache = res.data;
-            }
-        });
+    getRouteList(name?: string, planId?: number, plateNumber?: string) {
+        this.planService
+            .getRouteList(name || null, planId || null, plateNumber || null)
+            .subscribe((res: Result<RouteModel[]>) => {
+                if (res.data) {
+                    this.routesListCache = res.data;
+                }
+            });
     }
 }
