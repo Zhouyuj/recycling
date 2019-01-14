@@ -4,6 +4,7 @@ import { MapService } from './map/map.service';
 import { MessageService } from './message/message.service';
 import { NotificationService } from './notification/notification.service';
 import { DistrictsService } from './districts/districts.service';
+import { ModalService } from './modal/modal.service';
 
 @NgModule({
     imports     : [
@@ -14,7 +15,8 @@ import { DistrictsService } from './districts/districts.service';
         MapService,
         MessageService,
         NotificationService,
-        DistrictsService
+        DistrictsService,
+        ModalService,
     ],
 })
 export class ServicesModule {

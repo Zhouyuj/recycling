@@ -23,7 +23,7 @@ import { TestMarkerDemoService } from './test-marker-demo.service';
 })
 export class TestMapDemoService {
 
-    public _map: any;
+    private _map: any;
 
     constructor(private testMarkerDemoService: TestMarkerDemoService) {
     }
@@ -41,7 +41,7 @@ export class TestMapDemoService {
     }
 
     // 初始化地图,全局调用的生成地图方法(应该在首屏调用一次即可,首屏具有地图功能)
-    // 注意:在组件中调用次方法,需要在订阅值为 true 时调用 unsubscribe()
+    // 注意:在组件中调用此方法,需要在订阅值为 true 时调用 unsubscribe()
     public initMap(): Observable<boolean> {
         return interval(100)
             .pipe(
@@ -56,13 +56,16 @@ export class TestMapDemoService {
 
     // 获取高德地图脚本
     public load(): void {
-        const URL = 'https://webapi.amap.com/maps?v=1.4.4&key=234f52ac0db9acffc06680a652bc86dc';
-        const scriptElm = document.createElement('script');
-        scriptElm.setAttribute('type', 'text/javascript');
-        scriptElm.setAttribute('src', URL);
-        scriptElm.setAttribute('defer', '');
-        scriptElm.setAttribute('async', '');
-        document.getElementsByTagName('head')[ 0 ].appendChild(scriptElm);
+        // 判断脚本是否存在 TODO
+        if (1) {
+            const SRC = 'https://webapi.amap.com/maps?v=1.4.4&key=234f52ac0db9acffc06680a652bc86dc&plugin=AMap.ToolBar';
+            const scriptElm = document.createElement('script');
+            scriptElm.setAttribute('type', 'text/javascript');
+            scriptElm.setAttribute('src', SRC);
+            scriptElm.setAttribute('defer', '');
+            scriptElm.setAttribute('async', '');
+            document.getElementsByTagName('head')[ 0 ].appendChild(scriptElm);
+        }
     }
 
     // 判断地图是否加载完成(window.AMap)

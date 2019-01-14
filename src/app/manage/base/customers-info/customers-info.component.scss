@@ -28,4 +28,26 @@
     .location {
         cursor: pointer;
     }
+
+    .show-image-cell {
+        cursor: pointer;
+    }
+    .show-image-cell:hover {
+        color: #108ee9;
+    }
+
+}
+
+.carousel-content {
+    text-align: center;
+    width: 700px;
+    height: 500px;
+    line-height: 500px;
+    background: #364d79;
+    color: #fff;
+    overflow: hidden;
+    img {
+        width: 100%;
+        height: 100%;
+    }
 }

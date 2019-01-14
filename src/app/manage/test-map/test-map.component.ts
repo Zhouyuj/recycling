@@ -47,9 +47,9 @@ export class TestMapComponent implements OnInit {
             [ 113.166737, 23.019604 ],
         ];
         this.mapService.setCenter(lngLat);
-        //this.createMarker(lngLat);
+        this.createMarker(lngLat);
         //this.createPolyline(path);
-        this.createPolygon(path);
+        //this.createPolygon(path);
     }
 
     public createMarker(lngLat: number[]) {

@@ -73,7 +73,9 @@
                 <thead>
                 <tr>
                     <th nzWidth="50px"></th><!-- 此th为展开/收起表头 -->
-                    <th nzWidth="62px"><div></div></th><!-- 此th与下面的th(全选)互斥,当前先不实现全选 -->
+                    <th nzWidth="62px">
+                        <div></div>
+                    </th><!-- 此th与下面的th(全选)互斥,当前先不实现全选 -->
                     <th nzWidth="100px">类型</th>
                     <th nzWidth="100px">定位</th>
                     <th nzWidth="100px">图片</th>
@@ -151,7 +153,13 @@
                                *ngIf="data.lngLat">
                             </i>
                         </td>
-                        <td>{{data.images.length}}</td>
+                        <td>
+                            <span class="show-image-cell"
+                                  *ngIf="data.category === 'Separate'"
+                                  (click)="onShowImage($event, data, tplImageModalContent)">
+                                {{data.images.length}}
+                            </span>
+                        </td>
                         <td>{{data.name}}</td>
                         <td>{{data.countyName}}</td>
                         <td>{{data.duration}}</td>
@@ -163,7 +171,7 @@
                         <td>{{data.mobilePhone || data.landlinePhone}}</td>
                     </tr>
                     <ng-template *ngIf="data.expand" ngFor let-item [ngForOf]="data.customerList">
-                        <tr  (click)="onSelectedTr($event, item)">
+                        <tr (click)="onSelectedTr($event, item)">
                             <td></td>
                             <td nzShowCheckbox [(nzChecked)]="item.checked" [nzDisabled]="item.disabled"
                                 (nzCheckedChange)="onSelected($event, item)"></td>
@@ -175,7 +183,13 @@
                                    *ngIf="item.lngLat">
                                 </i>
                             </td>
-                            <td>{{item.images.length}}</td>
+                            <td>
+                                <span class="show-image-cell"
+                                      *ngIf="item.category === 'Separate' && item.images.length"
+                                      (click)="onShowImage($event, item, tplImageModalContent)">
+                                    {{item.images.length}}
+                                </span>
+                            </td>
                             <td>{{item.name}}</td>
                             <td>{{item.countyName}}</td>
                             <td>{{item.duration}}</td>
@@ -195,8 +209,17 @@
     </div>
 </div>
 
-<nz-modal [(nzVisible)]="isDelModalVisible" nzTitle="删除收运点" (nzOnCancel)="isDelModalVisible = false" (nzOnOk)="onDel()" [nzOkLoading]="isDelOkLoading">
+<nz-modal [(nzVisible)]="isDelModalVisible" nzTitle="删除收运点" (nzOnCancel)="isDelModalVisible = false" (nzOnOk)="onDel()"
+          [nzOkLoading]="isDelOkLoading">
     <p>{{parentCache && parentCache.customerList.length === 1
         ? '聚类点要求至少存在一个子收运单位,删除最后一个子收运单位后,该聚类点将被删除'
         : '确认删除该单位?'}}</p>
 </nz-modal>
+
+<ng-template #tplImageModalContent>
+    <nz-carousel [nzAutoPlay]="true" *ngIf="!!images">
+        <div class="carousel-content" nz-carousel-content *ngFor="let image of images">
+            <img [src]="image.url" alt="图片加载失败">
+        </div>
+    </nz-carousel>
+</ng-template>

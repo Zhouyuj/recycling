@@ -1,12 +1,13 @@
-import { Component, OnInit, ViewChild, EventEmitter } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Component, OnInit, ViewChild, EventEmitter, TemplateRef } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs/index';
 import { debounceTime, map, switchMap } from 'rxjs/operators';
 
-import { NzDrawerService } from 'ng-zorro-antd';
+import { NzDrawerService, NzModalService } from 'ng-zorro-antd';
 
 import { CustomersInfoFormComponent } from './customers-info-form/customers-info-form.component';
 import { CustomersInfoService } from './customers-info.service';
 import { NotificationService } from '../../../shared/services/notification/notification.service';
+
 import { CustomerRes } from './customer-res.model';
 import { PageReq } from '../../../shared/models/page/page-req.model';
 import { PageRes } from '../../../shared/models/page/page-res.model';
@@ -67,9 +68,11 @@ export class CustomersInfoComponent implements OnInit {
     public formCache: FormModel;
     public parentCache: ListModel;    // 选中子点时,存在值为聚类点,否则为null
     public selectedId: number;
+    public images: { id: number, type: string, url: string }[];
 
     constructor(private customersInfoService: CustomersInfoService,
                 private drawerService: NzDrawerService,
+                private modalService: NzModalService,
                 private notificationService: NotificationService) {
     }
 
@@ -80,12 +83,12 @@ export class CustomersInfoComponent implements OnInit {
 
     initFilterOption() {
         let dis = ZHANGZHOU_OPTIONS
-            .filter(item => item.label === '福建省')[0].children
-            .filter(item => item.label === '漳州市')[0].children
+            .filter(item => item.label === '福建省')[ 0 ].children
+            .filter(item => item.label === '漳州市')[ 0 ].children
             .map(item => {
                 return { value: item.value, text: item.label };
             });
-        this.districtsFilterList = [...dis];
+        this.districtsFilterList = [ ...dis ];
     }
 
     onAdd() {
@@ -224,6 +227,22 @@ export class CustomersInfoComponent implements OnInit {
 
     /** checkable end **/
 
+    onShowImage($e, item: ListModel, tplImageModalContent?: TemplateRef<{}>) {
+        this.onStopPropagation($e);
+        console.log('onShowImage');
+        this.images = null;
+        const modal = this.modalService.create({
+            nzTitle          : item.name,
+            nzContent        : tplImageModalContent,
+            nzFooter         : null,
+        });
+        modal.afterOpen.subscribe(() => {
+            this.images = item.images;
+        });
+        modal.afterClose.subscribe(() => {
+            modal.destroy();
+        });
+    }
 
     /**
      * @param type: this.sortMap 的值
@@ -243,21 +262,21 @@ export class CustomersInfoComponent implements OnInit {
      */
     onFilter(e, type?: string) {
         console.log(e);
-        this.notificationService.create({type: 'warning', title: '抱歉,区域筛选暂不支持'});
+        this.notificationService.create({ type: 'warning', title: '抱歉,区域筛选暂不支持' });
         return;
         /*switch (type) {
-            case 'roleId':
-                let result = (e && !e.length) ? '' : e.join(',');
-                if (this.params[ type ] === result) return;
-                this.params[ type ] = (e && !e.length) ? '' : e.join(',');
-                break;
-            case 'sex':
-            case 'postId':
-                if (!e && !this.params[ type ] || this.params[ type ] === e) return;
-                this.params[ type ] = e || '';
-                break;
-        }
-        this.getListByPage({ isResetReq: true });*/
+         case 'roleId':
+         let result = (e && !e.length) ? '' : e.join(',');
+         if (this.params[ type ] === result) return;
+         this.params[ type ] = (e && !e.length) ? '' : e.join(',');
+         break;
+         case 'sex':
+         case 'postId':
+         if (!e && !this.params[ type ] || this.params[ type ] === e) return;
+         this.params[ type ] = e || '';
+         break;
+         }
+         this.getListByPage({ isResetReq: true });*/
     }
 
     onKeywordSearchTh(keywordType: string) {
@@ -269,7 +288,6 @@ export class CustomersInfoComponent implements OnInit {
      * @param e
      */
     onStopPropagation(e) {
-        console.log(e);
         e.stopPropagation();
     }
 
@@ -302,6 +320,7 @@ export class CustomersInfoComponent implements OnInit {
                         this.listCache = this.dataToTableList(res.data.content);
                         /* 更新列表的信息（分页/排序） */
                         this.updatePageRes(res.data);
+                        this.isSpinning = false;
                     }
                 },
                 err => {

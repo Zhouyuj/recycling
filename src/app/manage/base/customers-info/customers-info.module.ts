@@ -6,12 +6,15 @@ import { CustomersInfoFormComponent } from './customers-info-form/customers-info
 import { CustomersInfoService } from './customers-info.service';
 
 @NgModule({
-    imports     : [
+    imports        : [
         CommonModule,
         SharedModule,
     ],
-    declarations: [ CustomersInfoComponent, CustomersInfoFormComponent ],
-    providers   : [
+    declarations   : [
+        CustomersInfoComponent,
+        CustomersInfoFormComponent,
+    ],
+    providers      : [
         CustomersInfoService,
     ],
     entryComponents: [
