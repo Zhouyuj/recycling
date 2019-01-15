@@ -6,49 +6,33 @@
                 <!-- 面包屑导航 -->
                 <app-breadcrumbs [options]="breadcrumbs"></app-breadcrumbs>
             </div>
-            <div nz-col class="gutter-row" nzSpan="8" nzOffset="2"></div>
-            <div nz-col class="gutter-row" nzSpan="4">
+            <div nz-col class="gutter-row" nzSpan="4" nzOffset="2"></div>
+            <div nz-col class="gutter-row" nzSpan="8">
                 <div class="table-CUDE">
                     <button nz-button
                             nzType="default"
-                            nzShape="circle"
-                            (click)="onAdd()"
-                            nzTitle="添加"
-                            nzPlacement="topCenter"
-                            nz-tooltip>
-                        <i nz-icon type="plus-circle" theme="outline"></i>
+                            (click)="onAdd()">
+                        添加
                     </button>
                     &nbsp;
                     <button nz-button
                             [disabled]="!formCache"
                             nzType="default"
-                            nzShape="circle"
-                            (click)="onEdit()"
-                            nzTitle="编辑"
-                            nzPlacement="topCenter"
-                            nz-tooltip>
-                        <i nz-icon type="edit" theme="outline"></i>
+                            (click)="onEdit()">
+                        编辑
                     </button>
                     &nbsp;
                     <button nz-button
                             nzType="default"
                             [disabled]="!formCache"
-                            (click)="isDelModalVisible = true"
-                            nzTitle="删除"
-                            nzShape="circle"
-                            nzPlacement="topCenter"
-                            nz-tooltip>
-                        <i nz-icon type="delete" theme="outline"></i>
+                            (click)="onDel()">
+                        删除
                     </button>
                     &nbsp;
                     <button nz-button
                             nzType="default"
-                            nzShape="circle"
-                            (click)="onExp()"
-                            nzTitle="导出"
-                            nzPlacement="topCenter"
-                            nz-tooltip>
-                        <i nz-icon type="download" theme="outline"></i>
+                            (click)="onExp()">
+                        导出
                     </button>
                     &nbsp;
                 </div>
@@ -200,7 +184,3 @@
         </nz-spin>
     </div>
 </div>
-
-<nz-modal [(nzVisible)]="isDelModalVisible" nzTitle="删除人员信息" (nzOnCancel)="isDelModalVisible = false" (nzOnOk)="onDel()" [nzOkLoading]="isDelOkLoading">
-    <p>确认删除该人员?</p>
-</nz-modal>

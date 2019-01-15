@@ -125,11 +125,9 @@ export class VehicleSelectionComponent implements OnInit {
                 this.routeId
             ).subscribe(
                 (res: Result<number>) => {
-                    console.log('选择车辆成功', res);
                     this.onClose(true);
                 },
                 err => {
-                    console.warn(err.error.message);
                 }
             );
         }
@@ -156,12 +154,6 @@ export class VehicleSelectionComponent implements OnInit {
                 err => {
                     this.listCache = [];
                     this.isSpinning = false;
-                    console.error(`分页查询失败!!! message:${err.error.message}`);
-                    this.notificationService.create({
-                        type   : 'error',
-                        title  : '抱歉,数据查询(分页)失败',
-                        content: err ? err.error.message : '',
-                    });
                 },
                 () => this.isSpinning = false
             );

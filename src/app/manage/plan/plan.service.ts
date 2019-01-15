@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpRequest } from '@angular/common/http';
 import { Observable } from 'rxjs/index';
 
-import { RebirthHttp, GET, Query, POST, Body, Path } from 'rebirth-http';
+import { RebirthHttp, GET, Query, POST, Body, Path, DELETE } from 'rebirth-http';
 
 import { PageReq } from '../../shared/models/page/page-req.model';
 import { PageRes } from '../../shared/models/page/page-res.model';
@@ -34,6 +34,11 @@ export class PlanService extends RebirthHttp {
      */
     @POST('/plans')
     addPlan(@Body planReq: PlanReq, @Query('copyPlanId') copyPlanId?: string) {
+        return null;
+    }
+
+    @DELETE('/plans/:id')
+    delPlan(@Path('id') id: string): Observable<Result<any>> {
         return null;
     }
 

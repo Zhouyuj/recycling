@@ -12,7 +12,7 @@ export const ROUTER_CONFIG: Routes = [
                 path: '', component: PlanComponent, data: { title: '方案管理' },
             },
             {
-                path: 'edit/:id', component: EditPlanComponent, data: { title: '方案编辑' },
+                path: 'edit/:id/:name', component: EditPlanComponent, data: { title: '方案编辑' },
             },
         ],
     },

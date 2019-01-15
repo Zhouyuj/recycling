@@ -52,11 +52,6 @@ export class LoginComponent implements OnInit {
                 }
             },
             err => {
-                this.notificationService.create({
-                    type   : 'error',
-                    title  : '抱歉,用户名或密码错误',
-                    content: '只能包含字符、数字',
-                });
                 this.messageService.remove(msgId);
                 this.submitBtnValid = false;
             },

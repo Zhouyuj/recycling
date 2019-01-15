@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs/index';
 import { map } from 'rxjs/internal/operators/map';
 import { NzModalService, NzDrawerService } from 'ng-zorro-antd';
 
 import { AddPlanComponent } from './add-plan/add-plan.component';
 import { ModelConverter } from './models/model-converter';
+import { ModalService } from '../../shared/services/modal/modal.service';
 import { NotificationService } from '../../shared/services/notification/notification.service';
 import { PlanListModel } from './models/plan-list.model';
 import { PageRes } from '../../shared/models/page/page-res.model';
@@ -13,7 +14,7 @@ import { PageReq } from '../../shared/models/page/page-req.model';
 import { PlanOperationEnum } from './models/plan.enum';
 import { PlanRes } from './models/plan-res.model';
 import { PlanService } from './plan.service';
-import { PlanStateEnum, PlanStateEnumChinese } from './models/plan.enum';
+import { PlanStateEnum } from './models/plan.enum';
 import { Result } from '../../shared/models/response/result.model';
 import { RouteModel } from './models/route.model';
 
@@ -47,10 +48,10 @@ export class PlanComponent implements OnInit {
         status: '',
     };
     planStateList = [
-        { text: PlanStateEnumChinese.Completed, value: PlanStateEnum.Completed },
-        { text: PlanStateEnumChinese.Executing, value: PlanStateEnum.Executing },
-        { text: PlanStateEnumChinese.Stopped, value: PlanStateEnum.Stopped },
-        { text: PlanStateEnumChinese.UnExecuted, value: PlanStateEnum.UnExecuted },
+        { text: PlanStateEnum.CompletedChinese, value: PlanStateEnum.Completed },
+        { text: PlanStateEnum.ExecutingChinese, value: PlanStateEnum.Executing },
+        { text: PlanStateEnum.StoppedChinese, value: PlanStateEnum.Stopped },
+        { text: PlanStateEnum.UnExecutedChinese, value: PlanStateEnum.UnExecuted },
     ];
 
     resCache: PlanRes[];
@@ -62,6 +63,7 @@ export class PlanComponent implements OnInit {
     constructor(private router: Router,
                 private planService: PlanService,
                 private drawerService: NzDrawerService,
+                private modalService: ModalService,
                 private notificationService: NotificationService) {
     }
 
@@ -109,7 +111,7 @@ export class PlanComponent implements OnInit {
     onAdd(): void {
         this.drawerRef = this.drawerService.create<AddPlanComponent, {title: string}, boolean>({
             nzContent      : AddPlanComponent,
-            nzWidth        : '80%',
+            nzWidth        : '85%',
             nzPlacement    : 'left',
             nzContentParams: {
                 title: 'title',
@@ -127,21 +129,73 @@ export class PlanComponent implements OnInit {
         });
     }
 
+    onDel() {
+        if (!this.selectedItem) {
+            this.notificationService.create({
+                type : 'warning',
+                title: '请选择要删除的方案',
+            });
+            return;
+        }
+        this.modalService.createDeleteConfirm({
+            onOk: () => {
+                this.planService.delPlan(this.selectedItem.id).subscribe(
+                    (res: Result<any>) => {
+                        this.notificationService.create({
+                            type : 'success',
+                            title: '删除成功',
+                        });
+                        this.getListByPage();
+                    },
+                    err => {
+                        this.getListByPage();
+                    }
+                );
+            },
+        });
+    }
+
     onNavigateToEdit() {
         this.planService.operatingPlan(this.selectedItem.id, PlanOperationEnum.EDIT).subscribe(
             (res: Result<{ status: number }>) => {
-                this.router.navigateByUrl('/manage/plan/edit/' + this.selectedItem.id);
+                this.router.navigateByUrl('/manage/plan/edit/' + this.selectedItem.id + '/' + this.selectedItem.name);
             },
             (err) => {
-                if (err.error.status === 0) {
-                    this.notificationService.create({
-                        type   : 'error',
-                        title  : '抱歉,编辑失败',
-                        content: err.error.message,
-                    })
-                }
             }
         );
+    }
+
+    onExecute() {
+        if (this.selectedItem.state) {
+            this.planService.operatingPlan(this.selectedItem.id, PlanOperationEnum.EXECUTE).subscribe(
+                (res) => {
+                    console.log(res);
+                    this.getListByPage();
+                    this.notificationService.create({
+                        type : 'success',
+                        title: '已开始执行',
+                    });
+                }, err => {
+                    this.getListByPage();
+                }
+            );
+        }
+    }
+
+    onStop() {
+        if (this.selectedItem.state) {
+            this.planService.operatingPlan(this.selectedItem.id, PlanOperationEnum.STOP).subscribe(
+                (res) => {
+                    this.getListByPage();
+                    this.notificationService.create({
+                        type : 'success',
+                        title: '已停止',
+                    });
+                }, err => {
+                    this.getListByPage();
+                }
+            );
+        }
     }
 
     getListByPage(option?: { isResetReq: boolean }) {
@@ -157,10 +211,10 @@ export class PlanComponent implements OnInit {
                     this.resCache = res.data.content;
                     this.listCache = this.dataToTableList(res.data.content);
                     this.updatePageRes(res.data);
+                    this.selectedItem = null;
                 }
             },
             err => {
-                console.warn(`分页查询失败!!! message:${err.error.message}`);
                 this.isSpinning = false;
             },
             () => this.isSpinning = false
@@ -174,7 +228,7 @@ export class PlanComponent implements OnInit {
     resetPageReq(): void {
         this.pageReq.page = 1;
         this.pageReq.size = this.pageRes.size;
-        this.pageReq.sort = 'entryTime.desc';
+        this.pageReq.sort = 'createdDate.desc';
     }
 
     updateParams() {

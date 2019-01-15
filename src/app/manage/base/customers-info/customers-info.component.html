@@ -14,44 +14,27 @@
                 <div class="table-CUDE">
                     <button nz-button
                             (click)="onAdd()"
-                            nzType="default"
-                            nzShape="circle"
-                            nzTitle="添加"
-                            nzPlacement="topCenter"
-                            nz-tooltip>
-                        <i nz-icon type="plus-circle" theme="outline"></i>
+                            nzType="default">
+                        添加
                     </button>
                     &nbsp;
                     <button nz-button
                             [disabled]="!formCache"
                             (click)="onEdit()"
-                            nzType="default"
-                            nzShape="circle"
-                            nzTitle="编辑"
-                            nzPlacement="topCenter"
-                            nz-tooltip>
-                        <i nz-icon type="edit" theme="outline"></i>
+                            nzType="default">
+                        编辑
                     </button>
                     &nbsp;
                     <button nz-button
-                            nzTitle="删除"
                             [disabled]="!formCache"
-                            (click)="isDelModalVisible = true"
-                            nzType="default"
-                            nzShape="circle"
-                            nzPlacement="topCenter"
-                            nz-tooltip>
-                        <i nz-icon type="delete" theme="outline"></i>
+                            (click)="isDelModalVisible = true">
+                        删除
                     </button>
                     &nbsp;
                     <button nz-button
                             (click)="onExp()"
-                            nzType="default"
-                            nzShape="circle"
-                            nzTitle="导出"
-                            nzPlacement="topCenter"
-                            nz-tooltip>
-                        <i nz-icon type="download" theme="outline"></i>
+                            nzType="default">
+                        导出
                     </button>
                     &nbsp;
                 </div>

@@ -84,11 +84,6 @@ export class VehicleInfoFormComponent implements OnInit {
                         this.drawerRef.close(this.success);
                     },
                     err => {
-                        this.notificationService.create({
-                            type   : 'error',
-                            title  : '抱歉,添加失败',
-                            content: err.error.message ? err.error.message : '该提醒将自动消失',
-                        });
                         this.isSpinning = false;
                     },
                     () => this.isSpinning = false
@@ -106,11 +101,6 @@ export class VehicleInfoFormComponent implements OnInit {
                         this.drawerRef.close(this.success);
                     },
                     err => {
-                        this.notificationService.create({
-                            type   : 'error',
-                            title  : '抱歉,更新失败',
-                            content: err.error.message ? err.error.message : '该提醒将自动消失',
-                        });
                         this.isSpinning = false;
                     },
                     () => this.isSpinning = false

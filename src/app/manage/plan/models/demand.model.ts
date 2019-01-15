@@ -11,7 +11,7 @@ export interface DemandModel {
     //vehiclePlate: string,
     checked?: boolean;
     expand?: boolean;
-    subTaskList?: SubDemandModel[];
+    taskList?: SubDemandModel[];
 }
 
 export interface SubDemandModel {
@@ -47,7 +47,7 @@ export interface DemandReq {
     collectionPeriodId: number;
     customerId: number;
     name: string;
-    subTaskList?: {
+    taskList?: {
         amountOfGarbage: number,
         customerId: number,
         name: string,

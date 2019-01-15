@@ -1,5 +1,6 @@
 import { Component, OnInit, EventEmitter } from '@angular/core';
 
+import { ModalService } from '../../../shared/services/modal/modal.service';
 import { StaffInfoService } from './staff-info.service';
 import { StaffInfoFormComponent } from './staff-info-form/staff-info-form.component';
 
@@ -88,6 +89,7 @@ export class StaffInfoComponent implements OnInit {
 
     constructor(private staffInfoService: StaffInfoService,
                 private notificationService: NotificationService,
+                private modalService: ModalService,
                 private drawerService: NzDrawerService) {
     }
 
@@ -104,28 +106,26 @@ export class StaffInfoComponent implements OnInit {
     }
 
     onDel() {
-        this.isDelOkLoading = true;
-        this.staffInfoService.delStaff(this.selectedItemCache.id).subscribe(
-            res => {
-                this.isDelOkLoading = false;
-                this.isDelModalVisible = false;
-                this.notificationService.create({
-                    type   : 'success',
-                    title  : '恭喜,删除成功',
-                    content: '该提醒将自动消失',
-                });
-                this.getListByPage({ isResetReq: true });
-            }, err => {
-                this.isDelOkLoading = false;
-                this.isDelModalVisible = false;
-                this.notificationService.create({
-                    type   : 'error',
-                    title  : '抱歉,删除失败',
-                    content: err ? err.error.message : '',
-                });
-                this.getListByPage({ isResetReq: true });
+        this.modalService.createDeleteConfirm({
+            onOk: () => {
+                this.staffInfoService.delStaff(this.selectedItemCache.id).subscribe(
+                    res => {
+                        this.notificationService.create({
+                            type   : 'success',
+                            title  : '恭喜,删除成功',
+                            content: '该提醒将自动消失',
+                        });
+                        this.getListByPage({ isResetReq: true });
+                        this.selectedItemCache = null;
+                        this.formCache = null;
+                    }, err => {
+                        this.getListByPage({ isResetReq: true });
+                        this.selectedItemCache = null;
+                        this.formCache = null;
+                    }
+                );
             }
-        );
+        });
     }
 
     // TODO
@@ -271,11 +271,6 @@ export class StaffInfoComponent implements OnInit {
                     this.listCache = [];
                     this.isSpinning = false;
                     console.error(`分页查询失败!!! message:${err.error.message}`);
-                    this.notificationService.create({
-                        type   : 'error',
-                        title  : '抱歉,数据查询(分页)失败',
-                        content: err ? err.error.message : '',
-                    });
                 },
                 () => this.isSpinning = false
             );

@@ -57,13 +57,37 @@ export class AddPlanComponent implements OnInit {
 
     getListByPage() {
         this.isTableSpinning = true;
-        this.planService.getPlanList(this.pageReq, this.params).subscribe((res: Result<PageRes<PlanRes[]>>) => {
+        let paramsTemp = this.updateParams();
+        this.planService.getPlanList(this.pageReq, paramsTemp).subscribe((res: Result<PageRes<PlanRes[]>>) => {
             if (res.data.content) {
                 this.resCache = res.data.content;
                 this.listCache = res.data.content.map(item => ModelConverter.planResToPlanListModel(item));
                 this.isTableSpinning = false;
+                this.selectedItem = null;
+                this.updatePageRes(res.data);
             }
         })
+    }
+
+    updateParams(): any {
+        let paramsTemp = {};
+        for (let k in this.params) {
+            if (!this.params[ k ]) {
+                this.params[ k ] = null;
+            } else {
+                paramsTemp[ k ] = this.params[ k ];
+            }
+        }
+        return paramsTemp;
+    }
+
+    updatePageRes(data: PageRes<PlanRes[]>): void {
+        this.pageRes = new PageRes(data.page, data.size, data.pages, data.total, data.last);
+    }
+
+    onPage(e) {
+        this.pageReq.page = e;
+        this.getListByPage();
     }
 
     /**
@@ -81,16 +105,10 @@ export class AddPlanComponent implements OnInit {
                 this.notificationService.create({
                     type   : 'success',
                     title  : '恭喜,复制方案成功',
-                    content: '该提醒将自动消失',
                 });
             },
             err => {
                 this.isFormSpinning = false;
-                this.notificationService.create({
-                    type   : 'error',
-                    title  : '抱歉,复制方案失败',
-                    content: err.message ? err.message : '该提醒将自动消失',
-                });
             },
             () => this.isFormSpinning = false
         );
@@ -114,11 +132,6 @@ export class AddPlanComponent implements OnInit {
             },
             err => {
                 this.isFormChildSpinning = false;
-                this.notificationService.create({
-                    type   : 'error',
-                    title  : '抱歉,新建空白方案失败',
-                    content: err.message ? err.message : '该提醒将自动消失',
-                });
             },
             () => this.isFormChildSpinning = false
         );

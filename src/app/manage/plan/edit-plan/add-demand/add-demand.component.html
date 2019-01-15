@@ -104,7 +104,7 @@
                 <tbody>
                 <ng-template ngFor let-item [ngForOf]="demandListCache">
                     <!-- 普通请求 -->
-                    <tr *ngIf="!item.subTaskList || !item.subTaskList.length"
+                    <tr *ngIf="!item.taskList || !item.taskList.length"
                         [ngClass]="{ 'table-row-selected': item.checked }"
                         (click)="onSelectDemand($event, item)">
                         <td></td>
@@ -139,7 +139,7 @@
                         </td>
                     </tr>
                     <!-- 聚类请求 -->
-                    <tr *ngIf="item.subTaskList && item.subTaskList.length > 0"
+                    <tr *ngIf="item.taskList && item.taskList.length > 0"
                         [ngClass]="{ 'table-row-selected': item.checked, 'cluster': true }">
                         <td></td>
                         <td>
@@ -159,7 +159,7 @@
     <nz-row *ngIf="isShowSub">
         <nz-table #demandTable
                   [nzSize]="'middle'"
-                  [nzData]="selectedCluster.subTaskList"
+                  [nzData]="selectedCluster.taskList"
                   [nzScroll]="{ y: '500px' }"
                   [nzFrontPagination]="false"
                   [nzShowPagination]="false">
@@ -183,7 +183,7 @@
             </tr>
             </thead>
             <tbody>
-            <ng-template ngFor let-item [ngForOf]="selectedCluster.subTaskList">
+            <ng-template ngFor let-item [ngForOf]="selectedCluster.taskList">
                 <tr [ngClass]="{ 'table-row-selected': item.checked }"
                     (click)="onSelectDemandSub($event, item, selectedCluster.id)">
                     <!--<td nzShowCheckbox

@@ -104,11 +104,7 @@ export class ApkComponent implements OnInit {
                 this.onCloseForm();
             },
             err => {
-                this.notificationService.create({
-                    type   : 'error',
-                    title  : '抱歉,上传失败',
-                    content: err ? err.error.message : '',
-                });
+                this.getListByPage();
                 this.isFormSpinning = false;
             }
         );

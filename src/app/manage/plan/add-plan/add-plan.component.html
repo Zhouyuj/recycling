@@ -1,6 +1,6 @@
 <div class="wrap">
     <div nz-row>
-        <div nz-col nzSpan="18">
+        <div nz-col nzSpan="17">
             <div class="left">
                 <div nz-row>
                     <button nz-button nzType="primary" (click)="onOpenChildren()">新建空白方案</button>
@@ -27,7 +27,15 @@
                         </button>
                     </ng-template>
                     <nz-spin [nzSize]="'large'" [nzSpinning]="isTableSpinning">
-                        <nz-table #planTable [nzData]="listCache">
+                        <nz-table #planTable
+                                  [nzData]="listCache"
+                                  [nzSize]="'middle'"
+                                  [nzFrontPagination]="false"
+                                  [nzTotal]="pageRes.total"
+                                  [nzPageIndex]="pageRes.page"
+                                  [nzPageSize]="pageRes.size"
+                                  (nzPageIndexChange)="onPage($event)"
+                                  (nzPageSizeChange)="onPage($event)">
                             <thead>
                             <tr>
                                 <th></th><!-- 此表头为checkbox -->
@@ -41,15 +49,17 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr *ngFor="let item of planTable.data; index as i" (click)="onClickListItem($event, item)">
+                            <tr *ngFor="let item of planTable.data; index as i"
+                                [ngClass]="{ 'table-row-selected': item.checked }"
+                                (click)="onClickListItem($event, item)">
                                 <td nzShowCheckbox [(nzChecked)]="item.checked"
                                     (nzCheckedChange)="onCheckedChange($event, item)"></td>
                                 <td>{{i + 1}}</td>
                                 <td>{{item.name}}</td>
                                 <td>{{item.numberOfRoutes}}</td>
                                 <td>{{item.numberOfTasks}}</td>
-                                <td>{{item.state}}</td>
-                                <td>{{item.category}}</td>
+                                <td>{{item.state | planStateToChinese}}</td>
+                                <td>{{item.category | planCategoryToChinese }}</td>
                                 <td>{{item.editUser}}</td>
                             </tr>
                             </tbody>
@@ -58,7 +68,7 @@
                 </div>
             </div>
         </div>
-        <div nz-col nzSpan="6" class="table-form">
+        <div nz-col nzSpan="7" class="table-form">
             <form nz-form (ngSubmit)="onSubmitExistPlan()" #myForm="ngForm">
                 <nz-form-item>
                     <nz-form-label [nzSpan]="7" nzFor="plan-name" class="table-form-label" nzRequired>方案名称</nz-form-label>
@@ -87,7 +97,7 @@
                 </nz-form-item>
                 <nz-form-item>
                     <nz-form-control [nzSpan]="8" [nzOffset]="7">
-                        <button nz-button nzType="primary" type="submit" [disabled]="!myForm.valid">生成方案</button>
+                        <button nz-button nzType="primary" type="submit" [disabled]="!myForm.valid">复制方案</button>
                     </nz-form-control>
                 </nz-form-item>
             </form>

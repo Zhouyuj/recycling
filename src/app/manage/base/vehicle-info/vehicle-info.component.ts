@@ -3,6 +3,7 @@ import { Component, OnInit, EventEmitter } from '@angular/core';
 import { VehicleInfoFormComponent } from './vehicle-info-form/vehicle-info-form.component';
 import { VehicleInfoService } from './vehicle-info.service';
 
+import { ModalService } from '../../../shared/services/modal/modal.service';
 import { NotificationService } from '../../../shared/services/notification/notification.service';
 import { NzDrawerService } from 'ng-zorro-antd';
 
@@ -41,7 +42,6 @@ export class VehicleInfoComponent implements OnInit {
 
     public isSpinning = false;
     public isDelModalVisible = false;
-    public isDelOkLoading = false;
 
     public pageReq = new PageReq();
     public pageRes = new PageRes();
@@ -65,6 +65,7 @@ export class VehicleInfoComponent implements OnInit {
 
     constructor(private vehicleInfoService: VehicleInfoService,
                 private notificationService: NotificationService,
+                private modalService: ModalService,
                 private drawerService: NzDrawerService) {
     }
 
@@ -103,28 +104,26 @@ export class VehicleInfoComponent implements OnInit {
     }
 
     onDel() {
-        this.isDelOkLoading = true;
-        this.vehicleInfoService.delCustomer(this.selectedItemCache.id).subscribe(
-            res => {
-                this.isDelOkLoading = false;
-                this.isDelModalVisible = false;
-                this.notificationService.create({
-                    type   : 'success',
-                    title  : '恭喜,删除成功',
-                    content: '该提醒将自动消失',
-                });
-                this.getListByPage({ isResetReq: true });
-            }, err => {
-                this.isDelOkLoading = false;
-                this.isDelModalVisible = false;
-                this.notificationService.create({
-                    type   : 'error',
-                    title  : '抱歉,删除失败',
-                    content: err ? err.error.message : '',
-                });
-                this.getListByPage({ isResetReq: true });
+        const ref = this.modalService.createDeleteConfirm({
+            onOk: () => {
+                return this.vehicleInfoService.delCustomer(this.selectedItemCache.id).subscribe(
+                    res => {
+                        this.notificationService.create({
+                            type   : 'success',
+                            title  : '恭喜,删除成功',
+                            content: '该提醒将自动消失',
+                        });
+                        this.getListByPage({ isResetReq: true });
+                        this.selectedItemCache = null;
+                        this.formCache = null;
+                    }, err => {
+                        this.getListByPage({ isResetReq: true });
+                        this.selectedItemCache = null;
+                        this.formCache = null;
+                    }
+                );
             }
-        );
+        });
     }
 
     onExp() {
@@ -256,11 +255,6 @@ export class VehicleInfoComponent implements OnInit {
                     this.listCache = [];
                     this.isSpinning = false;
                     console.error(`分页查询失败!!! message:${err.error.message}`);
-                    this.notificationService.create({
-                        type   : 'error',
-                        title  : '抱歉,数据查询(分页)失败',
-                        content: err ? err.error.message : '',
-                    });
                 },
                 () => this.isSpinning = false
             );

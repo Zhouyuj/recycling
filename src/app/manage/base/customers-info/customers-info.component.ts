@@ -117,11 +117,6 @@ export class CustomersInfoComponent implements OnInit {
             }, err => {
                 this.isDelOkLoading = false;
                 this.isDelModalVisible = false;
-                this.notificationService.create({
-                    type   : 'error',
-                    title  : '抱歉,删除失败',
-                    content: err ? err.error.message : '',
-                });
                 this.getListByPage();
             }
         );
@@ -328,11 +323,6 @@ export class CustomersInfoComponent implements OnInit {
                     this.listCache = [];
                     this.isSpinning = false;
                     console.error(`分页查询失败!!! message:${err.error.message}`);
-                    this.notificationService.create({
-                        type   : 'error',
-                        title  : '抱歉,数据查询(分页)失败',
-                        content: err ? err.error.message : '',
-                    });
                 },
                 () => this.isSpinning = false
             );

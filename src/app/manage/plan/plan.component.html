@@ -11,63 +11,36 @@
                 <div class="table-CUDE">
                     <button nz-button
                             nzType="default"
-                            nzShape="circle"
-                            (click)="onAdd()"
-                            nzTitle="添加"
-                            nzPlacement="topCenter"
-                            nz-tooltip>
-                        <i nz-icon type="plus-circle" theme="outline"></i>
+                            (click)="onAdd()">
+                        添加
                     </button>
                     &nbsp;
                     <button nz-button
                             nzType="default"
-                            nzShape="circle"
-                            nzTitle="计算过程"
-                            nzPlacement="topCenter"
-                            nz-tooltip>
-                        <i nz-icon type="calculator" theme="outline"></i>
-                    </button>
-                    &nbsp;
-                    <button nz-button
-                            nzType="default"
-                            nzShape="circle"
                             (click)="onNavigateToEdit()"
-                            [disabled]="!selectedItem"
-                            nzTitle="编辑"
-                            nzPlacement="topCenter"
-                            nz-tooltip>
-                        <i nz-icon type="edit" theme="outline"></i>
+                            [disabled]="!selectedItem">
+                        编辑
                     </button>
                     &nbsp;
                     <button nz-button
-                            [disabled]="!selectedItem"
-                            nz-popconfirm
-                            nzTitle="删除"
                             nzType="default"
-                            nzShape="circle"
-                            nzPlacement="topCenter"
-                            nz-tooltip>
-                        <i nz-icon type="delete" theme="outline"></i>
+                            (click)="onDel()"
+                            [disabled]="!selectedItem">
+                        删除
                     </button>
                     &nbsp;
                     <button nz-button
-                            [disabled]="!selectedItem"
                             nzType="default"
-                            nzShape="circle"
-                            nzTitle="执行"
-                            nzPlacement="topCenter"
-                            nz-tooltip>
-                        <i nz-icon type="play-circle" theme="outline"></i>
+                            (click)="onExecute()"
+                            [disabled]="!selectedItem">
+                        执行
                     </button>
                     &nbsp;
                     <button nz-button
-                            [disabled]="!selectedItem"
                             nzType="default"
-                            nzShape="circle"
-                            nzTitle="停止"
-                            nzPlacement="topCenter"
-                            nz-tooltip>
-                        <i nz-icon type="stop" theme="outline"></i>
+                            (click)="onStop()"
+                            [disabled]="!selectedItem">
+                        停止
                     </button>
                     &nbsp;
                 </div>
@@ -113,15 +86,17 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr *ngFor="let item of planTable.data; index as i" (click)="onClickListItem($event, item)">
+                <tr *ngFor="let item of planTable.data; index as i"
+                    [ngClass]="{ 'table-row-selected': item.checked }"
+                    (click)="onClickListItem($event, item)">
                     <td nzShowCheckbox [(nzChecked)]="item.checked"
                         (nzCheckedChange)="onSelected($event, item)"></td>
                     <td>{{i + 1 + 12 * (pageRes.page - 1)}}</td>
                     <td>{{item.name}}</td>
                     <td>{{item.numberOfRoutes}}</td>
                     <td>{{item.numberOfTasks}}</td>
-                    <td>{{item.state}}</td>
-                    <td>{{item.category}}</td>
+                    <td>{{item.state | planStateToChinese}}</td>
+                    <td>{{item.category | planCategoryToChinese }}</td>
                     <td>{{item.editUser}}</td>
                 </tr>
                 </tbody>

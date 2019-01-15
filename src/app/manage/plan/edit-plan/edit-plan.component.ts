@@ -2,12 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-
 import { NzDrawerService } from 'ng-zorro-antd';
 
-import { AddDemandComponent } from './add-demand/add-demand.component';
 import { EditPlanService } from './edit-plan.service';
+import { ModalService } from '../../../shared/services/modal/modal.service';
 import { NotificationService } from '../../../shared/services/notification/notification.service';
+import { PlanService } from '../plan.service';
+
+import { AddDemandComponent } from './add-demand/add-demand.component';
+
 import { PageReq } from '../../../shared/models/page/page-req.model';
 import { PageRes } from '../../../shared/models/page/page-res.model';
 import { Result } from '../../../shared/models/response/result.model';
@@ -17,7 +20,7 @@ import { DemandRes, DemandListModel, DemandModel, SubDemandModel, CollectionPeri
 import { PlanOperationEnum } from '../models/plan.enum';
 import { TaskModel } from '../models/task.model';
 import { VehicleSelectionComponent } from './vehicle-selection/vehicle-selection.component';
-import {TaskEnum} from '../models/task.enum';
+import { TaskEnum } from '../models/task.enum';
 
 @Component({
     selector   : 'app-edit-plan',
@@ -52,6 +55,7 @@ export class EditPlanComponent implements OnInit {
     };
 
     planId = ''; // 所编辑的方案id
+    planName = ''; // 所编辑的方案name
     routeId: string;
 
     routeListCache: RouteListModel[];    // 表格:路线数据
@@ -69,7 +73,9 @@ export class EditPlanComponent implements OnInit {
     constructor(private route: ActivatedRoute,
                 private router: Router,
                 private editPlanService: EditPlanService,
+                private planService: PlanService,
                 private notificationService: NotificationService,
+                private modalService: ModalService,
                 private drawerService: NzDrawerService) {
     }
 
@@ -89,6 +95,10 @@ export class EditPlanComponent implements OnInit {
                 title: '方案管理',
             },
             {
+                link : '',
+                title: this.planName,
+            },
+            {
                 link : `/manage/plan/edit/${this.planId}`,
                 title: '编辑',
             },
@@ -99,6 +109,7 @@ export class EditPlanComponent implements OnInit {
     initRouteList() {
         this.route.paramMap.subscribe((params: ParamMap) => {
             this.planId = params.get('id');
+            this.planName = params.get('name');
             this.initBreadcrumbs()
                 .getRouteList();
         });
@@ -130,6 +141,25 @@ export class EditPlanComponent implements OnInit {
      */
     onPredictPlan() {
         console.log('onPredictPlan');
+        this.notificationService.create({
+            type : 'info',
+            title: '功能实现中',
+        });
+    }
+
+    onPlanning() {
+        this.planService.operatingPlan(this.planId, PlanOperationEnum.PLANNING).subscribe(
+            (res) => {
+                // TODO
+                this.notificationService.create({
+                    type: 'success',
+                    title: '规划成功',
+                });
+                this.initRouteList().initDemandList();
+            },
+            err => {
+            }
+        );
     }
 
     /** 路线 start **/
@@ -151,20 +181,26 @@ export class EditPlanComponent implements OnInit {
             this.notificationService.create({ type: 'warning', title: '抱歉,请先选择一条路线再进行操作' });
             return;
         }
-        this.editPlanService.delRoute(this.planId, this.selectedRoutesCache.id).subscribe(
-            (res) => {
-                this.selectedRoutesCache = null;
-                this.notificationService.create({ type: 'success', title: '恭喜,删除成功', });
-                this.getRouteList();
+        this.modalService.createDeleteConfirm({
+            onOk    : () => {
+                this.editPlanService.delRoute(this.planId, this.selectedRoutesCache.id).subscribe(
+                    (res) => {
+                        this.selectedRoutesCache = null;
+                        this.notificationService.create({ type: 'success', title: '恭喜,删除成功', });
+                        this.getRouteList();
+                    },
+                    err => {
+                        this.notificationService.create({
+                            type   : 'warning',
+                            title  : '抱歉,删除失败',
+                            content: err.error.message || '',
+                        });
+                    }
+                );
             },
-            err => {
-                this.notificationService.create({
-                    type   : 'warning',
-                    title  : '抱歉,删除失败',
-                    content: err.error.message || '',
-                });
-            }
-        );
+            onCancel: () => console.log('cancel delete'),
+        });
+
     }
 
     onSelectVehicle() {
@@ -209,14 +245,12 @@ export class EditPlanComponent implements OnInit {
         } else {
             this.getDistributeList();
         }
-        console.log(this.selectedRoutesCache);
     }
 
     // 锁定/解锁
     onChangeRouteStatus($e, item: RouteListModel) {
         this.isRoutesSpinning = true;
         this.onStopPro($e);
-        console.log('点击锁定/解锁');
         //item.lock = !item.lock;
         const status = !item.lock ? 'LOCK' : 'UNLOCK';
         this.editPlanService.changeRouteStatus(this.planId, item.id, status).subscribe(
@@ -224,11 +258,7 @@ export class EditPlanComponent implements OnInit {
                 this.getRouteList();
             },
             err => {
-                this.notificationService.create({
-                    type   : 'error',
-                    title  : '锁定/解锁失败',
-                    content: err.error.message || '请联系系统管理员',
-                });
+                console.error('锁定/解锁失败');
                 this.getRouteList();
             }
         );
@@ -250,7 +280,6 @@ export class EditPlanComponent implements OnInit {
      */
     getRouteList() {
         this.isRoutesSpinning = true;
-        // 分页查询参数 TODO
         let paramsTemp = this.updateParams('route');
         this.editPlanService.getRouteList(this.planId, paramsTemp).subscribe(
             (res: Result<RouteModel[]>) => {
@@ -263,16 +292,10 @@ export class EditPlanComponent implements OnInit {
                 this.isRoutesSpinning = false;
                 this.distributedListCache = [];
                 this.classifySameVehicleRoutes(this.routeListCache);
-                console.log(this.routeListCache);
             },
             err => {
                 this.isRoutesSpinning = false;
                 this.distributedListCache = [];
-                this.notificationService.create({
-                    type   : 'error',
-                    title  : '抱歉,获取路线列表失败',
-                    content: err.error.messege || '请联系管理员',
-                });
             }
         );
     }
@@ -321,11 +344,6 @@ export class EditPlanComponent implements OnInit {
                     console.log(res);
                 },
                 err => {
-                    this.notificationService.create({
-                        type   : 'error',
-                        title  : '抱歉,更新任务优先级失败',
-                        content: err.error.message || '请联系系统管理员',
-                    });
                     this.getDistributeList();
                 }
             );
@@ -354,11 +372,8 @@ export class EditPlanComponent implements OnInit {
                     this.getDemandList();
                 },
                 err => {
-                    this.notificationService.create({
-                        type   : 'error',
-                        title  : '抱歉,取消失败',
-                        content: err.error.message || '请联系系统管理员',
-                    });
+                    this.getDistributeList();
+                    this.getDemandList();
                 }
             );
 
@@ -382,11 +397,6 @@ export class EditPlanComponent implements OnInit {
                 });
                 this.isDistributeSpinning = false;
             }, err => {
-                this.notificationService.create({
-                    type   : 'error',
-                    title  : '获取任务列表失败',
-                    content: err.error.message || '请通知系统管理员'
-                });
                 this.isDistributeSpinning = false;
             }
         );
@@ -414,26 +424,24 @@ export class EditPlanComponent implements OnInit {
     }
 
     onDelDemand() {
-        let ids = this.getIdsBySelection().join(',');
-        console.log(ids);
-        // TODO 调接口
-        this.editPlanService.delDemand(ids).subscribe(
-            (res: Result<any>) => {
-                this.getDemandList();
-                this.notificationService.create({
-                    type : 'success',
-                    title: '删除成功',
-                });
+        this.modalService.createDeleteConfirm({
+            onOk    : () => {
+                let ids = this.getIdsBySelection().join(',');
+                this.editPlanService.delDemand(ids).subscribe(
+                    (res: Result<any>) => {
+                        this.getDemandList();
+                        this.notificationService.create({
+                            type : 'success',
+                            title: '删除成功',
+                        });
+                    },
+                    err => {
+                        this.getDemandList();
+                    }
+                );
             },
-            err => {
-                this.notificationService.create({
-                    type   : 'error',
-                    title  : '抱歉,删除失败',
-                    content: err.error.message || '请联系系统管理员',
-                });
-                this.getDemandList();
-            }
-        );
+            onCancel: () => console.log('cancel delete'),
+        });
     }
 
     onDistribute() {
@@ -458,11 +466,6 @@ export class EditPlanComponent implements OnInit {
                 this.getDemandList();
             },
             err => {
-                this.notificationService.create({
-                    type   : 'error',
-                    title  : '抱歉,添加失败',
-                    content: err.error.message || '请联系系统管理员',
-                });
             }
         );
     }
@@ -485,16 +488,16 @@ export class EditPlanComponent implements OnInit {
         this.demandListCache.forEach((r: DemandModel) => {
             if (parent && r.id === parent.id) {   // 选中的为子
                 let selectParent = false;
-                r.subTaskList.forEach((sub: SubDemandModel) => {
+                r.taskList.forEach((sub: SubDemandModel) => {
                     if (sub.id === item.id) sub.checked = !item.checked;
                     if (sub.checked) selectParent = true;
                 });
                 parent.checked = selectParent;
             } else if (r.id === item.id) {           // 选中的为普通/父(所有子跟随父)
                 r.checked = !item.checked;
-                r.subTaskList
-                && r.subTaskList.length > 0
-                && r.subTaskList.forEach((sub: SubDemandModel) => {
+                r.taskList
+                && r.taskList.length > 0
+                && r.taskList.forEach((sub: SubDemandModel) => {
                     sub.checked = r.checked;
                 });
             }
@@ -505,8 +508,8 @@ export class EditPlanComponent implements OnInit {
     onSelectAllDemands(e: boolean) {
         this.demandListCache.forEach((item: DemandListModel) => {
             item.checked = e;
-            if (item.subTaskList && item.subTaskList.length > 0) {
-                item.subTaskList.forEach((sub: SubDemandModel) => {
+            if (item.taskList && item.taskList.length > 0) {
+                item.taskList.forEach((sub: SubDemandModel) => {
                     sub.checked = e;
                 });
             }
@@ -547,11 +550,6 @@ export class EditPlanComponent implements OnInit {
                     });
                 },
                 err => {
-                    this.notificationService.create({
-                        type   : 'error',
-                        title  : '抱歉,更新' + item.name + '失败',
-                        content: err.error.message || '请联系系统管理员',
-                    });
                     this.getDemandList();
                 }
             );
@@ -573,7 +571,7 @@ export class EditPlanComponent implements OnInit {
 
     onGarbageAmountChange(e, parent?: DemandListModel) {
         if (parent) {   // 修改子,需要累加
-            parent.amountOfGarbage = Number(parent.subTaskList.map((sub: SubDemandModel) => sub.amountOfGarbage).reduce((a, b) => a + b).toFixed(1));
+            parent.amountOfGarbage = Number(parent.taskList.map((sub: SubDemandModel) => sub.amountOfGarbage).reduce((a, b) => a + b).toFixed(1));
         }
     }
 
@@ -601,11 +599,6 @@ export class EditPlanComponent implements OnInit {
             },
             err => {
                 this.isDemandSpinning = false;
-                this.notificationService.create({
-                    type   : 'error',
-                    title  : '抱歉,获取收运请求数据失败',
-                    content: err.error.message || '请联系系统管理员',
-                })
             }
         );
     }
@@ -613,8 +606,8 @@ export class EditPlanComponent implements OnInit {
     // 当需求增加级层后需要改为递归
     demandResToTableRows(list: DemandRes[]): DemandListModel[] {
         return list.map((item: DemandRes) => {
-            if (item.subTaskList && item.subTaskList.length > 0) {
-                item.subTaskList = item.subTaskList.map((sub: SubDemandModel) => {
+            if (item.taskList && item.taskList.length > 0) {
+                item.taskList = item.taskList.map((sub: SubDemandModel) => {
                     return {
                         ...sub,
                         checked       : false,
@@ -652,9 +645,9 @@ export class EditPlanComponent implements OnInit {
     getIdsBySelection(): number[] {
         let ids = [];
         this.demandListCache.filter((d: DemandListModel) => d.checked).forEach((d: DemandListModel) => {
-            if (d.subTaskList && d.subTaskList.length > 0) {
-                let subIds = d.subTaskList.filter((sub: SubDemandModel) => sub.checked).map((sub: SubDemandModel) => sub.id);
-                if (subIds.length === d.subTaskList.length) { // 子全删除
+            if (d.taskList && d.taskList.length > 0) {
+                let subIds = d.taskList.filter((sub: SubDemandModel) => sub.checked).map((sub: SubDemandModel) => sub.id);
+                if (subIds.length === d.taskList.length) { // 子全删除
                     ids = [ ...ids, d.id ];
                 } else {
                     ids = [ ...ids, ...subIds ];
@@ -668,8 +661,8 @@ export class EditPlanComponent implements OnInit {
 
     refreshSelectStatus(): void {
         const allSelectedSubs = this.demandListCache
-            .filter((value: DemandListModel) => value.subTaskList && value.subTaskList.length)
-            .every((value: DemandListModel) => value.subTaskList.every((sub: SubDemandModel) => sub.checked === true));
+            .filter((value: DemandListModel) => value.taskList && value.taskList.length)
+            .every((value: DemandListModel) => value.taskList.every((sub: SubDemandModel) => sub.checked === true));
         const allSelectedDemands = this.demandListCache.every(value => value.checked === true);
         const allUnSelected = this.demandListCache.every(value => !value.checked);
         this.allSelectedDemands = allSelectedDemands && allSelectedSubs;

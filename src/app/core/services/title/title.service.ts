@@ -31,18 +31,20 @@ export class TitleService {
     }
 
     updateTitleAfterNavigated() {
-        this.router.events.pipe(
-            filter(event => event instanceof NavigationEnd),
-            map(event =>  this.activatedRoute),
-            map(route => {
-                while (route.firstChild) {
-                    route = route.firstChild;
-                }
-                return route;
-            }),
-            filter(route => route.outlet === 'primary'),
-            mergeMap(route => route.data)
-        ).subscribe(event => this.setTitle(event.title || '漳州餐厨收运管理系统'));
+        this.router.events
+            .pipe(
+                filter(event => event instanceof NavigationEnd),
+                map(event =>  this.activatedRoute),
+                map(route => {
+                    while (route.firstChild) {
+                        route = route.firstChild;
+                    }
+                    return route;
+                }),
+                filter(route => route.outlet === 'primary'),
+                mergeMap(route => route.data)
+            )
+            .subscribe(event => this.setTitle(event.title || '漳州餐厨收运管理系统'));
 
     }
 }

@@ -74,7 +74,7 @@ export class AddDemandComponent implements OnInit {
             d.checked = false;
         });
         this.selectedCluster = item;
-        if (item.subTaskList && item.subTaskList.length > 0) {
+        if (item.taskList && item.taskList.length > 0) {
             // 获取选中的请求信息
             this.selectedCluster = item;
         }
@@ -86,7 +86,7 @@ export class AddDemandComponent implements OnInit {
         this.demandListCache.forEach((item: DemandListModel) => {   // 撤销选中的子请求
             if (item.id === this.selectedCluster.id) {
                 item.checked = false;
-                item.subTaskList.forEach((child: SubDemandModel) => {
+                item.taskList.forEach((child: SubDemandModel) => {
                     child.checked = false;
                 });
             }
@@ -130,9 +130,9 @@ export class AddDemandComponent implements OnInit {
     onSelectAll(e: boolean) {
         this.demandListCache.forEach((item: DemandListModel) => {
             item.checked = e;
-            if (item.subTaskList && item.subTaskList.length > 0) {
+            if (item.taskList && item.taskList.length > 0) {
                 item.checked = false;
-                item.subTaskList.forEach((sub: SubDemandModel) => {
+                item.taskList.forEach((sub: SubDemandModel) => {
                     sub.checked = false;
                 });
             }
@@ -150,7 +150,7 @@ export class AddDemandComponent implements OnInit {
         item.checked = !item.checked;
         this.demandListCache.forEach((d: DemandListModel) => {  // 子点选中,该聚类必选中
             if (d.id === parentId) {
-                if (d.subTaskList.find((s: SubDemandModel) => s.checked)) {
+                if (d.taskList.find((s: SubDemandModel) => s.checked)) {
                     d.checked = true;
                 } else d.checked = false;
             }
@@ -164,7 +164,7 @@ export class AddDemandComponent implements OnInit {
      */
     onSelectSubAll(e: boolean, parent: DemandListModel) {
         parent.checked = e;
-        parent.subTaskList.forEach((sub: SubDemandModel) => {
+        parent.taskList.forEach((sub: SubDemandModel) => {
             sub.checked = e;
         });
         this.allSelectedSub = e;
@@ -228,8 +228,8 @@ export class AddDemandComponent implements OnInit {
                 this.indeterminate = (!allSelected) && (!allUnSelected);
                 break;
             case 2:
-                const allSelectedSub = this.selectedCluster.subTaskList.every(value => value.checked === true);
-                const allUnSelectedSub = this.selectedCluster.subTaskList.every(value => !value.checked);
+                const allSelectedSub = this.selectedCluster.taskList.every(value => value.checked === true);
+                const allUnSelectedSub = this.selectedCluster.taskList.every(value => !value.checked);
                 this.allSelectedSub = allSelectedSub;
                 this.indeterminateSub = (!allSelectedSub) && (!allUnSelectedSub);
                 break;
@@ -294,14 +294,14 @@ export class AddDemandComponent implements OnInit {
             if (!item.collectionPeriodId) { // 无选中时间段
                 valid = false;
                 return;
-            } else if (item.subTaskList && item.subTaskList.length > 0) { // 存在子请求时
-                item.subTaskList.forEach((child: SubDemandModel) => {
+            } else if (item.taskList && item.taskList.length > 0) { // 存在子请求时
+                item.taskList.forEach((child: SubDemandModel) => {
                     if (child.checked && VerifyUtil.isEmpty(child.amountOfGarbage)) { // 子请求无输入收运量
                         valid = false;
                         return;
                     } else valid = true;
                 });
-            } else if ((!item.subTaskList || item.subTaskList.length === 0) && VerifyUtil.isEmpty(item.amountOfGarbage)) { // 非聚类请求无输入收运量
+            } else if ((!item.taskList || item.taskList.length === 0) && VerifyUtil.isEmpty(item.amountOfGarbage)) { // 非聚类请求无输入收运量
                 valid = false;
                 return;
             } else valid = true;

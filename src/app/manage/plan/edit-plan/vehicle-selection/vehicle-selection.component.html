@@ -3,6 +3,7 @@
 
         <nz-table #vehicleTable
                   [nzData]="listCache"
+                  [nzSize]="'middle'"
                   [nzScroll]="{ y: '500px' }"
                   [nzFrontPagination]="false"
                   [nzTotal]="pageRes.total"
@@ -37,7 +38,7 @@
             <tr *ngFor="let item of vehicleTable.data; index as i"
                 (mousedown)="onSelectTr($event, item)"
                 [ngClass]="{ 'table-row-selected': item.checked }">
-                <td>{{i}}</td>
+                <td>{{i + 1 + 12 * (pageRes.page - 1)}}</td>
                 <td>{{item.plateNumber}}</td>
                 <!--<td>{{item.district}}</td>-->
                 <td>{{item.vehicleType}}</td>

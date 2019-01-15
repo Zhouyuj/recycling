@@ -6,52 +6,36 @@
                 <!-- 面包屑导航 -->
                 <app-breadcrumbs [options]="breadcrumbs"></app-breadcrumbs>
             </div>
-            <div nz-col class="gutter-row" nzSpan="8" nzOffset="2">
+            <div nz-col class="gutter-row" nzSpan="4" nzOffset="2">
                 <!-- 关键字搜索 -->
             </div>
-            <div nz-col class="gutter-row" nzSpan="4">
+            <div nz-col class="gutter-row" nzSpan="8">
                 <!-- CUDE: create,update,delete,export -->
                 <div class="table-CUDE">
                     <button nz-button
                             nzType="default"
-                            nzShape="circle"
-                            (click)="onAdd()"
-                            nzTitle="添加"
-                            nzPlacement="topCenter"
-                            nz-tooltip>
-                        <i nz-icon type="plus-circle" theme="outline"></i>
+                            (click)="onAdd()">
+                        添加
                     </button>
                     &nbsp;
                     <button nz-button
                             [disabled]="!formCache"
                             nzType="default"
-                            nzShape="circle"
-                            (click)="onEdit()"
-                            nzTitle="编辑"
-                            nzPlacement="topCenter"
-                            nz-tooltip>
-                        <i nz-icon type="edit" theme="outline"></i>
+                            (click)="onEdit()">
+                        编辑
                     </button>
                     &nbsp;
                     <button nz-button
-                            nzTitle="删除"
-                            (click)="isDelModalVisible = true"
+                            (click)="onDel()"
                             [disabled]="!formCache"
-                            nzType="default"
-                            nzShape="circle"
-                            nzPlacement="topCenter"
-                            nz-tooltip>
-                        <i nz-icon type="delete" theme="outline"></i>
+                            nzType="default">
+                        删除
                     </button>
                     &nbsp;
                     <button nz-button
                             nzType="default"
-                            nzShape="circle"
-                            (click)="onExp()"
-                            nzTitle="导出"
-                            nzPlacement="topCenter"
-                            nz-tooltip>
-                        <i nz-icon type="download" theme="outline"></i>
+                            (click)="onExp()">
+                        导出
                     </button>
                     &nbsp;
                 </div>
@@ -61,53 +45,6 @@
     <!-- -------- 表格内容 -------- -->
     <div class="table-content">
         <nz-spin [nzSize]="'large'" [nzSpinning]="isSpinning">
-            <!--<ngx-datatable #dataTable class="material striped"
-                           [messages]="list_options.localizationMessage"
-                           [rows]="list_options.rows"
-                           [columnMode]="'force'"
-                           [headerHeight]="40"
-                           [rowHeight]="40"
-                           [footerHeight]="40"
-                           [scrollbarH]="true"
-                           [selected]="list_options.selectedRows"
-                           [selectionType]="'multi'"
-                           [sorts]="[{prop: 'buyDate', dir: 'desc'}]"
-                           [limit]="12"
-                           [externalPaging]="true"
-                           [count]="pageRes.total"
-                           [offset]="pageRes.page"
-                           (select)="onSelect($event)"
-                           (page)="onPage($event)"
-                           (sort)="onSort($event)"
-            >
-                &lt;!&ndash;TODO&ndash;&gt;
-                <ngx-datatable-column name="当前位置" prop="lngLat" [sortable]="false"></ngx-datatable-column>
-                <ngx-datatable-column name="是否参与规划" prop="plan" [sortable]="false">
-                    <ng-template let-column="column" ngx-datatable-header-template>
-                        是否参与规划
-                    </ng-template>
-                    <ng-template let-value="value" ngx-datatable-cell-template>
-                        <label nz-checkbox [ngModel]="value"></label>
-                    </ng-template>
-                </ngx-datatable-column>
-                <ngx-datatable-column name="是否可用" prop="available" [sortable]="false">
-                    <ng-template let-column="column" ngx-datatable-header-template>
-                        是否可用
-                    </ng-template>
-                    <ng-template let-value="value" ngx-datatable-cell-template>
-                        <label nz-checkbox [ngModel]="value"></label>
-                    </ng-template>
-                </ngx-datatable-column>
-                <ngx-datatable-column name="车牌号" prop="plateNumber" [sortable]="false"></ngx-datatable-column>
-                <ngx-datatable-column name="所属区域" prop="district" [sortable]="false"></ngx-datatable-column>
-                <ngx-datatable-column name="当前司机" prop="driver" [sortable]="false"></ngx-datatable-column>
-                <ngx-datatable-column name="计划出车时间" prop="planDepartureTime" [sortable]="false"></ngx-datatable-column>
-                <ngx-datatable-column name="车型" prop="vehicleType" [sortable]="false"></ngx-datatable-column>
-                <ngx-datatable-column name="车架号" prop="idNumber" [sortable]="false"></ngx-datatable-column>
-                <ngx-datatable-column name="发动机号" prop="engineModel" [sortable]="false"></ngx-datatable-column>
-                <ngx-datatable-column name="车载盒子ID" prop="boxId" [sortable]="false"></ngx-datatable-column>
-                <ngx-datatable-column name="购买时间" prop="buyDate"></ngx-datatable-column>
-            </ngx-datatable>-->
 
             <nz-table #staffTable
                       [nzData]="listCache"
@@ -215,7 +152,3 @@
         </nz-spin>
     </div>
 </div>
-
-<nz-modal [(nzVisible)]="isDelModalVisible" nzTitle="删除车辆" (nzOnCancel)="isDelModalVisible = false" (nzOnOk)="onDel()" [nzOkLoading]="isDelOkLoading">
-    <p>确认删除该车辆?</p>
-</nz-modal>

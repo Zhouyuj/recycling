@@ -10,24 +10,15 @@
                 <div class="table-CUDE">
                     <button nz-button
                             (click)="onSavePlan()"
-                            nzType="default"
-                            nzShape="circle"
-                            nzTitle="保存"
-                            nzPlacement="topCenter"
-                            nz-tooltip>
-                        <i nz-icon type="save" theme="outline"></i>
+                            nzType="default">
+                        保存
                     </button>
                     &nbsp;
                     <button nz-button
                             (click)="onPredictPlan()"
-                            nzType="default"
-                            nzShape="circle"
-                            nzTitle="方案预测"
-                            nzPlacement="topCenter"
-                            nz-tooltip>
-                        <i nz-icon type="bar-chart" theme="outline"></i>
+                            nzType="default">
+                        方案预测
                     </button>
-                    &nbsp;
                     &nbsp;
                 </div>
             </div>
@@ -192,7 +183,7 @@
                             <button nz-button
                                     (click)="onCancelDistribute()"
                                     nzType="default"
-                                    [disabled]="!distributedListCache">
+                                    [disabled]="!distributedListCache || distributedListCache.length === 0">
                                 取消派发
                             </button>
                             &nbsp;
@@ -270,7 +261,8 @@
                             </button>
                             &nbsp;
                             <button nz-button
-                                    nzType="default">
+                                    nzType="default"
+                                    (click)="onPlanning()">
                                 规划
                             </button>
                             &nbsp;
@@ -329,7 +321,7 @@
                         <ng-template ngFor let-item [ngForOf]="demandListCache">
                             <tr [ngClass]="{ 'table-row-selected': item.checked, 'editable-tr': true }"
                                 (click)="onSelectDemand($event, item)">
-                                <td [nzShowExpand]="item.subTaskList && item.subTaskList.length > 0"
+                                <td [nzShowExpand]="item.taskList && item.taskList.length > 0"
                                     [(nzExpand)]="item.expand"
                                     (nzExpandChange)="onCollapse(item, $event)" (click)="onStopPro($event)"></td>
                                 <td>
@@ -391,7 +383,7 @@
                                                          [nzSize]="'small'"
                                                          [nzMin]="0"
                                                          [nzStep]="0.1"
-                                                         [nzDisabled]="item.subTaskList !== null"
+                                                         [nzDisabled]="item.taskList !== null"
                                                          (click)="onStopPro($event)">
                                         </nz-input-number>
                                     </ng-container>
@@ -403,7 +395,7 @@
                                 <td>{{item.selectedPeriod.priority | collectionPeriodPriority}}</td>
                                 <td>{{item.selectedPeriod.vehicle}}</td>
                             </tr>
-                            <ng-template *ngIf="item.expand" ngFor let-child [ngForOf]="item.subTaskList">
+                            <ng-template *ngIf="item.expand" ngFor let-child [ngForOf]="item.taskList">
                                 <tr [ngClass]="{ 'table-row-selected': child.checked, 'editable-tr': true }"
                                     (click)="onSelectDemand($event, child, item)">
                                     <td></td>
