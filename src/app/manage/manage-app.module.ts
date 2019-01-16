@@ -7,6 +7,7 @@ import { NgZorroAntdModule } from 'ng-zorro-antd';
 
 import { SharedModule } from '../shared/shared.module';
 import { ManageAppRoutingModule } from './manage-app-routing.module';
+import { MonitorModule } from './monitor/monitor.module';
 
 import { TestMapComponent } from './test-map/test-map.component';
 import { TestMapDemoService } from './test-map/test-map-demo.service';
@@ -19,6 +20,7 @@ import { ManageAppComponent } from './manage-app.component';
         NgZorroAntdModule,
         SharedModule,
         ManageAppRoutingModule,
+        MonitorModule,
     ],
     declarations: [ ManageAppComponent, TestMapComponent ],
     providers   : [ TestMapDemoService, TestMarkerDemoService ],

@@ -5,4 +5,11 @@
         text-align: center;
     }
 
+    .vehicletable-thead::-webkit-scrollbar {
+        display: none;
+    }
+
+    .vehicleTable-tbody::-webkit-scrollbar {
+        display: none;
+    }
 }

@@ -14,13 +14,12 @@ import { AddDemandComponent } from './add-demand/add-demand.component';
 import { PageReq } from '../../../shared/models/page/page-req.model';
 import { PageRes } from '../../../shared/models/page/page-res.model';
 import { Result } from '../../../shared/models/response/result.model';
-import { RouteModel } from '../models/route.model';
-import { RouteListModel } from '../models/route.model';
+import { RouteModel, RouteListModel } from '../models/route.model';
 import { DemandRes, DemandListModel, DemandModel, SubDemandModel, CollectionPeriod } from '../models/demand.model';
 import { PlanOperationEnum } from '../models/plan.enum';
 import { TaskModel } from '../models/task.model';
-import { VehicleSelectionComponent } from './vehicle-selection/vehicle-selection.component';
 import { TaskEnum } from '../models/task.enum';
+import { VehicleSelectionComponent } from './vehicle-selection/vehicle-selection.component';
 
 @Component({
     selector   : 'app-edit-plan',
@@ -35,8 +34,10 @@ export class EditPlanComponent implements OnInit {
     isDemandSpinning = false;       // 表格加载图
     canCancelDistribute = false;    // 取消派发按钮 TODO
 
-    allSelectedDemands = false;
-    indeterminateDemands = false;
+    allSelectedDemands = false;     // 收运请求表格全选
+    indeterminateDemands = false;   // 收运请求表格模糊选择
+
+    expandTask = true;             // 已派发任务表格全展开/收起
 
     pageReq = new PageReq(1, 12, 'createdDate.desc');    // 只有收运请求存在分页
     pageRes = new PageRes();    // 只有收运请求存在分页
@@ -126,7 +127,6 @@ export class EditPlanComponent implements OnInit {
      * 保存方案
      */
     onSavePlan() {
-        console.log('onSavePlan');
         this.editPlanService.editPlan(this.planId, PlanOperationEnum.SAVE).subscribe((res: Result<any>) => {
             this.notificationService.create({
                 type : 'success',
@@ -140,7 +140,6 @@ export class EditPlanComponent implements OnInit {
      * 方案预测
      */
     onPredictPlan() {
-        console.log('onPredictPlan');
         this.notificationService.create({
             type : 'info',
             title: '功能实现中',
@@ -152,7 +151,7 @@ export class EditPlanComponent implements OnInit {
             (res) => {
                 // TODO
                 this.notificationService.create({
-                    type: 'success',
+                    type : 'success',
                     title: '规划成功',
                 });
                 this.initRouteList().initDemandList();
@@ -393,9 +392,11 @@ export class EditPlanComponent implements OnInit {
                     return {
                         ...item,
                         checked: false,
+                        expand : false,
                     }
                 });
                 this.isDistributeSpinning = false;
+                console.log(this.distributedListCache);
             }, err => {
                 this.isDistributeSpinning = false;
             }
@@ -468,6 +469,15 @@ export class EditPlanComponent implements OnInit {
             err => {
             }
         );
+    }
+
+    onCollapseTask(data: TaskModel, e: boolean): void {
+        this.distributedListCache.forEach((d: TaskModel) => {
+            if (d.id === data.id) {
+                d.expand = e;
+                return;
+            }
+        });
     }
 
     /**

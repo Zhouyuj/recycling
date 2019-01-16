@@ -7,8 +7,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 
 const ROUTER_CONFIG: Routes = [
-    { path: '', pathMatch: 'full', redirectTo: '/manage/baseInfo/staffs' },
-    { path: 'home', pathMatch: 'full', redirectTo: '/manage/baseInfo/staffs' },
+    { path: '', pathMatch: 'full', redirectTo: '/manage/monitor' },
     {
         path        : 'login',
         loadChildren: './login/login.module#LoginModule',

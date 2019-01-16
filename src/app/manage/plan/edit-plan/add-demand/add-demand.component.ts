@@ -246,12 +246,13 @@ export class AddDemandComponent implements OnInit {
             (res: Result<PageRes<CustomerRes[]>>) => {
                 if (res.data) {
                     this.demandListCache = this.customerResToTableRows(res.data.content);
+                    this.updatePageRes(res.data);
                 }
-                this.isDemandSpinning = false;
             },
             err => {
                 this.isDemandSpinning = false;
-            }
+            },
+            () => this.isDemandSpinning = false
         );
     }
 
@@ -271,7 +272,7 @@ export class AddDemandComponent implements OnInit {
         return paramsTemp;
     }
 
-    updatePageRes(data: PageRes<DemandRes[]>): void {
+    updatePageRes(data: PageRes<CustomerRes[]>): void {
         this.pageRes = new PageRes(data.page, data.size, data.pages, data.total, data.last);
     }
 

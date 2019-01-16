@@ -199,6 +199,9 @@
                               [nzShowPagination]="false">
                         <thead>
                         <tr style="height: 69px;">
+                            <th nzWidth="64px"
+                                [(nzExpand)]="expandTask">
+                            </th>
                             <th nzWidth="160px">
                                 名称
                                 <!--<br/>
@@ -209,7 +212,7 @@
                                        [(ngModel)]="params.distribute.name"
                                        (keyup)="$event.which === 13 && getDistributeList()">-->
                             </th>
-                            <th nzWidth="150px">
+                            <th nzWidth="180px">
                                 收运时间
                             </th>
                             <th nzWidth="110px">
@@ -221,16 +224,33 @@
                         </tr>
                         </thead>
                         <tbody cdkDropList (cdkDropListDropped)="onDrop($event)">
-                        <tr *ngFor="let item of distributedListCache; index as i"
-                            [ngClass]="{ 'table-row-selected': item.checked }"
-                            cdkDrag
-                            cdkDragDisabled="{{selectedRoutesCache.lock || item.state !== 'ToDo'}}"
-                            (click)="onSelectDistribute($event, item)">
-                            <td>{{item.name}}-{{item.id}}</td>
-                            <td>收运时间收运时间收运</td>
-                            <td>{{item.amountOfGarbage}}</td>
-                            <td>{{item.state | taskStateToChinese}}</td>
-                        </tr>
+                        <ng-template ngFor let-item [ngForOf]="distributedListCache">
+                            <tr [ngClass]="{ 'table-row-selected': item.checked }"
+                                cdkDrag
+                                cdkDragDisabled="{{selectedRoutesCache.lock || item.state !== 'ToDo'}}"
+                                (click)="onSelectDistribute($event, item)">
+                                <td [nzShowExpand]="item.taskList && item.taskList.length > 0"
+                                    [(nzExpand)]="item.expand"
+                                    (nzExpandChange)="onCollapseTask(item, $event)" (click)="onStopPro($event)"></td>
+                                <td>{{item.name}}-{{item.id}}</td>
+                                <td>
+                                    {{item.collectionPeriod.dateType | collectionDateType}}-{{item.collectionPeriod.startTime | secondToHourMinute}}~{{item.collectionPeriod.endTime | secondToHourMinute}}
+                                </td>
+                                <td>{{item.amountOfGarbage}}</td>
+                                <td>{{item.state | taskStateToChinese}}</td>
+                            </tr>
+                            <ng-template *ngIf="item.expand" ngFor let-child [ngForOf]="item.taskList">
+                                <tr>
+                                    <td></td>
+                                    <td>{{child.name}}-{{child.id}}</td>
+                                    <td>
+                                        {{child.collectionPeriod.dateType | collectionDateType}}-{{child.collectionPeriod.startTime | secondToHourMinute}}~{{child.collectionPeriod.endTime | secondToHourMinute}}
+                                    </td>
+                                    <td>{{child.amountOfGarbage}}</td>
+                                    <td>{{child.state | taskStateToChinese}}</td>
+                                </tr>
+                            </ng-template>
+                        </ng-template>
                         </tbody>
                     </nz-table>
                 </nz-spin>

@@ -3,7 +3,6 @@
 
         <nz-table #vehicleTable
                   [nzData]="listCache"
-                  [nzSize]="'middle'"
                   [nzScroll]="{ y: '500px' }"
                   [nzFrontPagination]="false"
                   [nzTotal]="pageRes.total"
@@ -11,7 +10,7 @@
                   [nzPageSize]="pageRes.size"
                   (nzPageIndexChange)="onPage($event)"
                   (nzPageSizeChange)="onPage($event)">
-            <thead>
+            <thead class="vehicletable-thead">
             <tr>
                 <th nzWidth="50px">序号</th>
                 <th nzWidth="150px">
@@ -34,7 +33,7 @@
                 </th>
             </tr>
             </thead>
-            <tbody>
+            <tbody class="vehicleTable-tbody">
             <tr *ngFor="let item of vehicleTable.data; index as i"
                 (mousedown)="onSelectTr($event, item)"
                 [ngClass]="{ 'table-row-selected': item.checked }">
