@@ -12,16 +12,19 @@ export interface TaskModel {
         startTime: number,
         endTime  : number,
     };
-    taskList:[{
-        id: number;
-        name: string;
-        amountOfGarbage: number;
-        state: string;
-        collectionPeriod: {
-            startTime: number,
-            endTime  : number,
-        }
-    }];
+    taskList: SubTaskModel[];
     checked?: boolean;
     expand?: boolean;
+}
+
+export interface SubTaskModel {
+    id: number,
+    name: string,
+    amountOfGarbage: number,
+    state: string,
+    collectionPeriod: {
+        startTime: number,
+        endTime  : number,
+    },
+    checked?: boolean,
 }

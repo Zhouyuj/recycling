@@ -10,16 +10,16 @@
                 <div class="table-CUDE">
                     <button nz-button
                             (click)="onSavePlan()"
-                            nzType="default">
-                        保存
+                            nzType="primary">
+                        保存方案
                     </button>
                     &nbsp;
-                    <button nz-button
+                    <!--<button nz-button
                             (click)="onPredictPlan()"
                             nzType="default">
                         方案预测
                     </button>
-                    &nbsp;
+                    &nbsp;-->
                 </div>
             </div>
         </div>
@@ -199,8 +199,7 @@
                               [nzShowPagination]="false">
                         <thead>
                         <tr style="height: 69px;">
-                            <th nzWidth="64px"
-                                [(nzExpand)]="expandTask">
+                            <th nzWidth="64px">
                             </th>
                             <th nzWidth="160px">
                                 名称
@@ -240,7 +239,8 @@
                                 <td>{{item.state | taskStateToChinese}}</td>
                             </tr>
                             <ng-template *ngIf="item.expand" ngFor let-child [ngForOf]="item.taskList">
-                                <tr>
+                                <tr [ngClass]="{ 'table-row-selected': child.checked }"
+                                    (click)="onSelectDistribute($event, child, item)">
                                     <td></td>
                                     <td>{{child.name}}-{{child.id}}</td>
                                     <td>
@@ -280,12 +280,12 @@
                                 删除
                             </button>
                             &nbsp;
-                            <button nz-button
+                            <!--<button nz-button
                                     nzType="default"
                                     (click)="onPlanning()">
                                 规划
                             </button>
-                            &nbsp;
+                            &nbsp;-->
                             <button nz-button
                                     nzType="default"
                                     (click)="onDistribute()">

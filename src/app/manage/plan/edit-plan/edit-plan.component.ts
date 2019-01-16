@@ -17,7 +17,7 @@ import { Result } from '../../../shared/models/response/result.model';
 import { RouteModel, RouteListModel } from '../models/route.model';
 import { DemandRes, DemandListModel, DemandModel, SubDemandModel, CollectionPeriod } from '../models/demand.model';
 import { PlanOperationEnum } from '../models/plan.enum';
-import { TaskModel } from '../models/task.model';
+import { TaskModel, SubTaskModel } from '../models/task.model';
 import { TaskEnum } from '../models/task.enum';
 import { VehicleSelectionComponent } from './vehicle-selection/vehicle-selection.component';
 
@@ -36,8 +36,6 @@ export class EditPlanComponent implements OnInit {
 
     allSelectedDemands = false;     // 收运请求表格全选
     indeterminateDemands = false;   // 收运请求表格模糊选择
-
-    expandTask = true;             // 已派发任务表格全展开/收起
 
     pageReq = new PageReq(1, 12, 'createdDate.desc');    // 只有收运请求存在分页
     pageRes = new PageRes();    // 只有收运请求存在分页
@@ -324,9 +322,25 @@ export class EditPlanComponent implements OnInit {
 
     /** 已派发 start **/
 
-    onSelectDistribute($e, item) {
+    onSelectDistribute($e, item, parent?: TaskModel) {
         this.onStopPro($e);
-        item.checked = !item.checked;
+        this.distributedListCache.forEach((r: TaskModel) => {
+            if (parent && r.id === parent.id) {   // 选中的为子
+                let selectParent = false;
+                r.taskList.forEach((sub: SubTaskModel) => {
+                    if (sub.id === item.id) sub.checked = !item.checked;
+                    if (sub.checked) selectParent = true;
+                });
+                parent.checked = selectParent;
+            } else if (r.id === item.id) {           // 选中的为普通/父(所有子跟随父)
+                r.checked = !item.checked;
+                r.taskList
+                && r.taskList.length > 0
+                && r.taskList.forEach((sub: SubTaskModel) => {
+                    sub.checked = r.checked;
+                });
+            }
+        });
     }
 
     onDrop(event: CdkDragDrop<any>) {
@@ -350,21 +364,31 @@ export class EditPlanComponent implements OnInit {
     }
 
     onCancelDistribute() {
-        if (this.distributedListCache && this.distributedListCache.every((d: TaskModel) => !d.checked)) {
+        let canDo = false;
+        this.distributedListCache.forEach((d: TaskModel) => {
+            if (d.checked) {
+                canDo = true;
+            } else if (d.taskList.length > 0 && d.taskList.find(t => t.checked === true)) {
+                canDo = true;
+            }
+        });
+        if (!canDo) {
             this.notificationService.create({
                 type : 'warning',
                 title: '抱歉,请选择至少一个已派发收运任务'
             });
             return;
         }
-        const ids = this.distributedListCache
-            .filter((d: TaskModel) => d.checked)
-            .map((d: TaskModel) => {
-                return d.id;
-            })
-            .join(',');
+        let ids = [];
+        this.distributedListCache.forEach((d: TaskModel) => {
+            if (d.checked) {
+                ids.push(d.id);
+            } else if (d.taskList.length > 0) {
+                ids = [ ...ids, ...(d.taskList.filter(t => t.checked).map(t => t.id)) ];
+            }
+        });
         this.editPlanService
-            .delTasksOnRoute(this.selectedRoutesCache.id, ids)
+            .delTasksOnRoute(this.selectedRoutesCache.id, ids.join(','))
             .subscribe(
                 (res) => {
                     this.getDistributeList();
@@ -388,11 +412,21 @@ export class EditPlanComponent implements OnInit {
         let routeId = this.selectedRoutesCache.id;
         this.editPlanService.getDistributeList(routeId).subscribe(
             res => {
-                this.distributedListCache = res.data.map((item) => {
+                this.distributedListCache = res.data.map((item: TaskModel) => {
+                    let taskList;
+                    if (item.taskList && item.taskList.length > 0) {
+                        taskList = item.taskList.map(t => {
+                            return {
+                                ...t,
+                                checked: false,
+                            }
+                        });
+                    }
                     return {
                         ...item,
-                        checked: false,
-                        expand : false,
+                        taskList: taskList || [],
+                        checked : false,
+                        expand  : false,
                     }
                 });
                 this.isDistributeSpinning = false;
