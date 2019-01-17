@@ -185,6 +185,7 @@ export class EditPlanComponent implements OnInit {
                         this.selectedRoutesCache = null;
                         this.notificationService.create({ type: 'success', title: '恭喜,删除成功', });
                         this.getRouteList();
+                        this.getDemandList();
                     },
                     err => {
                         this.notificationService.create({
@@ -561,10 +562,21 @@ export class EditPlanComponent implements OnInit {
         this.refreshSelectStatus();
     }
 
-    onStartEditDemand($e, item: DemandListModel) {
+    onStartEditDemand($e, item: DemandListModel | SubDemandModel) {
         this.onStopPro($e);
         // 判断其他是否在编辑状态
-        let canEdit = this.demandListCache.every((d: DemandListModel) => d.editable === false);
+        let canEdit = false;
+        //let canEdit = this.demandListCache.every((d: DemandListModel) => d.editable === false);
+        canEdit = this.demandListCache.every((d: DemandListModel) => {
+            // 目标:所有父/子都 editable==false
+            if (d.editable) {
+                return false;
+            } else if (d.taskList && d.taskList.length > 0 && d.taskList.find((sub: SubDemandModel) => sub.editable === true)) {
+                return false;
+            } else {
+                return true;
+            }
+        });
         if (canEdit) {
             item.editable = true;
 

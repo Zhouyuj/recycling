@@ -72,18 +72,25 @@ export class ModelConverter {
         return l;
     }
 
+    /**
+     * 筛选,组装数据
+     * @param l
+     * @returns {DemandReq}
+     */
     public static demandListModelToReq(l: DemandListModel): DemandReq {
         let req: DemandReq;
-        let amountOfGarbage, taskList;
-        if (VerifyUtil.isNotEmpty(l.taskList) && l.taskList.length > 0) { // 聚类请求 收运量传 0
-            amountOfGarbage = 0;
-            taskList = l.taskList.map((sub: SubDemandModel) => { // 子请求
-                return {
-                    amountOfGarbage: sub.amountOfGarbage,
-                    customerId     : sub.id,
-                    name           : sub.name,
-                }
-            });
+        let amountOfGarbage = 0, taskList;
+        if (VerifyUtil.isNotEmpty(l.taskList) && l.taskList.length > 0) { // 聚类请求收运量
+            taskList = l.taskList
+                .filter((sub: SubDemandModel) => sub.checked)
+                .map((sub: SubDemandModel) => { // 子请求
+                    amountOfGarbage += sub.amountOfGarbage;
+                    return {
+                        amountOfGarbage: sub.amountOfGarbage,
+                        customerId     : sub.id,
+                        name           : sub.name,
+                    }
+                });
         } else {
             amountOfGarbage = l.amountOfGarbage; // 普通请求收运量
         }

@@ -74,10 +74,6 @@ export class AddDemandComponent implements OnInit {
             d.checked = false;
         });
         this.selectedCluster = item;
-        if (item.taskList && item.taskList.length > 0) {
-            // 获取选中的请求信息
-            this.selectedCluster = item;
-        }
     }
 
     onHideSub() {
