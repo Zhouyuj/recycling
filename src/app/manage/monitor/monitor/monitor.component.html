@@ -25,10 +25,44 @@
     <!-- 侧边栏与地图 -->
     <div class="table-content" nz-row>
         <div class="tables-cell" nz-col nzSpan="13" nz-row>
+            <!-- 线路表格 -->
             <div class="table-route" nz-col nzSpan="12">
-
+                <nz-table #routeTable [nzData]="routeListCache">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>路线</th>
+                        <th>车辆</th>
+                        <th>司机</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let item of routeListCache">
+                        <td>序号</td>
+                        <td>路线路线</td>
+                        <td>车辆车辆</td>
+                        <td>司机司机</td>
+                    </tr>
+                    </tbody>
+                </nz-table>
             </div>
-            <div class="table-task" nz-col nzSpan="12"></div>
+            <!-- 任务表格 -->
+            <div class="table-task" nz-col nzSpan="12">
+                <nz-table #taskTable [nzData]="taskListCache">
+                    <thead>
+                    <tr>
+                        <th>收集点</th>
+                        <th>手持报量（吨）</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let item of taskListCache">
+                        <td>我是名称</td>
+                        <td>1212</td>
+                    </tr>
+                    </tbody>
+                </nz-table>
+            </div>
         </div>
         <div class="map-cell" nz-col nzSpan="11">
             <div id="map"></div>

@@ -86,7 +86,7 @@ export class ModelConverter {
                 .map((sub: SubDemandModel) => { // 子请求
                     amountOfGarbage += sub.amountOfGarbage;
                     return {
-                        amountOfGarbage: sub.amountOfGarbage,
+                        amountOfGarbage: sub.amountOfGarbage || 0,
                         customerId     : sub.id,
                         name           : sub.name,
                     }
@@ -95,7 +95,7 @@ export class ModelConverter {
             amountOfGarbage = l.amountOfGarbage; // 普通请求收运量
         }
         req = {
-            amountOfGarbage   : amountOfGarbage,
+            amountOfGarbage   : amountOfGarbage || 0,
             collectionPeriodId: l.collectionPeriodId,
             customerId        : l.id,
             name              : l.name,

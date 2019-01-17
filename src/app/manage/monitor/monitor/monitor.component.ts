@@ -23,6 +23,9 @@ export class MonitorComponent implements OnInit {
 
     map: any;
 
+    routeListCache: any;
+    taskListCache: any;
+
     constructor(private mapService: MapService) {
     }
 

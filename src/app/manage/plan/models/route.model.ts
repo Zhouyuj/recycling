@@ -8,13 +8,19 @@ export interface RouteModel {
     id: string;
     lock: boolean;
     name: string;
-    plateNumber: string;
     priority: number;
     state: RouteState;
+    vehicle: VehicleOfRoute;
 }
 
 export interface RouteListModel extends RouteModel {
     checked?: boolean;   // 是否被选中
+}
+
+export interface VehicleOfRoute {
+    lat: number;
+    lng: number;
+    plateNumber: string;
 }
 
 export enum RouteState {

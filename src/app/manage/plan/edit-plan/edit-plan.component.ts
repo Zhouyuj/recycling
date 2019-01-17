@@ -265,7 +265,7 @@ export class EditPlanComponent implements OnInit {
 
     onChangeRoutePriority($e, item: RouteListModel) {
         this.editPlanService.updateRoute(
-            { name: item.name, priority: item.priority, vehicle: item.plateNumber },
+            { name: item.name, priority: item.priority, vehicle: item.vehicle.plateNumber },
             this.planId,
             item.id
         ).subscribe((res) => {
@@ -299,15 +299,16 @@ export class EditPlanComponent implements OnInit {
     }
 
     // 统计同一车辆的路线
+    // sameVehicleRoutes 以车牌号作为key的对象
     // sameVehicleRoutes = { '闽Y11111': [ RouteListModel ], }
     classifySameVehicleRoutes(routes: RouteListModel[]) {
         this.sameVehicleRoutes = {};
         routes.forEach((r: RouteListModel) => {
-            if (r.plateNumber) {
-                if (this.sameVehicleRoutes[ r.plateNumber ]) {
-                    this.sameVehicleRoutes[ r.plateNumber ].push(r);
+            if (r.vehicle) {
+                if (this.sameVehicleRoutes[ r.vehicle.plateNumber ]) {
+                    this.sameVehicleRoutes[ r.vehicle.plateNumber ].push(r);
                 } else {
-                    this.sameVehicleRoutes[ r.plateNumber ] = [ r ];
+                    this.sameVehicleRoutes[ r.vehicle.plateNumber ] = [ r ];
                 }
             }
         });
@@ -716,11 +717,17 @@ export class EditPlanComponent implements OnInit {
     }
 
     refreshSelectStatus(): void {
-        const allSelectedSubs = this.demandListCache
+        const allSelectedSubs = this.demandListCache.length > 0
+            ? this.demandListCache
             .filter((value: DemandListModel) => value.taskList && value.taskList.length)
-            .every((value: DemandListModel) => value.taskList.every((sub: SubDemandModel) => sub.checked === true));
-        const allSelectedDemands = this.demandListCache.every(value => value.checked === true);
-        const allUnSelected = this.demandListCache.every(value => !value.checked);
+            .every((value: DemandListModel) => value.taskList.every((sub: SubDemandModel) => sub.checked === true))
+            : false;
+        const allSelectedDemands = this.demandListCache.length > 0
+            ? this.demandListCache.every(value => value.checked === true)
+            : false;
+        const allUnSelected = this.demandListCache.length > 0
+            ? this.demandListCache.every(value => !value.checked)
+            : true;
         this.allSelectedDemands = allSelectedDemands && allSelectedSubs;
         this.indeterminateDemands = (!(allSelectedDemands && allSelectedSubs)) && (!allUnSelected);
     }

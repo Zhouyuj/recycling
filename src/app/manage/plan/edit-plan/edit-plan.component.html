@@ -119,15 +119,15 @@
                                 </div>
                             </td>
                             <td>{{item.name}}</td>
-                            <td>{{item.plateNumber}}</td>
+                            <td>{{item.vehicle.plateNumber}}</td>
                             <td>
-                                <nz-select *ngIf="item.plateNumber && sameVehicleRoutes[item.plateNumber].length > 1"
+                                <nz-select *ngIf="item.vehicle && sameVehicleRoutes[item.vehicle.plateNumber].length > 1"
                                            style="width: 100%"
                                            [(ngModel)]="item.priority"
                                            [nzSize]="'small'"
                                            (click)="onStopPro($event)"
                                            (ngModelChange)="onChangeRoutePriority($event, item)">
-                                    <ng-container *ngFor="let o of sameVehicleRoutes[item.plateNumber]; index as i">
+                                    <ng-container *ngFor="let o of sameVehicleRoutes[item.vehicle.plateNumber]; index as i">
                                         <nz-option [nzValue]="i + 1" [nzLabel]="i + 1"></nz-option>
                                     </ng-container>
                                 </nz-select>
