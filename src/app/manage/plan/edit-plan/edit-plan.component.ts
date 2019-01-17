@@ -325,23 +325,21 @@ export class EditPlanComponent implements OnInit {
 
     onSelectDistribute($e, item, parent?: TaskModel) {
         this.onStopPro($e);
-        this.distributedListCache.forEach((r: TaskModel) => {
-            if (parent && r.id === parent.id) {   // 选中的为子
-                let selectParent = false;
-                r.taskList.forEach((sub: SubTaskModel) => {
-                    if (sub.id === item.id) sub.checked = !item.checked;
-                    if (sub.checked) selectParent = true;
-                });
-                parent.checked = selectParent;
-            } else if (r.id === item.id) {           // 选中的为普通/父(所有子跟随父)
-                r.checked = !item.checked;
-                r.taskList
-                && r.taskList.length > 0
-                && r.taskList.forEach((sub: SubTaskModel) => {
-                    sub.checked = r.checked;
+        if (parent) { // 选中子
+            item.checked = !item.checked;
+            this.distributedListCache.forEach((r: TaskModel) => {
+                if (r.id === parent.id) {
+                    parent.checked = r.taskList.every((sub: SubTaskModel) => sub.checked);
+                }
+            });
+        } else {    // 选中普通/父
+            item.checked = !item.checked;
+            if (item.taskList && item.taskList.length > 0) {
+                item.taskList.forEach((sub: SubTaskModel) => {
+                    sub.checked = item.checked;
                 });
             }
-        });
+        }
     }
 
     onDrop(event: CdkDragDrop<any>) {
@@ -571,7 +569,9 @@ export class EditPlanComponent implements OnInit {
             // 目标:所有父/子都 editable==false
             if (d.editable) {
                 return false;
-            } else if (d.taskList && d.taskList.length > 0 && d.taskList.find((sub: SubDemandModel) => sub.editable === true)) {
+            } else if (d.taskList
+                && d.taskList.length > 0
+                && d.taskList.find((sub: SubDemandModel) => sub.editable === true)) {
                 return false;
             } else {
                 return true;

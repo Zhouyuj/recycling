@@ -231,9 +231,14 @@
                                 <td [nzShowExpand]="item.taskList && item.taskList.length > 0"
                                     [(nzExpand)]="item.expand"
                                     (nzExpandChange)="onCollapseTask(item, $event)" (click)="onStopPro($event)"></td>
-                                <td>{{item.name}}-{{item.id}}</td>
+                                <td>{{item.name}}</td>
                                 <td>
-                                    {{item.collectionPeriod.dateType | collectionDateType}}-{{item.collectionPeriod.startTime | secondToHourMinute}}~{{item.collectionPeriod.endTime | secondToHourMinute}}
+                                    <p>【{{item.collectionPeriod.dateType | collectionDateType}}-餐厨TODO】</p>
+                                    <p>
+                                        {{item.collectionPeriod.startTime | secondToHourMinute}}
+                                        ~
+                                        {{item.collectionPeriod.endTime | secondToHourMinute}}
+                                    </p>
                                 </td>
                                 <td>{{item.amountOfGarbage}}</td>
                                 <td>{{item.state | taskStateToChinese}}</td>
@@ -242,9 +247,14 @@
                                 <tr [ngClass]="{ 'table-row-selected': child.checked }"
                                     (click)="onSelectDistribute($event, child, item)">
                                     <td></td>
-                                    <td>{{child.name}}-{{child.id}}</td>
+                                    <td>{{child.name}}</td>
                                     <td>
-                                        {{child.collectionPeriod.dateType | collectionDateType}}-{{child.collectionPeriod.startTime | secondToHourMinute}}~{{child.collectionPeriod.endTime | secondToHourMinute}}
+                                        <p>【{{child.collectionPeriod.dateType | collectionDateType}}-餐厨TODO】</p>
+                                        <p>
+                                            {{child.collectionPeriod.startTime | secondToHourMinute}}
+                                            ~
+                                            {{child.collectionPeriod.endTime | secondToHourMinute}}
+                                        </p>
                                     </td>
                                     <td>{{child.amountOfGarbage}}</td>
                                     <td>{{child.state | taskStateToChinese}}</td>
@@ -382,17 +392,18 @@
                                             <nz-option
                                                     *ngFor="let op of item.collectionPeriods"
                                                     [nzValue]="op.id"
-                                                    nzLabel="{{op.dateType | collectionDateType}} - {{op.startTime | secondToHourMinute}} ~ {{op.endTime | secondToHourMinute}}">
+                                                    nzLabel="{{op.dateType | collectionDateType}}-餐厨TODO {{op.startTime | secondToHourMinute}} ~ {{op.endTime | secondToHourMinute}}">
                                             </nz-option>
                                         </nz-select>
                                     </ng-container>
                                     <ng-container *ngIf="!item.editable">
                                         <!-- 展示-不可编辑 -->
-                                        {{item.selectedPeriod.dateType | collectionDateType}}
-                                        -
-                                        {{item.selectedPeriod.startTime | secondToHourMinute}}
-                                        ~
-                                        {{item.selectedPeriod.endTime | secondToHourMinute}}
+                                        <p>【{{item.selectedPeriod.dateType | collectionDateType}}-餐厨TODO】</p>
+                                        <p>
+                                            {{item.selectedPeriod.startTime | secondToHourMinute}}
+                                            ~
+                                            {{item.selectedPeriod.endTime | secondToHourMinute}}
+                                        </p>
                                     </ng-container>
                                 </td>
                                 <td>
@@ -447,11 +458,12 @@
                                         </div>
                                     </td>
                                     <td>
-                                        {{item.selectedPeriod.dateType | collectionDateType}}
-                                        -
-                                        {{item.selectedPeriod.startTime | secondToHourMinute}}
-                                        ~
-                                        {{item.selectedPeriod.endTime | secondToHourMinute}}
+                                        <p>【{{item.selectedPeriod.dateType | collectionDateType}}-餐厨TODO】</p>
+                                        <p>
+                                            {{item.selectedPeriod.startTime | secondToHourMinute}}
+                                            ~
+                                            {{item.selectedPeriod.endTime | secondToHourMinute}}
+                                        </p>
                                     </td>
                                     <td>
                                         <ng-container *ngIf="child.editable">
