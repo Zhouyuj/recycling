@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 
-import { MapService } from '../../../shared/services/map/map.service';
+import { MapService } from '../../shared/services/map/map.service.ts';
 
-import { Map } from '../models/map.model';
+import { Map } from 'models/map.model.ts';
 
 @Component({
     selector   : 'app-monitor',

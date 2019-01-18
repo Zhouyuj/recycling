@@ -121,7 +121,7 @@
                             <td>{{item.name}}</td>
                             <td>{{item.vehicle.plateNumber}}</td>
                             <td>
-                                <nz-select *ngIf="item.vehicle && sameVehicleRoutes[item.vehicle.plateNumber].length > 1"
+                                <nz-select *ngIf="item.vehicle.plateNumber && sameVehicleRoutes[item.vehicle.plateNumber].length > 1"
                                            style="width: 100%"
                                            [(ngModel)]="item.priority"
                                            [nzSize]="'small'"
@@ -233,7 +233,9 @@
                                     (nzExpandChange)="onCollapseTask(item, $event)" (click)="onStopPro($event)"></td>
                                 <td>{{item.name}}</td>
                                 <td>
-                                    <p>【{{item.collectionPeriod.dateType | collectionDateType}}-餐厨TODO】</p>
+                                    <p>
+                                        【{{item.collectionPeriod.dateType | collectionDateType}}-{{item.collectionPeriod.garbageCategory | collectionPeriodTypeToChinese}}】
+                                    </p>
                                     <p>
                                         {{item.collectionPeriod.startTime | secondToHourMinute}}
                                         ~
@@ -249,7 +251,9 @@
                                     <td></td>
                                     <td>{{child.name}}</td>
                                     <td>
-                                        <p>【{{child.collectionPeriod.dateType | collectionDateType}}-餐厨TODO】</p>
+                                        <p>
+                                            【{{child.collectionPeriod.dateType | collectionDateType}}-{{child.collectionPeriod.garbageCategory | collectionPeriodTypeToChinese}}】
+                                        </p>
                                         <p>
                                             {{child.collectionPeriod.startTime | secondToHourMinute}}
                                             ~
@@ -392,13 +396,15 @@
                                             <nz-option
                                                     *ngFor="let op of item.collectionPeriods"
                                                     [nzValue]="op.id"
-                                                    nzLabel="{{op.dateType | collectionDateType}}-餐厨TODO {{op.startTime | secondToHourMinute}} ~ {{op.endTime | secondToHourMinute}}">
+                                                    nzLabel="{{op.dateType | collectionDateType}}-{{op.garbageCategory | collectionPeriodTypeToChinese}} {{op.startTime | secondToHourMinute}} ~ {{op.endTime | secondToHourMinute}}">
                                             </nz-option>
                                         </nz-select>
                                     </ng-container>
                                     <ng-container *ngIf="!item.editable">
                                         <!-- 展示-不可编辑 -->
-                                        <p>【{{item.selectedPeriod.dateType | collectionDateType}}-餐厨TODO】</p>
+                                        <p>
+                                            【{{item.selectedPeriod.dateType | collectionDateType}}-{{item.selectedPeriod.garbageCategory | collectionPeriodTypeToChinese}}】
+                                        </p>
                                         <p>
                                             {{item.selectedPeriod.startTime | secondToHourMinute}}
                                             ~
@@ -458,7 +464,9 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <p>【{{item.selectedPeriod.dateType | collectionDateType}}-餐厨TODO】</p>
+                                        <p>
+                                            【{{item.selectedPeriod.dateType | collectionDateType}}-{{item.selectedPeriod.garbageCategory | collectionPeriodTypeToChinese}}】
+                                        </p>
                                         <p>
                                             {{item.selectedPeriod.startTime | secondToHourMinute}}
                                             ~

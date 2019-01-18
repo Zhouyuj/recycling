@@ -3,7 +3,7 @@
  */
 
 export class PlanListModel {
-    id: string;
+    id: number;
     name: string; // 方案名字
     numberOfRoutes: number; // 路线总数
     numberOfTasks: number; // 收集点总数

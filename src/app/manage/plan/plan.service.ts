@@ -38,19 +38,20 @@ export class PlanService extends RebirthHttp {
     }
 
     @DELETE('/plans/:id')
-    delPlan(@Path('id') id: string): Observable<Result<any>> {
+    delPlan(@Path('id') id: number): Observable<Result<any>> {
         return null;
     }
 
     @GET('/routes')
     getRouteList(@Query('name') name?: string,
                  @Query('planId') planId?: number,
+                 @Query('planIds') planIds?: number[],
                  @Query('plateNumber') plateNumber?: string): Observable<Result<RouteModel[]>> {
         return null;
     }
 
     @POST('/plans/:id/operations')
-    operatingPlan(@Path('id') id: string, @Query('operate') operate: string): Observable<Result<{ status: number }>> {
+    operatingPlan(@Path('id') id: number, @Query('operate') operate: string): Observable<Result<{ status: number }>> {
         return null;
     }
 

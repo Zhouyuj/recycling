@@ -1,5 +1,5 @@
 <div class="wrap">
-    <div class="table-operations">
+    <div class="top-bar">
         <div nz-row nzGutter="16">
             <div nz-col class="gutter-row" nzSpan="10">
                 <!-- 面包屑导航 -->
@@ -23,14 +23,14 @@
         </div>
     </div>
     <!-- 侧边栏与地图 -->
-    <div class="table-content" nz-row>
+    <div class="side-bar" nz-row>
         <div class="tables-cell" nz-col nzSpan="13" nz-row>
             <!-- 线路表格 -->
             <div class="table-route" nz-col nzSpan="12">
                 <nz-table #routeTable [nzData]="routeListCache">
                     <thead>
                     <tr>
-                        <th></th>
+                        <th nzWidth="50px"></th>
                         <th>路线</th>
                         <th>车辆</th>
                         <th>司机</th>
@@ -51,8 +51,8 @@
                 <nz-table #taskTable [nzData]="taskListCache">
                     <thead>
                     <tr>
-                        <th>收集点</th>
-                        <th>手持报量（吨）</th>
+                        <th nzWidth="60%">收集点</th>
+                        <th nzWidth="40%">手持报量(吨)</th>
                     </tr>
                     </thead>
                     <tbody>

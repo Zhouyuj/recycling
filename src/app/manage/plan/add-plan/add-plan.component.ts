@@ -30,6 +30,10 @@ export class AddPlanComponent implements OnInit {
     pageRes = new PageRes();
     params = {
         name: '',
+        status: [
+            'Stopped',
+            'Completed',
+        ],
     };
 
     planNameKeyword: string;

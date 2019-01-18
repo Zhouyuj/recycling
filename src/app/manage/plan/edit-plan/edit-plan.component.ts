@@ -53,7 +53,7 @@ export class EditPlanComponent implements OnInit {
         },
     };
 
-    planId = ''; // 所编辑的方案id
+    planId = 0; // 所编辑的方案id
     planName = ''; // 所编辑的方案name
     routeId: string;
 
@@ -107,7 +107,7 @@ export class EditPlanComponent implements OnInit {
 
     initRouteList() {
         this.route.paramMap.subscribe((params: ParamMap) => {
-            this.planId = params.get('id');
+            this.planId = parseInt(params.get('id'));
             this.planName = params.get('name');
             this.initBreadcrumbs()
                 .getRouteList();
@@ -203,7 +203,7 @@ export class EditPlanComponent implements OnInit {
 
     onSelectVehicle() {
         const drawerRef = this.drawerService
-            .create<VehicleSelectionComponent, { success: boolean, planId: string, routeId: string }, boolean>(
+            .create<VehicleSelectionComponent, { success: boolean, planId: number, routeId: number }, boolean>(
                 {
                     nzTitle        : '请为线路选择车辆',
                     nzContent      : VehicleSelectionComponent,
@@ -430,7 +430,6 @@ export class EditPlanComponent implements OnInit {
                     }
                 });
                 this.isDistributeSpinning = false;
-                console.log(this.distributedListCache);
             }, err => {
                 this.isDistributeSpinning = false;
             }

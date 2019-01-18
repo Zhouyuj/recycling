@@ -40,7 +40,7 @@
                         <nz-option
                                 *ngFor="let op of selectedCluster.collectionPeriods"
                                 [nzValue]="op.id"
-                                nzLabel="{{op.dateType | collectionDateType}} - {{op.startTime | secondToHourMinute}} ~ {{op.endTime | secondToHourMinute}}">
+                                nzLabel="{{op.dateType | collectionDateType}}-{{op.garbageCategory | collectionPeriodTypeToChinese}} {{op.startTime | secondToHourMinute}} ~ {{op.endTime | secondToHourMinute}}">
                         </nz-option>
                     </nz-select>
                 </nz-col>
@@ -84,10 +84,10 @@
                     <!--<th nzWidth="200px">
                         账号
                     </th>-->
-                    <th nzWidth="250px">
+                    <th nzWidth="280px">
                         收运时间
                     </th>
-                    <th nzWidth="80px">
+                    <th nzWidth="120px">
                         收运量
                     </th>
                     <!--<th nzWidth="120px">
@@ -118,7 +118,7 @@
                                 <nz-option
                                         *ngFor="let op of item.collectionPeriods"
                                         [nzValue]="op.id"
-                                        nzLabel="{{op.dateType | collectionDateType}} - {{op.startTime | secondToHourMinute}} ~ {{op.endTime | secondToHourMinute}}">
+                                        nzLabel="{{op.dateType | collectionDateType}}-{{op.garbageCategory | collectionPeriodTypeToChinese}} {{op.startTime | secondToHourMinute}} ~ {{op.endTime | secondToHourMinute}}">
                                 </nz-option>
                             </nz-select>
                         </td>

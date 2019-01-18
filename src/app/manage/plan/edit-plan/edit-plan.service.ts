@@ -23,31 +23,31 @@ export class EditPlanService extends RebirthHttp {
     /** start of routes **/
 
     @GET('/routes')
-    getRouteList(@Query('planId') planId: string, /* 编辑方案的id,必填 */
+    getRouteList(@Query('planId') planId: number, /* 编辑方案的id,必填 */
                  @Query('param') param?: { name?: string, plateNumber?: string }): Observable<Result<RouteModel[]>> {
         return null;
     }
 
     @POST('/plans/:id/routes')
-    addRoute(@Body routeDTO: any, @Path('id') id: string): Observable<Result<number>> {
+    addRoute(@Body routeDTO: any, @Path('id') id: number): Observable<Result<number>> {
         return null;
     }
 
     @PATCH('/plans/:id/routes/:routeId')
     updateRoute(@Body routeDTO: { name?: string, priority?: number, vehicle?: string},
-                @Path('id') id: string,
-                @Path('routeId') routeId: string): Observable<Result<any>> {
+                @Path('id') id: number,
+                @Path('routeId') routeId: number): Observable<Result<any>> {
         return null;
     }
 
     @DELETE('/plans/:id/routes/:routeId')
-    delRoute(@Path('id') id: string, @Path('routeId') routeId: string): Observable<Result<any>> {
+    delRoute(@Path('id') id: number, @Path('routeId') routeId: number): Observable<Result<any>> {
         return null;
     }
 
     @POST('/plans/:id/routes/:routeId/operations')
-    changeRouteStatus(@Path('id') id: string,
-                      @Path('routeId') routeId: string,
+    changeRouteStatus(@Path('id') id: number,
+                      @Path('routeId') routeId: number,
                       @Query('operate') operate: string): Observable<Result<any>> {
         return null;
     }
@@ -59,7 +59,7 @@ export class EditPlanService extends RebirthHttp {
      * @returns {null}
      */
     @POST('/routes/:id/tasks')
-    addTasksOnRoute(@Path('id') id: string, @Query('taskIds') taskIds: string): Observable<Result<any>> {
+    addTasksOnRoute(@Path('id') id: number, @Query('taskIds') taskIds: string): Observable<Result<any>> {
         return null;
     }
 
@@ -70,7 +70,7 @@ export class EditPlanService extends RebirthHttp {
      * @returns {null}
      */
     @DELETE('/routes/:id/tasks')
-    delTasksOnRoute(@Path('id') id: string, @Query('taskIds') taskIds: string): Observable<Result<any>> {
+    delTasksOnRoute(@Path('id') id: number, @Query('taskIds') taskIds: string): Observable<Result<any>> {
         return null;
     }
 
@@ -78,7 +78,7 @@ export class EditPlanService extends RebirthHttp {
      * 修改任务优先级
      */
     @PATCH('/routes/:id/tasks')
-    updateTasksPriorityOnRoute(@Path('id') id: string,
+    updateTasksPriorityOnRoute(@Path('id') id: number,
                                @Body taskPriorityList: { id: number, priority: number }[]): Observable<Result<any>> {
         return null;
     }
@@ -98,7 +98,7 @@ export class EditPlanService extends RebirthHttp {
      * @returns {null}
      */
     @GET('/routes/:id/tasks')
-    getDistributeList(@Path('id') id: string): Observable<Result<TaskModel[]>> {
+    getDistributeList(@Path('id') id: number): Observable<Result<TaskModel[]>> {
         return null;
     }
 
@@ -148,7 +148,7 @@ export class EditPlanService extends RebirthHttp {
      * @returns {null}
      */
     @POST('plans/:id/operations')
-    editPlan(@Path('id') id: string, @Query('operate') operate: PlanOperationEnum) {
+    editPlan(@Path('id') id: number, @Query('operate') operate: PlanOperationEnum) {
         return null;
     }
 

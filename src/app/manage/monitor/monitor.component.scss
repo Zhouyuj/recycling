@@ -3,7 +3,7 @@
     height: 100%;
 }
 
-.table-operations {
+.top-bar {
     position: relative;
     z-index: 13;
     padding-bottom: 8px;
@@ -25,7 +25,7 @@
     }
 }
 
-.table-content {
+.side-bar {
     min-height: 656px;
     padding: 0 1px 1px;
     th, td {
@@ -37,7 +37,7 @@
     }
 
     .table-route {
-        border-right: 1px solid #aaaaaa;
+        border-right: 2px solid #ddd;
         box-sizing: border-box;
     }
 

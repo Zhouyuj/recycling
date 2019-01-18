@@ -19,8 +19,8 @@ import {EditPlanService} from '../edit-plan.service';
 export class VehicleSelectionComponent implements OnInit {
 
     @Input() success: boolean;
-    @Input() planId: string;
-    @Input() routeId: string;
+    @Input() planId: number;
+    @Input() routeId: number;
     isSpinning = false;
     pageReq = new PageReq();
     pageRes = new PageRes();

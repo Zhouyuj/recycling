@@ -48,9 +48,9 @@ export class PlanComponent implements OnInit {
         status: '',
     };
     planStateList = [
-        { text: PlanStateEnum.CompletedChinese, value: PlanStateEnum.Completed },
+        //{ text: PlanStateEnum.CompletedChinese, value: PlanStateEnum.Completed },
         { text: PlanStateEnum.ExecutingChinese, value: PlanStateEnum.Executing },
-        { text: PlanStateEnum.StoppedChinese, value: PlanStateEnum.Stopped },
+        //{ text: PlanStateEnum.StoppedChinese, value: PlanStateEnum.Stopped },
         { text: PlanStateEnum.UnExecutedChinese, value: PlanStateEnum.UnExecuted },
     ];
 
@@ -247,9 +247,9 @@ export class PlanComponent implements OnInit {
         return data.map(item => ModelConverter.planResToPlanListModel(item));
     }
 
-    getRouteList(name?: string, planId?: number, plateNumber?: string) {
+    getRouteList(name?: string, planId?: number, planIds?: number[], plateNumber?: string) {
         this.planService
-            .getRouteList(name || null, planId || null, plateNumber || null)
+            .getRouteList(name || null, planId || null, planIds || null, plateNumber || null)
             .subscribe((res: Result<RouteModel[]>) => {
                 if (res.data) {
                     this.routesListCache = res.data;

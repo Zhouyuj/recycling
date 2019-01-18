@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { CustomerPipeModule } from './customer/customer-pipe.module';
 import { CollectionDateTypePipe } from './time/collection-date-type.pipe';
 import { CollectionPeriodPriorityPipe } from './priority/collection-period-priority.pipe';
 import { DistrictCodeToNamePipe } from './districts/district-code-to-name.pipe';
@@ -10,9 +11,12 @@ import { PlanPipeModule } from './plan/plan-pipe.module';
     imports     : [
         CommonModule,
         PlanPipeModule,
+        CustomerPipeModule,
     ],
     exports     : [
         PlanPipeModule,
+        CustomerPipeModule,
+
         CollectionDateTypePipe,
         CollectionPeriodPriorityPipe,
         DistrictCodeToNamePipe,
