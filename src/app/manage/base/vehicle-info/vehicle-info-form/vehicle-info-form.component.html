@@ -71,7 +71,7 @@
             <nz-form-item>
                 <nz-form-label [nzSm]="4" [nzXs]="24" nzRequired nzFor="planDepartureTime">计划出车时间</nz-form-label>
                 <nz-form-control [nzSm]="7" [nzXs]="24">
-                    <nz-time-picker
+                    <!--<nz-time-picker
                             name="planDepartureTime"
                             required
                             [(ngModel)]="formData.planDepartureTime"
@@ -80,7 +80,12 @@
                             #planDepartureTime="ngModel">
                     </nz-time-picker>
                     <nz-form-explain [hidden]="planDepartureTime.valid || planDepartureTime.pristine">请选择出车时间
-                    </nz-form-explain>
+                    </nz-form-explain>-->
+
+                    <app-time-picker
+                            [(values)]="formData.planDepartureTime"
+                            (changesEmitter)="onPlanDepartureTimeChange($event)">
+                    </app-time-picker>
                 </nz-form-control>
 
                 <nz-form-label [nzSm]="4" [nzXs]="24" nzRequired nzFor="planBackTime">最晚回厂时间</nz-form-label>
@@ -95,7 +100,6 @@
                     <nz-form-explain [hidden]="planBackTime.valid || planBackTime.pristine">请选择回厂时间</nz-form-explain>-->
                     <app-time-picker
                             [(values)]="formData.planBackTime"
-                            [disabledTimes]="disabledTimes"
                             (changesEmitter)="onPlanBackTimeChange($event)">
                     </app-time-picker>
                     <!--<nz-range-picker

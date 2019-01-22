@@ -9,7 +9,7 @@ export class VehicleFormModel {
     engineModel: string;
     boxId: string;
     buyDate: Date;              // required
-    planDepartureTime: Date;    // required
+    planDepartureTime: string[];    // required
     planBackTime: string[];         // required
     type: string;               // 1-5吨餐厨车 = null; 2-8吨餐厨车 = null; 3-1吨油脂车 required
     //district: string[];         // code required

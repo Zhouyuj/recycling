@@ -39,4 +39,4 @@ testem.log
 Thumbs.db
 
 # deploy
-/deploy/*.zip
+deploy/recycling-web-client.zip

@@ -8,6 +8,8 @@ export interface TaskModel {
     amountOfGarbage: number;
     priority: number;
     state: string;
+    lat: number;
+    lng: number;
     collectionPeriod: {
         startTime: number,
         endTime  : number,

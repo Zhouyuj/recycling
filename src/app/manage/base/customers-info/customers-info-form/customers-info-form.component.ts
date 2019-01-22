@@ -129,6 +129,7 @@ export class CustomersInfoFormComponent implements OnInit {
         }
         this.isSpinning = true;
         this.transformFormModelToRequest();
+        return;
         switch (this.type) {
             case 'add':
                 this.customersInfoService.addCustomer(this.customerReq).subscribe(
@@ -266,6 +267,13 @@ export class CustomersInfoFormComponent implements OnInit {
                 this.formModelCluster.duration[ durationType ] = durationC;
                 break;
         }
+    }
+
+    /**
+     * 改变时间段
+     */
+    onDurationTimeChange(e: string[], item: DurationDetail, type: 'startTime' | 'endTime') {
+        item[type] = e;
     }
 
     onAddChildCollection(): void {

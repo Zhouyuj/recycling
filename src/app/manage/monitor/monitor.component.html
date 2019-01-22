@@ -7,15 +7,26 @@
             </div>
             <div nz-col class="gutter-row " nzSpan="8" nzOffset="6">
                 <div class="table-CUDE">
-                    <label nz-checkbox [(ngModel)]="isShowSideBar" (ngModelChange)="onToggleSideBar($event)">侧边栏</label>
+                    <label nz-checkbox [(ngModel)]="isShowSideBar" (ngModelChange)="onToggleSideBar($event)">
+                        <strong>侧边栏</strong>
+                    </label>
                     &nbsp;
-                    <label nz-checkbox [(ngModel)]="isShowCity" (ngModelChange)="onToggleCity($event)">漳州市</label>
-                    &nbsp;
-                    <label nz-checkbox [(ngModel)]="isShowGasStation" (ngModelChange)="onToggleGasStation($event)">加油站</label>
-                    &nbsp;
+                    <!--<label nz-checkbox [(ngModel)]="isShowCity" (ngModelChange)="onToggleCity($event)">
+                        <strong>漳州市</strong>
+                    </label>
+                    &nbsp;-->
+                    <!--<label nz-checkbox [(ngModel)]="isShowGasStation" (ngModelChange)="onToggleGasStation($event)">
+                        <strong>加油站</strong>
+                    </label>
+                    &nbsp;-->
                     <span class="question-icon"
-                          (click)="onShowTips()">
+                          nz-popover
+                          [nzContent]="tips"
+                          nzPlacement="bottomRight">
                         <i nz-icon type="question-circle" theme="fill"></i>
+                        <ng-template #tips>
+                            <img src="../../../assets/images/map-icon/icon_list.png" alt="图片加载失败">
+                        </ng-template>
                     </span>
                     &nbsp;
                 </div>
@@ -23,48 +34,80 @@
         </div>
     </div>
     <!-- 侧边栏与地图 -->
-    <div class="side-bar" nz-row>
-        <div class="tables-cell" nz-col nzSpan="13" nz-row>
-            <!-- 线路表格 -->
-            <div class="table-route" nz-col nzSpan="12">
-                <nz-table #routeTable [nzData]="routeListCache">
-                    <thead>
-                    <tr>
-                        <th nzWidth="50px"></th>
-                        <th>路线</th>
-                        <th>车辆</th>
-                        <th>司机</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr *ngFor="let item of routeListCache">
-                        <td>序号</td>
-                        <td>路线路线</td>
-                        <td>车辆车辆</td>
-                        <td>司机司机</td>
-                    </tr>
-                    </tbody>
-                </nz-table>
-            </div>
-            <!-- 任务表格 -->
-            <div class="table-task" nz-col nzSpan="12">
-                <nz-table #taskTable [nzData]="taskListCache">
-                    <thead>
-                    <tr>
-                        <th nzWidth="60%">收集点</th>
-                        <th nzWidth="40%">手持报量(吨)</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr *ngFor="let item of taskListCache">
-                        <td>我是名称</td>
-                        <td>1212</td>
-                    </tr>
-                    </tbody>
-                </nz-table>
+    <div nz-row>
+        <div class="side-bar" nz-col nzSpan="6" *ngIf="isShowSideBar">
+            <div class="tables-cell" nz-row>
+                <!-- 线路表格 -->
+                <div class="table-route" nz-col nzSpan="24">
+                    <nz-table #routeTable
+                              [nzData]="routeListCache"
+                              [nzLoading]="false"
+                              [nzFrontPagination]="true"
+                              [nzShowPagination]="false">
+                        <thead>
+                        <tr>
+                            <th nzWidth="50px"></th>
+                            <th>路线</th>
+                            <th>车辆</th>
+                            <th>司机</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let item of routeListCache; index as i"
+                            [ngClass]="{ 'table-row-selected': item.checked }"
+                            (click)="onSelectRoute($event, item)">
+                            <td>{{i + 1}}</td>
+                            <td>{{item.checked}}</td>
+                            <td>车辆车辆</td>
+                            <td>司机司机</td>
+                        </tr>
+                        </tbody>
+                    </nz-table>
+                </div>
+                <!-- 任务表格 -->
+                <div class="table-task" nz-col nzSpan="24" *ngIf="isShowTaskTable && taskListCache && taskListCache.length > 0">
+                    <nz-table #taskTable
+                              [nzData]="taskListCache"
+                              [nzShowPagination]="false">
+                        <thead>
+                        <tr>
+                            <th nzWidth="5%"></th>
+                            <th nzWidth="55%">收集点</th>
+                            <th nzWidth="40%" class="amount-of-garbage">手持报量(吨)</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <ng-template ngFor let-item [ngForOf]="taskListCache">
+                            <tr (click)="onClickTask($event, item)">
+                                <td [nzShowExpand]="item.taskList && item.taskList.length > 0"
+                                    [(nzExpand)]="item.expand"
+                                    (nzExpandChange)="onCollapseTask(item, $event)" (click)="onStopPro($event)"></td>
+                                <td>
+                                    {{item.state}}{{item.name}}
+                                </td>
+                                <td class="amount-of-garbage">
+                                    {{item.amountOfGarbage}}
+                                </td>
+                            </tr>
+                            <ng-template *ngIf="item.expand"
+                                         ngFor let-child [ngForOf]="item.taskList">
+                                <tr (click)="onClickTask($event, child)">
+                                    <td></td>
+                                    <td>
+                                        {{child.state}}{{child.name}}
+                                    </td>
+                                    <td class="amount-of-garbage">
+                                        {{child.amountOfGarbage}}
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </ng-template>
+                        </tbody>
+                    </nz-table>
+                </div>
             </div>
         </div>
-        <div class="map-cell" nz-col nzSpan="11">
+        <div class="map-cell" nz-col nzSpan="{{isShowSideBar ? 18 : 24}}">
             <div id="map"></div>
         </div>
     </div>

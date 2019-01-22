@@ -125,6 +125,22 @@ export class EditPlanComponent implements OnInit {
      * 保存方案
      */
     onSavePlan() {
+        if (this.sameVehicleRoutes) {
+            for (let k in this.sameVehicleRoutes) {
+                if (this.sameVehicleRoutes[ k ].length > 1) {
+                    const priorityArr = this.sameVehicleRoutes[ k ].map((r: RouteListModel) => r.priority);
+                    const uniqueArr = Array.from(new Set(priorityArr));
+                    if (uniqueArr.length < priorityArr.length) {
+                        this.notificationService.create({
+                            type   : 'warning',
+                            title  : '抱歉,选择相同车辆的线路优先级不可相同',
+                            content: '请先调整优先级再保存',
+                        });
+                        return;
+                    }
+                }
+            }
+        }
         this.editPlanService.editPlan(this.planId, PlanOperationEnum.SAVE).subscribe((res: Result<any>) => {
             this.notificationService.create({
                 type : 'success',
@@ -304,7 +320,7 @@ export class EditPlanComponent implements OnInit {
     classifySameVehicleRoutes(routes: RouteListModel[]) {
         this.sameVehicleRoutes = {};
         routes.forEach((r: RouteListModel) => {
-            if (r.vehicle) {
+            if (r.vehicle && r.vehicle.plateNumber) {
                 if (this.sameVehicleRoutes[ r.vehicle.plateNumber ]) {
                     this.sameVehicleRoutes[ r.vehicle.plateNumber ].push(r);
                 } else {
@@ -564,7 +580,6 @@ export class EditPlanComponent implements OnInit {
         this.onStopPro($e);
         // 判断其他是否在编辑状态
         let canEdit = false;
-        //let canEdit = this.demandListCache.every((d: DemandListModel) => d.editable === false);
         canEdit = this.demandListCache.every((d: DemandListModel) => {
             // 目标:所有父/子都 editable==false
             if (d.editable) {
@@ -604,6 +619,7 @@ export class EditPlanComponent implements OnInit {
                         type : 'success',
                         title: '更新' + item.name + '成功',
                     });
+                    this.getDemandList();
                 },
                 err => {
                     this.getDemandList();

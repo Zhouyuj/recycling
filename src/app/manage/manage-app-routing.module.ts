@@ -6,7 +6,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { ManageAppComponent } from './manage-app.component';
 import { TestMapComponent } from './test-map/test-map.component';
-import { MonitorComponent } from './monitor/monitor/monitor.component';
+import { MonitorComponent } from './monitor/monitor.component';
 
 import { AuthRoutingGuardService } from '../core/services/authorization/auth-routing-guard.service';
 

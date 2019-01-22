@@ -7,6 +7,7 @@ import { filter, map } from 'rxjs/operators';
 
 import { Marker, MarkerIcon, Animation } from './marker.model';
 import { Map } from './map.model';
+import { Polyline } from './polyline.model';
 
 /**
  * 地图 service
@@ -19,7 +20,7 @@ import { Map } from './map.model';
 })
 export class MapService {
 
-    public _map: any;
+    private _map: any;
 
     constructor() {
     }
@@ -102,9 +103,13 @@ export class MapService {
         return result;
     }
 
-    // 批量删除 marker TODO
-    public removeMarkers() {
+    // 全部删除 marker TODO
+    public removeAllMarkers(markers: any[]) {
+        this._map.remove(markers);
+    }
 
+    public getAllOverlays(type: 'marker' | 'circle' | 'polyline' | 'polygon'): any {
+        return this.map.getAllOverlays(type);
     }
 
     // 显示单个 marker TODO
@@ -121,6 +126,18 @@ export class MapService {
 
     /*****
      * API marker end
+     *****/
+
+    /*****
+     * API polyline start
+     *****/
+
+    public createPolyline(opts: Polyline) {
+        return new AMap.Polyline(opts);
+    }
+
+    /*****
+     * API polyline end
      *****/
 
     /** 其他函数 TODO **/

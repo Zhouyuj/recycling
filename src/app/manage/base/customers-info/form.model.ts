@@ -32,8 +32,8 @@ export class DurationDetail {
     id: number = null;
     idx = 0; // 用于页面的增删
     dateType: string = null; // Holiday-节假日,Working-工作日
-    startTime: Date = null;
-    endTime: Date = null;
+    startTime: string[] = null;
+    endTime: string[] = null;
     priorityType: string = null; // Low-低级,High-中等,Hard-极高
     plateNumber: string = null;
 

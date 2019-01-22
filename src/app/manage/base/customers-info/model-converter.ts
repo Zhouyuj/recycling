@@ -82,8 +82,10 @@ export class ModelConverter {
                 return {
                     id             : o.id,
                     dateType       : o.dateType,
-                    startTime      : this.calSecondFromHourAndMin(o.startTime),
-                    endTime        : this.calSecondFromHourAndMin(o.endTime),
+                    //startTime      : this.calSecondFromHourAndMin(o.startTime),
+                    //endTime        : this.calSecondFromHourAndMin(o.endTime),
+                    startTime      : this.hourMinToSec(o.startTime),
+                    endTime        : this.hourMinToSec(o.endTime),
                     priorityType   : o.priorityType,
                     plateNumber    : o.plateNumber,
                     garbageCategory: 'KitchenWaste', // 餐厨垃圾
@@ -95,8 +97,10 @@ export class ModelConverter {
                 return {
                     id             : o.id,
                     dateType       : o.dateType,
-                    startTime      : this.calSecondFromHourAndMin(o.startTime),
-                    endTime        : this.calSecondFromHourAndMin(o.endTime),
+                    //startTime      : this.calSecondFromHourAndMin(o.startTime),
+                    //endTime        : this.calSecondFromHourAndMin(o.endTime),
+                    startTime      : this.hourMinToSec(o.startTime),
+                    endTime        : this.hourMinToSec(o.endTime),
                     priorityType   : o.priorityType,
                     plateNumber    : o.plateNumber,
                     garbageCategory: 'WasteGrease', // 餐厨垃圾
@@ -161,8 +165,10 @@ export class ModelConverter {
                 _d.id = item.id;
                 _d.idx = index;
                 _d.dateType = item.dateType;
-                _d.startTime = this.convertSecondToDate(item.startTime);
-                _d.endTime = this.convertSecondToDate(item.endTime);
+                //_d.startTime = this.convertSecondToDate(item.startTime);
+                //_d.endTime = this.convertSecondToDate(item.endTime);
+                _d.startTime = this.secToHourMin(item.startTime);
+                _d.endTime = this.secToHourMin(item.endTime);
                 _d.priorityType = item.priorityType;
                 _d.plateNumber = item.plateNumber;
                 return _d;
@@ -173,8 +179,10 @@ export class ModelConverter {
                 _d.id = item.id;
                 _d.idx = index;
                 _d.dateType = item.dateType;
-                _d.startTime = this.convertSecondToDate(item.startTime);
-                _d.endTime = this.convertSecondToDate(item.endTime);
+                //_d.startTime = this.convertSecondToDate(item.startTime);
+                //_d.endTime = this.convertSecondToDate(item.endTime);
+                _d.endTime = this.secToHourMin(item.endTime);
+                _d.startTime = this.secToHourMin(item.startTime);
                 _d.priorityType = item.priorityType;
                 _d.plateNumber = item.plateNumber;
                 return _d;
@@ -219,5 +227,20 @@ export class ModelConverter {
         let min = time ? time.getMinutes() : 0;
         let result = hour * 3600 + min * 60;
         return result;
+    }
+
+    public static hourMinToSec(value: string[]): number {
+        let numArr = value.map(item => parseInt(item));
+        return numArr[0] * 3600 + numArr[1] * 60;
+    }
+
+    public static secToHourMin(sec: number): string[] {
+        let hour = Math.floor(sec / 3600);
+        let min = Math.floor((sec - hour * 3600) / 60);
+        return [
+            hour > 10 ? `${hour}` : `0${hour}`,
+            min > 10 ? `${min}` : `0${min}`,
+
+        ];
     }
 }

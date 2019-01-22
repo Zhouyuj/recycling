@@ -193,11 +193,6 @@ export class AddDemandComponent implements OnInit {
             },
             err => {
                 this.isDemandSpinning = false;
-                this.notificationService.create({
-                    type   : 'error',
-                    title  : '添加失败',
-                    content: err.error.message || '请联系系统管理员',
-                })
             }
         );
     }

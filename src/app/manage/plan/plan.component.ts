@@ -103,7 +103,7 @@ export class PlanComponent implements OnInit {
         } else {
             let result = e.join(',');
             if (this.params.status === result) return;
-            this.params.status = e.join(',');
+            this.params.status = result;
         }
         this.getListByPage({ isResetReq: true });
     }
@@ -238,6 +238,12 @@ export class PlanComponent implements OnInit {
                 this.params[ k ] = null;
             } else {
                 paramsTemp[ k ] = this.params[ k ];
+            }
+            if (k === 'status') { // 需求:方案管理页面只显示 【未执行】和【执行中】,而不显示【已停止】和【已完成】
+                if (this.params[ k ] === null) {
+                    this.params[ k ] = PlanStateEnum.Executing + ',' + PlanStateEnum.UnExecuted;
+                    paramsTemp[ k ] = this.params[ k ];
+                }
             }
         }
         return paramsTemp;

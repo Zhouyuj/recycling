@@ -67,7 +67,8 @@
                               [nzData]="routeListCache"
                               [nzScroll]="{ x: '450px', y: '500px' }"
                               [nzFrontPagination]="false"
-                              [nzShowPagination]="false">
+                              [nzShowPagination]="false"
+                              [nzNoResult]="skeleton">
                         <thead>
                         <tr>
                             <th nzWidth="64px">
@@ -196,7 +197,8 @@
                               [nzData]="distributedListCache"
                               [nzScroll]="{ x: '600px', y: '500px' }"
                               [nzFrontPagination]="false"
-                              [nzShowPagination]="false">
+                              [nzShowPagination]="false"
+                              [nzNoResult]="skeleton">
                         <thead>
                         <tr style="height: 69px;">
                             <th nzWidth="64px">
@@ -314,6 +316,7 @@
                               [nzSize]="'middle'"
                               [nzData]="demandListCache"
                               [nzScroll]="{ x: '900px', y: '500px' }"
+                              [nzNoResult]="skeleton"
                               [nzFrontPagination]="false"
                               [nzTotal]="pageRes.total"
                               [nzPageIndex]="pageRes.page"
@@ -503,3 +506,12 @@
         </div>
     </div>
 </div>
+
+<ng-template #skeleton>
+    <p style="text-align: center;">
+        抱歉,暂无数据
+    </p>
+    <nz-skeleton [nzParagraph]="{ rows: 15 }"
+                 [nzTitle]="false">
+    </nz-skeleton>
+</ng-template>

@@ -10,8 +10,6 @@ import { VehicleFormModel } from '../vehicle-form.model';
 import { VehicleReq } from '../vehicle-req.model';
 import { VerifyUtil } from '../../../../shared/utils/verify-utils';
 
-import { TIMES }from '../../../../shared/components/time-picker/time-picker-config';
-
 @Component({
     selector   : 'app-vehicle-info-form',
     templateUrl: './vehicle-info-form.component.html',
@@ -26,8 +24,6 @@ export class VehicleInfoFormComponent implements OnInit {
     public vehicleReq: VehicleReq;
     public cascaderOptions: any;
     public isSpinning = false;
-    //public planBackConfig = TIMES;
-    public disabledTimes;
 
     constructor(private drawerRef: NzDrawerRef<any>,
                 private districtsService: DistrictsService,
@@ -62,8 +58,8 @@ export class VehicleInfoFormComponent implements OnInit {
      *
      */
     onPlanDepartureTimeChange(e) {
-        // TODO
-        //this.disabledTimes = e;
+        this.formData.planDepartureTime = e;
+        console.log(this.formData.planDepartureTime);
     }
 
     onSubmitForm(): void {
@@ -153,9 +149,9 @@ export class VehicleInfoFormComponent implements OnInit {
                 content: '回厂时间不能为空',
             });
             return false;
-        } else if (this.formData.planDepartureTime.getHours() > parseInt(this.formData.planBackTime[0])
-            || this.formData.planDepartureTime.getHours() === parseInt(this.formData.planBackTime[0])
-            && this.formData.planDepartureTime.getMinutes() > parseInt(this.formData.planBackTime[1])) {
+        } else if (parseInt(this.formData.planDepartureTime[0]) > parseInt(this.formData.planBackTime[0])
+            || parseInt(this.formData.planDepartureTime[0]) === parseInt(this.formData.planBackTime[0])
+            && parseInt(this.formData.planDepartureTime[1]) > parseInt(this.formData.planBackTime[1])) {
             this.notificationService.create({
                 type   : 'error',
                 title  : '抱歉,请检查内容',

@@ -260,23 +260,34 @@
                                                        nzFor="startTime-{{item.idx}}-food-separate">时间区间
                                         </nz-form-label>
                                         <nz-form-control [nzSm]="5" [nzXs]="24">
-                                            <nz-time-picker
+                                            <!--<nz-time-picker
                                                     name="startTime-{{item.idx}}-food-separate"
                                                     required
                                                     [(ngModel)]="item.startTime"
                                                     nzFormat="HH:mm">
-                                            </nz-time-picker>
+                                            </nz-time-picker>-->
+
+                                            <app-time-picker
+                                                    [(values)]="item.startTime"
+                                                    (changesEmitter)="onDurationTimeChange($event, item, 'startTime')">
+                                            </app-time-picker>
+
                                         </nz-form-control>
                                         <nz-form-control [nzSm]="1" [nzXs]="24">
                                             <nz-form-text>至</nz-form-text>
                                         </nz-form-control>
                                         <nz-form-control [nzSm]="5" [nzXs]="24">
-                                            <nz-time-picker
+                                            <!--<nz-time-picker
                                                     name="endTime-{{item.idx}}-food-separate"
                                                     required
                                                     [(ngModel)]="item.endTime"
                                                     nzFormat="HH:mm">
-                                            </nz-time-picker>
+                                            </nz-time-picker>-->
+
+                                            <app-time-picker
+                                                    [(values)]="item.endTime"
+                                                    (changesEmitter)="onDurationTimeChange($event, item, 'endTime')">
+                                            </app-time-picker>
                                         </nz-form-control>
                                     </nz-form-item>
 
@@ -363,23 +374,34 @@
                                                        nzFor="startTime-{{item.idx}}-oil-separate">时间区间
                                         </nz-form-label>
                                         <nz-form-control [nzSm]="5" [nzXs]="24">
-                                            <nz-time-picker
+                                            <!--<nz-time-picker
                                                     name="startTime-{{item.idx}}-oil-separate"
                                                     required
                                                     [(ngModel)]="item.startTime"
                                                     nzFormat="HH:mm">
-                                            </nz-time-picker>
+                                            </nz-time-picker>-->
+
+                                            <app-time-picker
+                                                    [(values)]="item.startTime"
+                                                    (changesEmitter)="onDurationTimeChange($event, item, 'startTime')">
+                                            </app-time-picker>
+
                                         </nz-form-control>
                                         <nz-form-control [nzSm]="1" [nzXs]="24">
                                             <nz-form-text>至</nz-form-text>
                                         </nz-form-control>
                                         <nz-form-control [nzSm]="5" [nzXs]="24">
-                                            <nz-time-picker
+                                            <!--<nz-time-picker
                                                     name="endTime-{{item.idx}}-oil-separate"
                                                     required
                                                     [(ngModel)]="item.endTime"
                                                     nzFormat="HH:mm">
-                                            </nz-time-picker>
+                                            </nz-time-picker>-->
+
+                                            <app-time-picker
+                                                    [(values)]="item.endTime"
+                                                    (changesEmitter)="onDurationTimeChange($event, item, 'endTime')">
+                                            </app-time-picker>
                                         </nz-form-control>
                                     </nz-form-item>
 
@@ -609,23 +631,35 @@
                                                        nzFor="startTime-{{item.idx}}-food-cluster">时间区间
                                         </nz-form-label>
                                         <nz-form-control [nzSm]="5" [nzXs]="24">
-                                            <nz-time-picker
+                                            <!--<nz-time-picker
                                                     name="startTime-{{item.idx}}-food-cluster"
                                                     required
                                                     [(ngModel)]="item.startTime"
                                                     nzFormat="HH:mm">
-                                            </nz-time-picker>
+                                            </nz-time-picker>-->
+
+                                            <app-time-picker
+                                                    [(values)]="item.startTime"
+                                                    (changesEmitter)="onDurationTimeChange($event, item, 'startTime')">
+                                            </app-time-picker>
+
                                         </nz-form-control>
                                         <nz-form-control [nzSm]="1" [nzXs]="24">
                                             <nz-form-text>至</nz-form-text>
                                         </nz-form-control>
                                         <nz-form-control [nzSm]="5" [nzXs]="24">
-                                            <nz-time-picker
+                                            <!--<nz-time-picker
                                                     name="endTime-{{item.idx}}-food-cluster"
                                                     required
                                                     [(ngModel)]="item.endTime"
                                                     nzFormat="HH:mm">
-                                            </nz-time-picker>
+                                            </nz-time-picker>-->
+
+                                            <app-time-picker
+                                                    [(values)]="item.endTime"
+                                                    (changesEmitter)="onDurationTimeChange($event, item, 'endTime')">
+                                            </app-time-picker>
+
                                         </nz-form-control>
                                     </nz-form-item>
 
@@ -713,23 +747,37 @@
                                                        nzFor="startTime-{{item.idx}}-oil-cluster">时间区间
                                         </nz-form-label>
                                         <nz-form-control [nzSm]="5" [nzXs]="24">
-                                            <nz-time-picker
+                                            <!--<nz-time-picker
                                                     name="startTime-{{item.idx}}-oil-cluster"
                                                     required
                                                     [(ngModel)]="item.startTime"
                                                     nzFormat="HH:mm">
-                                            </nz-time-picker>
+                                            </nz-time-picker>-->
+
+                                            <app-time-picker
+                                                    [(values)]="item.startTime"
+                                                    (changesEmitter)="onDurationTimeChange($event, item)">
+                                            </app-time-picker>
+
+
                                         </nz-form-control>
                                         <nz-form-control [nzSm]="1" [nzXs]="24">
                                             <nz-form-text>至</nz-form-text>
                                         </nz-form-control>
                                         <nz-form-control [nzSm]="5" [nzXs]="24">
-                                            <nz-time-picker
+                                            <!--<nz-time-picker
                                                     name="endTime-{{item.idx}}-oil-cluster"
                                                     required
                                                     [(ngModel)]="item.endTime"
                                                     nzFormat="HH:mm">
-                                            </nz-time-picker>
+                                            </nz-time-picker>-->
+
+                                            <app-time-picker
+                                                    [(values)]="item.endTime"
+                                                    (changesEmitter)="onDurationTimeChange($event, item, 'endTime')">
+                                            </app-time-picker>
+
+
                                         </nz-form-control>
                                     </nz-form-item>
 
