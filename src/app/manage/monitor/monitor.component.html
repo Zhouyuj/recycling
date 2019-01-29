@@ -57,7 +57,7 @@
                             [ngClass]="{ 'table-row-selected': item.checked }"
                             (click)="onSelectRoute($event, item)">
                             <td>{{i + 1}}</td>
-                            <td>{{item.checked}}</td>
+                            <td>{{item.name}}</td>
                             <td>车辆车辆</td>
                             <td>司机司机</td>
                         </tr>
@@ -77,13 +77,14 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <ng-template ngFor let-item [ngForOf]="taskListCache">
+                        <ng-template ngFor let-item let-i="index" [ngForOf]="taskListCache">
                             <tr (click)="onClickTask($event, item)">
                                 <td [nzShowExpand]="item.taskList && item.taskList.length > 0"
                                     [(nzExpand)]="item.expand"
                                     (nzExpandChange)="onCollapseTask(item, $event)" (click)="onStopPro($event)"></td>
                                 <td>
-                                    {{item.state}}{{item.name}}
+                                    <nz-tag [nzColor]="'red'">{{i + 1}}</nz-tag>
+                                    {{item.name}}
                                 </td>
                                 <td class="amount-of-garbage">
                                     {{item.amountOfGarbage}}

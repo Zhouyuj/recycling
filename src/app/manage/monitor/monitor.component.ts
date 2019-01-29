@@ -168,26 +168,26 @@ export class MonitorComponent implements OnInit {
         if (this.markers.length > 0) {
             this.removeMarkers(this.markers);
         }
-        /*const marker = new Marker({
+        const marker = new Marker({
             map     : this.map,
             position: lngLat,
             icon    : new MarkerIcon({
                 size: [56, 85],
                 image: 'assets/images/map-icon/marker_bg.svg',
             }),
-        });*/
-        //this.markers = [ ...this.markers, this.mapService.createMarker(marker) ];
-        //this.setCenter(lngLat);
-        //console.log(this.mapService.getAllOverlays('marker')[0].getIcon());
-        const marker = new AMap.Marker({
-            map: this.map,
-            position: lngLat,
-            icon: 'assets/images/map-icon/marker_bg.svg',
         });
-        this.markers = [
-            ...this.markers,
-            marker,
-        ]
+        this.markers = [ ...this.markers, this.mapService.createMarker(marker) ];
+        this.setCenter(lngLat);
+        console.log(this.mapService.getAllOverlays('marker')[0].getIcon());
+        //const marker = new AMap.Marker({
+        //    map: this.map,
+        //    position: lngLat,
+        //    icon: 'assets/images/map-icon/marker_bg.svg',
+        //});
+        //this.markers = [
+        //    ...this.markers,
+        //    marker,
+        //]
     }
 
     removeMarkers(markers: any[]) {
