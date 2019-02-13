@@ -18,7 +18,7 @@ import { AddDemandComponent } from './add-demand/add-demand.component';
         AddDemandComponent
     ],
     providers      : [
-        //{ provide: EditPlanService, useClass: EditPlanMockService },
+        // { provide: EditPlanService, useClass: EditPlanMockService },
         EditPlanService,
     ],
     entryComponents: [

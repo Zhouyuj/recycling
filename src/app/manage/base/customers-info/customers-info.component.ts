@@ -82,7 +82,7 @@ export class CustomersInfoComponent implements OnInit {
     }
 
     initFilterOption() {
-        let dis = ZHANGZHOU_OPTIONS
+        const dis = ZHANGZHOU_OPTIONS
             .filter(item => item.label === '福建省')[ 0 ].children
             .filter(item => item.label === '漳州市')[ 0 ].children
             .map(item => {
@@ -131,7 +131,9 @@ export class CustomersInfoComponent implements OnInit {
      * form 表单
      */
     onOpenForm(type?: 'add' | 'edit'): void {
-        this.drawerRef = this.drawerService.create<CustomersInfoFormComponent, { type: string, success: boolean, cache: FormModel, parentCache: ListModel }, boolean>({
+        this.drawerRef = this.drawerService.create<CustomersInfoFormComponent,
+            { type: string, success: boolean, cache: FormModel, parentCache: ListModel },
+            boolean>({
             nzTitle        : { add: '添加', edit: '编辑' }[ type ] || '请编辑表单',
             nzContent      : CustomersInfoFormComponent,
             nzWidth        : '60%',
@@ -171,7 +173,7 @@ export class CustomersInfoComponent implements OnInit {
                     if (d.id === data.id) {
                         d.expand = false;
                     }
-                    //this.collapse(array, target, false);
+                    // this.collapse(array, target, false);
                 });
             } else {
                 return;
@@ -204,13 +206,13 @@ export class CustomersInfoComponent implements OnInit {
                         l.checked = true;
                         this.formCache = ModelConverter.customerResToFormModel(
                             this.listResCache
-                                .find(l => l.id === item.id).customerList
-                                .find(l => l.id === target.id),
+                                .find((customerResFirst: CustomerRes) => customerResFirst.id === item.id).customerList
+                                .find((customerResSecond: CustomerRes) => customerResSecond.id === target.id),
                             item.name
                         );
                         this.parentCache = item;
                     }
-                })
+                });
             }
         });
     }
@@ -244,7 +246,9 @@ export class CustomersInfoComponent implements OnInit {
      * @param e: descend | ascend
      */
     onSortTh(type: string, e) {
-        if (!e) return;
+        if (!e) {
+            return;
+        }
         e = e.replace('end', '');
         this.pageReq.sort = `${type}.${e},`;
         this.pageReq.page = 1;
@@ -303,7 +307,7 @@ export class CustomersInfoComponent implements OnInit {
         }
         this.isSpinning = true;
         // 分页接口
-        let paramsTemp = this.updateParams();
+        const paramsTemp = this.updateParams();
         this.customersInfoService
             .getCustomerList(this.pageReq, paramsTemp)
             .subscribe(
@@ -337,7 +341,9 @@ export class CustomersInfoComponent implements OnInit {
      * }]
      */
     dataToTableList(data: CustomerRes[]): ListModel[] {
-        if (!data.length) return [];
+        if (!data.length) {
+            return [];
+        }
         return data.map((o: CustomerRes) => ModelConverter.customerResToListModel(o));
     }
 
@@ -348,8 +354,8 @@ export class CustomersInfoComponent implements OnInit {
     }
 
     updateParams() {
-        let paramsTemp = {};
-        for (let k in this.params) {
+        const paramsTemp = {};
+        for (const k in this.params) {
             if (!this.params[ k ]) {
                 this.params[ k ] = null;
             } else {

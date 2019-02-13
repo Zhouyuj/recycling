@@ -13,7 +13,7 @@ import { VerifyUtil } from '../../../shared/utils/verify-utils';
 export class ModelConverter {
 
     public static planResToPlanListModel(r: PlanRes): PlanListModel {
-        let l = new PlanListModel();
+        const l = new PlanListModel();
         l.id = r.id;
         l.name = r.name;
         l.numberOfRoutes = r.numberOfRoutes;
@@ -27,14 +27,14 @@ export class ModelConverter {
 
     // TODO
     public static demandResToListModel(r: DemandRes): DemandListModel {
-        let l: DemandListModel;
+        const l: DemandListModel = r;
         return l;
     }
 
     public static customerResToListModel(r: CustomerRes): DemandListModel {
         let l: DemandListModel, collectionPeriods = null, taskList = null;
         collectionPeriods = r.collectionPeriodList.map((cl: CollectionPeriodOfCustomerRes) => {
-            let period = {
+            const period = {
                 ...cl,
                 vehicle : cl.plateNumber,
                 priority: cl.priorityType,
@@ -51,7 +51,7 @@ export class ModelConverter {
                     amountOfGarbage : sc.dustbin,
                     collectionPeriod: collectionPeriods,    // 子请求收运时间段由父提供
                     checked         : false,
-                }
+                };
             });
         }
         try {
@@ -89,7 +89,7 @@ export class ModelConverter {
                         amountOfGarbage: sub.amountOfGarbage || 0,
                         customerId     : sub.id,
                         name           : sub.name,
-                    }
+                    };
                 });
         } else {
             amountOfGarbage = l.amountOfGarbage; // 普通请求收运量

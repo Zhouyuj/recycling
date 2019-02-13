@@ -32,10 +32,11 @@ export class ApkServiceV2 extends RebirthHttp {
      * @param description
      * @returns { id: number, type: Image | Video | Audio, url: string }
      */
-    //@Headers({ 'Content-Type': undefined })
+    // @Headers({ 'Content-Type': undefined })
     @POST('/apps')
     addApk(@Body formData: FormData,
-           @Query('params') params: { version: string, description: string }): Observable<Result<{ id: number, type: string, url: string }>> {
+           @Query('params') params: { version: string, description: string }
+           ): Observable<Result<{ id: number, type: string, url: string }>> {
         return null;
     }
 

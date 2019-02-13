@@ -21,7 +21,7 @@ export class TestMarkerDemoService {
 
     // 批量新建 marker TODO
     public createMarkers(opts: Marker[]): any[] {
-        let result: any[] = opts.map(preMarker => new AMap.Marker(preMarker));
+        const result: any[] = opts.map(preMarker => new AMap.Marker(preMarker));
         return result;
     }
 

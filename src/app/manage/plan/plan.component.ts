@@ -48,9 +48,9 @@ export class PlanComponent implements OnInit {
         status: '',
     };
     planStateList = [
-        //{ text: PlanStateEnum.CompletedChinese, value: PlanStateEnum.Completed },
+        // { text: PlanStateEnum.CompletedChinese, value: PlanStateEnum.Completed },
         { text: PlanStateEnum.ExecutingChinese, value: PlanStateEnum.Executing },
-        //{ text: PlanStateEnum.StoppedChinese, value: PlanStateEnum.Stopped },
+        // { text: PlanStateEnum.StoppedChinese, value: PlanStateEnum.Stopped },
         { text: PlanStateEnum.UnExecutedChinese, value: PlanStateEnum.UnExecuted },
     ];
 
@@ -98,11 +98,15 @@ export class PlanComponent implements OnInit {
 
     onKeywordFilter(e: string[]) {
         if (!e.length) {
-            if (!this.params.status) return;
+            if (!this.params.status) {
+                return;
+            }
             this.params.status = '';
         } else {
-            let result = e.join(',');
-            if (this.params.status === result) return;
+            const result = e.join(',');
+            if (this.params.status === result) {
+                return;
+            }
             this.params.status = result;
         }
         this.getListByPage({ isResetReq: true });
@@ -203,7 +207,7 @@ export class PlanComponent implements OnInit {
             this.resetPageReq();
         }
         this.isSpinning = true;
-        let paramsTemp = this.updateParams();
+        const paramsTemp = this.updateParams();
         this.planService.getPlanList(this.pageReq, paramsTemp).subscribe(
             (res: Result<PageRes<PlanRes[]>>) => {
                 if (res.data.content) {
@@ -232,8 +236,8 @@ export class PlanComponent implements OnInit {
     }
 
     updateParams() {
-        let paramsTemp = {};
-        for (let k in this.params) {
+        const paramsTemp = {};
+        for (const k of Object.keys(this.params)) {
             if (!this.params[ k ]) {
                 this.params[ k ] = null;
             } else {

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpRequest, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/index';
-//import { RebirthHttp, Headers, GET, POST, Body, Query } from 'rebirth-http';
+// import { RebirthHttp, Headers, GET, POST, Body, Query } from 'rebirth-http';
 import { ApkRes } from './models/apk-res.model';
 import { PageRes } from '../../../shared/models/page/page-res.model';
 import { Result } from '../../../shared/models/response/result.model';
@@ -14,7 +14,7 @@ import { Result } from '../../../shared/models/response/result.model';
 export class ApkService  {
 
     constructor(private http: HttpClient) {
-        //super(http);
+        // super(http);
     }
 /*
 
@@ -45,9 +45,9 @@ export class ApkService  {
     addApk(formData: FormData, url: string) {
         const httpOptions = {
             headers: new HttpHeaders({ 'Content-Type': 'multipart/form-data' }),
-            //headers: new HttpHeaders().set('Content-Type', 'multipart/form-data'),
-            //headers: { 'Content-Type': 'multipart/form-data' },
-            //headers: { 'Content-Type': 'multipart/form-data', 'X-RequestedWith': 'XMLHttpRequest' },
+            // headers: new HttpHeaders().set('Content-Type', 'multipart/form-data'),
+            // headers: { 'Content-Type': 'multipart/form-data' },
+            // headers: { 'Content-Type': 'multipart/form-data', 'X-RequestedWith': 'XMLHttpRequest' },
         };
         return this.http.post(url, formData, httpOptions);
     }

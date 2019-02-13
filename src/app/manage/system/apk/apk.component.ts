@@ -60,7 +60,7 @@ export class ApkComponent implements OnInit {
     onBeforeUpload = (file: UploadFile): boolean => {
         this.fileList.push(file);
         return false;
-    };
+    }
 
     /**
      * 下载apk
@@ -87,7 +87,7 @@ export class ApkComponent implements OnInit {
         this.fileList.forEach((file: any) => formData.append('apk', file));
 
         const url = `${this.env.api}/apps?description=${this.formCache.description}&version=${this.formCache.version}`;
-        //this.asyncPost(formData, url);
+        // this.asyncPost(formData, url);
         this.apkService.addApk(formData, {
             version    : this.formCache.version,
             description: this.formCache.description

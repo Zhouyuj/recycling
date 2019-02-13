@@ -1,14 +1,13 @@
 /**
  * Created by wujiahui on 2018/12/24.
  */
-
 export interface DemandModel {
     id: number; /* 请求 id */
     name: string;
-    collectionPeriods: CollectionPeriod[],
-    collectionPeriodId: number,
+    collectionPeriods: CollectionPeriod[];
+    collectionPeriodId: number;
     amountOfGarbage: number;    // 收运量(桶)
-    //vehiclePlate: string,
+    // vehiclePlate: string,
     checked?: boolean;
     expand?: boolean;
     taskList?: SubDemandModel[];
@@ -33,6 +32,7 @@ export interface CollectionPeriod {
     vehicle: string;
 }
 
+/* tslint:disable-next-line no-empty-interface */
 export interface DemandRes extends DemandModel {
 }
 

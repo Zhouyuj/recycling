@@ -21,7 +21,7 @@ export class SelectComponent implements OnInit {
     }
 
     onSelectFilter($e) {
-        let obj = {
+        const obj = {
             type: this.title,
             id: this.selected_option
         };

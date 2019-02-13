@@ -6,7 +6,7 @@ import { LodashUtils } from './lodash-utils';
 
 export class ObjectUtils {
     public static cloneDeep(obj: any): any {
-        //return JSON.parse(JSON.stringify(obj));
+        // return JSON.parse(JSON.stringify(obj));
         return LodashUtils.cloneDeep(obj);
     }
 
@@ -24,15 +24,13 @@ export class ObjectUtils {
             objs.forEach(function (item, index) {
                 if (typeof item !== 'object') {
                     console.error('item' + index + ' is no valid arguments, expected to be object');
-                }
-                else {
+                } else {
                     for (const key in item) {
                         if (item.hasOwnProperty(key)) {
                             if (typeof item[ key ] === 'object') {
                                 out[ key ] = out[ key ] || {};  // 这步是最重要的！
                                 this.extend(out[ key ], item[ key ]);
-                            }
-                            else {
+                            } else {
                                 out[ key ] = item[ key ];
                             }
                         }

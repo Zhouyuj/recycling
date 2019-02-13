@@ -19,7 +19,7 @@ import { MonitorMockService } from './monitor-mock.service';
     ],
     providers: [
         MonitorService,
-        //{ provide: MonitorService, useClass: MonitorMockService },
+        // { provide: MonitorService, useClass: MonitorMockService },
     ],
 })
 export class MonitorModule {

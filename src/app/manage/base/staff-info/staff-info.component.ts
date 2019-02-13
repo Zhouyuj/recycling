@@ -62,7 +62,7 @@ export class StaffInfoComponent implements OnInit {
         detailedAddress      : '',
         homeAddress          : '',
         identity             : '',
-    };// 分页查询参数
+    }; // 分页查询参数
     public roleList = [
         { text: RoleEnum.aministrator, value: 1 },
         { text: RoleEnum.surviellant, value: 2 },
@@ -154,7 +154,7 @@ export class StaffInfoComponent implements OnInit {
     }
 
     onPage(e) {
-        //this.updatePageReq(e);
+        // this.updatePageReq(e);
         this.pageReq.page = e;
         this.getListByPage();
     }
@@ -166,7 +166,9 @@ export class StaffInfoComponent implements OnInit {
      * @param type
      */
     onSort(e, type: string) {
-        if (!e) return;
+        if (!e) {
+            return;
+        }
         e = e.replace('end', '');
         this.pageReq.sort = `${type}.${e},`;
         this.pageReq.page = 1;
@@ -180,13 +182,17 @@ export class StaffInfoComponent implements OnInit {
     onFilter(e, type: string) {
         switch (type) {
             case 'roleId':
-                let result = (e && !e.length) ? '' : e.join(',');
-                if (this.params[ type ] === result) return;
+                const result = (e && !e.length) ? '' : e.join(',');
+                if (this.params[ type ] === result) {
+                    return;
+                }
                 this.params[ type ] = (e && !e.length) ? '' : e.join(',');
                 break;
             case 'sex':
             case 'postId':
-                if (!e && !this.params[ type ] || this.params[ type ] === e) return;
+                if (!e && !this.params[ type ] || this.params[ type ] === e) {
+                    return;
+                }
                 this.params[ type ] = e || '';
                 break;
         }
@@ -208,7 +214,7 @@ export class StaffInfoComponent implements OnInit {
      */
     onStopPropagation(e) {
         console.log(e);
-        //e.stopPropagation();
+        // e.stopPropagation();
         e.stopImmediatePropagation();
     }
 
@@ -251,7 +257,7 @@ export class StaffInfoComponent implements OnInit {
         }
         this.isSpinning = true;
         // 分页接口
-        let paramsTemp = this.updateParams();
+        const paramsTemp = this.updateParams();
         this.staffInfoService
             .getStaffList(this.pageReq, paramsTemp)
             .subscribe(
@@ -288,8 +294,8 @@ export class StaffInfoComponent implements OnInit {
     }
 
     updateParams() {
-        let paramsTemp = {};
-        for (let k in this.params) {
+        const paramsTemp = {};
+        for (const k in this.params) {
             if (!this.params[ k ]) {
                 this.params[ k ] = null;
             } else {
@@ -300,8 +306,9 @@ export class StaffInfoComponent implements OnInit {
     }
 
     dataToTableRows(data: StaffRes[]): StaffListModel[] {
-        if (!data.length) return [];
+        if (!data.length) {
+            return [];
+        }
         return data.map((o: StaffRes) => ModelConverter.staffResToListModel(o));
     }
-
 }

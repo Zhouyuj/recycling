@@ -19,7 +19,6 @@ export class TableRowSelectedDirective {
     }
 
     @HostListener('mouseup', ['$event.target']) onmouseup($e) {
-        debugger;
         if (this.isSelected) {
             this.addClass();
         } else {

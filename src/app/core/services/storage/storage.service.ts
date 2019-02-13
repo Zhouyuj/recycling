@@ -30,7 +30,7 @@ export class MemoryStorage implements IStorage {
     }
 
     get({ pool = DEFAULT_STORAGE_POOL_KEY, key }: { pool?: string; key: string }): Object {
-        let storage = this.getAll(pool);
+        const storage = this.getAll(pool);
         return storage.has(key) ? storage.get(key) : null;
     }
 
@@ -46,7 +46,7 @@ export class MemoryStorage implements IStorage {
             this.storages.delete(pool);
             return;
         }
-        let storage = this.storages.get(pool);
+        const storage = this.storages.get(pool);
         if (storage) {
             storage.delete(key);
         }
@@ -66,17 +66,17 @@ export class WebStorage implements IStorage {
     }
 
     getAll(pool: string): any {
-        let json = this.webStorage.getItem(pool);
+        const json = this.webStorage.getItem(pool);
         return json ? JSON.parse(json) : {};
     }
 
     get({ pool = DEFAULT_STORAGE_POOL_KEY, key }: { pool?: string, key: string }): Object {
-        let storage = this.getAll(pool);
+        const storage = this.getAll(pool);
         return storage[ key ];
     }
 
     put({ pool = DEFAULT_STORAGE_POOL_KEY, key }: { pool?: string, key: string }, value: Object): any {
-        let storage = this.getAll(pool);
+        const storage = this.getAll(pool);
         storage[ key ] = value;
         return this.saveAll(pool, storage);
     }

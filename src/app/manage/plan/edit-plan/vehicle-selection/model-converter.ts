@@ -12,7 +12,7 @@ export class ModelConverter {
         v = {
             id         : r.id,
             plateNumber: r.plateNumber,
-            //district   : r.area,
+            // district   : r.area,
             vehicleType: r.businessLine ? r.businessLine.type.name : '',
             checked    : false,
         };

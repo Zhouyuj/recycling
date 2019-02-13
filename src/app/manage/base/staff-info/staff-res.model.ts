@@ -10,7 +10,7 @@ export class StaffRes {
     identity: string;
     name: string;
     post: { id: number, name: string };
-    roles: [ { id: number,name: string } ];
+    roles: [ { id: number, name: string } ];
     sex: string = null;
     username: string = null;
     createTime: number = null;

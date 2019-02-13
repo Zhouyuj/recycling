@@ -5,7 +5,7 @@ export class Polygon {
     public id: string;
     public map: any;
     public path: number[][];
-    public isTransform: boolean;// 是否需要转换坐标
+    public isTransform: boolean; // 是否需要转换坐标
     public zIndex: number;  // 多边形覆盖物的叠加顺序。默认zIndex：10
     public strokeColor: string; // 线条颜色，使用16进制颜色代码赋值。默认值为#006600
     public strokeOpacity: number; // 轮廓线透明度，取值范围[0,1]，0表示完全透明，1表示不透明。默认为0.9

@@ -48,7 +48,7 @@ export class MapService {
                     }
                     return this.isLoaded;
                 })
-            )
+            );
     }
 
     // 获取高德地图脚本
@@ -64,7 +64,7 @@ export class MapService {
 
     // 判断地图是否加载完成(window.AMap)
     public get isLoaded(): boolean {
-        return !isUndefined(window[ 'AMap' ]) && !isUndefined(window[ 'AMap' ].constructor);
+        return window[ 'AMap' ] !== undefined && window[ 'AMap' ].constructor !== undefined;
     }
 
     get map() {
@@ -99,7 +99,7 @@ export class MapService {
 
     // 批量新建 marker TODO
     public createMarkers(opt: Marker[]): any[] {
-        let result: any[] = opt.map(preMarker => new AMap.Marker(preMarker));
+        const result: any[] = opt.map(preMarker => new AMap.Marker(preMarker));
         return result;
     }
 

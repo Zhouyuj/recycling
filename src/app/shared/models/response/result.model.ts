@@ -7,6 +7,6 @@ export class Result<T> {
 }
 
 export interface ResultError {
-    message?: string,
-    status?: number,
+    message?: string;
+    status?: number;
 }

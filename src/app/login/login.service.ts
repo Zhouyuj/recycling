@@ -19,7 +19,7 @@ export class LoginService extends RebirthHttp {
     }
 
     isLogin(): boolean {
-        let token: Token = this.tokenService.getToken();
+        const token: Token = this.tokenService.getToken();
         if (VerifyUtil.isNotEmpty(token)) {
             return true;
         }

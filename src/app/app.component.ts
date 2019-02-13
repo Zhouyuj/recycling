@@ -1,7 +1,7 @@
 import { Component, ViewContainerRef } from '@angular/core';
 
 /* 第三方 */
-//import { RebirthNGConfig } from 'rebirth-ng';
+// import { RebirthNGConfig } from 'rebirth-ng';
 
 /* 自定义 */
 import { InterceptorServices } from './core/services/interceptors/interceptors.service';
@@ -19,7 +19,7 @@ export class AppComponent {
                 private interceptorServices: InterceptorServices,
                 private titleService: TitleService) {
 
-        //this.rebirthNGConfig.rootContainer = this.viewContainerRef;
+        // this.rebirthNGConfig.rootContainer = this.viewContainerRef;
 
         /* http 拦截器 */
         this.interceptorServices.registInterceptors();

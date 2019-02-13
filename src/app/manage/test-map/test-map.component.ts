@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 
 import { Observable } from 'rxjs/index';
-//import { Marker } from '../../shared/services/map/marker.model';
-//import { Map } from '../../shared/services/map/map.model';
+// import { Marker } from '../../shared/services/map/marker.model';
+// import { Map } from '../../shared/services/map/map.model';
 
 import { Marker } from './marker';
 import { Map } from './map';
@@ -29,16 +29,18 @@ export class TestMapComponent implements OnInit {
     }
 
     public initMap(): void {
-        let subscription = this.mapService.initMap().subscribe((hasLoaded: boolean) => {
+        const subscription = this.mapService.initMap().subscribe((hasLoaded: boolean) => {
             if (hasLoaded) {
                 this.map = this.mapService.createMap(new Map('container', [ 113.18691, 23.031716 ], 15));
-                subscription && subscription.unsubscribe(); // 取消定时器
+                if (subscription) {
+                    subscription.unsubscribe(); // 取消定时器
+                }
             }
         });
     }
 
     public setCenter(lngLat: number[]) {
-        let path = [
+        const path = [
             [ 113.186894, 23.031745 ],
             [ 113.192811, 23.033113 ],
             [ 113.175259, 23.027268 ],
@@ -48,21 +50,21 @@ export class TestMapComponent implements OnInit {
         ];
         this.mapService.setCenter(lngLat);
         this.createMarker(lngLat);
-        //this.createPolyline(path);
-        //this.createPolygon(path);
+        // this.createPolyline(path);
+        // this.createPolygon(path);
     }
 
     public createMarker(lngLat: number[]) {
-        let marker = this.mapService.createMarker(new Marker({ id: 'haha', map: this.map, position: lngLat }));
+        const marker = this.mapService.createMarker(new Marker({ id: 'haha', map: this.map, position: lngLat }));
     }
 
     public createPolyline(path: number[][]) {
-        let polyline = this.mapService.createPolyline(new Polyline({ id: 'hiahia', map: this.map, path: path }));
+        const polyline = this.mapService.createPolyline(new Polyline({ id: 'hiahia', map: this.map, path: path }));
     }
 
     public createPolygon(path: number[][]) {
-        let opt = new Polygon({ id: 'hehe', map: this.map, path: path });
+        const opt = new Polygon({ id: 'hehe', map: this.map, path: path });
         console.log(opt);
-        let polygon = this.mapService.createPolygon(opt);
+        const polygon = this.mapService.createPolygon(opt);
     }
 }

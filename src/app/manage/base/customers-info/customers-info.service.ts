@@ -37,13 +37,13 @@ export class CustomersInfoService extends RebirthHttp {
     public getCustomerVehicles(@Query('page') page: PageReq,
                                @Query('area') area: string,
                                @Query('state') state: string,
-                               @Query('plateNumber') plateNumber?: string): Observable<Result<PageRes<VehicleRes[]>>> {//TODO
+                               @Query('plateNumber') plateNumber?: string): Observable<Result<PageRes<VehicleRes[]>>> {// TODO
         return null;
     }
 
     @GET('/customers')
     public getCustomerList(@Query('page') page: PageReq,
-                           @Query('params') params?: any): Observable<Result<PageRes<CustomerRes[]>>> {//TODO
+                           @Query('params') params?: any): Observable<Result<PageRes<CustomerRes[]>>> {// TODO
         return null;
     }
 

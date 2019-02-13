@@ -35,7 +35,7 @@ export class InterceptorServices extends RebirthHttp {
                     if (token) {
                         return request.clone({
                             setHeaders: { Authorization: 'Bearer ' + token },
-                        })
+                        });
                     }
                     return request;
                 },

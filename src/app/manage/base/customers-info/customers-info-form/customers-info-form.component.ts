@@ -77,7 +77,7 @@ export class CustomersInfoFormComponent implements OnInit {
     initVehicles() {
         const getRandomNameList = ({ districtCode, plateNumber }) => {
             // 若需要根据地区来选择车辆,只要打开一下这行代码,使districtCode存在 区/市 的code即可
-            //districtCode = districtCode || '350603';
+            // districtCode = districtCode || '350603';
             // 若需要根据地区选择车辆,删除一下行代码
             districtCode = '';
             return this.customersInfoService.getCustomerVehicles(new PageReq(1, 20), districtCode, 'Available', plateNumber)
@@ -191,7 +191,7 @@ export class CustomersInfoFormComponent implements OnInit {
      */
     onAddressChange($e): void {
         if (this.selectedCategory === 'Separate') {
-            if (this.formModelSeparate.address.join(',') == $e.join(',')) {
+            if (this.formModelSeparate.address.join(',') === $e.join(',')) {
                 return;
             } else {
                 this.formModelSeparate.address = $e;
@@ -210,7 +210,7 @@ export class CustomersInfoFormComponent implements OnInit {
                 }*/
             }
         } else if (this.selectedCategory === 'Cluster') {
-            if (this.formModelCluster.address.join(',') == $e.join(',')) {
+            if (this.formModelCluster.address.join(',') === $e.join(',')) {
                 return;
             } else {
                 this.formModelCluster.address = $e;
@@ -248,7 +248,7 @@ export class CustomersInfoFormComponent implements OnInit {
                 break;
             case 'Cluster':     /* 聚类点 */
                 const lengthC = this.formModelCluster.duration[ type ] ? this.formModelCluster.duration[ type ].length : 0;
-                let newIdC = !lengthC ? 0 : this.formModelCluster.duration[ type ][ lengthC - 1 ].idx + 1;
+                const newIdC = !lengthC ? 0 : this.formModelCluster.duration[ type ][ lengthC - 1 ].idx + 1;
                 this.formModelCluster.duration[ type ].push(new DurationDetail(newIdC));
                 break;
         }
@@ -257,13 +257,17 @@ export class CustomersInfoFormComponent implements OnInit {
     onRemoveDuration(durationType: string, idx: number) {
         switch (this.selectedCategory) {
             case 'Separate':
-                if (!this.formModelSeparate.duration[ durationType ].length) return;
-                let durationS = this.formModelSeparate.duration[ durationType ].filter(item => item.idx !== idx);
+                if (!this.formModelSeparate.duration[ durationType ].length) {
+                    return;
+                }
+                const durationS = this.formModelSeparate.duration[ durationType ].filter(item => item.idx !== idx);
                 this.formModelSeparate.duration[ durationType ] = durationS;
                 break;
             case 'Cluster':
-                if (!this.formModelCluster.duration[ durationType ].length) return;
-                let durationC = this.formModelCluster.duration[ durationType ].filter(item => item.idx !== idx);
+                if (!this.formModelCluster.duration[ durationType ].length) {
+                    return;
+                }
+                const durationC = this.formModelCluster.duration[ durationType ].filter(item => item.idx !== idx);
                 this.formModelCluster.duration[ durationType ] = durationC;
                 break;
         }
@@ -277,14 +281,16 @@ export class CustomersInfoFormComponent implements OnInit {
     }
 
     onAddChildCollection(): void {
-        let length = this.formModelCluster.childCollections.length || 0;
-        let newIdx = !length ? 0 : this.formModelCluster.childCollections[ length - 1 ].idx + 1;
+        const length = this.formModelCluster.childCollections.length || 0;
+        const newIdx = !length ? 0 : this.formModelCluster.childCollections[ length - 1 ].idx + 1;
         this.formModelCluster.childCollections.push(new ChildCollections(newIdx));
     }
 
     onRemoveChildCollections(idx: number) {
-        if (!this.formModelCluster.childCollections.length) return;
-        let result = this.formModelCluster.childCollections.filter(item => {
+        if (!this.formModelCluster.childCollections.length) {
+            return;
+        }
+        const result = this.formModelCluster.childCollections.filter(item => {
             return item.idx !== idx;
         });
         this.formModelCluster.childCollections = result;
@@ -325,7 +331,7 @@ export class CustomersInfoFormComponent implements OnInit {
                     });
                     return false;
                 }
-                if (parseInt(this.formModelSeparate.hasKey) !== 0 && parseInt(this.formModelSeparate.hasKey) !== 1) {
+                if (parseInt(this.formModelSeparate.hasKey, 10) !== 0 && parseInt(this.formModelSeparate.hasKey, 10) !== 1) {
                     this.notificationService.create({
                         type   : 'error',
                         title  : '抱歉,请检查输入内容',
@@ -333,7 +339,10 @@ export class CustomersInfoFormComponent implements OnInit {
                     });
                     return false;
                 }
-                if ((this.formModelSeparate.level === null || this.formModelSeparate.level === 0) && !this.formModelSeparate.duration.food.length && !this.formModelSeparate.duration.oil.length) {
+                if ((this.formModelSeparate.level === null ||
+                    this.formModelSeparate.level === 0) &&
+                    !this.formModelSeparate.duration.food.length &&
+                    !this.formModelSeparate.duration.oil.length) {
                     this.notificationService.create({
                         type   : 'error',
                         title  : '抱歉,请检查输入内容',
@@ -345,7 +354,7 @@ export class CustomersInfoFormComponent implements OnInit {
                     let result = null;
                     this.formModelSeparate.duration.food.forEach((item: DurationDetail) => {
                         // 判断是否有未填的必填数据
-                        let needComplete = !(!!item.dateType && !!item.startTime && !!item.endTime && !!item.priorityType);
+                        const needComplete = !(!!item.dateType && !!item.startTime && !!item.endTime && !!item.priorityType);
                         if (needComplete) {
                             this.notificationService.create({
                                 type   : 'error',
@@ -358,13 +367,15 @@ export class CustomersInfoFormComponent implements OnInit {
                             result = true;
                         }
                     });
-                    if (!result) return;    // 停止验证
+                    if (!result) {
+                        return;    // 停止验证
+                    }
                 }
                 if (this.formModelSeparate.duration.oil.length) {
                     let result = null;
                     this.formModelSeparate.duration.oil.forEach((item: DurationDetail) => {
                         // 判断是否有未填的必填数据
-                        let needComplete = !(!!item.dateType && !!item.startTime && !!item.endTime && !!item.priorityType);
+                        const needComplete = !(!!item.dateType && !!item.startTime && !!item.endTime && !!item.priorityType);
                         if (needComplete) {
                             this.notificationService.create({
                                 type   : 'error',
@@ -377,7 +388,9 @@ export class CustomersInfoFormComponent implements OnInit {
                             result = true;
                         }
                     });
-                    if (!result) return;    // 停止验证
+                    if (!result) {
+                        return;    // 停止验证
+                    }
                 }
                 break;
             case 'Cluster':
@@ -397,7 +410,8 @@ export class CustomersInfoFormComponent implements OnInit {
                     });
                     return false;
                 }
-                if (!this.formModelCluster.childCollections.length || !this.formModelCluster.childCollections.filter(item => !!item.name).length) {
+                if (!this.formModelCluster.childCollections.length ||
+                    !this.formModelCluster.childCollections.filter(item => !!item.name).length) {
                     this.notificationService.create({
                         type   : 'error',
                         title  : '抱歉,请检查输入内容',
@@ -405,7 +419,10 @@ export class CustomersInfoFormComponent implements OnInit {
                     });
                     return false;
                 }
-                if ((this.formModelCluster.level === null || this.formModelCluster.level === 0) && !this.formModelCluster.duration.food.length && !this.formModelCluster.duration.oil.length) {
+                if ((this.formModelCluster.level === null ||
+                    this.formModelCluster.level === 0) &&
+                    !this.formModelCluster.duration.food.length &&
+                    !this.formModelCluster.duration.oil.length) {
                     this.notificationService.create({
                         type   : 'error',
                         title  : '抱歉,请检查输入内容',
@@ -417,7 +434,7 @@ export class CustomersInfoFormComponent implements OnInit {
                     let result = null;
                     this.formModelCluster.duration.food.forEach((item: DurationDetail) => {
                         // 判断 收运时间段中 是否有未填的必填数据
-                        let needComplete = !(!!item.dateType && !!item.startTime && !!item.endTime && !!item.priorityType);
+                        const needComplete = !(!!item.dateType && !!item.startTime && !!item.endTime && !!item.priorityType);
                         if (needComplete) {
                             this.notificationService.create({
                                 type   : 'error',
@@ -430,13 +447,15 @@ export class CustomersInfoFormComponent implements OnInit {
                             result = true;
                         }
                     });
-                    if (!result) return;    // 停止验证
+                    if (!result) {
+                        return;    // 停止验证
+                    }
                 }
                 if (this.formModelCluster.duration.oil.length) {
                     let result = null;
                     this.formModelCluster.duration.oil.forEach((item: DurationDetail) => {
                         // 判断 收运时间段中 是否有未填的必填数据
-                        let needComplete = !(!!item.dateType && !!item.startTime && !!item.endTime && !!item.priorityType);
+                        const needComplete = !(!!item.dateType && !!item.startTime && !!item.endTime && !!item.priorityType);
                         if (needComplete) {
                             this.notificationService.create({
                                 type   : 'error',
@@ -449,7 +468,9 @@ export class CustomersInfoFormComponent implements OnInit {
                             result = true;
                         }
                     });
-                    if (!result) return;    // 停止验证
+                    if (!result) {
+                        return;    // 停止验证
+                    }
                 }
                 break;
         }

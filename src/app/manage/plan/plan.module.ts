@@ -20,7 +20,7 @@ import { EditPlanModule } from './edit-plan/edit-plan.module';
     ],
     declarations: [ PlanComponent, AddPlanComponent ],
     providers   : [
-        //{ provide: PlanService, useClass: PlanMockService },
+        // { provide: PlanService, useClass: PlanMockService },
         PlanService,
     ],
     entryComponents: [

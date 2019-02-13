@@ -89,7 +89,7 @@ export class AddDemandComponent implements OnInit {
         });
         this.refreshSelectStatus(2);
         this.selectedCluster = null;
-        //this.getCustomerList();
+        // this.getCustomerList();
         console.log(this.demandListCache);
     }
 
@@ -101,7 +101,7 @@ export class AddDemandComponent implements OnInit {
      */
     onChangeTime(e, item: DemandListModel) {
         if (e !== null) {
-            item.selectedPeriod = item.collectionPeriods.find((p: CollectionPeriod) => p.id == e);
+            item.selectedPeriod = item.collectionPeriods.find((p: CollectionPeriod) => p.id === e);
         } else {
             item.selectedPeriod = null;
         }
@@ -114,7 +114,7 @@ export class AddDemandComponent implements OnInit {
      */
     onChangeClusterTime(e) {
         if (e !== null) {
-            this.selectedCluster.selectedPeriod = this.selectedCluster.collectionPeriods.find((p: CollectionPeriod) => p.id == e);
+            this.selectedCluster.selectedPeriod = this.selectedCluster.collectionPeriods.find((p: CollectionPeriod) => p.id === e);
         } else {
             this.selectedCluster.selectedPeriod = null;
         }
@@ -148,7 +148,9 @@ export class AddDemandComponent implements OnInit {
             if (d.id === parentId) {
                 if (d.taskList.find((s: SubDemandModel) => s.checked)) {
                     d.checked = true;
-                } else d.checked = false;
+                } else {
+                    d.checked = false;
+                }
             }
         });
         this.refreshSelectStatus(2);
@@ -184,8 +186,8 @@ export class AddDemandComponent implements OnInit {
 
         this.isDemandSpinning = true;
         // 筛选出checked==true的父/子,保存时间段/收运量,组装req
-        let selections: DemandListModel[] = this.demandListCache.filter((item: DemandListModel) => item.checked);
-        let req: DemandReq[] = selections.map((item: DemandListModel) => ModelConverter.demandListModelToReq(item));
+        const selections: DemandListModel[] = this.demandListCache.filter((item: DemandListModel) => item.checked);
+        const req: DemandReq[] = selections.map((item: DemandListModel) => ModelConverter.demandListModelToReq(item));
         this.editPlanService.addDemands(req).subscribe(
             (res: Result<{ id: number }>) => {
                 this.onClose(true);
@@ -232,7 +234,7 @@ export class AddDemandComponent implements OnInit {
         if (option && option.isResetReq) {
             this.resetPageReq();
         }
-        let paramsTemp = this.updateParams();
+        const paramsTemp = this.updateParams();
         this.customersInfoService.getCustomerList(this.pageReq, paramsTemp).subscribe(
             (res: Result<PageRes<CustomerRes[]>>) => {
                 if (res.data) {
@@ -252,8 +254,8 @@ export class AddDemandComponent implements OnInit {
     }
 
     updateParams(): any {
-        let paramsTemp = {};
-        for (let k in this.params) {
+        const paramsTemp = {};
+        for (const k in this.params) {
             if (!this.params[ k ]) {
                 this.params[ k ] = null;
             } else {
@@ -278,7 +280,7 @@ export class AddDemandComponent implements OnInit {
      */
     isValid(): boolean {
         let valid: boolean;
-        let tempList = this.demandListCache.filter((item: DemandListModel) => item.checked);
+        const tempList = this.demandListCache.filter((item: DemandListModel) => item.checked);
         if (tempList.length === 0) {
             return valid = false;
         }
@@ -291,12 +293,16 @@ export class AddDemandComponent implements OnInit {
                     if (child.checked && VerifyUtil.isEmpty(child.amountOfGarbage)) { // 子请求无输入收运量
                         valid = false;
                         return;
-                    } else valid = true;
+                    } else {
+                        valid = true;
+                    }
                 });
             } else if ((!item.taskList || item.taskList.length === 0) && VerifyUtil.isEmpty(item.amountOfGarbage)) { // 非聚类请求无输入收运量
                 valid = false;
                 return;
-            } else valid = true;
+            } else {
+                valid = true;
+            }
         });
 
         return valid;

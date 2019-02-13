@@ -12,7 +12,7 @@ export interface TaskModel {
     lng: number;
     collectionPeriod: {
         startTime: number,
-        endTime  : number,
+        endTime: number,
     };
     taskList: SubTaskModel[];
     checked?: boolean;
@@ -20,13 +20,13 @@ export interface TaskModel {
 }
 
 export interface SubTaskModel {
-    id: number,
-    name: string,
-    amountOfGarbage: number,
-    state: string,
+    id: number;
+    name: string;
+    amountOfGarbage: number;
+    state: string;
     collectionPeriod: {
         startTime: number,
-        endTime  : number,
-    },
-    checked?: boolean,
+        endTime: number,
+    };
+    checked?: boolean;
 }

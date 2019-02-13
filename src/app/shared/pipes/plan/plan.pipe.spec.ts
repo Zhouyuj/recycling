@@ -1,8 +1,8 @@
-import { PlanPipe } from './plan.pipe';
+import { TaskStateToChinesePipe } from './plan.pipe';
 
 describe('PlanPipe', () => {
   it('create an instance', () => {
-    const pipe = new PlanPipe();
+    const pipe = new TaskStateToChinesePipe();
     expect(pipe).toBeTruthy();
   });
 });

@@ -5,7 +5,7 @@ export class Polyline {
     public id: string;
     public map: any;
     public path: number[][];
-    public isTransform: boolean;// 是否需要转换坐标
+    public isTransform: boolean; // 是否需要转换坐标
     public zIndex: number;  // default 50
     public strokeColor: string; // 线条颜色，使用16进制颜色代码赋值。默认值为#006600
     public strokeWeight: number;    // 线条宽度，单位：像素

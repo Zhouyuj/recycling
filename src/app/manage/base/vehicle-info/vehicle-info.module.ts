@@ -16,7 +16,7 @@ import { VehicleInfoService } from './vehicle-info.service';
     declarations: [ VehicleInfoComponent, VehicleInfoFormComponent ],
     providers: [
         VehicleInfoService,
-        //{ provide: VehicleInfoService, useClass: VehicleInfoMockService },
+        // { provide: VehicleInfoService, useClass: VehicleInfoMockService },
     ],
     entryComponents: [
         VehicleInfoFormComponent,

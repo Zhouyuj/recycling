@@ -76,42 +76,42 @@ export class ModelConverter {
      */
     public static formModelToCustomerReq(f: FormModel, parentName: string = '', oldCusterName: string = ''): CustomerReq {
         let c: CustomerReq;
-        let foodPeriod = f.duration.food
+        const foodPeriod = f.duration.food
             .filter((o: DurationDetail) => o.dateType !== null)   /* 过滤为空的数据,因为有默认的值 */
             .map((o: DurationDetail) => {
                 return {
                     id             : o.id,
                     dateType       : o.dateType,
-                    //startTime      : this.calSecondFromHourAndMin(o.startTime),
-                    //endTime        : this.calSecondFromHourAndMin(o.endTime),
+                    // startTime      : this.calSecondFromHourAndMin(o.startTime),
+                    // endTime        : this.calSecondFromHourAndMin(o.endTime),
                     startTime      : this.hourMinToSec(o.startTime),
                     endTime        : this.hourMinToSec(o.endTime),
                     priorityType   : o.priorityType,
                     plateNumber    : o.plateNumber,
                     garbageCategory: 'KitchenWaste', // 餐厨垃圾
-                }
+                };
             });
-        let oilPeriod = f.duration.oil
+        const oilPeriod = f.duration.oil
             .filter((o: DurationDetail) => o.dateType !== null)   /* 过滤为空的数据 */
             .map((o: DurationDetail) => {
                 return {
                     id             : o.id,
                     dateType       : o.dateType,
-                    //startTime      : this.calSecondFromHourAndMin(o.startTime),
-                    //endTime        : this.calSecondFromHourAndMin(o.endTime),
+                    // startTime      : this.calSecondFromHourAndMin(o.startTime),
+                    // endTime        : this.calSecondFromHourAndMin(o.endTime),
                     startTime      : this.hourMinToSec(o.startTime),
                     endTime        : this.hourMinToSec(o.endTime),
                     priorityType   : o.priorityType,
                     plateNumber    : o.plateNumber,
                     garbageCategory: 'WasteGrease', // 餐厨垃圾
-                }
+                };
             });
         let customerList = f.childCollections
             .filter((o: ChildCollections) => o.name && o.name !== null)
             .map((cc: ChildCollections) => {
                 let collectionNamePrefix = '';  // 前缀
                 if (oldCusterName) {    // 如果修改的是聚类点,需要将子收集点的前缀（旧聚类点名称)替换为新的聚类点名称作为前缀
-                    let reg = new RegExp(oldCusterName, 'g');
+                    const reg = new RegExp(oldCusterName, 'g');
                     cc.name = cc.name.replace(reg, '');
                 }
                 if (cc.name.indexOf(f.collectionName) < 0) {  // 子收集点添加前缀
@@ -120,7 +120,7 @@ export class ModelConverter {
                 return {
                     id  : cc.id || null,
                     name: collectionNamePrefix + cc.name,
-                }
+                };
             });
         customerList = customerList.length > 0 ? customerList : null;
         c = {
@@ -145,42 +145,44 @@ export class ModelConverter {
             name                : f.collectionName.indexOf(parentName) >= 0 ? f.collectionName : parentName + f.collectionName,
             password            : f.password || null,
             needKey             : f.hasKey === '1' ? true : false,
-            typeId              : parseInt(f.collectionType) || null,
+            typeId              : parseInt(f.collectionType, 10) || null,
             username            : f.account || null,
         };
         return c;
     }
 
-    public static getCountyName(code: string, countyNames: [{ code:string, name:string }]): string {
-        let result = (countyNames.filter(item => item.code == code)[ 0 ] || { name: '' }).name || '';
+    public static getCountyName(code: string, countyNames: [{ code: string, name: string }]): string {
+        const result = (countyNames.filter(item => item.code === code)[ 0 ] || { name: '' }).name || '';
         return result;
     }
 
     public static convertToDuration(c: CollectionPeriod[]): Duration {
-        let d = new Duration();
-        if (!c) return d;
-        let food = c.filter((item: CollectionPeriod) => item.garbageCategory === 'KitchenWaste')
+        const d = new Duration();
+        if (!c) {
+            return d;
+        }
+        const food = c.filter((item: CollectionPeriod) => item.garbageCategory === 'KitchenWaste')
             .map((item: CollectionPeriod, index) => {  // TODO 优化为一个操作
-                let _d = new DurationDetail();
+                const _d = new DurationDetail();
                 _d.id = item.id;
                 _d.idx = index;
                 _d.dateType = item.dateType;
-                //_d.startTime = this.convertSecondToDate(item.startTime);
-                //_d.endTime = this.convertSecondToDate(item.endTime);
+                // _d.startTime = this.convertSecondToDate(item.startTime);
+                // _d.endTime = this.convertSecondToDate(item.endTime);
                 _d.startTime = this.secToHourMin(item.startTime);
                 _d.endTime = this.secToHourMin(item.endTime);
                 _d.priorityType = item.priorityType;
                 _d.plateNumber = item.plateNumber;
                 return _d;
             });
-        let oil = c.filter((item: CollectionPeriod) => item.garbageCategory === 'WasteGrease')
+        const oil = c.filter((item: CollectionPeriod) => item.garbageCategory === 'WasteGrease')
             .map((item: CollectionPeriod, index) => {  // TODO 优化为一个操作
-                let _d = new DurationDetail();
+                const _d = new DurationDetail();
                 _d.id = item.id;
                 _d.idx = index;
                 _d.dateType = item.dateType;
-                //_d.startTime = this.convertSecondToDate(item.startTime);
-                //_d.endTime = this.convertSecondToDate(item.endTime);
+                // _d.startTime = this.convertSecondToDate(item.startTime);
+                // _d.endTime = this.convertSecondToDate(item.endTime);
                 _d.endTime = this.secToHourMin(item.endTime);
                 _d.startTime = this.secToHourMin(item.startTime);
                 _d.priorityType = item.priorityType;
@@ -203,7 +205,7 @@ export class ModelConverter {
                 idx : index,
                 name: item.name,
                 id  : item.id,
-            }
+            };
         });
         return c;
     }
@@ -213,30 +215,30 @@ export class ModelConverter {
      * @returns {Date}
      */
     public static convertSecondToDate(sec: number): Date {
-        let num_hour = sec / 3600;
-        let h = Math.floor(num_hour);
-        let m = (sec / 3600 - h) * 60;
-        let result = new Date();
+        const num_hour = sec / 3600;
+        const h = Math.floor(num_hour);
+        const m = (sec / 3600 - h) * 60;
+        const result = new Date();
         result.setHours(h);
         result.setMinutes(m);
         return result;
     }
 
     public static calSecondFromHourAndMin(time: Date): number {
-        let hour = time ? time.getHours() : 0;
-        let min = time ? time.getMinutes() : 0;
-        let result = hour * 3600 + min * 60;
+        const hour = time ? time.getHours() : 0;
+        const min = time ? time.getMinutes() : 0;
+        const result = hour * 3600 + min * 60;
         return result;
     }
 
     public static hourMinToSec(value: string[]): number {
-        let numArr = value.map(item => parseInt(item));
+        const numArr = value.map(item => parseInt(item, 10));
         return numArr[0] * 3600 + numArr[1] * 60;
     }
 
     public static secToHourMin(sec: number): string[] {
-        let hour = Math.floor(sec / 3600);
-        let min = Math.floor((sec - hour * 3600) / 60);
+        const hour = Math.floor(sec / 3600);
+        const min = Math.floor((sec - hour * 3600) / 60);
         return [
             hour > 10 ? `${hour}` : `0${hour}`,
             min > 10 ? `${min}` : `0${min}`,

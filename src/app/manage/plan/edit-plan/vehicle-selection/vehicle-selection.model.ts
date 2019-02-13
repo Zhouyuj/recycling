@@ -5,7 +5,7 @@
 export interface VehicleSelectionModel {
     id: number;
     plateNumber: string;
-    //district: string;
+    // district: string;
     vehicleType: string;
     checked?: boolean;
 }

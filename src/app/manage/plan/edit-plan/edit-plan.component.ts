@@ -107,7 +107,7 @@ export class EditPlanComponent implements OnInit {
 
     initRouteList() {
         this.route.paramMap.subscribe((params: ParamMap) => {
-            this.planId = parseInt(params.get('id'));
+            this.planId = parseInt(params.get('id'), 10);
             this.planName = params.get('name');
             this.initBreadcrumbs()
                 .getRouteList();
@@ -126,7 +126,7 @@ export class EditPlanComponent implements OnInit {
      */
     onSavePlan() {
         if (this.sameVehicleRoutes) {
-            for (let k in this.sameVehicleRoutes) {
+            for (const k in this.sameVehicleRoutes) {
                 if (this.sameVehicleRoutes[ k ].length > 1) {
                     const priorityArr = this.sameVehicleRoutes[ k ].map((r: RouteListModel) => r.priority);
                     const uniqueArr = Array.from(new Set(priorityArr));
@@ -265,7 +265,7 @@ export class EditPlanComponent implements OnInit {
     onChangeRouteStatus($e, item: RouteListModel) {
         this.isRoutesSpinning = true;
         this.onStopPro($e);
-        //item.lock = !item.lock;
+        // item.lock = !item.lock;
         const status = !item.lock ? 'LOCK' : 'UNLOCK';
         this.editPlanService.changeRouteStatus(this.planId, item.id, status).subscribe(
             (res: Result<any>) => {
@@ -294,7 +294,7 @@ export class EditPlanComponent implements OnInit {
      */
     getRouteList() {
         this.isRoutesSpinning = true;
-        let paramsTemp = this.updateParams('route');
+        const paramsTemp = this.updateParams('route');
         this.editPlanService.getRouteList(this.planId, paramsTemp).subscribe(
             (res: Result<RouteModel[]>) => {
                 this.routeListCache = res.data.map((item: RouteModel) => {
@@ -333,7 +333,9 @@ export class EditPlanComponent implements OnInit {
     needSelectRoute(): boolean {
         if (!this.selectedRoutesCache) {
             return true;
-        } else return false;
+        } else {
+            return false;
+        }
     }
 
     /** 路线 end **/
@@ -424,8 +426,8 @@ export class EditPlanComponent implements OnInit {
         }
         this.isDistributeSpinning = true;
         // 分页查询参数 TODO
-        let paramsTemp = this.updateParams('demand');
-        let routeId = this.selectedRoutesCache.id;
+        const paramsTemp = this.updateParams('demand');
+        const routeId = this.selectedRoutesCache.id;
         this.editPlanService.getDistributeList(routeId).subscribe(
             res => {
                 this.distributedListCache = res.data.map((item: TaskModel) => {
@@ -435,7 +437,7 @@ export class EditPlanComponent implements OnInit {
                             return {
                                 ...t,
                                 checked: false,
-                            }
+                            };
                         });
                     }
                     return {
@@ -443,7 +445,7 @@ export class EditPlanComponent implements OnInit {
                         taskList: taskList || [],
                         checked : false,
                         expand  : false,
-                    }
+                    };
                 });
                 this.isDistributeSpinning = false;
             }, err => {
@@ -476,7 +478,7 @@ export class EditPlanComponent implements OnInit {
     onDelDemand() {
         this.modalService.createDeleteConfirm({
             onOk    : () => {
-                let ids = this.getIdsBySelection().join(',');
+                const ids = this.getIdsBySelection().join(',');
                 this.editPlanService.delDemand(ids).subscribe(
                     (res: Result<any>) => {
                         this.getDemandList();
@@ -509,7 +511,7 @@ export class EditPlanComponent implements OnInit {
             });
             return;
         }
-        let ids = this.getIdsBySelection();
+        const ids = this.getIdsBySelection();
         this.editPlanService.addTasksOnRoute(this.selectedRoutesCache.id, ids.join(',')).subscribe(
             (res: Result<any>) => {
                 this.getDistributeList();
@@ -548,17 +550,21 @@ export class EditPlanComponent implements OnInit {
             if (parent && r.id === parent.id) {   // 选中的为子
                 let selectParent = false;
                 r.taskList.forEach((sub: SubDemandModel) => {
-                    if (sub.id === item.id) sub.checked = !item.checked;
-                    if (sub.checked) selectParent = true;
+                    if (sub.id === item.id) {
+                        sub.checked = !item.checked;
+                    }
+                    if (sub.checked) {
+                        selectParent = true;
+                    }
                 });
                 parent.checked = selectParent;
             } else if (r.id === item.id) {           // 选中的为普通/父(所有子跟随父)
                 r.checked = !item.checked;
-                r.taskList
-                && r.taskList.length > 0
-                && r.taskList.forEach((sub: SubDemandModel) => {
-                    sub.checked = r.checked;
-                });
+                if (r.taskList && r.taskList.length > 0) {
+                    r.taskList.forEach((sub: SubDemandModel) => {
+                        sub.checked = r.checked;
+                    });
+                }
             }
         });
         this.refreshSelectStatus();
@@ -635,7 +641,7 @@ export class EditPlanComponent implements OnInit {
 
     onChangeDuration(e, item: DemandListModel) {
         if (e !== null) {
-            item.selectedPeriod = item.collectionPeriods.find((p: CollectionPeriod) => p.id == e);
+            item.selectedPeriod = item.collectionPeriods.find((p: CollectionPeriod) => p.id === e);
         } else {
             item.selectedPeriod = null;
         }
@@ -643,7 +649,11 @@ export class EditPlanComponent implements OnInit {
 
     onGarbageAmountChange(e, parent?: DemandListModel) {
         if (parent) {   // 修改子,需要累加
-            parent.amountOfGarbage = Number(parent.taskList.map((sub: SubDemandModel) => sub.amountOfGarbage).reduce((a, b) => a + b).toFixed(1));
+            parent.amountOfGarbage = Number(parent.taskList
+                .map((sub: SubDemandModel) => sub.amountOfGarbage)
+                .reduce((a, b) => a + b)
+                .toFixed(1)
+            );
         }
     }
 
@@ -659,7 +669,7 @@ export class EditPlanComponent implements OnInit {
     getDemandList() {
         this.isDemandSpinning = true;
         // 分页查询参数 TODO
-        let paramsTemp = this.updateParams('demand');
+        const paramsTemp = this.updateParams('demand');
         this.editPlanService.getDemandList(this.pageReq, paramsTemp).subscribe(
             (res: Result<PageRes<DemandRes[]>>) => {
                 if (res.data) {
@@ -699,8 +709,8 @@ export class EditPlanComponent implements OnInit {
     }
 
     updateParams(type: string): any {
-        let paramsTemp = {};
-        for (let k in this.params[ type ]) {
+        const paramsTemp = {};
+        for (const k in this.params[ type ]) {
             if (!this.params[ type ][ k ]) {
                 this.params[ type ][ k ] = null;
             } else {
@@ -718,7 +728,7 @@ export class EditPlanComponent implements OnInit {
         let ids = [];
         this.demandListCache.filter((d: DemandListModel) => d.checked).forEach((d: DemandListModel) => {
             if (d.taskList && d.taskList.length > 0) {
-                let subIds = d.taskList.filter((sub: SubDemandModel) => sub.checked).map((sub: SubDemandModel) => sub.id);
+                const subIds = d.taskList.filter((sub: SubDemandModel) => sub.checked).map((sub: SubDemandModel) => sub.id);
                 if (subIds.length === d.taskList.length) { // 子全删除
                     ids = [ ...ids, d.id ];
                 } else {

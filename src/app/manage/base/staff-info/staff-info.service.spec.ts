@@ -1,6 +1,6 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { StaffInfoService } from './staff-info.service.ts';
+import { StaffInfoService } from './staff-info.service';
 
 describe('StaffInfoService', () => {
     beforeEach(() => {

@@ -1,11 +1,36 @@
 /**
  * Created by wujiahui on 2018/10/23.
  */
+
+/**
+ * 自封装的 icon 对象
+ * marker 的 icon 属性可以是该类(MarkerIcon),或者是本地图片地址(string)
+ * 当 marker 存在 content 时,此属性无效
+ */
+export class MarkerIcon {
+    public size: number[];
+    public image: string;
+    public imageOffset: number[];
+    public imageSize: number[];
+
+    constructor(opts: {
+            size: number[],
+            image: string,
+            imageOffset?: number[],
+            imageSize?: number[]
+        }) {
+        /* tslint:disable-next-line */
+        for (let k in opts) {
+            this[k] = opts[k];
+        }
+    }
+}
+
 export class Marker {
     public id: string;          // id
     public map: any;            // 要显示该marker的地图对象
     public position: number[];  // 点标记在地图上显示的位置，默认为地图中心点
-    public isTransform: boolean;// 是否需要转换坐标
+    public isTransform: boolean; // 是否需要转换坐标
     public offset: number[];    // 点标记显示位置偏移量，默认值为Pixel(-10,-34)。指定position后，默认以marker左上角位置为基准点
     public title: string;       // 鼠标滑过点标记时的文字提示，不设置则鼠标滑过点标无文字提示
     public icon: MarkerIcon;   // 需在点标记中显示的图标。可以是一个本地图标地址，或者Icon对象。有合法的content内容时，此属性无效
@@ -34,10 +59,11 @@ export class Marker {
         draggable?: boolean,
         label?: { content: string, offset: number[] },
     }) {
+        /* tslint:disable-next-line */
         for (let k in opts) {
             this[k] = opts[k];
         }
-        //Object.assign(this, opts);
+        // Object.assign(this, opts);
         if (this.content) {
             delete this.icon;
         }
@@ -58,7 +84,7 @@ export class Marker {
         }
         /** 2-坐标 **/
         if (marker.isTransform) {
-            let tempLngLat = this.lngLatTransform(marker.position);
+            const tempLngLat = this.lngLatTransform(marker.position);
             marker.position = new AMap.LngLat(tempLngLat[ 0 ], tempLngLat[ 1 ]);
         } else {
             marker.position = new AMap.LngLat(marker.position[ 0 ], marker.position[ 1 ]);
@@ -83,29 +109,6 @@ export class Marker {
     // 坐标转换
     private lngLatTransform(position: number[]): number[] {
         return null;
-    }
-}
-
-/**
- * 自封装的 icon 对象
- * marker 的 icon 属性可以是该类(MarkerIcon),或者是本地图片地址(string)
- * 当 marker 存在 content 时,此属性无效
- */
-export class MarkerIcon {
-    public size: number[];
-    public image: string;
-    public imageOffset: number[];
-    public imageSize: number[];
-
-    constructor(opts: {
-            size: number[],
-            image: string,
-            imageOffset?: number[],
-            imageSize?: number[]
-        }) {
-        for (let k in opts) {
-            this[k] = opts[k];
-        }
     }
 }
 

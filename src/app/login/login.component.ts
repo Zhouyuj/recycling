@@ -36,7 +36,7 @@ export class LoginComponent implements OnInit {
             return;
         }
         this.submitBtnValid = true;
-        let msgId = this.messageService.create({ type: 'loading', content: '正在登陆,请稍后' });
+        const msgId = this.messageService.create({ type: 'loading', content: '正在登陆,请稍后' });
         this.loginService.auth(this.formModel).subscribe(
             (res: Result<{ token: string }>) => {
                 if (res.data.token) {
@@ -60,7 +60,8 @@ export class LoginComponent implements OnInit {
     }
 
     checkForm(): boolean {
-        if (!(/^(([a-zA-Z]|\d){3,17})$/.test(this.formModel.username))) {   // 以字母开头，长度在3-18之间，只能包含字符、数字和下划线 (/^[a-zA-Z](([a-zA-Z]|\d){3,17})$/
+        // 以字母开头，长度在3-18之间，只能包含字符、数字和下划线 (/^[a-zA-Z](([a-zA-Z]|\d){3,17})$/
+        if (!(/^(([a-zA-Z]|\d){3,17})$/.test(this.formModel.username))) {
             this.notificationService.create({
                 type   : 'error',
                 title  : '抱歉,请检查用户名',
@@ -74,7 +75,9 @@ export class LoginComponent implements OnInit {
                 content: '只能包含字母、数字',
             });
             return false;
-        } else return true;
+        } else {
+            return true;
+        }
     }
 
     redirectToHome(): void {

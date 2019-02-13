@@ -6,7 +6,7 @@ export class StaffFormModel {
     id: number = null;
     name: string = null;
     sex: string = null;
-    username: string= null;
+    username: string = null;
     password: string = null;
     position: string = null;
     roles: string[] = null;

@@ -8,11 +8,11 @@ export class VehicleReq {
     buyDate: number = null;
     engineModel: string = null;
     idNumber: string = null;
-    plateNumber: string
+    plateNumber: string;
 }
 
 export class BusinessLineReq {
-    //areaCode: string = null;
+    // areaCode: string = null;
     planBackTime: number = null;
     planDepartureTime: number = null;
     test: boolean = null;

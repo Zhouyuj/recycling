@@ -78,8 +78,8 @@ export class ModelConverter {
             identity   : f.identity || null,
             name       : f.name || null,
             password   : f.password || null,
-            postId     : parseInt(f.position) || null,
-            roles      : f.roles.map((role: string) => parseInt(role)) || null,
+            postId     : parseInt(f.position, 10) || null,
+            roles      : f.roles.map((role: string) => parseInt(role, 10)) || null,
             sex        : f.sex || null,
             username   : f.username || null,
         };

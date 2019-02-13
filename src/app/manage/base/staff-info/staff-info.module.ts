@@ -16,7 +16,7 @@ import { StaffInfoMockService } from './staff-info-mock.service';
     declarations: [ StaffInfoComponent, StaffInfoFormComponent ],
     providers: [
         StaffInfoService,
-        //{ provide: StaffInfoService, useClass: StaffInfoMockService }
+        // { provide: StaffInfoService, useClass: StaffInfoMockService }
     ],
     entryComponents: [
         StaffInfoFormComponent,

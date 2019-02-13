@@ -38,7 +38,7 @@ export class VehicleInfoFormComponent implements OnInit {
                 this.formData = ObjectUtils.cloneDeep(this.cache);
             } else {
                 this.formData = new VehicleFormModel();
-                //this.formData.district = [ '350603' ];
+                // this.formData.district = [ '350603' ];
             }
         });
     }
@@ -110,12 +110,12 @@ export class VehicleInfoFormComponent implements OnInit {
     }
 
     convertDataToDistricts(districts: any[]): any[] {
-        let leafDistricts = districts.map(district => {
+        const leafDistricts = districts.map(district => {
             return {
                 value : district.code,
                 label : district.name,
                 isLeaf: true,
-            }
+            };
         });
         return leafDistricts;
     }
@@ -149,9 +149,9 @@ export class VehicleInfoFormComponent implements OnInit {
                 content: '回厂时间不能为空',
             });
             return false;
-        } else if (parseInt(this.formData.planDepartureTime[0]) > parseInt(this.formData.planBackTime[0])
-            || parseInt(this.formData.planDepartureTime[0]) === parseInt(this.formData.planBackTime[0])
-            && parseInt(this.formData.planDepartureTime[1]) > parseInt(this.formData.planBackTime[1])) {
+        } else if (parseInt(this.formData.planDepartureTime[0], 10) > parseInt(this.formData.planBackTime[0], 10)
+            || parseInt(this.formData.planDepartureTime[0], 10) === parseInt(this.formData.planBackTime[0], 10)
+            && parseInt(this.formData.planDepartureTime[1], 10) > parseInt(this.formData.planBackTime[1], 10)) {
             this.notificationService.create({
                 type   : 'error',
                 title  : '抱歉,请检查内容',
@@ -165,16 +165,16 @@ export class VehicleInfoFormComponent implements OnInit {
                 content: '车型不能为空',
             });
             return false;
-        }/* else if (!this.formData.district) {
-            this.notificationService.create({
-                type   : 'error',
-                title  : '抱歉,请检查内容',
-                content: '所属区域不能为空',
-            });
-            return false;
-        }*/ else {
+        } else {
             return true;
         }
+        // else if (!this.formData.district) {
+        //     this.notificationService.create({
+        //         type   : 'error',
+        //         title  : '抱歉,请检查内容',
+        //         content: '所属区域不能为空',
+        //     });
+        //     return false;
+        // }
     }
-
 }

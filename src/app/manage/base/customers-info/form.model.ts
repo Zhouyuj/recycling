@@ -1,10 +1,28 @@
 /**
  * Created by wujiahui on 2018/11/6.
  */
+export class Duration {
+    tabType: 'food' | 'oil' = 'food';  // 该值只用于切换tab
+    food: DurationDetail[] = [];
+    oil: DurationDetail[] = [];
+}
+
+export class ChildCollections {
+    idx = 0; // 用于页面的增删
+    name: string = null;
+    id: number = null;
+
+    constructor(idx?: number, name?: string, id?: number) {
+        this.idx = idx || 0;
+        this.name = name;
+        this.id = id;
+    }
+}
+
 export class FormModel {
     id: number = null;
     collectionName: string = null;
-    category: string = 'Separate';   // 业务上分: 聚类点Cluster / 普通收集点Separate
+    category = 'Separate';   // 业务上分: 聚类点Cluster / 普通收集点Separate
     address: string[];
     account: string = null;
     password: string = null;
@@ -22,12 +40,6 @@ export class FormModel {
     level: number = null; // 显示/隐藏 收运时间段
 }
 
-export class Duration {
-    tabType: 'food' | 'oil' = 'food';  // 该值只用于切换tab
-    food: DurationDetail[] = [];
-    oil: DurationDetail[] = [];
-}
-
 export class DurationDetail {
     id: number = null;
     idx = 0; // 用于页面的增删
@@ -39,17 +51,5 @@ export class DurationDetail {
 
     constructor(idx?: number) {
         this.idx = idx || 0;
-    }
-}
-
-export class ChildCollections {
-    idx = 0; // 用于页面的增删
-    name: string = null;
-    id: number = null;
-
-    constructor(idx?: number, name?: string, id?: number) {
-        this.idx = idx || 0;
-        this.name = name;
-        this.id = id;
     }
 }

@@ -24,7 +24,7 @@ export class VehicleInfoService extends RebirthHttp {
 
     @GET('/vehicles')
     public getVehicleList(@Query('page') page: PageReq,
-                          @Query('params') params?: any): Observable<Result<PageRes<VehicleRes[]>>> {//TODO
+                          @Query('params') params?: any): Observable<Result<PageRes<VehicleRes[]>>> {// TODO
         return null;
     }
 

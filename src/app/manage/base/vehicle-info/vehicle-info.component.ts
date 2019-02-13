@@ -51,7 +51,7 @@ export class VehicleInfoComponent implements OnInit {
         boxId      : '',
         driver     : '',
         plateNumber: '',
-    };// 分页查询参数
+    }; // 分页查询参数
     public sortMap = {
         buyDate: '',
     };   // 操作表格的排序参数
@@ -80,7 +80,7 @@ export class VehicleInfoComponent implements OnInit {
             { text: VehicleCategoryEnum.food8, value: VehicleCategoryEnum.food8Index },
             { text: VehicleCategoryEnum.oil1, value: VehicleCategoryEnum.oil1Index },
         ];
-        let zhangzhouDistricts = ZHANGZHOU_OPTIONS.map(province => {
+        const zhangzhouDistricts = ZHANGZHOU_OPTIONS.map(province => {
             let zhangzhouCity;
             if (province.value === '350000') {
                 zhangzhouCity = province.children.find((city) => city.value === '350600');
@@ -88,9 +88,11 @@ export class VehicleInfoComponent implements OnInit {
                     return {
                         value: district.value,
                         text : district.label,
-                    }
+                    };
                 });
-            } else return [];
+            } else {
+                return [];
+            }
         });
         this.countyFilterList = zhangzhouDistricts[ 0 ];
     }
@@ -157,13 +159,17 @@ export class VehicleInfoComponent implements OnInit {
     onFilter(e, type: string) {
         switch (type) {
             case 'roleId':
-                let result = (e && !e.length) ? '' : e.join(',');
-                if (this.params[ type ] === result) return;
+                const result: string = (e && !e.length) ? '' : e.join(',');
+                if (this.params[ type ] === result) {
+                    return;
+                }
                 this.params[ type ] = (e && !e.length) ? '' : e.join(',');
                 break;
             case 'typeId':
             case 'area':
-                if (!e && !this.params[ type ] || this.params[ type ] === e) return;
+                if (!e && !this.params[ type ] || this.params[ type ] === e) {
+                    return;
+                }
                 this.params[ type ] = e || '';
                 break;
         }
@@ -191,7 +197,9 @@ export class VehicleInfoComponent implements OnInit {
      * @param type
      */
     onSort(e, type: string) {
-        if (!e) return;
+        if (!e) {
+            return;
+        }
         e = e.replace('end', '');
         this.pageReq.sort = `${type}.${e},`;
         this.pageReq.page = 1;
@@ -236,7 +244,7 @@ export class VehicleInfoComponent implements OnInit {
         }
         this.isSpinning = true;
         // 分页接口
-        let paramsTemp = this.updateParams();
+        const paramsTemp = this.updateParams();
         this.vehicleInfoService
             .getVehicleList(this.pageReq, paramsTemp)
             .subscribe(
@@ -261,7 +269,9 @@ export class VehicleInfoComponent implements OnInit {
     }
 
     dataToTableRows(data: VehicleRes[]): VehicleListModel[] {
-        if (!data.length) return [];
+        if (!data.length) {
+            return [];
+        }
         return data.map((o: VehicleRes) => ModelConverter.vehicleResToListModel(o));
     }
 
@@ -272,8 +282,8 @@ export class VehicleInfoComponent implements OnInit {
     }
 
     updateParams() {
-        let paramsTemp = {};
-        for (let k in this.params) {
+        const paramsTemp = {};
+        for (const k in this.params) {
             if (!this.params[ k ]) {
                 this.params[ k ] = null;
             } else {

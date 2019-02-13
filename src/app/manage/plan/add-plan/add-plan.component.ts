@@ -61,7 +61,7 @@ export class AddPlanComponent implements OnInit {
 
     getListByPage() {
         this.isTableSpinning = true;
-        let paramsTemp = this.updateParams();
+        const paramsTemp = this.updateParams();
         this.planService.getPlanList(this.pageReq, paramsTemp).subscribe((res: Result<PageRes<PlanRes[]>>) => {
             if (res.data.content) {
                 this.resCache = res.data.content;
@@ -70,12 +70,12 @@ export class AddPlanComponent implements OnInit {
                 this.selectedItem = null;
                 this.updatePageRes(res.data);
             }
-        })
+        });
     }
 
     updateParams(): any {
-        let paramsTemp = {};
-        for (let k in this.params) {
+        const paramsTemp = {};
+        for (const k in this.params) {
             if (!this.params[ k ]) {
                 this.params[ k ] = null;
             } else {

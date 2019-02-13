@@ -22,23 +22,25 @@ export class TimePickerComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges(changes) {
-        if (!this.disabledTimes) return;
-        let hour = this.disabledTimes.getHours();
-        let min = this.disabledTimes.getMinutes();
+        if (!this.disabledTimes) {
+            return;
+        }
+        const hour = this.disabledTimes.getHours();
+        const min = this.disabledTimes.getMinutes();
         this.nzOptions.forEach(
             (item: {
-                value   : string,
-                label   : string,
+                value: string,
+                label: string,
                 disabled: boolean,
                 children: [ { value: string, label: string, isLeaf: boolean, disabled: boolean} ],
             }) => {
-                if (parseInt(item.value) < hour) {
+                if (parseInt(item.value, 10) < hour) {
                     item.disabled = true;
                 } else {
                     item.disabled = false;
                     item.children.forEach(
                         (childItem: { value: string, label: string, isLeaf: boolean, disabled: boolean}) => {
-                            if (parseInt(childItem.value) < min) {
+                            if (parseInt(childItem.value, 10) < min) {
                                 childItem.disabled = true;
                             } else {
                                 childItem.disabled = false;

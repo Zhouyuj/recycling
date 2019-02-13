@@ -1,6 +1,30 @@
 /**
  * Created by wujiahui on 2018/10/26.
  */
+
+/**
+ * 自封装的 icon 对象
+ * marker 的 icon 属性可以是该类(MarkerIcon),或者是本地图片地址(string)
+ * 当 marker 存在 content 时,此属性无效
+ */
+export class MarkerIcon {
+    public size: number[];
+    public image: string;
+    public imageOffset: number[];
+    public imageSize: number[];
+
+    constructor(obj: {
+        size: number[],
+        image: string,
+        imageOffset?: number[],
+        imageSize?: number[]
+    }) {
+        /* tslint:disable-next-line */
+        for (let k in obj) {
+            this[k] = obj[k];
+        }
+    }
+}
 export class Marker {
     public id: string;           // id
     public map: any;             // 要显示该marker的地图对象
@@ -34,6 +58,7 @@ export class Marker {
         draggable?: boolean,
         label?: { content: string, offset: number[] },
     }) {
+        /* tslint:disable-next-line */
         for (let k in obj) {
             this[k] = obj[k];
         }
@@ -52,7 +77,7 @@ export class Marker {
     private assembleMarker(marker: any) {
         /* 1-坐标 */
         if (marker.isTransform) {
-            let tempLngLat = this.lngLatTransformer(marker.position);
+            const tempLngLat = this.lngLatTransformer(marker.position);
             marker.position = new AMap.LngLat(tempLngLat[ 0 ], tempLngLat[ 1 ]);
         } else {
             marker.position = new AMap.LngLat(marker.position[ 0 ], marker.position[ 1 ]);
@@ -77,29 +102,6 @@ export class Marker {
     // 坐标转换
     private lngLatTransformer(position: number[]): number[] {
         return null;
-    }
-}
-
-/**
- * 自封装的 icon 对象
- * marker 的 icon 属性可以是该类(MarkerIcon),或者是本地图片地址(string)
- * 当 marker 存在 content 时,此属性无效
- */
-export class MarkerIcon {
-    public size: number[];
-    public image: string;
-    public imageOffset: number[];
-    public imageSize: number[];
-
-    constructor(obj: {
-        size: number[],
-        image: string,
-        imageOffset?: number[],
-        imageSize?: number[]
-    }) {
-        for (let k in obj) {
-            this[k] = obj[k];
-        }
     }
 }
 

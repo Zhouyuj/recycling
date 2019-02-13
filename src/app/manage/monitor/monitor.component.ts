@@ -53,10 +53,12 @@ export class MonitorComponent implements OnInit {
     }
 
     initMap(): MonitorComponent {
-        let subscription = this.mapService.initMap().subscribe((hasLoaded: boolean) => {
+        const subscription = this.mapService.initMap().subscribe((hasLoaded: boolean) => {
             if (hasLoaded) {
                 this.map = this.mapService.createMap(new Map('map', [ 113.18691, 23.031716 ], 15));
-                subscription && subscription.unsubscribe(); // 取消定时器
+                if (subscription) {
+                    subscription.unsubscribe(); // 取消定时器
+                }
             }
         });
         return this;
@@ -179,15 +181,15 @@ export class MonitorComponent implements OnInit {
         this.markers = [ ...this.markers, this.mapService.createMarker(marker) ];
         this.setCenter(lngLat);
         console.log(this.mapService.getAllOverlays('marker')[0].getIcon());
-        //const marker = new AMap.Marker({
+        // const marker = new AMap.Marker({
         //    map: this.map,
         //    position: lngLat,
         //    icon: 'assets/images/map-icon/marker_bg.svg',
-        //});
-        //this.markers = [
+        // });
+        // this.markers = [
         //    ...this.markers,
         //    marker,
-        //]
+        // ]
     }
 
     removeMarkers(markers: any[]) {

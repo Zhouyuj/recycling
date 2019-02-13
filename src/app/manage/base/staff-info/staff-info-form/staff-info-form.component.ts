@@ -25,7 +25,7 @@ export class StaffInfoFormComponent implements OnInit {
 
     constructor(private drawerRef: NzDrawerRef<any>,
                 private notificationService: NotificationService,
-                private StaffInfoService: StaffInfoService) {
+                private staffInfoService: StaffInfoService) {
     }
 
     ngOnInit(): void {
@@ -45,7 +45,7 @@ export class StaffInfoFormComponent implements OnInit {
         this.transformFormModelToRequest();
         switch (this.type) {
             case 'add':
-                this.StaffInfoService.addStaff(this.staffReq).subscribe(
+                this.staffInfoService.addStaff(this.staffReq).subscribe(
                     res => {
                         this.notificationService.create({
                             type   : 'success',
@@ -61,7 +61,7 @@ export class StaffInfoFormComponent implements OnInit {
                     () => this.isSpinning = false);
                 break;
             case 'edit':
-                this.StaffInfoService.updateStaff(this.cache.id, this.staffReq).subscribe(
+                this.staffInfoService.updateStaff(this.cache.id, this.staffReq).subscribe(
                     res => {
                         this.notificationService.create({
                             type   : 'success',
