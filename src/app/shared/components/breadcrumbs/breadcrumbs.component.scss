@@ -1,5 +1,7 @@
+@import "./breadcrumbs.component-param";
+
 .breadcrumbs {
-    height: 32px;
+    height: $breadcrumbs-height;
     padding: 0 2rem;
     display: flex;
     align-items: center;

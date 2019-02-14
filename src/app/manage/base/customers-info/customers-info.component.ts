@@ -17,13 +17,14 @@ import { ModelConverter } from './model-converter';
 import { FormModel } from './form.model';
 import { ListModel } from './list.model';
 import { ZHANGZHOU_OPTIONS } from '../../../shared/components/cascader/cascader-zhangzhou.config';
+import { TableBasicComponent } from '../../table-basic.component';
 
 @Component({
     selector   : 'app-customers-info',
     templateUrl: './customers-info.component.html',
     styleUrls  : [ './customers-info.component.scss' ]
 })
-export class CustomersInfoComponent implements OnInit {
+export class CustomersInfoComponent extends TableBasicComponent implements OnInit {
     /* 面包屑导航 */
     public breadcrumbs = [
         {
@@ -74,9 +75,11 @@ export class CustomersInfoComponent implements OnInit {
                 private drawerService: NzDrawerService,
                 private modalService: NzModalService,
                 private notificationService: NotificationService) {
+        super();
     }
 
     ngOnInit() {
+        this.calcTableScrollY();
         this.initFilterOption();
         this.getListByPage({ isResetReq: true });
     }

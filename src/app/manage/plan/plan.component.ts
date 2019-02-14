@@ -17,13 +17,14 @@ import { PlanService } from './plan.service';
 import { PlanStateEnum } from './models/plan.enum';
 import { Result } from '../../shared/models/response/result.model';
 import { RouteModel } from './models/route.model';
+import { TableBasicComponent } from '../table-basic.component';
 
 @Component({
     selector   : 'app-plan',
     templateUrl: './plan.component.html',
     styleUrls  : [ './plan.component.scss' ]
 })
-export class PlanComponent implements OnInit {
+export class PlanComponent extends TableBasicComponent implements OnInit {
     /* 面包屑导航 */
     breadcrumbs = [
         {
@@ -65,9 +66,11 @@ export class PlanComponent implements OnInit {
                 private drawerService: NzDrawerService,
                 private modalService: ModalService,
                 private notificationService: NotificationService) {
+        super();
     }
 
     ngOnInit() {
+        this.calcTableScrollY();
         this.getListByPage();
     }
 

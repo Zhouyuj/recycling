@@ -1,7 +1,13 @@
 @import "../../../assets/styles/customer-global";
+@import "../../shared/components/breadcrumbs/breadcrumbs.component-param";
+@import "../../shared/components/header/header.component-param";
+@import "../manage-app.component-param";
+
 
 /* table height */
-$table-height: 655px;
+$breadcrumbs-total-height: (#{$breadcrumbs-height} + #{$breadcrumbs-padding-bottom} + #{$manage-app-content-padding});
+$table-height: calc(100vh - #{$header-height} - (#{$breadcrumbs-total-height}) - #{$manage-app-content-padding});
+$map-height: $table-height;
 
 .wrap {
     width: 100%;
@@ -12,8 +18,6 @@ $table-height: 655px;
     position: relative;
     z-index: 13;
     padding-bottom: 8px;
-    // [nz-button] {
-    // }
 
     .table-search {
         text-align: right;
@@ -80,6 +84,6 @@ $table-height: 655px;
 .map-cell {
     #map {
         width: 100%;
-        min-height: $table-height;
+        min-height: $map-height;
     }
 }

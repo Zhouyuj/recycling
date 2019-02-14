@@ -11,6 +11,7 @@ import { PlanReq } from '../models/plan-req.model';
 import { PlanRes } from '../models/plan-res.model';
 import { Result } from '../../../shared/models/response/result.model';
 import { PlanListModel } from '../models/plan-list.model';
+import { TableBasicComponent } from '../../table-basic.component';
 
 @Component({
     selector   : 'app-add-plan',
@@ -49,6 +50,7 @@ export class AddPlanComponent implements OnInit {
     resCache: PlanRes[];
     listCache: PlanListModel[];
     selectedItem: PlanRes;
+    tableScrollY = '500px';
 
     constructor(private drawerRef: NzDrawerRef<boolean>,
                 private planService: PlanService,
@@ -56,7 +58,30 @@ export class AddPlanComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.calcTableScrollY();
         this.getListByPage();
+    }
+
+    calcTableScrollY() {
+        const layoutPadding = 24;
+        const addButtonHeight = 32;
+        const dividerHeight = 24;
+        const dividerMargin = 16;
+        const searchHeight = 32;
+        const tableHeadHeight = 67;
+        const tablePaginationHeight = 32;
+        const tablePaginationMargin = 16;
+        this.tableScrollY = `${
+            window.innerHeight -
+            (layoutPadding * 3) -
+            addButtonHeight -
+            dividerHeight -
+            (dividerMargin * 2) -
+            searchHeight -
+            tableHeadHeight -
+            tablePaginationHeight -
+            (tablePaginationMargin * 2)
+        }px`;
     }
 
     getListByPage() {

@@ -1,4 +1,11 @@
 @import "../../../../assets/styles/customer-global";
+@import "../../../shared/components/breadcrumbs/breadcrumbs.component-param";
+@import "../../../shared/components/header/header.component-param";
+@import "../../manage-app.component-param";
+
+/* table height */
+$breadcrumbs-total-height: (#{$breadcrumbs-height} + #{$breadcrumbs-padding-bottom} + #{$manage-app-content-padding});
+$table-height: calc(100vh - #{$header-height} - (#{$breadcrumbs-total-height}) - #{$manage-app-content-padding});
 
 .wrap {
     width: 100%;
@@ -9,8 +16,6 @@
     position: relative;
     z-index: 13;
     padding-bottom: 8px;
-    [nz-button] {
-    }
 
     .table-search {
         text-align: right;
@@ -23,7 +28,7 @@
 }
 
 .table-content {
-    min-height: 660px;
+    min-height: $table-height;
     th, td {
         text-align: center;
     }

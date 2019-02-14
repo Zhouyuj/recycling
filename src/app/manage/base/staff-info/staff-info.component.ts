@@ -17,13 +17,14 @@ import { ModelConverter } from '../staff-info/model-converter';
 import { ObjectUtils } from '../../../shared/utils/object-utils';
 import { RoleEnum } from './models/role.enum';
 import { PostEnum } from './models/post.enum';
+import { TableBasicComponent } from '../../table-basic.component';
 
 @Component({
     selector   : 'app-staff-info',
     templateUrl: './staff-info.component.html',
     styleUrls  : [ './staff-info.component.scss' ]
 })
-export class StaffInfoComponent implements OnInit {
+export class StaffInfoComponent extends TableBasicComponent implements OnInit {
     /* 面包屑导航 */
     breadcrumbs = [
         {
@@ -91,9 +92,11 @@ export class StaffInfoComponent implements OnInit {
                 private notificationService: NotificationService,
                 private modalService: ModalService,
                 private drawerService: NzDrawerService) {
+        super();
     }
 
     ngOnInit() {
+        this.calcTableScrollY();
         this.getListByPage({ isResetReq: true });
     }
 

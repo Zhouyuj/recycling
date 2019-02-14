@@ -1,3 +1,6 @@
+@import "./manage-app.component-param";
+@import "../shared/components/breadcrumbs/breadcrumbs.component-param";
+
 .manage-app-header {
     width: 100%;
     position: relative;
@@ -5,7 +8,7 @@
 
 .manage-app-content {
     width: 100%;
-    padding: .5rem;
+    padding: $manage-app-content-padding;
     position: absolute;
     top: 56px;
     left: 0;
@@ -22,7 +25,7 @@
 .table-operations {
     position: relative;
     z-index: 13;
-    padding-bottom: 8px;
+    padding-bottom: $breadcrumbs-padding-bottom;
     // [nz-button] {
     // }
 

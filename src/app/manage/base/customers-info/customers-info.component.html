@@ -45,7 +45,7 @@
     <div class="table-content">
         <nz-spin [nzSize]="'large'" [nzSpinning]="isSpinning">
             <nz-table #nzTable
-                      [nzScroll]="{x: '1900px', y: '500px'}"
+                      [nzScroll]="{x: '1900px', y: tableScrollY}"
                       [nzData]="listCache"
                       [nzFrontPagination]="false"
                       [nzTotal]="pageRes.total"

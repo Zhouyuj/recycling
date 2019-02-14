@@ -52,7 +52,7 @@
         <nz-spin [nzSize]="'large'" [nzSpinning]="isSpinning">
             <nz-table #planTable
                       [nzData]="listCache"
-                      [nzScroll]="{x: '1000px', y: '500px'}"
+                      [nzScroll]="{y: tableScrollY}"
                       [nzFrontPagination]="false"
                       [nzTotal]="pageRes.total"
                       [nzPageIndex]="pageRes.page"

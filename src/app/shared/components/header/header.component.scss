@@ -1,3 +1,5 @@
+@import "./header.component-param";
+
 #header-comp {
     width: 100%;
     //border-bottom: 1px solid #83bf46;
@@ -9,7 +11,7 @@
 
 .logo {
     width: 100%;
-    height: 56px;
+    height: $header-height;
     padding: 2px 5px;
 }
 
@@ -35,7 +37,7 @@
 }
 
 #personal-menu {
-    height: 56px;
+    height: $header-height;
     border: 0;
     border-bottom: 1px solid #e8e8e8;
     box-shadow: none;
@@ -48,7 +50,7 @@
 
     .personal-menu-item {
         position: relative;
-        line-height: 56px;
+        line-height: $header-height;
         text-align: center;
         .bell {
             i {

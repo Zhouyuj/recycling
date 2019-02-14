@@ -16,8 +16,8 @@ export class MarkerIcon {
     constructor(obj: {
         size: number[],
         image: string,
-        imageOffset?: number[],
-        imageSize?: number[]
+        imageSize: number[],
+        imageOffset?: number[]
     }) {
         /* tslint:disable-next-line */
         for (let k in obj) {

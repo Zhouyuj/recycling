@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef } from '@angular/core';
 import { Observable } from 'rxjs/index';
 import { map } from 'rxjs/internal/operators/map';
 import { merge } from 'rxjs';
@@ -37,8 +37,9 @@ export class MonitorComponent implements OnInit {
     isShowGasStation = false;
     isShowTaskTable = false;
 
-    map: any;   // 高德地图对象
-    markers: any[] = []; // 高德覆盖物对象
+    map: Map;   // 高德地图对象
+    markers: Marker[] = []; // 高德覆盖物对象
+    mapLayoutHeight: number;
 
     routeListCache: RouteListModel[];
     taskListCache: TaskModel[];
@@ -48,8 +49,7 @@ export class MonitorComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.initMap()
-            .getPlanList();
+        this.initMap().getPlanList();
     }
 
     initMap(): MonitorComponent {
@@ -174,7 +174,8 @@ export class MonitorComponent implements OnInit {
             map     : this.map,
             position: lngLat,
             icon    : new MarkerIcon({
-                size: [56, 85],
+                size: [28, 42],
+                imageSize: [28, 42],
                 image: 'assets/images/map-icon/marker_bg.svg',
             }),
         });

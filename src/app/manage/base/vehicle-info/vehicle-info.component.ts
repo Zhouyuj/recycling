@@ -17,13 +17,14 @@ import { VehicleRes } from './vehicle-res.model';
 import { VehicleListModel } from './vehicle-list.model';
 import { VehicleCategoryEnum } from './models/vehicle-category.enum';
 import { ZHANGZHOU_OPTIONS } from '../../../shared/components/cascader/cascader-zhangzhou.config';
+import { TableBasicComponent } from '../../table-basic.component';
 
 @Component({
     selector   : 'app-vehicle-info',
     templateUrl: './vehicle-info.component.html',
     styleUrls  : [ './vehicle-info.component.scss' ]
 })
-export class VehicleInfoComponent implements OnInit {
+export class VehicleInfoComponent extends TableBasicComponent implements OnInit {
     /* 面包屑导航 */
     breadcrumbs = [
         {
@@ -67,9 +68,11 @@ export class VehicleInfoComponent implements OnInit {
                 private notificationService: NotificationService,
                 private modalService: ModalService,
                 private drawerService: NzDrawerService) {
+        super();
     }
 
     ngOnInit() {
+        this.calcTableScrollY();
         this.initFilterOptions();
         this.getListByPage({ isResetReq: true });
     }
