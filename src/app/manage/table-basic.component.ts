@@ -6,7 +6,7 @@ export class TableBasicComponent {
         return this._tableScrollY;
     }
 
-    public calcTableScrollY() {
+    public calcTableScrollY(offsetHeight = 0) {
         const headerHeight = 54;
         const breadcrumbsHeight = 52;
         const tableHeadHeight = 78;
@@ -18,7 +18,8 @@ export class TableBasicComponent {
             breadcrumbsHeight -
             tableHeadHeight -
             tablePaginationHeight -
-            (tablePaginationMargin * 2)
+            (tablePaginationMargin * 2) -
+            offsetHeight
         }px`;
     }
 }

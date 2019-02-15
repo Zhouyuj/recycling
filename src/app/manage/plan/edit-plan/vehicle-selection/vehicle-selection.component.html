@@ -3,7 +3,7 @@
 
         <nz-table #vehicleTable
                   [nzData]="listCache"
-                  [nzScroll]="{ y: '500px' }"
+                  [nzScroll]="{ y: tableScrollY }"
                   [nzFrontPagination]="false"
                   [nzTotal]="pageRes.total"
                   [nzPageIndex]="pageRes.page"

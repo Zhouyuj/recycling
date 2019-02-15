@@ -10,13 +10,14 @@ import { VehicleRes } from '../../../base/vehicle-info/vehicle-res.model';
 import { ModelConverter } from './model-converter';
 import { NotificationService } from '../../../../shared/services/notification/notification.service';
 import {EditPlanService} from '../edit-plan.service';
+import { TableBasicComponent } from 'src/app/manage/table-basic.component';
 
 @Component({
     selector   : 'app-vehicle-selection',
     templateUrl: './vehicle-selection.component.html',
     styleUrls  : [ './vehicle-selection.component.scss' ]
 })
-export class VehicleSelectionComponent implements OnInit {
+export class VehicleSelectionComponent extends TableBasicComponent implements OnInit {
 
     @Input() success: boolean;
     @Input() planId: number;
@@ -40,10 +41,11 @@ export class VehicleSelectionComponent implements OnInit {
                 private vehicleInfoService: VehicleInfoService,
                 private editPlanService: EditPlanService,
                 private notificationService: NotificationService) {
-
+        super();
     }
 
     ngOnInit() {
+        this.calcTableScrollY(30);
         this.initFilterOptions();
         console.log(this.success);
         this.initVehicles();

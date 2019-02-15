@@ -20,13 +20,14 @@ import { PlanOperationEnum } from '../models/plan.enum';
 import { TaskModel, SubTaskModel } from '../models/task.model';
 import { TaskEnum } from '../models/task.enum';
 import { VehicleSelectionComponent } from './vehicle-selection/vehicle-selection.component';
+import { TableBasicComponent } from '../../table-basic.component';
 
 @Component({
     selector   : 'app-edit-plan',
     templateUrl: './edit-plan.component.html',
     styleUrls  : [ './edit-plan.component.scss' ]
 })
-export class EditPlanComponent implements OnInit {
+export class EditPlanComponent extends TableBasicComponent implements OnInit {
     /* 面包屑导航 */
     breadcrumbs: any;
     isRoutesSpinning = false;       // 表格加载图
@@ -76,9 +77,11 @@ export class EditPlanComponent implements OnInit {
                 private notificationService: NotificationService,
                 private modalService: ModalService,
                 private drawerService: NzDrawerService) {
+        super();
     }
 
     ngOnInit() {
+        this.calcTableScrollY(30);
         this.initRouteList()
             .initDemandList();
     }

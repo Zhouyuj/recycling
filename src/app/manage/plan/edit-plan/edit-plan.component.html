@@ -65,7 +65,7 @@
                     <nz-table #routesTable style="height: 100%;"
                               [nzSize]="'middle'"
                               [nzData]="routeListCache"
-                              [nzScroll]="{ x: '450px', y: '500px' }"
+                              [nzScroll]="{ x: '450px', y: tableScrollY }"
                               [nzFrontPagination]="false"
                               [nzShowPagination]="false">
                         <thead>
@@ -194,7 +194,7 @@
                     <nz-table #distributeTable
                               [nzSize]="'middle'"
                               [nzData]="distributedListCache"
-                              [nzScroll]="{ x: '600px', y: '500px' }"
+                              [nzScroll]="{ x: '600px', y: tableScrollY }"
                               [nzFrontPagination]="false"
                               [nzShowPagination]="false">
                         <thead>
@@ -313,7 +313,7 @@
                     <nz-table #demandTable
                               [nzSize]="'middle'"
                               [nzData]="demandListCache"
-                              [nzScroll]="{ x: '900px', y: '500px' }"
+                              [nzScroll]="{ x: '900px', y: tableScrollY }"
                               [nzFrontPagination]="false"
                               [nzTotal]="pageRes.total"
                               [nzPageIndex]="pageRes.page"

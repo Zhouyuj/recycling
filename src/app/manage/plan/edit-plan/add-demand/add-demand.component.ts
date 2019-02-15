@@ -14,13 +14,14 @@ import { VerifyUtil } from '../../../../shared/utils/verify-utils';
 import { NotificationService } from '../../../../shared/services/notification/notification.service';
 import { CustomersInfoService } from '../../../base/customers-info/customers-info.service';
 import { CustomerRes } from '../../../base/customers-info/customer-res.model';
+import { TableBasicComponent } from 'src/app/manage/table-basic.component';
 
 @Component({
     selector   : 'app-add-demand',
     templateUrl: './add-demand.component.html',
     styleUrls  : [ './add-demand.component.scss' ]
 })
-export class AddDemandComponent implements OnInit {
+export class AddDemandComponent extends TableBasicComponent implements OnInit {
     isDemandSpinning = false;
     isShowSub = false;
     allSelected = false;
@@ -41,9 +42,11 @@ export class AddDemandComponent implements OnInit {
                 private editPlanService: EditPlanService,
                 private customersInfoService: CustomersInfoService,
                 private notificationService: NotificationService) {
+        super();
     }
 
     ngOnInit() {
+        this.calcTableScrollY(105);
         this.getCustomerList({ isResetReq: true });
     }
 

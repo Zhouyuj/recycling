@@ -63,7 +63,7 @@
             <nz-table #demandTable
                       [nzSize]="'middle'"
                       [nzData]="demandListCache"
-                      [nzScroll]="{ x: '900px', y: '500px' }"
+                      [nzScroll]="{ x: '900px', y: tableScrollY }"
                       [nzFrontPagination]="false"
                       [nzTotal]="pageRes.total"
                       [nzPageIndex]="pageRes.page"
@@ -159,7 +159,7 @@
     <nz-row *ngIf="isShowSub">
         <nz-table #demandTable
                   [nzData]="selectedCluster.taskList"
-                  [nzScroll]="{ y: '500px' }"
+                  [nzScroll]="{ y: tableScrollY }"
                   [nzFrontPagination]="false"
                   [nzShowPagination]="false">
             <thead>
