@@ -87,3 +87,14 @@ $map-height: $table-height;
         min-height: $map-height;
     }
 }
+
+.child-tag-text {
+    width: 127px;
+    display: block;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    position: absolute;
+    margin-top: -22px;
+    margin-left: 35px;
+}

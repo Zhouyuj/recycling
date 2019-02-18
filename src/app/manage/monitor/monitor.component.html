@@ -73,8 +73,8 @@
                         <thead>
                         <tr>
                             <th nzWidth="5%"></th>
-                            <th nzWidth="50%">收运单位</th>
-                            <th nzWidth="45%" class="amount-of-garbage">手持报量(吨)</th>
+                            <th nzWidth="60%">收运单位</th>
+                            <th nzWidth="35%" class="amount-of-garbage">手持报量(吨)</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -96,10 +96,16 @@
                                 <tr (click)="onClickTask($event, child)">
                                     <td></td>
                                     <td>
-                                        {{child.state}}{{child.name}}
+                                        <nz-badge nzDot [nzStyle]="{
+                                            top: '-8px',
+                                            marginRight: '5px',
+                                            marginLeft: '5px',
+                                            backgroundColor: convertTaskStateToColor(child.state)
+                                        }">&nbsp;</nz-badge>
+                                        <span class="child-tag-text" [title]="child.name">{{child.name}}</span>
                                     </td>
                                     <td class="amount-of-garbage">
-                                        {{child.amountOfGarbage}}
+                                        {{child.amountOfGarbage * 0.1}}
                                     </td>
                                 </tr>
                             </ng-template>

@@ -166,7 +166,7 @@ export class MonitorComponent extends TableBasicComponent implements OnInit {
      *
      * 收运任务状态
      * ToDo：待收集-绿色
-     * Going：正在前往- TODO
+     * Going：正在前往-蓝色
      * Collecting：收集中-蓝色
      * Delay：延缓（挂起）-黄色
      * Skipped：跳过-红色
@@ -248,8 +248,6 @@ export class MonitorComponent extends TableBasicComponent implements OnInit {
             color = '#79cf6b'; // green
             break;
         case TaskState.Going:
-            color = '#CC6699'; // pink
-            break;
         case TaskState.Collecting:
             color = '#42b4fc'; // blue
             break;

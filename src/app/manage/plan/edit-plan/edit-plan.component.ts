@@ -481,19 +481,15 @@ export class EditPlanComponent extends TableBasicComponent implements OnInit {
     onDelDemand() {
         this.modalService.createDeleteConfirm({
             onOk    : () => {
-                const ids = this.getIdsBySelection().join(',');
-                this.editPlanService.delDemand(ids).subscribe(
-                    (res: Result<any>) => {
-                        this.getDemandList();
-                        this.notificationService.create({
-                            type : 'success',
-                            title: '删除成功',
-                        });
-                    },
-                    err => {
-                        this.getDemandList();
-                    }
-                );
+                Promise.all(this.getIdsBySelection().map((id: number) =>
+                    this.editPlanService.delDemand(String(id)).toPromise()
+                )).then(() => {
+                    this.getDemandList();
+                    this.notificationService.create({
+                        type : 'success',
+                        title: '删除成功',
+                    });
+                }).catch(() => this.getDemandList());
             },
             onCancel: () => console.log('cancel delete'),
         });

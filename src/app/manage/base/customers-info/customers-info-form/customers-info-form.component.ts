@@ -129,11 +129,10 @@ export class CustomersInfoFormComponent implements OnInit {
         }
         this.isSpinning = true;
         this.transformFormModelToRequest();
-        return;
         switch (this.type) {
             case 'add':
                 this.customersInfoService.addCustomer(this.customerReq).subscribe(
-                    res => {
+                    () => {
                         this.notificationService.create({
                             type   : 'success',
                             title  : '恭喜,添加成功',
@@ -142,7 +141,7 @@ export class CustomersInfoFormComponent implements OnInit {
                         this.success = true;
                         this.drawerRef.close(this.success);
                     },
-                    err => {
+                    () => {
                         this.isSpinning = false;
                     },
                     () => this.isSpinning = false
@@ -150,7 +149,7 @@ export class CustomersInfoFormComponent implements OnInit {
                 break;
             case 'edit':
                 this.customersInfoService.updateCustomer(this.customerReq, this.cache.id).subscribe(
-                    res => {
+                    () => {
                         this.notificationService.create({
                             type   : 'success',
                             title  : '恭喜,更新成功',
@@ -159,7 +158,7 @@ export class CustomersInfoFormComponent implements OnInit {
                         this.success = true;
                         this.drawerRef.close(this.success);
                     },
-                    err => {
+                    () => {
                         this.isSpinning = false;
                     },
                     () => this.isSpinning = false
