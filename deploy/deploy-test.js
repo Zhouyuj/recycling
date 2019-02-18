@@ -166,7 +166,7 @@ class Deployer {
             host: this.server.host,
             username: this.server.user,
             password: this.server.password,
-            privateKey: SSH_KEY_PATH,
+            // privateKey: SSH_KEY_PATH,
         }).then(() => {
             new Promise((resolve, reject) => {
                 console.log('deploy...');
