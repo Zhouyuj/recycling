@@ -2,7 +2,7 @@ export class TableBasicComponent {
 
     private _tableScrollY = '500px';
 
-    protected get tableScrollY(): string {
+    public get tableScrollY(): string {
         return this._tableScrollY;
     }
 
