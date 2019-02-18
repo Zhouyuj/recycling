@@ -105,6 +105,21 @@ export class Marker {
     }
 }
 
+export class MarkerLabel {
+    public content: string;
+    public offset: number[];
+
+    constructor(obj: {
+        content: string,
+        offset?: number[]
+    }) {
+        this.content = obj.content;
+        if (obj.offset) {
+            this.offset = new AMap.Pixel(obj.offset[0], obj.offset[1]);
+        }
+    }
+}
+
 /**
  * marker 动画效果
  */

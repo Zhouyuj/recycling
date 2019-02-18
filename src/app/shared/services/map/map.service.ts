@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 
-import { isUndefined } from 'util';
 import { Observable } from 'rxjs/index';
-import { interval, of } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { interval } from 'rxjs';
+import { map } from 'rxjs/operators';
 
-import { Marker, MarkerIcon, Animation } from './marker.model';
+import { Marker } from './marker.model';
 import { Map } from './map.model';
 import { Polyline } from './polyline.model';
+import { Driving } from './driving.model';
 
 /**
  * 地图 service
@@ -21,8 +21,14 @@ import { Polyline } from './polyline.model';
 export class MapService {
 
     private _map: any;
+    private _driving: any;
 
     constructor() {
+    }
+
+    public createDriving(opt: Driving): any {
+        this.driving = new AMap.Driving(opt);
+        return this.driving;
     }
 
     /*****
@@ -31,7 +37,7 @@ export class MapService {
     // 各业务组件可调用的生成地图方法.注意:该方法使用的前提是this.isLoaded=true;(即业务组件中先调用this.initMap,一般可忽略)
     public createMap(opt: Map): any {
         this.map = new AMap.Map(opt.domId, {
-            center: new AMap.LngLat(opt.center[ 0 ], opt.center[ 1 ]),
+            center: this.lngLat(opt.center),
             zoom  : opt.zoom
         });
         return this.map;
@@ -53,7 +59,7 @@ export class MapService {
 
     // 获取高德地图脚本
     public load(): void {
-        const URL = 'https://webapi.amap.com/maps?v=1.4.4&key=234f52ac0db9acffc06680a652bc86dc';
+        const URL = 'https://webapi.amap.com/maps?v=1.4.4&key=234f52ac0db9acffc06680a652bc86dc&plugin=AMap.Driving';
         const scriptElm = document.createElement('script');
         scriptElm.setAttribute('type', 'text/javascript');
         scriptElm.setAttribute('src', URL);
@@ -75,9 +81,17 @@ export class MapService {
         this._map = o;
     }
 
+    get driving() {
+        return this._driving;
+    }
+
+    set driving(o: any) {
+        this._driving = o;
+    }
+
     // 设置地图显示的中心点
     public setCenter(lngLat: number[]): void {
-        this.map.setCenter(new AMap.LngLat(lngLat[ 0 ], lngLat[ 1 ]));
+        this.map.setCenter(this.lngLat(lngLat));
     }
 
     /*****
@@ -142,4 +156,13 @@ export class MapService {
 
     /** 其他函数 TODO **/
 
+    /**
+     * API LngLat
+     *
+     * @param {number} lngLat[0] => lng
+     * @param {number} lngLat[1] => lat
+     */
+    public lngLat(lngLat: number[]) {
+        return new AMap.LngLat(lngLat[0], lngLat[1]);
+    }
 }

@@ -44,3 +44,62 @@ body {
     overflow-y: scroll;
 }
 /* ---- body end ---- */
+
+/* ---- AMap marker content start ---- */
+#map {
+    .map-marker-content-station {
+        position: relative;
+        width: 48px;
+        height: 50px;
+        
+        img {
+            height: 100%;
+            width: 100%;
+        }
+
+        .map-marker-text {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            top: 7px;
+            left: 0;
+            right: 0;
+            margin: 0 auto;
+            text-align: center;
+            color: #fff;
+            font-size: 12px;
+            border-radius: 50%;
+        }
+    }
+
+    .map-marker-content-vehicle {
+        position: relative;
+        width: 37px;
+        height: 56px;
+        
+        img {
+            height: 100%;
+            width: 100%;
+        }
+
+        .map-marker-label-vehicle {
+            width: 90px;
+            height: 25px;
+            position: relative;
+            top: -30px;
+            left: 40px;
+            border: 1px solid #00a9ff;
+            background-color: rgba(255, 255, 255, 0.85);
+            border-radius: 5px;
+            padding-top: 1px;
+            color: #0075ff;
+            font-weight: bold;
+            text-align: center;
+            font-size: 14px;
+            white-space: nowrap;
+            font-family: 宋体, sans-serif;
+            cursor: default;
+        }
+    }
+}
+/* ---- AMap marker content end ---- */

@@ -3,14 +3,17 @@
  */
 
 import { TaskEnum } from './task.enum';
+import { TaskModel } from './task.model';
 
 export interface RouteModel {
     id: number;
     lock: boolean;
     name: string;
     priority: number;
+    driver: string;
     state: RouteState;
     vehicle: VehicleOfRoute;
+    taskList?: TaskModel[];
 }
 
 export interface RouteListModel extends RouteModel {

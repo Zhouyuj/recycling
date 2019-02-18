@@ -41,6 +41,7 @@
                 <div class="table-route" nz-col nzSpan="24">
                     <nz-table #routeTable
                               [nzData]="routeListCache"
+                              [nzScroll]="{y: tablScrollY}"
                               [nzLoading]="false"
                               [nzFrontPagination]="true"
                               [nzShowPagination]="false">
@@ -58,8 +59,8 @@
                             (click)="onSelectRoute($event, item)">
                             <td>{{i + 1}}</td>
                             <td>{{item.name}}</td>
-                            <td>车辆车辆</td>
-                            <td>司机司机</td>
+                            <td>{{item.vehicle.plateNumber}}</td>
+                            <td>{{item.driver}}</td>
                         </tr>
                         </tbody>
                     </nz-table>
@@ -72,8 +73,8 @@
                         <thead>
                         <tr>
                             <th nzWidth="5%"></th>
-                            <th nzWidth="55%">收集点</th>
-                            <th nzWidth="40%" class="amount-of-garbage">手持报量(吨)</th>
+                            <th nzWidth="50%">收运单位</th>
+                            <th nzWidth="45%" class="amount-of-garbage">手持报量(吨)</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -83,7 +84,7 @@
                                     [(nzExpand)]="item.expand"
                                     (nzExpandChange)="onCollapseTask(item, $event)" (click)="onStopPro($event)"></td>
                                 <td>
-                                    <nz-tag [nzColor]="'red'">{{i + 1}}</nz-tag>
+                                    <nz-tag [nzColor]="convertTaskStateToColor(item.state)">{{i + 1}}</nz-tag>
                                     {{item.name}}
                                 </td>
                                 <td class="amount-of-garbage">

@@ -6,7 +6,7 @@
 
 /* table height */
 $breadcrumbs-total-height: (#{$breadcrumbs-height} + #{$breadcrumbs-padding-bottom} + #{$manage-app-content-padding});
-$table-height: calc(100vh - #{$header-height} - (#{$breadcrumbs-total-height}) - #{$manage-app-content-padding});
+$table-height: calc(100vh - 0.1rem - #{$header-height} - (#{$breadcrumbs-total-height}) - #{$manage-app-content-padding});
 $map-height: $table-height;
 
 .wrap {

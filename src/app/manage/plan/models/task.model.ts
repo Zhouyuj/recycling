@@ -7,7 +7,7 @@ export interface TaskModel {
     name: string;
     amountOfGarbage: number;
     priority: number;
-    state: string;
+    state: TaskState;
     lat: number;
     lng: number;
     collectionPeriod: {
@@ -17,6 +17,7 @@ export interface TaskModel {
     taskList: SubTaskModel[];
     checked?: boolean;
     expand?: boolean;
+    routeId?: number;
 }
 
 export interface SubTaskModel {
@@ -29,4 +30,13 @@ export interface SubTaskModel {
         endTime: number,
     };
     checked?: boolean;
+}
+
+export enum TaskState {
+    ToDo = 'ToDo',
+    Going = 'Going',
+    Collecting = 'Collecting',
+    Delay = 'Delay',
+    Skipped = 'Skipped',
+    Completed = 'Completed'
 }

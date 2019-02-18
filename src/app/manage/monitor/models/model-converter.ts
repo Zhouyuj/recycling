@@ -14,9 +14,10 @@ export class ModelConverter {
         return l;
     }
 
-    public static taskResToListModel(t: TaskModel): TaskModel {
+    public static taskResToListModel(t: TaskModel, routeId: number): TaskModel {
         return t = {
             ...t,
+            routeId,
             checked: false,
             expand: false,
         };
