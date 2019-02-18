@@ -10,7 +10,7 @@ export class VehicleListModel {
     plateNumber: string = null;
     // district: string = null;
     driver: string = null;
-    planDepartureTime: string = null;
+    planDepartureTime: string[] = null;
     vehicleType: string = null;
     idNumber: string = null; // 车架号
     engineModel: string = null;

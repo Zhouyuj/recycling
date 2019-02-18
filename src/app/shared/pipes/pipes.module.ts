@@ -7,6 +7,7 @@ import { DistrictCodeToNamePipe } from './districts/district-code-to-name.pipe';
 import { SecondToHourMinutePipe } from './time/second-to-hour-minute.pipe';
 import { PlanPipeModule } from './plan/plan-pipe.module';
 import { MonitorPipeModule } from './monitor/monitor-pipe.module';
+import { ArrayToTimePipe } from './time/array-to-time.pipe';
 
 @NgModule({
     imports     : [
@@ -24,12 +25,14 @@ import { MonitorPipeModule } from './monitor/monitor-pipe.module';
         CollectionPeriodPriorityPipe,
         DistrictCodeToNamePipe,
         SecondToHourMinutePipe,
+        ArrayToTimePipe,
     ],
     declarations: [
         CollectionDateTypePipe,
         CollectionPeriodPriorityPipe,
         DistrictCodeToNamePipe,
         SecondToHourMinutePipe,
+        ArrayToTimePipe,
     ],
 })
 export class PipesModule {

@@ -20,8 +20,9 @@ export class ModelConverter {
             plateNumber      : v.plateNumber,
             // district         : v.area,
             driver           : v.driver,
-            planDepartureTime: DateUtil
-                .dateFormat(new Date(this.convertSecondToDate(v.businessLine.planDepartureTime)), 'hh:mm'),
+            // planDepartureTime: DateUtil
+            //     .dateFormat(new Date(this.convertSecondToDate(v.businessLine.planDepartureTime)), 'hh:mm'),
+            planDepartureTime: this.secToHourMin(v.businessLine.planDepartureTime) || null,
             vehicleType      : v.businessLine.type.name,
             idNumber         : v.idNumber,
             engineModel      : v.engineModel,
@@ -103,9 +104,8 @@ export class ModelConverter {
         const hour = Math.floor(sec / 3600);
         const min = Math.floor((sec - hour * 3600) / 60);
         return [
-            hour > 10 ? `${hour}` : `0${hour}`,
-            min > 10 ? `${min}` : `0${min}`,
-
+            hour >= 10 ? `${hour}` : `0${hour}`,
+            min >= 10 ? `${min}` : `0${min}`,
         ];
     }
 }

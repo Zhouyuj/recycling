@@ -29,7 +29,7 @@ export class MonitorComponent extends TableBasicComponent implements OnInit {
     breadcrumbs = [
         {
             link : '/',
-            title: '实时导航',
+            title: '实时监控',
         },
     ];
     isShowSideBar = false;

@@ -85,10 +85,10 @@
                                     (nzExpandChange)="onCollapseTask(item, $event)" (click)="onStopPro($event)"></td>
                                 <td>
                                     <nz-tag [nzColor]="convertTaskStateToColor(item.state)">{{i + 1}}</nz-tag>
-                                    {{item.name}}
+                                    <span class="tag-text" [title]="item.name">{{item.name}}</span>
                                 </td>
                                 <td class="amount-of-garbage">
-                                    {{item.amountOfGarbage}}
+                                    {{(item.amountOfGarbage * 0.1).toFixed(2)}}
                                 </td>
                             </tr>
                             <ng-template *ngIf="item.expand"
@@ -102,10 +102,10 @@
                                             marginLeft: '5px',
                                             backgroundColor: convertTaskStateToColor(child.state)
                                         }">&nbsp;</nz-badge>
-                                        <span class="child-tag-text" [title]="child.name">{{child.name}}</span>
+                                        <span class="tag-text" [title]="child.name">{{child.name}}</span>
                                     </td>
                                     <td class="amount-of-garbage">
-                                        {{child.amountOfGarbage * 0.1}}
+                                        {{(item.amountOfGarbage * 0.1).toFixed(2)}}
                                     </td>
                                 </tr>
                             </ng-template>
