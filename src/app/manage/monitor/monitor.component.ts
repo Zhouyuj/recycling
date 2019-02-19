@@ -18,6 +18,7 @@ import { Marker } from '../../shared/services/map/marker.model';
 import { VerifyUtil } from '../../shared/utils/verify-utils';
 import { TableBasicComponent } from '../table-basic.component';
 import { Driving } from 'src/app/shared/services/map/driving.model';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector   : 'app-monitor',
@@ -48,8 +49,10 @@ export class MonitorComponent extends TableBasicComponent implements OnInit {
 
     private drivingService: any;
 
-    constructor(private mapService: MapService,
-                private monitorService: MonitorService) {
+    constructor(
+        private mapService: MapService,
+        private monitorService: MonitorService,
+        private route: ActivatedRoute) {
         super();
     }
 
@@ -59,6 +62,7 @@ export class MonitorComponent extends TableBasicComponent implements OnInit {
         this.initMap().subscribe(() => {
             this.createDrivingService();
             this.executePlanWithRoute();
+            this.jumpToCenterByParam();
         });
 
         this.routeListSubject$.subscribe((routeList: RouteListModel[]) => {
@@ -90,6 +94,16 @@ export class MonitorComponent extends TableBasicComponent implements OnInit {
             }
         });
         return subject;
+    }
+
+    jumpToCenterByParam() {
+        const lngLatStr: string = this.route.snapshot.paramMap.get('lngLat');
+        if (lngLatStr) {
+            const lngLatForParam: number[] = lngLatStr
+                .split(',')
+                .map((lngLat: string) => +lngLat);
+            this.setCenter(lngLatForParam);
+        }
     }
 
     onToggleSideBar(e: boolean) {

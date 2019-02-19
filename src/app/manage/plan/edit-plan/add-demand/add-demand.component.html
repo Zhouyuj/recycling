@@ -25,7 +25,7 @@
                       nzTitle="返回将撤销当前操作"
                       (nzOnConfirm)="onHideSub()">
                     <i nz-icon type="left" theme="outline"></i>
-                    {{selectedCluster.name || ''}}
+                    <span class="cluster-name">{{selectedCluster.name || ''}}</span>
                 </span>
             </div>
         </nz-col>

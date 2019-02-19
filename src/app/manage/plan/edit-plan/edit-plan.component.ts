@@ -220,6 +220,13 @@ export class EditPlanComponent extends TableBasicComponent implements OnInit {
 
     }
 
+    onSelectVehicleForRow(event: Event, item: RouteListModel) {
+        if (!this.selectedRoutesCache) {
+            this.onSelectRoute(event, item);
+        }
+        this.onSelectVehicle();
+    }
+
     onSelectVehicle() {
         const drawerRef = this.drawerService
             .create<VehicleSelectionComponent, { success: boolean, planId: number, routeId: number }, boolean>(

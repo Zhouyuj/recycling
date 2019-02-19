@@ -118,7 +118,7 @@
                                     </i>
                                 </div>
                             </td>
-                            <td>{{item.name}}</td>
+                            <td (dblclick)="onSelectVehicleForRow($event, item)">{{item.name}}</td>
                             <td>{{item.vehicle.plateNumber}}</td>
                             <td>
                                 <nz-select *ngIf="item.vehicle.plateNumber && sameVehicleRoutes[item.vehicle.plateNumber].length > 1"

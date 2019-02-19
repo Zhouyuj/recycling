@@ -11,12 +11,22 @@
             color: #1890ff;
             i, span {
                 cursor: pointer;
+                margin-right: 5px;
             }
             div.nav-content {
                 height: 2rem;
                 line-height: 2rem;
                 display: flex;
                 align-content: center;
+                margin-top: -3px;
+
+                span.cluster-name {
+                    width: 145px;
+                    text-overflow: ellipsis;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    position: absolute;
+                }
             }
         }
     }

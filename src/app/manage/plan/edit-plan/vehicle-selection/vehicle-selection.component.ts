@@ -47,7 +47,6 @@ export class VehicleSelectionComponent extends TableBasicComponent implements On
     ngOnInit() {
         this.calcTableScrollY(30);
         this.initFilterOptions();
-        console.log(this.success);
         this.initVehicles();
     }
 

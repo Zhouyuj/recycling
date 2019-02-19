@@ -135,7 +135,8 @@
                             <i nz-icon
                                type="environment" theme="outline"
                                class="location"
-                               *ngIf="data.lngLat">
+                               (click)="onJumpToMointor(data.lngLat)"
+                               *ngIf="hasLngLat(data.lngLat)">
                             </i>
                         </td>
                         <td>

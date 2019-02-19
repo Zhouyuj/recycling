@@ -8,36 +8,36 @@
 
         <div nz-col nzSpan="20" nzXl="18" nzLg="20" id="nav-menu"><!-- nav-menu -->
             <ul nz-menu [nzMode]="'horizontal'">
-                <li nz-menu-item>
+                <li nz-menu-item routerLinkActive="ant-menu-item-selected">
                     <div class="icon-box">
                         <i nz-icon type="desktop" theme="outline"></i>
                     </div>
                     <a class="menu-title" routerLink="/manage/monitor">实时监控</a>
                 </li>
-                <li nz-menu-item>
+                <li nz-menu-item routerLinkActive="ant-menu-item-selected">
                     <div class="icon-box">
                         <i nz-icon type="file-ppt" theme="outline"></i>
                     </div>
                     <a class="menu-title" routerLink="/manage/plan">方案管理</a>
                 </li>
-                <li nz-submenu>
+                <li nz-submenu routerLinkActive="ant-menu-item-selected ant-submenu-selected ant-menu-submenu-selected">
                     <div class="icon-box" title>
                         <i nz-icon type="idcard" theme="outline"></i>
                     </div>
                     <p class="menu-title" title>基础信息</p>
                     <ul>
                         <li nz-menu-group>
-                            <a routerLink="/manage/baseInfo/staffs" nz-menu-item title>人员信息</a>
+                            <a routerLink="/manage/baseInfo/staffs" routerLinkActive="ant-menu-item-selected" nz-menu-item title>人员信息</a>
                         </li>
                         <li nz-menu-group>
-                            <a routerLink="/manage/baseInfo/vehicles" nz-menu-item title>车辆信息</a>
+                            <a routerLink="/manage/baseInfo/vehicles" routerLinkActive="ant-menu-item-selected" nz-menu-item title>车辆信息</a>
                         </li>
                         <li nz-menu-group>
-                            <a routerLink="/manage/baseInfo/customers" nz-menu-item title>收运单位管理</a>
+                            <a routerLink="/manage/baseInfo/customers" routerLinkActive="ant-menu-item-selected" nz-menu-item title>收运单位管理</a>
                         </li>
                     </ul>
                 </li>
-                <li nz-submenu>
+                <!-- <li nz-submenu>
                     <div class="icon-box" title>
                         <i nz-icon type="car" theme="outline"></i>
                     </div>
@@ -47,8 +47,8 @@
                             <span nz-menu-item title>新功能实现中</span>
                         </li>
                     </ul>
-                </li>
-                <li nz-submenu>
+                </li> -->
+                <li nz-submenu routerLinkActive="ant-menu-item-selected">
                     <div class="icon-box" title>
                         <i nz-icon type="profile" theme="outline"></i>
                     </div>
@@ -59,7 +59,7 @@
                         </li>
                     </ul>
                 </li>
-                <li nz-submenu>
+                <!-- <li nz-submenu>
                     <div class="icon-box" title>
                         <i nz-icon type="table" theme="outline"></i>
                     </div>
@@ -102,8 +102,8 @@
                             <span nz-menu-item title>新功能实现中</span>
                         </li>
                     </ul>
-                </li>
-                <li nz-submenu>
+                </li> -->
+                <li nz-submenu routerLinkActive="ant-menu-item-selected">
                     <div class="icon-box" title>
                         <i nz-icon type="setting" theme="outline"></i>
                     </div>

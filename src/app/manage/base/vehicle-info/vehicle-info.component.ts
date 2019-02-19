@@ -5,7 +5,7 @@ import { VehicleInfoService } from './vehicle-info.service';
 
 import { ModalService } from '../../../shared/services/modal/modal.service';
 import { NotificationService } from '../../../shared/services/notification/notification.service';
-import { NzDrawerService } from 'ng-zorro-antd';
+import { NzDrawerService, isNotNil } from 'ng-zorro-antd';
 
 import { ModelConverter } from './model-converter';
 import { ObjectUtils } from '../../../shared/utils/object-utils';
@@ -18,6 +18,9 @@ import { VehicleListModel } from './vehicle-list.model';
 import { VehicleCategoryEnum } from './models/vehicle-category.enum';
 import { ZHANGZHOU_OPTIONS } from '../../../shared/components/cascader/cascader-zhangzhou.config';
 import { TableBasicComponent } from '../../table-basic.component';
+import { isNumber } from 'util';
+import { ActivatedRoute, Routes, Router } from '@angular/router';
+import { Route } from '@angular/compiler/src/core';
 
 @Component({
     selector   : 'app-vehicle-info',
@@ -67,7 +70,8 @@ export class VehicleInfoComponent extends TableBasicComponent implements OnInit 
     constructor(private vehicleInfoService: VehicleInfoService,
                 private notificationService: NotificationService,
                 private modalService: ModalService,
-                private drawerService: NzDrawerService) {
+                private drawerService: NzDrawerService,
+                private router: Router) {
         super();
     }
 
@@ -239,6 +243,18 @@ export class VehicleInfoComponent extends TableBasicComponent implements OnInit 
                 }
             }
         });
+    }
+
+    onJumpToMointor(lngLatStr: string): void {
+        const lngLat: string[] = lngLatStr.split(',');
+        this.router.navigate(['/manage/monitor', {
+            lngLat: [+lngLat[0], +lngLat[1]]
+        }]);
+    }
+
+    hasLngLat(lngLatStr: string): boolean {
+        const lngLat: string[] = lngLatStr.split(',');
+        return lngLat.length > 0 && !isNaN(+lngLat[0]) && !isNaN(+lngLat[1]);
     }
 
     getListByPage(option?: { isResetReq: boolean }) {

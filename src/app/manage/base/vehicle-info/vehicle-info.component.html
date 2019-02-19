@@ -132,7 +132,8 @@
                         <i nz-icon ></i>
                         <i nz-icon type="environment" theme="outline"
                            class="location"
-                           *ngIf="item.lngLat">
+                           (click)="onJumpToMointor(item.lngLat)"
+                           *ngIf="hasLngLat(item.lngLat)">
                         </i>
                     </td>
                     <td>{{item.plan ? '是' : '否'}}</td>

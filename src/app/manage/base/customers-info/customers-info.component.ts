@@ -18,6 +18,7 @@ import { FormModel } from './form.model';
 import { ListModel } from './list.model';
 import { ZHANGZHOU_OPTIONS } from '../../../shared/components/cascader/cascader-zhangzhou.config';
 import { TableBasicComponent } from '../../table-basic.component';
+import { Router } from '@angular/router';
 
 @Component({
     selector   : 'app-customers-info',
@@ -74,7 +75,8 @@ export class CustomersInfoComponent extends TableBasicComponent implements OnIni
     constructor(private customersInfoService: CustomersInfoService,
                 private drawerService: NzDrawerService,
                 private modalService: NzModalService,
-                private notificationService: NotificationService) {
+                private notificationService: NotificationService,
+                private router: Router) {
         super();
     }
 
@@ -300,6 +302,22 @@ export class CustomersInfoComponent extends TableBasicComponent implements OnIni
 
     /** antd table end **/
 
+    onJumpToMointor(lngLatStr: string): void {
+        const lngLat: string[] = this.convertLngLatFormString(lngLatStr);
+        this.router.navigate(['/manage/monitor', {
+            lngLat: [+lngLat[0], +lngLat[1]]
+        }]);
+    }
+
+    hasLngLat(lngLatStr: string): boolean {
+        const lngLat: string[] = this.convertLngLatFormString(lngLatStr);
+        return lngLat.length > 0 && !isNaN(+lngLat[0]) && !isNaN(+lngLat[1]);
+    }
+
+    convertLngLatFormString(lngLatStr: string) {
+        lngLatStr = lngLatStr.replace('(', '').replace(')', '');
+        return lngLatStr.split(',').map((value: string) => value.trim());
+    }
 
     /**
      * 统一分页获取列表方法

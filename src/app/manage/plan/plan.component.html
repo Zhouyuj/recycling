@@ -92,7 +92,7 @@
                     <td nzShowCheckbox [(nzChecked)]="item.checked"
                         (nzCheckedChange)="onSelected($event, item)"></td>
                     <td>{{i + 1 + 12 * (pageRes.page - 1)}}</td>
-                    <td>{{item.name}}</td>
+                    <td (dblclick)="onNavigateToEditForRow($event, item)">{{item.name}}</td>
                     <td>{{item.numberOfRoutes}}</td>
                     <td>{{item.numberOfTasks}}</td>
                     <td>{{item.state | planStateToChinese}}</td>
