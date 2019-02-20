@@ -221,10 +221,10 @@ export class EditPlanComponent extends TableBasicComponent implements OnInit {
     }
 
     onSelectVehicleForRow(event: Event, item: RouteListModel) {
-        if (!this.selectedRoutesCache) {
-            this.onSelectRoute(event, item);
-        }
-        this.onSelectVehicle();
+        // if (!this.selectedRoutesCache) {
+        //     this.onSelectRoute(event, item);
+        // }
+        // this.onSelectVehicle();
     }
 
     onSelectVehicle() {

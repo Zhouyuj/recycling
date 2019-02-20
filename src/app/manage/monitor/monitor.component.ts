@@ -1,5 +1,5 @@
-import { Component, OnInit, ElementRef } from '@angular/core';
-import { Observable, interval, Subject } from 'rxjs/index';
+import { Component, OnInit, ElementRef, OnDestroy } from '@angular/core';
+import { Observable, interval, Subject, of, Subscribable, Subscription } from 'rxjs/index';
 import { map } from 'rxjs/internal/operators/map';
 
 import { MapService } from '../../shared/services/map/map.service';
@@ -18,14 +18,15 @@ import { Marker } from '../../shared/services/map/marker.model';
 import { VerifyUtil } from '../../shared/utils/verify-utils';
 import { TableBasicComponent } from '../table-basic.component';
 import { Driving } from 'src/app/shared/services/map/driving.model';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, ParamMap, Params } from '@angular/router';
+import { switchMap, combineAll, merge, concatAll, concat } from 'rxjs/operators';
 
 @Component({
     selector   : 'app-monitor',
     templateUrl: './monitor.component.html',
     styleUrls  : [ './monitor.component.scss' ]
 })
-export class MonitorComponent extends TableBasicComponent implements OnInit {
+export class MonitorComponent extends TableBasicComponent implements OnInit, OnDestroy {
     /* 面包屑导航 */
     breadcrumbs = [
         {
@@ -33,6 +34,7 @@ export class MonitorComponent extends TableBasicComponent implements OnInit {
             title: '实时监控',
         },
     ];
+    isShowSideBarLabel = true;
     isShowSideBar = false;
     isShowCity = false;
     isShowGasStation = false;
@@ -41,11 +43,14 @@ export class MonitorComponent extends TableBasicComponent implements OnInit {
     map: Map;   // 高德地图对象
     stationMarkers: Marker[] = [];
     vehicleMarkers: Marker[] = [];
+    recyclingMarkers: Marker[] = [];
 
     routeListCache: RouteListModel[];
     taskListCache: TaskModel[];
     routeListSubject$: Subject<RouteListModel[]> = new Subject<RouteListModel[]>();
     taskListSubject$: Subject<TaskModel[]> = new Subject<TaskModel[]>();
+    paramMap$: Subject<any> = new Subject<any>();
+    interval$: Subscription;
 
     private drivingService: any;
 
@@ -68,11 +73,8 @@ export class MonitorComponent extends TableBasicComponent implements OnInit {
         this.routeListSubject$.subscribe((routeList: RouteListModel[]) => {
             this.removeVehicleMarkers();
             this.createVehicleMarkers(routeList);
-            // 每10秒刷新车辆位置
-            interval(10000).subscribe(() => {
-                this.removeVehicleMarkers();
-                this.createVehicleMarkers(routeList);
-            });
+            this.autoUpdateVehicleMarkers(routeList);
+            this.refreshByParam();
         });
 
         this.taskListSubject$.subscribe((taskModelList: TaskModel[]) => {
@@ -80,6 +82,10 @@ export class MonitorComponent extends TableBasicComponent implements OnInit {
             this.createStationMarkers(taskModelList);
             this.drawRouteWaypoints(taskModelList);
         });
+    }
+
+    ngOnDestroy() {
+        this.interval$.unsubscribe();
     }
 
     initMap() {
@@ -96,14 +102,63 @@ export class MonitorComponent extends TableBasicComponent implements OnInit {
         return subject;
     }
 
+    autoUpdateVehicleMarkers(routeList: RouteListModel[]) {
+        // 每10秒刷新车辆位置
+        this.interval$ = interval(1000 * 10).subscribe(() => {
+            this.removeVehicleMarkers();
+            this.createVehicleMarkers(routeList);
+        });
+    }
+
+    refreshByParam() {
+        this.paramMap$.subscribe(params => {
+            // 如果是收集点跳转到此，清空车辆标记
+            if (params.isCollection) {
+                this.isShowSideBarLabel = false;
+                this.removeVehicleMarkers();
+                this.clearRouteWaypoints();
+            } else {
+                this.removeRecyclingMarkers();
+            }
+            if (params.lngLat && params.isCollection) {
+                this.createRecyclingMarker(params.lngLat);
+                this.interval$.unsubscribe();
+            }
+        });
+        this.handleParamMap();
+    }
+
     jumpToCenterByParam() {
-        const lngLatStr: string = this.route.snapshot.paramMap.get('lngLat');
-        if (lngLatStr) {
-            const lngLatForParam: number[] = lngLatStr
-                .split(',')
-                .map((lngLat: string) => +lngLat);
-            this.setCenter(lngLatForParam);
-        }
+        this.paramMap$.subscribe((params) => {
+            if (params.lngLat) {
+                this.setCenter(params.lngLat);
+            }
+        });
+    }
+
+    handleParamMap(): void {
+        this.route.paramMap.pipe(
+            switchMap((params: ParamMap) => {
+                const lngLatStr: string = params.get('lngLat');
+                let lngLatForParam: number[];
+                if (lngLatStr) {
+                    lngLatForParam = lngLatStr
+                        .split(',')
+                        .map((lngLat: string) => +lngLat);
+                }
+                const isCollectionStr: string = params.get('isCollection');
+                let isCollectionForParam: boolean;
+                if (isCollectionStr) {
+                    isCollectionForParam = Boolean(isCollectionStr);
+                }
+
+                this.paramMap$.next({
+                    lngLat: lngLatForParam,
+                    isCollection: isCollectionForParam
+                });
+                return of(params);
+            })
+        ).subscribe(() => { /* noop */ });
     }
 
     onToggleSideBar(e: boolean) {
@@ -240,19 +295,21 @@ export class MonitorComponent extends TableBasicComponent implements OnInit {
         const firstTaskModel: TaskModel = taskModelList[0];
         const lastLenght: number = taskModelList.length - 1;
         const lastTaskModel: TaskModel = taskModelList[lastLenght];
-        const matchRoute = this.routeListCache.find((route: RouteModel) => route.id === firstTaskModel.routeId);
-        const waypoints: number[] = [];
-        taskModelList.forEach((taskModel: TaskModel, index: number) => {
-            if (index === lastLenght) {
-                return;
-            }
-            waypoints.push(this.mapService.lngLat([taskModel.lng, taskModel.lat]));
-        });
-        this.drivingService.search(
-            new AMap.LngLat(matchRoute.vehicle.lng, matchRoute.vehicle.lat),
-            new AMap.LngLat(lastTaskModel.lng, lastTaskModel.lat),
-            {waypoints}
-        );
+        if (firstTaskModel) {
+            const matchRoute = this.routeListCache.find((route: RouteModel) => route.id === firstTaskModel.routeId);
+            const waypoints: number[] = [];
+            taskModelList.forEach((taskModel: TaskModel, index: number) => {
+                if (index === lastLenght) {
+                    return;
+                }
+                waypoints.push(this.mapService.lngLat([taskModel.lng, taskModel.lat]));
+            });
+            this.drivingService.search(
+                new AMap.LngLat(matchRoute.vehicle.lng, matchRoute.vehicle.lat),
+                new AMap.LngLat(lastTaskModel.lng, lastTaskModel.lat),
+                {waypoints}
+            );
+        }
     }
 
     convertTaskStateToColor(state: string): string {
@@ -292,6 +349,27 @@ export class MonitorComponent extends TableBasicComponent implements OnInit {
             '    <img src="assets/images/map-icon/vehicle.png">' +
             '    <div class="map-marker-label-vehicle">' + plateNumber + '</div>' +
             '</div>';
+    }
+
+    createMarkerContentForRecycling(): string {
+        return '' +
+            '<div class="map-marker-content-station">' +
+            '    <img src="assets/images/map-icon/marker_bg.svg">' +
+            '    <div class="map-marker-recycling-icon">' +
+            '        <img src="assets/images/map-icon/recycling.svg">' +
+            '    </div>' +
+            '</div>';
+    }
+
+    createRecyclingMarker(lngLat: number[]): void {
+        const marker = new Marker({
+            map     : this.map,
+            position: lngLat,
+            content: this.createMarkerContentForRecycling(),
+            offset: [-24, -50]
+        });
+        const amapMarker = this.mapService.createMarker(marker);
+        this.recyclingMarkers.push(amapMarker);
     }
 
     createStationMarker(lngLat: number[], text = 1, state: string): void {
@@ -334,6 +412,11 @@ export class MonitorComponent extends TableBasicComponent implements OnInit {
                 this.createStationMarker([item.lng, item.lat], item.priority, item.state);
             }
         });
+    }
+
+    removeRecyclingMarkers(): void {
+        this.removeMarkers(this.recyclingMarkers);
+        this.recyclingMarkers = [];
     }
 
     removeVehicleMarkers(): void {

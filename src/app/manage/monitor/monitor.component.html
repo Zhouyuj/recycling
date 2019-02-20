@@ -7,7 +7,7 @@
             </div>
             <div nz-col class="gutter-row " nzSpan="8" nzOffset="6">
                 <div class="table-CUDE">
-                    <label nz-checkbox [(ngModel)]="isShowSideBar" (ngModelChange)="onToggleSideBar($event)">
+                    <label *ngIf="isShowSideBarLabel" nz-checkbox [(ngModel)]="isShowSideBar" (ngModelChange)="onToggleSideBar($event)">
                         <strong>侧边栏</strong>
                     </label>
                     &nbsp;
@@ -47,10 +47,10 @@
                               [nzShowPagination]="false">
                         <thead>
                         <tr>
-                            <th nzWidth="50px"></th>
-                            <th>路线</th>
-                            <th>车辆</th>
-                            <th>司机</th>
+                            <th nzWidth="5%"></th>
+                            <th nzWidth="35%">路线</th>
+                            <th nzWidth="35%">车辆</th>
+                            <th nzWidth="25%">司机</th>
                         </tr>
                         </thead>
                         <tbody>

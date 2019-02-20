@@ -305,7 +305,8 @@ export class CustomersInfoComponent extends TableBasicComponent implements OnIni
     onJumpToMointor(lngLatStr: string): void {
         const lngLat: string[] = this.convertLngLatFormString(lngLatStr);
         this.router.navigate(['/manage/monitor', {
-            lngLat: [+lngLat[0], +lngLat[1]]
+            lngLat: [+lngLat[0], +lngLat[1]],
+            isCollection: true
         }]);
     }
 
