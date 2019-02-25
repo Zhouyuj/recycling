@@ -11,4 +11,5 @@ export class PlanListModel {
     category: string; // Formal：正式的,Demo：演示的
     editUser: string;   // 编辑人员
     checked: boolean;   // 可选   -- 非接口数据
+    createdDate: number;
 }

@@ -21,6 +21,7 @@ export class ModelConverter {
         l.state = r.state;
         l.category = r.category;
         l.editUser = r.editUser;
+        l.createdDate = r.createdDate;
         l.checked = false;
         return l;
     }

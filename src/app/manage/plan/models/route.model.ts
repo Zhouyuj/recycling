@@ -13,6 +13,8 @@ export interface RouteModel {
     driver: string;
     state: RouteState;
     vehicle: VehicleOfRoute;
+    collectionQuantity: number; // 手持报量(吨)
+    weighedQuantity: number; // 地磅报量(吨)
     taskList?: TaskModel[];
 }
 

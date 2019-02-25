@@ -33,6 +33,11 @@ const ROUTER_CONFIG: Routes = [
                 data        : { title: '系统设置' },
             },
             {
+                path        : 'history',
+                loadChildren: './history/history.module#HistoryModule',
+                data        : { title: '历史方案' },
+            },
+            {
                 path: 'testMap', component: TestMapComponent, data: { title: '测试地图' },
             },
         ],

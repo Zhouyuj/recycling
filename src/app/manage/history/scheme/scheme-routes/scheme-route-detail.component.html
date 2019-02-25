@@ -1,0 +1,85 @@
+<div class="wrap">
+    <!-- -------- 表格操作 -------- -->
+    <div class="table-operations">
+        <div nz-row nzGutter="16">
+            <div nz-col class="gutter-row" nzSpan="10">
+                <button nz-button>
+                    <i nz-icon type="left"></i>
+                    返回
+                </button>
+            </div>
+        </div>
+        <div nz-row nzGutter="16">
+            <div nz-col nzSpan="4">线路名称：xxx</div>
+            <div nz-col nzSpan="2">车辆：xxx</div>
+            <div nz-col nzSpan="2">驾驶员：test</div>
+            <div nz-col nzSpan="4">手持报量(吨)：8.57</div>
+            <div nz-col nzSpan="4">地磅称重量(吨)：9.10</div>
+            <div nz-col nzSpan="4">执行日期：2019-02-13</div>
+        </div>
+    </div>
+    <div class="border-layout">
+        <div class="map-layout">
+            <div id="map" style="width: 800px; height: 300px"></div>
+        </div>
+        <div class="monitor-info">
+            <div nz-row>
+                <div nz-col nzSpan="2">
+                    <div class="monitor-title">监控信息</div>
+                </div>
+                <div nz-col nzSpan="4"></div>
+                <div nz-col nzSpan="2">
+                    <button 
+                        nz-button
+                        nz-popover
+                        [nzContent]="speedHandle"
+                        [nzSize]="'small'">
+                        倍速
+                    </button>
+                    <ng-template #speedHandle>
+                        <div [ngStyle]="{ height: '100px' }">
+                            <nz-slider 
+                                nzVertical
+                                [nzMin]="1"
+                                [nzMax]="20"
+                                [nzDefaultValue]="1">
+                            </nz-slider>
+                        </div>
+                    </ng-template>
+                </div>
+                <div nz-col nzSpan="1"></div>
+                <div nz-col nzSpan="2">
+                    <button nz-button [nzSize]="'small'">车辆居中</button>
+                </div>
+                <div nz-col nzSpan="2">
+                    <button nz-button [nzSize]="'small'">行车轨迹</button>
+                </div>
+                <div nz-col nzSpan="2">
+                    <button nz-button [nzSize]="'small'">计划路线</button>
+                </div>
+                <div nz-col nzSpan="9"></div>
+            </div>
+            <div nz-row>
+                <div nz-col nzSpan="1">
+                    <i *ngIf="!isPlay" nz-icon type="caret-right" (click)="onTest()"></i>
+                    <i *ngIf="isPlay" nz-icon type="pause" (click)="onTest()"></i>
+                </div>
+                <div nz-col nzSpan="2">
+                    <div class="time-text">00:22:33</div>
+                </div>
+                <div nz-col nzSpan="18" [ngStyle]="{ paddingTop: '2px' }">
+                    <nz-progress 
+                        [nzStrokeColor]="'#aad645'"
+                        [nzPercent]="percent"
+                        [nzStrokeLinecap]="square"
+                        [nzShowInfo]="false">
+                    </nz-progress>
+                </div>
+                <div nz-col nzSpan="1"></div>
+                <div nz-col nzSpan="2">
+                    <div class="time-text">00:22:33</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
