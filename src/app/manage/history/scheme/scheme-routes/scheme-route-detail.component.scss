@@ -1,69 +1,100 @@
-
-@import "src/assets/styles/customer-global";
-@import "src/app/shared/components/breadcrumbs/breadcrumbs.component-param";
-@import "src/app/shared/components/header/header.component-param";
-@import "src/app/manage/manage-app.component-param";
+@import 'src/assets/styles/customer-global';
+@import 'src/app/shared/components/breadcrumbs/breadcrumbs.component-param';
+@import 'src/app/shared/components/header/header.component-param';
+@import 'src/app/manage/manage-app.component-param';
 
 /* table height */
-$breadcrumbs-total-height: (#{$breadcrumbs-height} + #{$breadcrumbs-padding-bottom} + #{$manage-app-content-padding});
-$table-height: calc(100vh - #{$header-height} - (#{$breadcrumbs-total-height}) - #{$manage-app-content-padding});
+$breadcrumbs-total-height: (
+  #{$breadcrumbs-height} + #{$breadcrumbs-padding-bottom} + #{$manage-app-content-padding}
+);
+$table-height: calc(
+  100vh - #{$header-height} - (#{$breadcrumbs-total-height}) - #{$manage-app-content-padding}
+);
 
 .wrap {
-    width: 100%;
-    height: 100%;
+  width: 100%;
+  height: 100%;
 }
 
 .table-operations {
-    position: relative;
-    z-index: 13;
-    padding-bottom: 8px;
+  position: relative;
+  z-index: 13;
+  padding-bottom: 8px;
 
-    .table-search {
-        text-align: right;
-    }
+  .table-search {
+    text-align: right;
+  }
 
-    .table-CUDE { /* 增删改导出 */
-        text-align: right;
-    }
+  .table-CUDE {
+    /* 增删改导出 */
+    text-align: right;
+  }
 }
 
 .table-content {
-    height: $table-height;
+  height: $table-height;
 
-    th, td {
-        text-align: center;
-    }
+  th,
+  td {
+    text-align: center;
+  }
 
-    a {
-        text-decoration: underline;
-        color: dodgerblue;
-    }
+  a {
+    text-decoration: underline;
+    color: dodgerblue;
+  }
 }
 
 .border-layout {
-    border: 1px solid rgb(250, 245, 247);
+  border: 1px solid rgb(250, 245, 247);
 
-    .monitor-info {
-        padding: 6px;
-        background-color: rgb(250, 248, 250);
+  .monitor-info {
+    padding: 6px;
+    background-color: rgb(250, 248, 250);
 
-        i[nz-icon] {
-            font-size: 28px;
-            color: rgb(130, 191, 69);
-            cursor: pointer;
-        }
-
-        .monitor-title {
-            margin-left: 6px;
-        }
-        
-        .time-text {
-            font-size: 12px;
-            margin-top: 5px;
-        }
-
-        button[nz-button] {
-            font-size: 12px;
-        }
+    i[nz-icon] {
+      font-size: 28px;
+      color: rgb(130, 191, 69);
+      cursor: pointer;
     }
+
+    .monitor-title {
+      margin-left: 6px;
+    }
+
+    .time-text {
+      font-size: 12px;
+      margin-top: 5px;
+    }
+
+    button[nz-button] {
+      font-size: 12px;
+    }
+  }
+}
+
+.map-layout {
+  display: inline-block !important;
+  width: 100%;
+}
+
+.map-side-drag {
+  display: inline-block;
+  position: absolute;
+  height: 300px;
+  padding-top: 150px;
+  right: 8px;
+  background: #eeeeee;
+}
+
+.map-side-drag.dragged {
+  right: 400px;
+}
+
+.map-side-drag i {
+  transform: rotate(0deg);
+}
+
+.map-side-drag.dragged i {
+  transform: rotate(180deg);
 }

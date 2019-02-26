@@ -11,36 +11,39 @@ import { RouteModel, RouteListModel } from '../plan/models/route.model';
 import { TaskModel } from '../plan/models/task.model';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
 export class HistoryService extends RebirthHttp {
+  constructor(http: HttpClient) {
+    super(http);
+  }
 
-    constructor(http: HttpClient) {
-        super(http);
-    }
+  @GET('/routes')
+  getRouteList(@Query('params')
+  params: {
+    name?: string;
+    planId?: number;
+    planIds?: number[];
+    plateNumber?: string;
+  }): Observable<Result<RouteModel[]>> {
+    return null;
+  }
 
-    @GET('/routes')
-    getRouteList(@Query('params') params: {
-        name?: string,
-        planId?: number,
-        planIds?: number[],
-        plateNumber?: string
-    }): Observable<Result<RouteModel[]>> {
-        return null;
-    }
+  @GET('/routes/:id/tasks')
+  getTaskList(@Path('id') id: number): Observable<Result<TaskModel[]>> {
+    return null;
+  }
 
-    @GET('/routes/:id/tasks')
-    getTaskList(@Path('id') id: number): Observable<Result<TaskModel[]>> {
-        return null;
-    }
+  @GET('/plans')
+  getPlanList(
+    @Query('page') page: PageReq,
+    @Query('params') params: any
+  ): Observable<Result<PageRes<PlanRes[]>>> {
+    return null;
+  }
 
-    @GET('/plans')
-    getPlanList(@Query('page') page: PageReq, @Query('params') params: any): Observable<Result<PageRes<PlanRes[]>>> {
-        return null;
-    }
-
-    @DELETE('/plans/:id')
-    delPlan(@Path('id') id: number): Observable<Result<any>> {
-        return null;
-    }
+  @DELETE('/plans/:id')
+  delPlan(@Path('id') id: number): Observable<Result<any>> {
+    return null;
+  }
 }
