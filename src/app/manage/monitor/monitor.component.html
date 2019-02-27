@@ -25,7 +25,7 @@
                           nzPlacement="bottomRight">
                         <i nz-icon type="question-circle" theme="fill"></i>
                         <ng-template #tips>
-                            <img src="../../../assets/images/map-icon/icon_list.png" alt="图片加载失败">
+                            <img src="../../../assets/images/map-icon/icon_list2.png" alt="图片加载失败">
                         </ng-template>
                     </span>
                     &nbsp;
@@ -41,7 +41,7 @@
                 <div class="table-route" nz-col nzSpan="24">
                     <nz-table #routeTable
                               [nzData]="routeListCache"
-                              [nzScroll]="{y: tablScrollY}"
+                              [nzScroll]="{y: tableScrollY}"
                               [nzLoading]="false"
                               [nzFrontPagination]="true"
                               [nzShowPagination]="false">
@@ -69,12 +69,13 @@
                 <div class="table-task" nz-col nzSpan="24" *ngIf="isShowTaskTable && taskListCache && taskListCache.length > 0">
                     <nz-table #taskTable
                               [nzData]="taskListCache"
+                              [nzScroll]="{y: tableScrollY}"
                               [nzShowPagination]="false">
                         <thead>
                         <tr>
                             <th nzWidth="5%"></th>
-                            <th nzWidth="60%">收运单位</th>
-                            <th nzWidth="35%" class="amount-of-garbage">手持报量(吨)</th>
+                            <th nzWidth="55%">收运单位</th>
+                            <th nzWidth="40%" class="amount-of-garbage">手持报量(吨)</th>
                         </tr>
                         </thead>
                         <tbody>

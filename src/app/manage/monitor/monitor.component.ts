@@ -62,7 +62,7 @@ export class MonitorComponent extends TableBasicComponent implements OnInit, OnD
     }
 
     ngOnInit() {
-        this.calcTableScrollY();
+        this.calcTableScrollY(-60);
 
         this.initMap().subscribe(() => {
             this.createDrivingService();
