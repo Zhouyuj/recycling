@@ -12,7 +12,6 @@ import {
 } from 'rebirth-http';
 
 import { PlanRes } from '../plan/models/plan-res.model';
-import { Reports } from '../plan/models/reports.model';
 import { PageReq } from '../../shared/models/page/page-req.model';
 import { PageRes } from '../../shared/models/page/page-res.model';
 import { Result } from '../../shared/models/response/result.model';

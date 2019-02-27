@@ -8,7 +8,6 @@ import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { PlanModule } from '../../plan/plan.module';
 import { PlanListModel } from '../../plan/models/plan-list.model';
-import { Reports } from '../../plan/models/reports.model';
 import { ModelConverter } from '../../plan/models/model-converter';
 import { TableBasicComponent } from '../../table-basic.component';
 import { NotificationService } from 'src/app/shared/services/notification/notification.service';
