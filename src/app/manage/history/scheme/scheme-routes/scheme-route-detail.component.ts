@@ -32,12 +32,18 @@ export class SchemeRouteDetailComponent implements OnInit {
   constructor(
     private mapService: MapService,
     private historyService: HistoryService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) {}
 
   ngOnInit() {
     this.initMap();
     this.planId = +this.route.snapshot.paramMap.get('id');
+  }
+
+  onBack() {
+    const url = `/manage/history/scheme/${this.planId}/routes`;
+    this.router.navigate([url]);
   }
 
   initMap() {
