@@ -25,6 +25,11 @@ $table-height: calc(100vh - #{$header-height} - (#{$breadcrumbs-total-height}) -
     .table-CUDE { /* 增删改导出 */
         text-align: right;
     }
+
+    .route-info {
+        font-weight: bold;
+        margin-top: 5px;
+    }
 }
 
 .table-content {
@@ -37,6 +42,31 @@ $table-height: calc(100vh - #{$header-height} - (#{$breadcrumbs-total-height}) -
     a {
         text-decoration: underline;
         color: dodgerblue;
+    }
+}
+
+.map-layout {
+    
+    .task-list {
+        position: absolute;
+        right: 0;
+        top: 75px;
+    }
+
+    .toggle-layout {
+        position: absolute;
+        
+        button {
+            border-radius: 0;
+        }
+    }
+
+    .task-pane {
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 300px;
+        background-color: white;
     }
 }
 

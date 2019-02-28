@@ -3,24 +3,72 @@
     <div class="table-operations">
         <div nz-row nzGutter="16">
             <div nz-col class="gutter-row" nzSpan="10">
-                <button nz-button>
+                <button nz-button (click)="onBack()">
                     <i nz-icon type="left"></i>
                     返回
                 </button>
             </div>
         </div>
-        <div nz-row nzGutter="16">
-            <div nz-col nzSpan="4">线路名称：xxx</div>
-            <div nz-col nzSpan="2">车辆：xxx</div>
-            <div nz-col nzSpan="2">驾驶员：test</div>
-            <div nz-col nzSpan="4">手持报量(吨)：8.57</div>
-            <div nz-col nzSpan="4">地磅称重量(吨)：9.10</div>
-            <div nz-col nzSpan="4">执行日期：2019-02-13</div>
+        <div class="route-info" nz-row nzGutter="16">
+            <div nz-col nzSpan="4">线路名称：{{currentRoute.name}}</div>
+            <div nz-col nzSpan="3">车辆：{{currentRoute.vehicle.plateNumber}}</div>
+            <div nz-col nzSpan="2">驾驶员：{{currentRoute.driver}}</div>
+            <div nz-col nzSpan="3">手持报量(吨)：{{currentRoute.collectionQuantity}}</div>
+            <div nz-col nzSpan="4">地磅称重量(吨)：{{currentRoute.weighedQuantity}}</div>
+            <!-- <div nz-col nzSpan="4">执行日期：{{currentRoute.driver}}</div> -->
         </div>
     </div>
     <div class="border-layout">
         <div class="map-layout">
-            <div id="map" style="width: 800px; height: 300px"></div>
+            <div id="map" [ngStyle]="{ width: 'calc(100vw - 18px)', height: tableScrollY }"></div>
+            <div class="task-list">
+                <div class="toggle-layout" [ngStyle]="{ right: isOpen ? '300px' : '0' }">
+                    <button *ngIf="!isOpen"
+                        nz-button
+                        [nzSize]="'small'"
+                        [ngStyle]="{ height: tableScrollY }"
+                        (click)="onToggle()">
+                        <i nz-icon type="left" theme="outline"></i>
+                    </button>
+                    <button *ngIf="isOpen"
+                        nz-button
+                        [nzSize]="'small'"
+                        [ngStyle]="{ height: tableScrollY }"
+                        (click)="onToggle()">
+                        <i nz-icon type="right" theme="outline"></i>
+                    </button>
+                </div>
+                <div class="task-pane" *ngIf="isOpen" [ngStyle]="{height: tableScrollY}">
+                    <nz-spin [nzSize]="'large'" [nzSpinning]="isSpinning">
+                        <nz-table #tableData
+                                [nzData]="listCache"
+                                [nzShowPagination]="false"
+                                [nzScroll]="{ y: tableScrollY}">
+                            <thead>
+                            <tr>
+                                <th nzWidth="20%">
+                                    序号
+                                </th>
+                                <th nzWidth="40%">
+                                    单位名称
+                                </th>
+                                <th nzWidth="40%">
+                                    手持报量(吨)
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr *ngFor="let item of tableData.data; index as i"
+                                [ngClass]="{ 'table-row-selected': item.checked }">
+                                <td>{{i + 1}}</td>
+                                <td>{{item.name}}</td>
+                                <td>{{item.collectionQuantity}}</td>
+                            </tr>
+                            </tbody>
+                        </nz-table>
+                    </nz-spin>
+                </div>
+            </div>
         </div>
         <div class="monitor-info">
             <div nz-row>
@@ -32,6 +80,7 @@
                     <button 
                         nz-button
                         nz-popover
+                        nzTrigger="click"
                         [nzContent]="speedHandle"
                         [nzSize]="'small'">
                         倍速
@@ -42,20 +91,20 @@
                                 nzVertical
                                 [nzMin]="1"
                                 [nzMax]="20"
-                                [nzDefaultValue]="1">
+                                [(ngModel)]="speed">
                             </nz-slider>
                         </div>
                     </ng-template>
                 </div>
                 <div nz-col nzSpan="1"></div>
                 <div nz-col nzSpan="2">
-                    <button nz-button [nzSize]="'small'">车辆居中</button>
+                    <button nz-button (click)="onToCenter()" [nzSize]="'small'">车辆居中</button>
                 </div>
                 <div nz-col nzSpan="2">
                     <button nz-button [nzSize]="'small'">行车轨迹</button>
                 </div>
                 <div nz-col nzSpan="2">
-                    <button nz-button [nzSize]="'small'">计划路线</button>
+                    <button nz-button (click)="onPlanRoute()" [nzSize]="'small'">计划路线</button>
                 </div>
                 <div nz-col nzSpan="9"></div>
             </div>

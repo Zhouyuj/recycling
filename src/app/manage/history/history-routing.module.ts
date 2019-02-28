@@ -21,7 +21,7 @@ export const ROUTER_CONFIG: Routes = [
             },
             {
                 path: ':id/routes/:routeId/route',
-                component: SchemeRouteDetailComponent
+                component: SchemeRouteDetailComponent,
             }
         ],
     },
