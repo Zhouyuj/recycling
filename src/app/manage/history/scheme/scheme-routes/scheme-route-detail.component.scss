@@ -17,32 +17,61 @@ $table-height: calc(
 }
 
 .table-operations {
-  position: relative;
-  z-index: 13;
-  padding-bottom: 8px;
+    position: relative;
+    z-index: 13;
+    padding-bottom: 8px;
 
-  .table-search {
-    text-align: right;
-  }
+    .table-search {
+        text-align: right;
+    }
 
-  .table-CUDE {
-    /* 增删改导出 */
-    text-align: right;
-  }
+    .table-CUDE { /* 增删改导出 */
+        text-align: right;
+    }
+
+    .route-info {
+        font-weight: bold;
+        margin-top: 5px;
+    }
 }
 
 .table-content {
-  height: $table-height;
+    height: $table-height;
 
-  th,
-  td {
-    text-align: center;
-  }
+    th,
+    td {
+        text-align: center;
+    }
 
-  a {
-    text-decoration: underline;
-    color: dodgerblue;
-  }
+    a {
+        text-decoration: underline;
+        color: dodgerblue;
+    }
+}
+
+.map-layout {
+    
+    .task-list {
+        position: absolute;
+        right: 0;
+        top: 75px;
+    }
+
+    .toggle-layout {
+        position: absolute;
+        
+        button {
+            border-radius: 0;
+        }
+    }
+
+    .task-pane {
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 300px;
+        background-color: white;
+    }
 }
 
 .border-layout {
@@ -71,30 +100,4 @@ $table-height: calc(
       font-size: 12px;
     }
   }
-}
-
-.map-layout {
-  display: inline-block !important;
-  width: 100%;
-}
-
-.map-side-drag {
-  display: inline-block;
-  position: absolute;
-  height: 300px;
-  padding-top: 150px;
-  right: 8px;
-  background: #eeeeee;
-}
-
-.map-side-drag.dragged {
-  right: 400px;
-}
-
-.map-side-drag i {
-  transform: rotate(0deg);
-}
-
-.map-side-drag.dragged i {
-  transform: rotate(180deg);
 }

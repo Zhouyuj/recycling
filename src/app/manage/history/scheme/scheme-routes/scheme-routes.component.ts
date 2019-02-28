@@ -70,8 +70,14 @@ export class SchemeRoutesComponent extends TableBasicComponent implements OnInit
         //         this.isSpinning = false;
         //         console.log(val);
         //     });
-        const url = `/manage/history/scheme/${this.planId}/routes/${this.selectedItem.id}/route`;
-        this.router.navigate([url]);
+        const { id, name, driver, collectionQuantity, weighedQuantity } = this.selectedItem;
+        const { plateNumber, lat, lng } = this.selectedItem.vehicle;
+        const url = `/manage/history/scheme/${this.planId}/routes/${id}/route`;
+        this.router.navigate([url, {
+            id, name, plateNumber,
+            driver, collectionQuantity,
+            weighedQuantity, lat, lng,
+        }]);
     }
 
     onSelected(event: Event, item: RouteListModel) {
