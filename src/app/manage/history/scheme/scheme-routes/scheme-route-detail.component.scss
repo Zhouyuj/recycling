@@ -1,16 +1,19 @@
-
-@import "src/assets/styles/customer-global";
-@import "src/app/shared/components/breadcrumbs/breadcrumbs.component-param";
-@import "src/app/shared/components/header/header.component-param";
-@import "src/app/manage/manage-app.component-param";
+@import 'src/assets/styles/customer-global';
+@import 'src/app/shared/components/breadcrumbs/breadcrumbs.component-param';
+@import 'src/app/shared/components/header/header.component-param';
+@import 'src/app/manage/manage-app.component-param';
 
 /* table height */
-$breadcrumbs-total-height: (#{$breadcrumbs-height} + #{$breadcrumbs-padding-bottom} + #{$manage-app-content-padding});
-$table-height: calc(100vh - #{$header-height} - (#{$breadcrumbs-total-height}) - #{$manage-app-content-padding});
+$breadcrumbs-total-height: (
+  #{$breadcrumbs-height} + #{$breadcrumbs-padding-bottom} + #{$manage-app-content-padding}
+);
+$table-height: calc(
+  100vh - #{$header-height} - (#{$breadcrumbs-total-height}) - #{$manage-app-content-padding}
+);
 
 .wrap {
-    width: 100%;
-    height: 100%;
+  width: 100%;
+  height: 100%;
 }
 
 .table-operations {
@@ -35,7 +38,8 @@ $table-height: calc(100vh - #{$header-height} - (#{$breadcrumbs-total-height}) -
 .table-content {
     height: $table-height;
 
-    th, td {
+    th,
+    td {
         text-align: center;
     }
 
@@ -71,29 +75,29 @@ $table-height: calc(100vh - #{$header-height} - (#{$breadcrumbs-total-height}) -
 }
 
 .border-layout {
-    border: 1px solid rgb(250, 245, 247);
+  border: 1px solid rgb(250, 245, 247);
 
-    .monitor-info {
-        padding: 6px;
-        background-color: rgb(250, 248, 250);
+  .monitor-info {
+    padding: 6px;
+    background-color: rgb(250, 248, 250);
 
-        i[nz-icon] {
-            font-size: 28px;
-            color: rgb(130, 191, 69);
-            cursor: pointer;
-        }
-
-        .monitor-title {
-            margin-left: 6px;
-        }
-        
-        .time-text {
-            font-size: 12px;
-            margin-top: 5px;
-        }
-
-        button[nz-button] {
-            font-size: 12px;
-        }
+    i[nz-icon] {
+      font-size: 28px;
+      color: rgb(130, 191, 69);
+      cursor: pointer;
     }
+
+    .monitor-title {
+      margin-left: 6px;
+    }
+
+    .time-text {
+      font-size: 12px;
+      margin-top: 5px;
+    }
+
+    button[nz-button] {
+      font-size: 12px;
+    }
+  }
 }

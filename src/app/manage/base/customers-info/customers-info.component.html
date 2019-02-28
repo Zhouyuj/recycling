@@ -1,212 +1,312 @@
 <div class="wrap">
-    <!-- -------- 表格操作 -------- -->
-    <div class="table-operations">
-        <div nz-row nzGutter="16">
-            <div nz-col class="gutter-row" nzSpan="10">
-                <!-- 面包屑导航 -->
-                <app-breadcrumbs [options]="breadcrumbs"></app-breadcrumbs>
-            </div>
-            <div nz-col class="gutter-row" nzSpan="4" nzOffset="2">
-
-            </div>
-            <div nz-col class="gutter-row" nzSpan="8">
-                <!-- CUDE: create,update,delete,export -->
-                <div class="table-CUDE">
-                    <button nz-button
-                            (click)="onAdd()"
-                            nzType="default">
-                        添加
-                    </button>
-                    &nbsp;
-                    <button nz-button
-                            [disabled]="!formCache"
-                            (click)="onEdit()"
-                            nzType="default">
-                        编辑
-                    </button>
-                    &nbsp;
-                    <button nz-button
-                            [disabled]="!formCache"
-                            (click)="isDelModalVisible = true">
-                        删除
-                    </button>
-                    &nbsp;
-                    <button nz-button
-                            (click)="onExp()"
-                            nzType="default">
-                        导出
-                    </button>
-                    &nbsp;
-                </div>
-            </div>
+  <!-- -------- 表格操作 -------- -->
+  <div class="table-operations">
+    <div nz-row nzGutter="16">
+      <div nz-col class="gutter-row" nzSpan="10">
+        <!-- 面包屑导航 -->
+        <app-breadcrumbs [options]="breadcrumbs"></app-breadcrumbs>
+      </div>
+      <div nz-col class="gutter-row" nzSpan="4" nzOffset="2"></div>
+      <div nz-col class="gutter-row" nzSpan="8">
+        <!-- CUDE: create,update,delete,export -->
+        <div class="table-CUDE">
+          <button nz-button (click)="onAdd()" nzType="default">
+            添加
+          </button>
+          &nbsp;
+          <button
+            nz-button
+            [disabled]="!formCache"
+            (click)="onEdit()"
+            nzType="default"
+          >
+            编辑
+          </button>
+          &nbsp;
+          <button
+            nz-button
+            [disabled]="!formCache"
+            (click)="isDelModalVisible = true"
+          >
+            删除
+          </button>
+          &nbsp;
+          <button
+            nz-button
+            (click)="onExp()"
+            [disabled]="!formCache"
+            nzType="default"
+          >
+            导出
+          </button>
+          &nbsp;
         </div>
+      </div>
     </div>
-    <!-- -------- 表格内容 -------- -->
-    <div class="table-content">
-        <nz-spin [nzSize]="'large'" [nzSpinning]="isSpinning">
-            <nz-table #nzTable
-                      [nzScroll]="{x: '1900px', y: tableScrollY}"
-                      [nzData]="listCache"
-                      [nzFrontPagination]="false"
-                      [nzTotal]="pageRes.total"
-                      [nzPageIndex]="pageRes.page"
-                      [nzPageSize]="pageRes.size"
-                      (nzPageIndexChange)="onPageV2($event)"
-                      (nzPageSizeChange)="onPageV2($event)">
-                <thead>
-                <tr>
-                    <th nzWidth="50px"></th><!-- 此th为展开/收起表头 -->
-                    <th nzWidth="62px">
-                        <div></div>
-                    </th><!-- 此th与下面的th(全选)互斥,当前先不实现全选 -->
-                    <th nzWidth="100px">类型</th>
-                    <th nzWidth="70px">定位</th>
-                    <th nzWidth="70px">图片</th>
-                    <th nzWidth="200px" nzCustomFilter>名称
-                        <br/>
-                        <input type="text" nz-input placeholder=""
-                               nzSize="small" style="width: 60%;"
-                               [(ngModel)]="params.name"
-                               (keyup)="$event.which === 13 && onKeywordSearchTh('name')">
-                    </th>
-                    <!--<th nzWidth="200px"
+  </div>
+  <!-- -------- 表格内容 -------- -->
+  <div class="table-content">
+    <nz-spin [nzSize]="'large'" [nzSpinning]="isSpinning">
+      <nz-table
+        #nzTable
+        [nzScroll]="{ x: '1900px', y: tableScrollY }"
+        [nzData]="listCache"
+        [nzFrontPagination]="false"
+        [nzTotal]="pageRes.total"
+        [nzPageIndex]="pageRes.page"
+        [nzPageSize]="pageRes.size"
+        (nzPageIndexChange)="onPageV2($event)"
+        (nzPageSizeChange)="onPageV2($event)"
+      >
+        <thead>
+          <tr>
+            <th nzWidth="50px"></th>
+            <!-- 此th为展开/收起表头 -->
+            <th nzWidth="62px">
+              <div></div>
+            </th>
+            <!-- 此th与下面的th(全选)互斥,当前先不实现全选 -->
+            <th nzWidth="100px">类型</th>
+            <th nzWidth="70px">定位</th>
+            <th nzWidth="70px">图片</th>
+            <th nzWidth="200px" nzCustomFilter>
+              名称
+              <br />
+              <input
+                type="text"
+                nz-input
+                placeholder=""
+                nzSize="small"
+                style="width: 60%;"
+                [(ngModel)]="params.name"
+                (keyup)="$event.which === 13 && onKeywordSearchTh('name')"
+              />
+            </th>
+            <!--<th nzWidth="200px"
                         nzShowFilter
                         [nzFilters]="districtsFilterList"
                         [nzFilterMultiple]="true"
                         (nzFilterChange)="onFilter($event)">
                         所属区域
                     </th>-->
-                    <th nzWidth="150px">所属区域</th>
-                    <th nzWidth="120px">收运时间段</th>
-                    <th nzWidth="200px">地址
-                        <br/>
-                        <input type="text" nz-input placeholder=""
-                               nzSize="small" style="width: 60%;"
-                               [(ngModel)]="params.address"
-                               (keyup)="$event.which === 13 && onKeywordSearchTh('address')">
-                    </th>
-                    <th nzWidth="200px">账号
-                        <br/>
-                        <input type="text" nz-input placeholder=""
-                               nzSize="small" style="width: 60%;"
-                               [(ngModel)]="params.username"
-                               (keyup)="$event.which === 13 && onKeywordSearchTh('username')">
-                    </th>
-                    <th nzWidth="100px">派桶数</th>
-                    <th nzWidth="200px"
-                        nzShowSort
-                        [(nzSort)]="sortMap.createdDate"
-                        (nzSortChange)="onSortTh('createdDate',$event)">登记时间
-                        <br/>
-                        <input type="text" nz-input placeholder=""
-                               nzSize="small" style="width: 60%;"
-                               [(ngModel)]="params.createdDate"
-                               (focus)="onStopPropagation($event)"
-                               (keyup)="$event.which === 13 && onKeywordSearchTh('createdDate')">
-                    </th>
-                    <th nzWidth="150px">联系人 <br/>
-                        <input type="text" nz-input placeholder=""
-                               nzSize="small" style="width: 60%;"
-                               [(ngModel)]="params.contactName"
-                               (keyup)="$event.which === 13 && onKeywordSearchTh('contactName')">
-                    </th>
-                    <th>联系电话 <br/>
-                        <input type="text" nz-input placeholder=""
-                               nzSize="small" style="width: 60%;"
-                               [(ngModel)]="params.mobilePhone"
-                               (keyup)="$event.which === 13 && onKeywordSearchTh('mobilePhone')">
-                    </th>
-                </tr>
-                </thead>
-                <tbody>
-                <ng-template ngFor let-data [ngForOf]="nzTable.data">
-                    <tr *ngIf="data.level === 0"
-                        [ngClass]="{ 'table-row-selected': data.checked }"
-                        (click)="onSelectedTr($event, data)">
-                        <td [nzShowExpand]="data.customerList && data.customerList.length > 0"
-                            [(nzExpand)]="data.expand"
-                            (nzExpandChange)="onCollapse(data, $event)"></td>
-                        <td nzShowCheckbox
-                            [(nzChecked)]="data.checked"
-                            [nzDisabled]="data.disabled"
-                            (nzCheckedChange)="onSelected($event, data)"></td>
-                        <td>{{data.level ? '子收运单位' : (data.category === 'Cluster' ? '聚类点' : '普通点')}}</td>
-                        <td>
-                            <i nz-icon
-                               type="environment" theme="outline"
-                               class="location"
-                               (click)="onJumpToMointor(data.lngLat)"
-                               *ngIf="hasLngLat(data.lngLat)">
-                            </i>
-                        </td>
-                        <td>
-                            <div class="show-image-cell"
-                                  *ngIf="data.category === 'Separate' && data.images.length > 0"
-                                  (click)="onShowImage($event, data, tplImageModalContent)">
-                                <i nz-icon type="picture" theme="outline"></i>
-                            </div>
-                        </td>
-                        <td>{{data.name}}</td>
-                        <td>{{data.countyName}}</td>
-                        <td>{{data.duration}}</td>
-                        <td>{{data.fullAddress}}</td>
-                        <td>{{data.username}}</td>
-                        <td>{{data.totalDustbins}}</td>
-                        <td>{{data.createdDate | date:'yyyy-MM-dd'}}</td>
-                        <td>{{data.contactName}}</td>
-                        <td>{{data.mobilePhone || data.landlinePhone}}</td>
-                    </tr>
-                    <ng-template *ngIf="data.expand" ngFor let-item [ngForOf]="data.customerList">
-                        <tr [ngClass]="{ 'table-row-selected': item.checked }"
-                                (click)="onSelectedTr($event, item)">
-                            <td></td>
-                            <td nzShowCheckbox [(nzChecked)]="item.checked" [nzDisabled]="item.disabled"
-                                (nzCheckedChange)="onSelected($event, item)"></td>
-                            <td>子收运单位</td>
-                            <td>
-                                <i nz-icon
-                                   type="environment" theme="outline"
-                                   class="location"
-                                   *ngIf="item.lngLat">
-                                </i>
-                            </td>
-                            <td>
-                                <span class="show-image-cell"
-                                      *ngIf="item.category === 'Separate' && item.images.length"
-                                      (click)="onShowImage($event, item, tplImageModalContent)">
-                                    <i nz-icon type="picture" theme="outline"></i>
-                                </span>
-                            </td>
-                            <td>{{item.name}}</td>
-                            <td>{{item.countyName}}</td>
-                            <td>{{item.duration}}</td>
-                            <td>{{item.fullAddress}}</td>
-                            <td>{{item.username}}</td>
-                            <td>{{item.totalDustbins}}</td>
-                            <td>{{item.createdDate | date:'yyyy-MM-dd'}}</td>
-                            <td>{{item.contactName}}</td>
-                            <td>{{item.mobilePhone || item.landlinePhone}}</td>
-                        </tr>
-                    </ng-template>
-
-                </ng-template>
-                </tbody>
-            </nz-table>
-        </nz-spin>
-    </div>
+            <th nzWidth="150px">所属区域</th>
+            <th nzWidth="120px">收运时间段</th>
+            <th nzWidth="200px">
+              地址
+              <br />
+              <input
+                type="text"
+                nz-input
+                placeholder=""
+                nzSize="small"
+                style="width: 60%;"
+                [(ngModel)]="params.address"
+                (keyup)="$event.which === 13 && onKeywordSearchTh('address')"
+              />
+            </th>
+            <th nzWidth="200px">
+              账号
+              <br />
+              <input
+                type="text"
+                nz-input
+                placeholder=""
+                nzSize="small"
+                style="width: 60%;"
+                [(ngModel)]="params.username"
+                (keyup)="$event.which === 13 && onKeywordSearchTh('username')"
+              />
+            </th>
+            <th nzWidth="100px">派桶数</th>
+            <th
+              nzWidth="200px"
+              nzShowSort
+              [(nzSort)]="sortMap.createdDate"
+              (nzSortChange)="onSortTh('createdDate', $event)"
+            >
+              登记时间
+              <br />
+              <input
+                type="text"
+                nz-input
+                placeholder=""
+                nzSize="small"
+                style="width: 60%;"
+                [(ngModel)]="params.createdDate"
+                (focus)="onStopPropagation($event)"
+                (keyup)="
+                  $event.which === 13 && onKeywordSearchTh('createdDate')
+                "
+              />
+            </th>
+            <th nzWidth="150px">
+              联系人 <br />
+              <input
+                type="text"
+                nz-input
+                placeholder=""
+                nzSize="small"
+                style="width: 60%;"
+                [(ngModel)]="params.contactName"
+                (keyup)="
+                  $event.which === 13 && onKeywordSearchTh('contactName')
+                "
+              />
+            </th>
+            <th>
+              联系电话 <br />
+              <input
+                type="text"
+                nz-input
+                placeholder=""
+                nzSize="small"
+                style="width: 60%;"
+                [(ngModel)]="params.mobilePhone"
+                (keyup)="
+                  $event.which === 13 && onKeywordSearchTh('mobilePhone')
+                "
+              />
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-template ngFor let-data [ngForOf]="nzTable.data">
+            <tr
+              *ngIf="data.level === 0"
+              [ngClass]="{ 'table-row-selected': data.checked }"
+              (click)="onSelectedTr($event, data)"
+            >
+              <td
+                [nzShowExpand]="
+                  data.customerList && data.customerList.length > 0
+                "
+                [(nzExpand)]="data.expand"
+                (nzExpandChange)="onCollapse(data, $event)"
+              ></td>
+              <td
+                nzShowCheckbox
+                [(nzChecked)]="data.checked"
+                [nzDisabled]="data.disabled"
+                (nzCheckedChange)="onSelected($event, data)"
+              ></td>
+              <td>
+                {{
+                  data.level
+                    ? '子收运单位'
+                    : data.category === 'Cluster'
+                    ? '聚类点'
+                    : '普通点'
+                }}
+              </td>
+              <td>
+                <i
+                  nz-icon
+                  type="environment"
+                  theme="outline"
+                  class="location"
+                  (click)="onJumpToMointor(data.lngLat)"
+                  *ngIf="hasLngLat(data.lngLat)"
+                >
+                </i>
+              </td>
+              <td>
+                <div
+                  class="show-image-cell"
+                  *ngIf="data.category === 'Separate' && data.images.length > 0"
+                  (click)="onShowImage($event, data, tplImageModalContent)"
+                >
+                  <i nz-icon type="picture" theme="outline"></i>
+                </div>
+              </td>
+              <td>{{ data.name }}</td>
+              <td>{{ data.countyName }}</td>
+              <td>{{ data.duration }}</td>
+              <td>{{ data.fullAddress }}</td>
+              <td>{{ data.username }}</td>
+              <td>{{ data.totalDustbins }}</td>
+              <td>{{ data.createdDate | date: 'yyyy-MM-dd' }}</td>
+              <td>{{ data.contactName }}</td>
+              <td>{{ data.mobilePhone || data.landlinePhone }}</td>
+            </tr>
+            <ng-template
+              *ngIf="data.expand"
+              ngFor
+              let-item
+              [ngForOf]="data.customerList"
+            >
+              <tr
+                [ngClass]="{ 'table-row-selected': item.checked }"
+                (click)="onSelectedTr($event, item)"
+              >
+                <td></td>
+                <td
+                  nzShowCheckbox
+                  [(nzChecked)]="item.checked"
+                  [nzDisabled]="item.disabled"
+                  (nzCheckedChange)="onSelected($event, item)"
+                ></td>
+                <td>子收运单位</td>
+                <td>
+                  <i
+                    nz-icon
+                    type="environment"
+                    theme="outline"
+                    class="location"
+                    *ngIf="item.lngLat"
+                  >
+                  </i>
+                </td>
+                <td>
+                  <span
+                    class="show-image-cell"
+                    *ngIf="item.category === 'Separate' && item.images.length"
+                    (click)="onShowImage($event, item, tplImageModalContent)"
+                  >
+                    <i nz-icon type="picture" theme="outline"></i>
+                  </span>
+                </td>
+                <td>{{ item.name }}</td>
+                <td>{{ item.countyName }}</td>
+                <td>{{ item.duration }}</td>
+                <td>{{ item.fullAddress }}</td>
+                <td>{{ item.username }}</td>
+                <td>{{ item.totalDustbins }}</td>
+                <td>{{ item.createdDate | date: 'yyyy-MM-dd' }}</td>
+                <td>{{ item.contactName }}</td>
+                <td>{{ item.mobilePhone || item.landlinePhone }}</td>
+              </tr>
+            </ng-template>
+          </ng-template>
+        </tbody>
+      </nz-table>
+    </nz-spin>
+  </div>
 </div>
 
-<nz-modal [(nzVisible)]="isDelModalVisible" nzTitle="删除收运点" (nzOnCancel)="isDelModalVisible = false" (nzOnOk)="onDel()"
-          [nzOkLoading]="isDelOkLoading">
-    <p>{{parentCache && parentCache.customerList.length === 1
+<nz-modal
+  [(nzVisible)]="isDelModalVisible"
+  nzTitle="删除收运点"
+  (nzOnCancel)="isDelModalVisible = false"
+  (nzOnOk)="onDel()"
+  [nzOkLoading]="isDelOkLoading"
+>
+  <p>
+    {{
+      parentCache && parentCache.customerList.length === 1
         ? '聚类点要求至少存在一个子收运单位,删除最后一个子收运单位后,该聚类点将被删除'
-        : '确认删除该单位?'}}</p>
+        : '确认删除该单位?'
+    }}
+  </p>
 </nz-modal>
 
 <ng-template #tplImageModalContent>
-    <nz-carousel [nzAutoPlay]="true" *ngIf="!!images">
-        <div class="carousel-content" nz-carousel-content *ngFor="let image of images">
-            <img [src]="image.url" alt="图片加载失败">
-        </div>
-    </nz-carousel>
+  <nz-carousel [nzAutoPlay]="true" *ngIf="!!images">
+    <div
+      class="carousel-content"
+      nz-carousel-content
+      *ngFor="let image of images"
+    >
+      <img [src]="image.url" alt="图片加载失败" />
+    </div>
+  </nz-carousel>
 </ng-template>
