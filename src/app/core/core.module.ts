@@ -13,22 +13,20 @@ import { InterceptorServices } from './services/interceptors/interceptors.servic
 import { StorageService } from './services/storage/storage.service';
 import { TitleService } from './services/title/title.service';
 import { TokenService } from './services/token/token.service';
+import { DownloadReportsService } from './services/reports/downloadReports.service';
 
 @NgModule({
-    imports: [
-        RebirthHttpModule
-    ],
-    exports: [],
-    providers: [
-        AuthorizationService,
-        AuthRoutingGuardService,
-        InterceptorServices,
-        StorageService,
-        TitleService,
-        TokenService,
-    ],
-    declarations: [],
+  imports: [RebirthHttpModule],
+  exports: [],
+  providers: [
+    AuthorizationService,
+    AuthRoutingGuardService,
+    InterceptorServices,
+    StorageService,
+    TitleService,
+    TokenService,
+    DownloadReportsService
+  ],
+  declarations: []
 })
-export class CoreModule {
-
-}
+export class CoreModule {}

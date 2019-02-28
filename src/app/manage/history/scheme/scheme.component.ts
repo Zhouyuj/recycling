@@ -13,6 +13,7 @@ import { TableBasicComponent } from '../../table-basic.component';
 import { NotificationService } from 'src/app/shared/services/notification/notification.service';
 import { ModalService } from 'src/app/shared/services/modal/modal.service';
 import { Route, Router } from '@angular/router';
+import { DownloadReportsService } from '../../../core/services/reports/downloadReports.service';
 
 @Component({
   selector: 'app-history-scheme',
@@ -47,7 +48,8 @@ export class SchemeComponent extends TableBasicComponent implements OnInit {
     private historyService: HistoryService,
     private modalService: ModalService,
     private notificationService: NotificationService,
-    private router: Router
+    private router: Router,
+    private downloadReportsService: DownloadReportsService
   ) {
     super();
   }
@@ -91,16 +93,16 @@ export class SchemeComponent extends TableBasicComponent implements OnInit {
       });
       return;
     }
+    if (this.selectedItem.state !== 'Completed') {
+      this.notificationService.create({
+        type: 'warning',
+        title: '请选择已完成方案导出'
+      });
+      return;
+    }
     this.historyService.getPlanReport(this.selectedItem.id).subscribe(
       res => {
-        var objectUrl = URL.createObjectURL(res);
-        var a = document.createElement('a');
-        document.body.appendChild(a);
-        a.setAttribute('style', 'display:none');
-        a.setAttribute('href', objectUrl);
-        a.setAttribute('download', '模板.xls');
-        a.click();
-        document.body.removeChild(a);
+        this.downloadReportsService.download(res);
       },
       err => {
         this.getListByPage();

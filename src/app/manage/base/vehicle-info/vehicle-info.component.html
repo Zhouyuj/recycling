@@ -1,155 +1,190 @@
 <div class="wrap">
-    <!-- -------- 表格操作 -------- -->
-    <div class="table-operations">
-        <div nz-row nzGutter="16">
-            <div nz-col class="gutter-row" nzSpan="10">
-                <!-- 面包屑导航 -->
-                <app-breadcrumbs [options]="breadcrumbs"></app-breadcrumbs>
-            </div>
-            <div nz-col class="gutter-row" nzSpan="4" nzOffset="2">
-                <!-- 关键字搜索 -->
-            </div>
-            <div nz-col class="gutter-row" nzSpan="8">
-                <!-- CUDE: create,update,delete,export -->
-                <div class="table-CUDE">
-                    <button nz-button
-                            nzType="default"
-                            (click)="onAdd()">
-                        添加
-                    </button>
-                    &nbsp;
-                    <button nz-button
-                            [disabled]="!formCache"
-                            nzType="default"
-                            (click)="onEdit()">
-                        编辑
-                    </button>
-                    &nbsp;
-                    <button nz-button
-                            (click)="onDel()"
-                            [disabled]="!formCache"
-                            nzType="default">
-                        删除
-                    </button>
-                    &nbsp;
-                    <button nz-button
-                            nzType="default"
-                            (click)="onExp()">
-                        导出
-                    </button>
-                    &nbsp;
-                </div>
-            </div>
+  <!-- -------- 表格操作 -------- -->
+  <div class="table-operations">
+    <div nz-row nzGutter="16">
+      <div nz-col class="gutter-row" nzSpan="10">
+        <!-- 面包屑导航 -->
+        <app-breadcrumbs [options]="breadcrumbs"></app-breadcrumbs>
+      </div>
+      <div nz-col class="gutter-row" nzSpan="4" nzOffset="2">
+        <!-- 关键字搜索 -->
+      </div>
+      <div nz-col class="gutter-row" nzSpan="8">
+        <!-- CUDE: create,update,delete,export -->
+        <div class="table-CUDE">
+          <button nz-button nzType="default" (click)="onAdd()">
+            添加
+          </button>
+          &nbsp;
+          <button
+            nz-button
+            [disabled]="!formCache"
+            nzType="default"
+            (click)="onEdit()"
+          >
+            编辑
+          </button>
+          &nbsp;
+          <button
+            nz-button
+            (click)="onDel()"
+            [disabled]="!formCache"
+            nzType="default"
+          >
+            删除
+          </button>
+          &nbsp;
+          <button
+            nz-button
+            nzType="default"
+            [disabled]="!formCache"
+            (click)="onExp()"
+          >
+            导出
+          </button>
+          &nbsp;
         </div>
+      </div>
     </div>
-    <!-- -------- 表格内容 -------- -->
-    <div class="table-content">
-        <nz-spin [nzSize]="'large'" [nzSpinning]="isSpinning">
-
-            <nz-table #staffTable
-                      [nzData]="listCache"
-                      [nzScroll]="{ x: '2000px', y: tableScrollY}"
-                      [nzFrontPagination]="false"
-                      [nzTotal]="pageRes.total"
-                      [nzPageIndex]="pageRes.page"
-                      [nzPageSize]="pageRes.size"
-                      (nzPageIndexChange)="onPage($event)"
-                      (nzPageSizeChange)="onPage($event)">
-                <thead>
-                <tr>
-                    <th nzWidth="62px"></th><!-- 此表头为checkbox -->
-                    <th nzWidth="100px">
-                        当前位置
-                    </th>
-                    <th nzWidth="150px">
-                        是否参与规划
-                    </th>
-                    <th nzWidth="100px">
-                        是否可用
-                    </th>
-                    <th nzWidth="150px">
-                        车牌号
-                        <br/>
-                        <input type="text" nz-input placeholder=""
-                               nzSize="small" style="width: 60%;"
-                               [(ngModel)]="params.plateNumber"
-                               (keyup)="$event.which === 13 && onKeywordSearch()">
-                    </th>
-                    <!--<th nzWidth="150px"
+  </div>
+  <!-- -------- 表格内容 -------- -->
+  <div class="table-content">
+    <nz-spin [nzSize]="'large'" [nzSpinning]="isSpinning">
+      <nz-table
+        #staffTable
+        [nzData]="listCache"
+        [nzScroll]="{ x: '2000px', y: tableScrollY }"
+        [nzFrontPagination]="false"
+        [nzTotal]="pageRes.total"
+        [nzPageIndex]="pageRes.page"
+        [nzPageSize]="pageRes.size"
+        (nzPageIndexChange)="onPage($event)"
+        (nzPageSizeChange)="onPage($event)"
+      >
+        <thead>
+          <tr>
+            <th nzWidth="62px"></th>
+            <!-- 此表头为checkbox -->
+            <th nzWidth="100px">
+              当前位置
+            </th>
+            <th nzWidth="150px">
+              是否参与规划
+            </th>
+            <th nzWidth="100px">
+              是否可用
+            </th>
+            <th nzWidth="150px">
+              车牌号
+              <br />
+              <input
+                type="text"
+                nz-input
+                placeholder=""
+                nzSize="small"
+                style="width: 60%;"
+                [(ngModel)]="params.plateNumber"
+                (keyup)="$event.which === 13 && onKeywordSearch()"
+              />
+            </th>
+            <!--<th nzWidth="150px"
                         nzShowFilter
                         [nzFilters]="countyFilterList"
                         [nzFilterMultiple]="false"
                         (nzFilterChange)="onFilter($event, 'area')">
                         所属区域
                     </th>-->
-                    <th nzWidth="150px">
-                        当前司机
-                        <br/>
-                        <input type="text" nz-input placeholder=""
-                               nzSize="small" style="width: 60%;"
-                               [(ngModel)]="params.driver"
-                               (keyup)="$event.which === 13 && onKeywordSearch()">
-                    </th>
-                    <th nzWidth="200px">
-                        计划出车时间
-                    </th>
-                    <th nzWidth="150px"
-                        nzShowFilter
-                        [nzFilters]="vehicleCategoryFilterList"
-                        [nzFilterMultiple]="false"
-                        (nzFilterChange)="onFilter($event, 'typeId')">
-                        车型
-                    </th>
-                    <th nzWidth="150px">
-                        车架号
-                    </th>
-                    <th nzWidth="150px">
-                        发动机号
-                    </th>
-                    <th nzWidth="150px">
-                        车载盒子ID
-                        <br/>
-                        <input type="text" nz-input placeholder=""
-                               nzSize="small" style="width: 60%;"
-                               [(ngModel)]="params.boxId"
-                               (keyup)="$event.which === 13 && onKeywordSearch()">
-                    </th>
-                    <th nzWidth="200px"
-                        nzShowSort
-                        [(nzSort)]="sortMap.buyDate"
-                        (nzSortChange)="onSort($event, 'buyDate')">
-                        购买时间
-                    </th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr *ngFor="let item of listCache; index as i"
-                    [ngClass]="{ 'table-row-selected': item.checked }"
-                    (click)="onSelectTr($event, item)">
-                    <td nzShowCheckbox [(nzChecked)]="item.checked"
-                        (nzCheckedChange)="onSelect($event, item)"></td>
-                    <td>
-                        <i nz-icon ></i>
-                        <i nz-icon type="environment" theme="outline"
-                           class="location"
-                           (click)="onJumpToMointor(item.lngLat)"
-                           *ngIf="hasLngLat(item.lngLat)">
-                        </i>
-                    </td>
-                    <td>{{item.plan ? '是' : '否'}}</td>
-                    <td>{{item.available ? '是' : '否'}}</td>
-                    <td>{{item.plateNumber}}</td>
-                    <!--<td>{{item.district}}</td>-->
-                    <td>{{item.driver}}</td>
-                    <td>{{item.planDepartureTime | arrayToTime}}</td>
-                    <td>{{item.vehicleType}}</td>
-                    <td>{{item.idNumber}}</td>
-                    <td>{{item.engineModel}}</td>
-                    <td>{{item.boxId}}</td>
-                    <td>{{item.buyDate}}</td>
-                </tr>
-                </tbody>
-            </nz-table>
-        </nz-spin>
-    </div>
+            <th nzWidth="150px">
+              当前司机
+              <br />
+              <input
+                type="text"
+                nz-input
+                placeholder=""
+                nzSize="small"
+                style="width: 60%;"
+                [(ngModel)]="params.driver"
+                (keyup)="$event.which === 13 && onKeywordSearch()"
+              />
+            </th>
+            <th nzWidth="200px">
+              计划出车时间
+            </th>
+            <th
+              nzWidth="150px"
+              nzShowFilter
+              [nzFilters]="vehicleCategoryFilterList"
+              [nzFilterMultiple]="false"
+              (nzFilterChange)="onFilter($event, 'typeId')"
+            >
+              车型
+            </th>
+            <th nzWidth="150px">
+              车架号
+            </th>
+            <th nzWidth="150px">
+              发动机号
+            </th>
+            <th nzWidth="150px">
+              车载盒子ID
+              <br />
+              <input
+                type="text"
+                nz-input
+                placeholder=""
+                nzSize="small"
+                style="width: 60%;"
+                [(ngModel)]="params.boxId"
+                (keyup)="$event.which === 13 && onKeywordSearch()"
+              />
+            </th>
+            <th
+              nzWidth="200px"
+              nzShowSort
+              [(nzSort)]="sortMap.buyDate"
+              (nzSortChange)="onSort($event, 'buyDate')"
+            >
+              购买时间
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let item of listCache; index as i"
+            [ngClass]="{ 'table-row-selected': item.checked }"
+            (click)="onSelectTr($event, item)"
+          >
+            <td
+              nzShowCheckbox
+              [(nzChecked)]="item.checked"
+              (nzCheckedChange)="onSelect($event, item)"
+            ></td>
+            <td>
+              <i nz-icon></i>
+              <i
+                nz-icon
+                type="environment"
+                theme="outline"
+                class="location"
+                (click)="onJumpToMointor(item.lngLat)"
+                *ngIf="hasLngLat(item.lngLat)"
+              >
+              </i>
+            </td>
+            <td>{{ item.plan ? '是' : '否' }}</td>
+            <td>{{ item.available ? '是' : '否' }}</td>
+            <td>{{ item.plateNumber }}</td>
+            <!--<td>{{item.district}}</td>-->
+            <td>{{ item.driver }}</td>
+            <td>{{ item.planDepartureTime | arrayToTime }}</td>
+            <td>{{ item.vehicleType }}</td>
+            <td>{{ item.idNumber }}</td>
+            <td>{{ item.engineModel }}</td>
+            <td>{{ item.boxId }}</td>
+            <td>{{ item.buyDate }}</td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </nz-spin>
+  </div>
 </div>
