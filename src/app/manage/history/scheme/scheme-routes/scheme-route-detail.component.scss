@@ -66,11 +66,22 @@ $table-height: calc(
     }
 
     .task-pane {
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 313px;
+      background-color: white;
+
+      .tag-text {
+        width: 110px;
+        display: block;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
         position: absolute;
-        right: 0;
-        top: 0;
-        width: 300px;
-        background-color: white;
+        margin-top: -22px;
+        margin-left: 35px;
+      }
     }
 }
 

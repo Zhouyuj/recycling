@@ -15,6 +15,8 @@ export interface RouteModel {
     vehicle: VehicleOfRoute;
     collectionQuantity: number; // 手持报量(吨)
     weighedQuantity: number; // 地磅报量(吨)
+    startTime: number;
+    endTime: number;
     taskList?: TaskModel[];
 }
 
@@ -23,6 +25,7 @@ export interface RouteListModel extends RouteModel {
 }
 
 export interface VehicleOfRoute {
+    id: number;
     lat: number;
     lng: number;
     plateNumber: string;

@@ -114,7 +114,8 @@ export class SchemeComponent extends TableBasicComponent implements OnInit {
     this.router.navigate([
       `/manage/history/scheme/${item.id}/routes`,
       {
-        name: item.name
+        name: item.name,
+        date: item.createdDate
       }
     ]);
   }

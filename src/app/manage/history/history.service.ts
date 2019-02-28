@@ -17,6 +17,7 @@ import { PageRes } from '../../shared/models/page/page-res.model';
 import { Result } from '../../shared/models/response/result.model';
 import { RouteModel, RouteListModel } from '../plan/models/route.model';
 import { TaskModel } from '../plan/models/task.model';
+import { LocationModel } from './models/location.model';
 
 @Injectable({
   providedIn: 'root'
@@ -25,6 +26,16 @@ export class HistoryService extends RebirthHttp {
   constructor(http: HttpClient) {
     super(http);
   }
+
+  @GET('/locations/:vehicleId/:startTime/:endTime')
+  getLocations(
+    @Path('vehicleId') vehicleId: number,
+    @Path('startTime') startTime: number,
+    @Path('endTime') endTime: number
+  ): Observable<Result<LocationModel[]>> {
+    return null;
+  }
+
 
   @GET('/routes')
   getRouteList(@Query('params')
