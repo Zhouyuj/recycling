@@ -93,16 +93,9 @@ export class SchemeComponent extends TableBasicComponent implements OnInit {
       });
       return;
     }
-    if (this.selectedItem.state !== 'Completed') {
-      this.notificationService.create({
-        type: 'warning',
-        title: '请选择已完成方案导出'
-      });
-      return;
-    }
     this.historyService.getPlanReport(this.selectedItem.id).subscribe(
       res => {
-        this.downloadReportsService.download(res);
+        this.downloadReportsService.download(res, this.selectedItem.name);
       },
       err => {
         this.getListByPage();
