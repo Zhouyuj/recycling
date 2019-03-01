@@ -33,6 +33,10 @@ export class Driving {
             this[k] = obj[k];
         }
     }
+
+    search(start: any, end: any, opts: { waypoints: number[] }) {}
+
+    clear() {}
 }
 
 export enum DrivingPolicy {

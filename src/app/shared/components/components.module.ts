@@ -10,6 +10,9 @@ import { CascaderComponent } from './cascader/cascader.component';
 import { HeaderComponent } from './header/header.component';
 import { SelectComponent } from './select/select.component';
 import { TimePickerComponent } from './time-picker/time-picker.component';
+import { AmapComponent } from './amap/amap.component';
+import { AmarkerComponent } from './amap/amarker.component';
+import { AdrivingComponent } from './amap/adriving.component';
 
 @NgModule({
     imports     : [
@@ -24,6 +27,9 @@ import { TimePickerComponent } from './time-picker/time-picker.component';
         HeaderComponent,
         SelectComponent,
         TimePickerComponent,
+        AmapComponent,
+        AmarkerComponent,
+        AdrivingComponent
     ],
     declarations: [
         BreadcrumbsComponent,
@@ -31,6 +37,9 @@ import { TimePickerComponent } from './time-picker/time-picker.component';
         HeaderComponent,
         SelectComponent,
         TimePickerComponent,
+        AmapComponent,
+        AmarkerComponent,
+        AdrivingComponent
     ],
 })
 export class ComponentsModule {
