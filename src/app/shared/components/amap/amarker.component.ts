@@ -13,7 +13,7 @@ export class AmarkerComponent implements OnInit {
     @Input() type: string;
     @Input() text: string;
     @Input() color: string;
-    @Input() onDragEvent: Function;
+    @Output() drag = new EventEmitter<Function>();
     @Output() remove = new EventEmitter<Function>();
     @Output() create = new EventEmitter<Function>();
 
@@ -101,12 +101,14 @@ export class AmarkerComponent implements OnInit {
             content: this.createMarkerContentForNumber(text, color),
             offset: [-24, -50],
         };
-        if (this.onDragEvent) {
+        if (this.drag) {
             markerOptions.draggable = true;
         }
         const marker = new Marker(markerOptions);
         const amapMarker = this.mapService.createMarker(marker);
-        amapMarker.on('dragend', this.onDragEvent);
+        amapMarker.on('dragend', (event: any) => {
+            this.drag.emit(event);
+        });
         return amapMarker;
     }
 }

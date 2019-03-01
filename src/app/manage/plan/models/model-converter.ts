@@ -55,21 +55,32 @@ export class ModelConverter {
                 };
             });
         }
-        try {
-            l = {
-                id                : r.id,
-                name              : r.name,
-                collectionPeriods : collectionPeriods,
-                collectionPeriodId: collectionPeriods[ 0 ].id,
-                selectedPeriod    : collectionPeriods[ 0 ],
-                amountOfGarbage   : r.dustbin,
-                checked           : false,
-                expand            : false,
-                taskList          : taskList || null,
-            };
-        } catch (e) {
-            console.error('收运单位数据转化为收运请求数据出错::尤其检查收运时间段是否为空数组', r);
-        }
+        // try {
+        //     l = {
+        //         id                : r.id,
+        //         name              : r.name,
+        //         collectionPeriods : collectionPeriods,
+        //         collectionPeriodId: collectionPeriods[ 0 ].id,
+        //         selectedPeriod    : collectionPeriods[ 0 ],
+        //         amountOfGarbage   : r.dustbin,
+        //         checked           : false,
+        //         expand            : false,
+        //         taskList          : taskList || null,
+        //     };
+        // } catch (e) {
+        //     console.error('收运单位数据转化为收运请求数据出错::尤其检查收运时间段是否为空数组', r);
+        // }
+        l = {
+            id                : r.id,
+            name              : r.name,
+            collectionPeriods : collectionPeriods,
+            collectionPeriodId: collectionPeriods.length ? collectionPeriods[ 0 ].id : -1,
+            selectedPeriod    : collectionPeriods.length ? collectionPeriods[ 0 ] : undefined,
+            amountOfGarbage   : r.dustbin,
+            checked           : false,
+            expand            : false,
+            taskList          : taskList || null,
+        };
         return l;
     }
 

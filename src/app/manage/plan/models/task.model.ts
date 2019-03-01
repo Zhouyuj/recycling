@@ -4,6 +4,7 @@
 
 export interface TaskModel {
     id: number;
+    customerId: number;
     name: string;
     amountOfGarbage: number;
     priority: number;

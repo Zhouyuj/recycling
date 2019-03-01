@@ -8,7 +8,9 @@ import {
   DELETE,
   Path,
   POST,
-  RequestOptions
+  RequestOptions,
+  PUT,
+  Body
 } from 'rebirth-http';
 
 import { PlanRes } from '../plan/models/plan-res.model';
@@ -36,6 +38,12 @@ export class HistoryService extends RebirthHttp {
     return null;
   }
 
+  @PUT('/customers/:id/location')
+  updateCustomerLocation(
+    @Path('id') id: number,
+    @Body location: { lng: number, lat: number }): Observable<Result<any>> {
+    return null;
+  }
 
   @GET('/routes')
   getRouteList(@Query('params')

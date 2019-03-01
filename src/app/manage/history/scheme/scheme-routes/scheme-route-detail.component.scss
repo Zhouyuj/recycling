@@ -89,7 +89,7 @@ $table-height: calc(
   border: 1px solid rgb(250, 245, 247);
 
   .monitor-info {
-    padding: 6px;
+    padding: 4px;
     background-color: rgb(250, 248, 250);
 
     i[nz-icon] {
@@ -109,6 +109,11 @@ $table-height: calc(
 
     button[nz-button] {
       font-size: 12px;
+    }
+    
+    .has-icon-button {
+      border: none;
+      background: transparent;
     }
   }
 }

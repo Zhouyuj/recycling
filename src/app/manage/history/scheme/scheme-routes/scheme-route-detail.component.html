@@ -37,7 +37,7 @@
                     [type]="stationMarkerType"
                     [text]="station.priority"
                     [color]="convertTaskStateToColor(station.state)"
-                    [onDragEvent]="onDragEvent">
+                    (drag)="onDragEvent($event, station)">
                 </app-amarker>
                 <app-amarker *ngIf="runPlanVehiclePosition" 
                     [longitude]="runPlanVehiclePosition.lng"
@@ -135,6 +135,7 @@
                         nz-popover
                         nzTrigger="click"
                         [nzContent]="speedHandle"
+                        [disabled]="!hasRunPlan"
                         [nzSize]="'small'">
                         倍速
                     </button>
@@ -152,20 +153,24 @@
                 </div>
                 <div nz-col nzSpan="1"></div>
                 <div nz-col nzSpan="2">
-                    <button nz-button (click)="onToCenter()" [nzSize]="'small'">车辆居中</button>
+                    <button nz-button [disabled]="!hasRunPlan" (click)="onToCenter()" [nzSize]="'small'">车辆居中</button>
                 </div>
                 <div nz-col nzSpan="2">
-                    <button nz-button (click)="onRunPlan()" [nzSize]="'small'">行车轨迹</button>
+                    <button nz-button [disabled]="!hasRunPlan" (click)="onRunPlan()" [nzSize]="'small'">行车轨迹</button>
                 </div>
                 <div nz-col nzSpan="2">
-                    <button nz-button (click)="onPlanRoute()" [nzSize]="'small'">计划路线</button>
+                    <button nz-button [disabled]="!hasRunPlan" (click)="onPlanRoute()" [nzSize]="'small'">计划路线</button>
                 </div>
                 <div nz-col nzSpan="9"></div>
             </div>
             <div nz-row>
                 <div nz-col nzSpan="1">
-                    <i *ngIf="!isPlay" nz-icon type="caret-right" (click)="onPlay()"></i>
-                    <i *ngIf="isPlay" nz-icon type="pause" (click)="onPlay()"></i>
+                    <button class="has-icon-button" nz-button *ngIf="!isPlay" [disabled]="!hasRunPlan">
+                        <i nz-icon type="caret-right" (click)="onPlay()"></i>
+                    </button>
+                    <button class="has-icon-button" nz-button *ngIf="isPlay" [disabled]="!hasRunPlan">
+                        <i nz-icon type="pause" (click)="onPlay()"></i>
+                    </button>
                 </div>
                 <div nz-col nzSpan="2">
                     <div class="time-text">{{startTime}}</div>

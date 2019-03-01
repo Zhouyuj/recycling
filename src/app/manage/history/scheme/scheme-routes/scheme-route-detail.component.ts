@@ -14,7 +14,6 @@ import { Driving } from 'src/app/shared/services/map/driving.model';
 import { VerifyUtil } from 'src/app/shared/utils/verify-utils';
 import { LocationModel } from '../../models/location.model';
 import { DateUtil } from 'src/app/shared/utils/date-utils';
-import { repeat } from 'rxjs/operators';
 
 interface ILngLat {
     lng: number;
@@ -115,8 +114,11 @@ export class SchemeRouteDetailComponent extends TableBasicComponent implements O
             });
     }
 
-    onDragEvent(event) {
-        console.log(event);
+    onDragEvent(event, property: TaskModel) {
+        this.historyService.updateCustomerLocation(property.customerId, {
+            lng: event.lnglat.O,
+            lat: event.lnglat.P
+        }).subscribe(console.log);
     }
 
     assembleRouteByParams(): void {
@@ -141,6 +143,7 @@ export class SchemeRouteDetailComponent extends TableBasicComponent implements O
                 weighedQuantity: this.transformParamValue(+params.get('weighedQuantity')),
                 date
             };
+            this.setStartLngLat(this.currentRoute.vehicle.lng, this.currentRoute.vehicle.lat);
         });
     }
 
