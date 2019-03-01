@@ -95,7 +95,7 @@
                                         <span class="tag-text" [title]="item.name">{{item.name}}</span>
                                     </td>
                                     <td class="amount-of-garbage">
-                                        {{(item.amountOfGarbage * 0.1).toFixed(2)}}
+                                        {{item.amountOfGarbage}}
                                     </td>
                                 </tr>
                                 <ng-template *ngIf="item.expand"
@@ -112,7 +112,7 @@
                                             <span class="tag-text" [title]="child.name">{{child.name}}</span>
                                         </td>
                                         <td class="amount-of-garbage">
-                                            {{(item.amountOfGarbage * 0.1).toFixed(2)}}
+                                            {{item.amountOfGarbage * 0.1}}
                                         </td>
                                     </tr>
                                 </ng-template>
