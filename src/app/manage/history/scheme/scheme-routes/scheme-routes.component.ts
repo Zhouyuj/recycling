@@ -40,6 +40,7 @@ export class SchemeRoutesComponent extends TableBasicComponent implements OnInit
     isSpinning = false;
     planId: number;
     planName: string;
+    planDate: string;
 
     pageReq = new PageReq();
     pageRes = new PageRes();
@@ -59,24 +60,22 @@ export class SchemeRoutesComponent extends TableBasicComponent implements OnInit
 
         this.planId = +this.route.snapshot.paramMap.get('id');
         this.planName = this.route.snapshot.paramMap.get('name');
+        this.planDate = this.route.snapshot.paramMap.get('date');
 
         this.getList();
     }
 
     onDetail() {
-        // this.isSpinning = true;
-        // this.historyService.getTaskList(this.selectedItem.id)
-        //     .subscribe(val => {
-        //         this.isSpinning = false;
-        //         console.log(val);
-        //     });
-        const { id, name, driver, collectionQuantity, weighedQuantity } = this.selectedItem;
+        const { id, name, driver, collectionQuantity, weighedQuantity, startTime, endTime } = this.selectedItem;
         const { plateNumber, lat, lng } = this.selectedItem.vehicle;
         const url = `/manage/history/scheme/${this.planId}/routes/${id}/route`;
         this.router.navigate([url, {
             id, name, plateNumber,
             driver, collectionQuantity,
             weighedQuantity, lat, lng,
+            startTime, endTime,
+            vehicleId: this.selectedItem.vehicle.id,
+            date: this.planDate
         }]);
     }
 

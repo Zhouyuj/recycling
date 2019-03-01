@@ -12,24 +12,81 @@ import { TaskModel, TaskState } from 'src/app/manage/plan/models/task.model';
 import { Result } from 'src/app/shared/models/response/result.model';
 import { Driving } from 'src/app/shared/services/map/driving.model';
 import { VerifyUtil } from 'src/app/shared/utils/verify-utils';
+import { LocationModel } from '../../models/location.model';
+import { DateUtil } from 'src/app/shared/utils/date-utils';
+import { repeat } from 'rxjs/operators';
+
+interface ILngLat {
+    lng: number;
+    lat: number;
+}
 
 @Component({
   selector: 'app-history-scheme-route-detail',
   templateUrl: './scheme-route-detail.component.html',
   styleUrls: ['./scheme-route-detail.component.scss']
 })
-export class SchemeRouteDetailComponent extends TableBasicComponent
-  implements OnInit {
-  percent = 0;
-  speed = 1;
-  isPlay = false;
-  isOpen = false;
-  interval$: any;
-  currentRoute: RouteModel | any;
-  listCache: TaskModel[];
-  map: Map;
+export class SchemeRouteDetailComponent extends TableBasicComponent implements OnInit {
 
-  private drivingService: any;
+    percent = 0;
+    speed = 1;
+    isPlay = false;
+    isOpen = false;
+    hasRunPlan = false;
+    isSpinning = false;
+    interval$: any;
+    currentRoute: RouteModel | any;
+    listCache: TaskModel[];
+    locationList: LocationModel[];
+    startLngLat: number[];
+    map: Map;
+
+    taskPaneHeight: string;
+    startTime: string;
+    endTime: string;
+    timeDiffIndex = 0;
+
+    runPlanVechileMarker: any;
+
+    private drivingRunPlanService: any;
+    private drivingPlanRouteService: any;
+
+    constructor(
+        private mapService: MapService,
+        private historyService: HistoryService,
+        private location: Location,
+        private route: ActivatedRoute) {
+        super();
+    }
+
+    ngOnInit() {
+        this.calcTableScrollY(-50);
+        this.calcTaskPaneHeight();
+
+        this.initMap().subscribe(() => {
+            this.startTime = DateUtil.dateFormat(new Date(this.currentRoute.startTime), 'h:m:s');
+            this.endTime = DateUtil.dateFormat(new Date(this.currentRoute.endTime), 'h:m:s');
+
+            this.historyService.getLocations(this.currentRoute.vehicle.id, this.currentRoute.startTime, this.currentRoute.endTime)
+                .subscribe((result: Result<LocationModel[]>) => {
+                    this.locationList = result.data;
+                    if (this.locationList) {
+                        this.hasRunPlan = true;
+                        this.startLngLat = [
+                            this.locationList[0].longitude,
+                            this.locationList[1].latitude
+                        ];
+
+                        this.setCenter(this.startLngLat);
+                        this.createVehicleMarker(this.startLngLat, this.currentRoute.vehicle.plateNumber);
+                    }
+                });
+
+            this.createDrivingService();
+            this.searchTaskListWithRender();
+        });
+        this.assembleRouteByParams();
+    }
 
   constructor(
     private mapService: MapService,
@@ -40,38 +97,40 @@ export class SchemeRouteDetailComponent extends TableBasicComponent
     super();
   }
 
-  ngOnInit() {
-    this.calcTableScrollY(-50);
-    this.initMap().subscribe(() => {
-      const lngLat = [
-        this.currentRoute.vehicle.lng,
-        this.currentRoute.vehicle.lat
-      ];
-      this.setCenter(lngLat);
-      this.createVehicleMarker(lngLat, this.currentRoute.vehicle.plateNumber);
-      this.createDrivingService();
-      this.searchTaskListWithRender();
-    });
-    this.assembleRouteByParams();
-  }
+    calcTaskPaneHeight(): void {
+        this.taskPaneHeight = (+this.tableScrollY.replace('px', '') - 60) + 'px';
+    }
 
-  initMap() {
-    const subject = new Subject();
-    const subscription = this.mapService
-      .initMap()
-      .subscribe((hasLoaded: boolean) => {
-        if (hasLoaded) {
-          this.map = this.mapService.createMap(
-            new Map('map', [113.18691, 23.031716], 15)
-          );
-          if (subscription) {
-            subscription.unsubscribe(); // 取消定时器
-            subject.next(true);
-          }
-        }
-      });
-    return subject;
-  }
+    searchTaskListWithRender(): void {
+        this.isSpinning = true;
+        this.historyService.getTaskList(this.currentRoute.id)
+        .subscribe((result: Result<TaskModel[]>) => {
+            this.isSpinning = false;
+            this.listCache = result.data;
+            this.createVehicleMarkers(this.listCache);
+        });
+    }
+
+    assembleRouteByParams(): void {
+        this.route.paramMap.subscribe((params) => {
+            this.currentRoute = {
+                id: +params.get('id'),
+                name: params.get('name'),
+                driver: params.get('driver'),
+                vehicle: {
+                    id: +params.get('vehicleId'),
+                    plateNumber: params.get('plateNumber'),
+                    lat: +params.get('lat'),
+                    lng: +params.get('lng'),
+                },
+                startTime: +params.get('startTime'),
+                endTime: +params.get('endTime'),
+                collectionQuantity: +params.get('collectionQuantity'),
+                weighedQuantity: +params.get('weighedQuantity'),
+                date: params.get('date').substr(0, 10),
+            };
+        });
+    }
 
   searchTaskListWithRender(): void {
     this.historyService
@@ -82,34 +141,51 @@ export class SchemeRouteDetailComponent extends TableBasicComponent
       });
   }
 
-  assembleRouteByParams(): void {
-    this.route.paramMap.subscribe(params => {
-      this.currentRoute = {
-        id: +params.get('id'),
-        name: params.get('name'),
-        driver: params.get('driver'),
-        vehicle: {
-          plateNumber: params.get('plateNumber'),
-          lat: +params.get('lat'),
-          lng: +params.get('lng')
-        },
-        collectionQuantity: +params.get('collectionQuantity'),
-        weighedQuantity: +params.get('weighedQuantity')
-      };
-    });
-  }
+    createDrivingService(): void {
+        const drivingRunPlanModel = new Driving({
+            map: this.map,
+            hideMarkers: true
+        });
+        this.drivingRunPlanService = this.mapService.createDriving(drivingRunPlanModel);
+        const drivingPlanRouteModel = new Driving({
+            map: this.map,
+            hideMarkers: true,
+            outlineColor: 'blue'
+        });
+        this.drivingPlanRouteService = this.mapService.createDriving(drivingPlanRouteModel);
+    }
 
-  setCenter(lngLat: number[]): void {
-    this.mapService.setCenter(lngLat);
-  }
+    clearRunPlanWaypoints() {
+        this.drivingRunPlanService.clear();
+    }
 
-  createDrivingService(): void {
-    const drivingModel = new Driving({
-      map: this.map,
-      hideMarkers: true
-    });
-    this.drivingService = this.mapService.createDriving(drivingModel);
-  }
+    clearPlanRouteWaypoints() {
+        this.drivingPlanRouteService.clear();
+    }
+
+    /**
+     * 根据任务列表数据直接在地图上画出行车路径
+     * 如果数据是有5个点，会由起点一直画到终点（包括起点终点之间的途经点）
+     */
+    drawRouteWaypoints(drivingService: any, lngLatList: ILngLat[]) {
+        const firstModel: ILngLat = lngLatList[0];
+        const lastLenght: number = lngLatList.length - 1;
+        const lastModel: ILngLat = lngLatList[lastLenght];
+        if (firstModel) {
+            const waypoints: number[] = [];
+            lngLatList.forEach((model: ILngLat, index: number) => {
+                if (index === lastLenght) {
+                    return;
+                }
+                waypoints.push(this.mapService.lngLat([model.lng, model.lat]));
+            });
+            drivingService.search(
+                new AMap.LngLat(this.startLngLat[0], this.startLngLat[1]),
+                new AMap.LngLat(lastModel.lng, lastModel.lat),
+                {waypoints}
+            );
+        }
+    }
 
   clearRouteWaypoints() {
     this.drivingService.clear();
@@ -167,19 +243,16 @@ export class SchemeRouteDetailComponent extends TableBasicComponent
     return color;
   }
 
-  createMarkerContentForNumber(num = 1, color: string): string {
-    return (
-      '' +
-      '<div class="map-marker-content-station">' +
-      '    <img src="assets/images/map-icon/marker_bg.svg">' +
-      '    <div class="map-marker-text" style="background-color:' +
-      color +
-      '">' +
-      num +
-      '</div>' +
-      '</div>'
-    );
-  }
+    createStationMarker(lngLat: number[], text = 1, state: string) {
+        const marker = new Marker({
+            map     : this.map,
+            position: lngLat,
+            content: this.createMarkerContentForNumber(text, this.convertTaskStateToColor(state)),
+            offset: [-24, -50]
+        });
+        const amapMarker = this.mapService.createMarker(marker);
+        return amapMarker;
+    }
 
   createStationMarker(lngLat: number[], text = 1, state: string): void {
     const marker = new Marker({
@@ -194,17 +267,16 @@ export class SchemeRouteDetailComponent extends TableBasicComponent
     const amapMarker = this.mapService.createMarker(marker);
   }
 
-  createMarkerContentForCar(plateNumber: string): string {
-    return (
-      '' +
-      '<div class="map-marker-content-vehicle">' +
-      '    <img src="assets/images/map-icon/vehicle.png">' +
-      '    <div class="map-marker-label-vehicle">' +
-      plateNumber +
-      '</div>' +
-      '</div>'
-    );
-  }
+    createVehicleMarker(lngLat: number[], text: string) {
+        const marker = new Marker({
+            map     : this.map,
+            position: lngLat,
+            content: this.createMarkerContentForCar(text),
+            offset: [-24, -50]
+        });
+        const amapMarker = this.mapService.createMarker(marker);
+        return amapMarker;
+    }
 
   createVehicleMarker(lngLat: number[], text: string): void {
     const marker = new Marker({
@@ -232,16 +304,30 @@ export class SchemeRouteDetailComponent extends TableBasicComponent
     });
   }
 
-  onBack() {
-    this.location.back();
-  }
+    onStopPro($event: Event): void {
+        $event.stopPropagation();
+    }
 
-  onToCenter() {
-    this.setCenter([
-      this.currentRoute.vehicle.lng,
-      this.currentRoute.vehicle.lat
-    ]);
-  }
+    onClickTask($event: Event, item: TaskModel) {
+        this.onStopPro($event);
+        if (item.lng && item.lat) {
+            this.setCenter([item.lng, item.lat]);
+        }
+    }
+
+    onToCenter() {
+        this.setCenter(this.startLngLat);
+    }
+
+    onPlanRoute() {
+        const lngLatList: ILngLat[] = this.listCache.map((model: TaskModel) => {
+            return {
+                lng: model.lng,
+                lat: model.lat
+            };
+        });
+        this.drawRouteWaypoints(this.drivingPlanRouteService, lngLatList);
+    }
 
   onPlanRoute() {
     this.drawRouteWaypoints(this.listCache);
@@ -251,13 +337,42 @@ export class SchemeRouteDetailComponent extends TableBasicComponent
     this.isOpen = !this.isOpen;
   }
 
-  onTest() {
-    if (this.isPlay) {
-      this.interval$.unsubscribe();
-    } else {
-      this.interval$ = timer(1000, 1000 / this.speed).subscribe(() => {
-        if (this.percent < 100) {
-          this.percent += 1;
+    updateInterval() {
+        this.onPlay();  // 先暂停
+        this.onPlay();  // 再开始
+    }
+
+    excuteRunPlan() {
+        const vehicle = this.locationList[this.timeDiffIndex];
+        const center = [vehicle.longitude, vehicle.latitude];
+        if (this.runPlanVechileMarker) {
+            this.mapService.removeAllMarkers([this.runPlanVechileMarker]);
+        }
+        this.runPlanVechileMarker = this.createVehicleMarker(center, this.currentRoute.vehicle.plateNumber);
+    }
+
+    onRunPlan() {
+        const lngLatList: ILngLat[] = this.locationList.map((model: LocationModel) => {
+            return {
+                lng: model.longitude,
+                lat: model.latitude
+            };
+        });
+        this.drawRouteWaypoints(this.drivingRunPlanService, lngLatList);
+    }
+
+    onPlay() {
+        if (this.isPlay) {
+            this.interval$.unsubscribe();
+        } else {
+            const timeDiff = 1 / (this.locationList.length / 100);
+            this.interval$ = timer(1000, 1000 / this.speed).subscribe(() => {
+                if (this.percent < 100) {
+                    this.timeDiffIndex++;
+                    this.percent += timeDiff;
+                    this.excuteRunPlan();
+                }
+            });
         }
       });
     }
