@@ -204,7 +204,7 @@
                   type="environment"
                   theme="outline"
                   class="location"
-                  (click)="onJumpToMointor(data.lngLat)"
+                  (click)="onShowMap($event, data.lngLat, tplMapModalContent)"
                   *ngIf="hasLngLat(data.lngLat)"
                 >
                 </i>
@@ -310,3 +310,17 @@
     </div>
   </nz-carousel>
 </ng-template>
+
+<ng-template #tplMapModalContent>
+  <app-amap *ngIf="position"
+    [longitude]="position.lng"
+    [latitude]="position.lat"
+    [zoom]="15">
+    <app-amarker *ngIf="position"
+      [longitude]="position.lng"
+      [latitude]="position.lat"
+      [type]="recyclingMarkerType">
+    </app-amarker>  
+  </app-amap>  
+</ng-template>
+  

@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter } from '@angular/core';
+import { Component, OnInit, EventEmitter, TemplateRef } from '@angular/core';
 
 import { VehicleInfoFormComponent } from './vehicle-info-form/vehicle-info-form.component';
 import { VehicleInfoService } from './vehicle-info.service';
@@ -6,7 +6,7 @@ import { DownloadReportsService } from '../../../core/services/reports/downloadR
 
 import { ModalService } from '../../../shared/services/modal/modal.service';
 import { NotificationService } from '../../../shared/services/notification/notification.service';
-import { NzDrawerService, isNotNil } from 'ng-zorro-antd';
+import { NzDrawerService, isNotNil, NzModalService } from 'ng-zorro-antd';
 
 import { ModelConverter } from './model-converter';
 import { ObjectUtils } from '../../../shared/utils/object-utils';
@@ -22,6 +22,8 @@ import { TableBasicComponent } from '../../table-basic.component';
 import { isNumber } from 'util';
 import { ActivatedRoute, Routes, Router } from '@angular/router';
 import { Route } from '@angular/compiler/src/core';
+import { MarkerType } from 'src/app/shared/services/map/marker.model';
+import { ILngLat } from 'src/app/shared/services/map/map.model';
 
 @Component({
   selector: 'app-vehicle-info',
@@ -68,11 +70,17 @@ export class VehicleInfoComponent extends TableBasicComponent
   public selectedItemCache: VehicleRes;
   public listCache: VehicleListModel[];
   public formCache: VehicleFormModel;
+  public marker: {
+    plateNumber: string;
+    position: ILngLat
+  };
+  public vehicleMarkerType: MarkerType = MarkerType.VEHICLE;
 
   constructor(
     private vehicleInfoService: VehicleInfoService,
     private notificationService: NotificationService,
     private modalService: ModalService,
+    private nzModalService: NzModalService,
     private drawerService: NzDrawerService,
     private downloadReportsService: DownloadReportsService,
     private router: Router
@@ -272,18 +280,40 @@ export class VehicleInfoComponent extends TableBasicComponent
     });
   }
 
-  onJumpToMointor(lngLatStr: string): void {
-    const lngLat: string[] = lngLatStr.split(',');
-    this.router.navigate([
-      '/manage/monitor',
-      {
-        lngLat: [+lngLat[0], +lngLat[1]]
-      }
-    ]);
+  onStopPropagation(e) {
+    e.stopPropagation();
+  }
+
+  onShowMap($e, plateNumber: string, lngLatStr: string, tplMapModalContent?: TemplateRef<{}>) {
+    this.onStopPropagation($e);
+    this.marker = null;
+    const lngLat = this.convertLngLatFormString(lngLatStr);
+    const modal = this.nzModalService.create({
+      nzTitle: '当前位置',
+      nzContent: tplMapModalContent,
+      nzBodyStyle: {
+        height: 'calc(100vh - 196px)'
+      },
+      nzFooter: null
+    });
+    modal.afterOpen.subscribe(() => {
+      this.marker = {
+        plateNumber,
+        position: {lng: +lngLat[0], lat: +lngLat[1] }
+      };
+    });
+    modal.afterClose.subscribe(() => {
+      modal.destroy();
+    });
+  }
+
+  convertLngLatFormString(lngLatStr: string) {
+    lngLatStr = lngLatStr.replace('(', '').replace(')', '');
+    return lngLatStr.split(',').map((value: string) => value.trim());
   }
 
   hasLngLat(lngLatStr: string): boolean {
-    const lngLat: string[] = lngLatStr.split(',');
+    const lngLat: string[] = this.convertLngLatFormString(lngLatStr);
     return lngLat.length > 0 && !isNaN(+lngLat[0]) && !isNaN(+lngLat[1]);
   }
 

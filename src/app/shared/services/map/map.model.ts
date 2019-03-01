@@ -12,3 +12,8 @@ export class Map {
         this.zoom = zoom;
     }
 }
+
+export interface ILngLat {
+    lng: number;
+    lat: number;
+}

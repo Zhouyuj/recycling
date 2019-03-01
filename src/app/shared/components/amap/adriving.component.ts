@@ -1,41 +1,35 @@
-import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input, OnDestroy } from '@angular/core';
 import { MapService } from 'src/app/shared/services/map/map.service';
 import { Driving } from '../../services/map/driving.model';
-
-interface ILngLat {
-    lng: number;
-    lat: number;
-}
+import { Subscription } from 'rxjs';
+import { ILngLat } from '../../services/map/map.model';
 
 @Component({
     selector   : 'app-adriving',
     templateUrl: './adriving.component.html',
 })
-export class AdrivingComponent implements OnInit {
+export class AdrivingComponent implements OnInit, OnDestroy {
 
     @Input() outlineColor: string;
     @Output() drawWaypointsEvent = new EventEmitter<any>();
     @Output() clearEvent = new EventEmitter<Function>();
 
     private _drivingService: Driving;
+    private _complete$: Subscription;
 
     constructor(private mapService: MapService) {
     }
 
     ngOnInit() {
-        if (this.mapService.map) {
-            this.init();
-        } else {
-            this.mapService.mapListener$.subscribe(() => {
-                this.init();
+        this._complete$ = this.mapService.mapListener$.subscribe(() => {
+                this.create();
+                this.drawWaypointsEvent.emit(this.drawWaypoints.bind(this));
+                this.clearEvent.emit(this.clear.bind(this));
             });
-        }
     }
 
-    init() {
-        this.create();
-        this.drawWaypointsEvent.emit(this.drawWaypoints.bind(this));
-        this.clearEvent.emit(this.clear.bind(this));
+    ngOnDestroy() {
+        this._complete$.unsubscribe();
     }
 
     create() {

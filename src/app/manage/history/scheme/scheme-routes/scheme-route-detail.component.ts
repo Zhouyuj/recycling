@@ -1,7 +1,7 @@
 import { OnInit, Component } from '@angular/core';
 import { Subject, timer } from 'rxjs';
 import { MapService } from 'src/app/shared/services/map/map.service';
-import { Map } from 'src/app/shared/services/map/map.model';
+import { Map, ILngLat } from 'src/app/shared/services/map/map.model';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { RouteModel } from 'src/app/manage/plan/models/route.model';
@@ -15,10 +15,6 @@ import { VerifyUtil } from 'src/app/shared/utils/verify-utils';
 import { LocationModel } from '../../models/location.model';
 import { DateUtil } from 'src/app/shared/utils/date-utils';
 
-interface ILngLat {
-    lng: number;
-    lat: number;
-}
 @Component({
     selector: 'app-history-scheme-route-detail',
     templateUrl: './scheme-route-detail.component.html',

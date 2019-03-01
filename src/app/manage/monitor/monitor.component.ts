@@ -5,7 +5,6 @@ import { map } from 'rxjs/internal/operators/map';
 import { MapService } from '../../shared/services/map/map.service';
 import { MonitorService } from './monitor.service';
 
-import { Map } from './models/map.model';
 import { ModelConverter } from './models/model-converter';
 import { PageReq } from '../../shared/models/page/page-req.model';
 import { PageRes } from '../../shared/models/page/page-res.model';
@@ -20,6 +19,7 @@ import { TableBasicComponent } from '../table-basic.component';
 import { Driving } from 'src/app/shared/services/map/driving.model';
 import { ActivatedRoute, ParamMap, Params } from '@angular/router';
 import { switchMap, combineAll, merge, concatAll, concat } from 'rxjs/operators';
+import { Map } from 'src/app/shared/services/map/map.model';
 
 @Component({
     selector   : 'app-monitor',

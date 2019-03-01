@@ -132,5 +132,6 @@ export class Animation {
 
 export enum MarkerType {
     VEHICLE = 'vehicle',
-    STATION = 'station'
+    STATION = 'station',
+    RECYCLING = 'recycling',
 }

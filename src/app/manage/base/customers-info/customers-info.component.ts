@@ -26,6 +26,8 @@ import { ListModel } from './list.model';
 import { ZHANGZHOU_OPTIONS } from '../../../shared/components/cascader/cascader-zhangzhou.config';
 import { TableBasicComponent } from '../../table-basic.component';
 import { Router } from '@angular/router';
+import { MarkerType } from 'src/app/shared/services/map/marker.model';
+import { Marker } from '../../test-map/marker';
 
 @Component({
   selector: 'app-customers-info',
@@ -79,6 +81,11 @@ export class CustomersInfoComponent extends TableBasicComponent
   public parentCache: ListModel; // 选中子点时,存在值为聚类点,否则为null
   public selectedId: number;
   public images: { id: number; type: string; url: string }[];
+  public position: {
+    lng: number;
+    lat: number;
+  };
+  public recyclingMarkerType: MarkerType = MarkerType.RECYCLING;
 
   constructor(
     private customersInfoService: CustomersInfoService,
@@ -265,15 +272,37 @@ export class CustomersInfoComponent extends TableBasicComponent
 
   onShowImage($e, item: ListModel, tplImageModalContent?: TemplateRef<{}>) {
     this.onStopPropagation($e);
-    console.log('onShowImage');
     this.images = null;
     const modal = this.modalService.create({
       nzTitle: item.name,
       nzContent: tplImageModalContent,
+      nzBodyStyle: {
+        height: 'calc(100vh - 196px)'
+      },
       nzFooter: null
     });
     modal.afterOpen.subscribe(() => {
       this.images = item.images;
+    });
+    modal.afterClose.subscribe(() => {
+      modal.destroy();
+    });
+  }
+
+  onShowMap($e, lngLatStr: string, tplMapModalContent?: TemplateRef<{}>) {
+    this.onStopPropagation($e);
+    this.position = null;
+    const lngLat = this.convertLngLatFormString(lngLatStr);
+    const modal = this.modalService.create({
+      nzTitle: '当前位置',
+      nzContent: tplMapModalContent,
+      nzBodyStyle: {
+        height: 'calc(100vh - 196px)'
+      },
+      nzFooter: null
+    });
+    modal.afterOpen.subscribe(() => {
+      this.position = { lng: +lngLat[0], lat: +lngLat[1] };
     });
     modal.afterClose.subscribe(() => {
       modal.destroy();
@@ -338,17 +367,6 @@ export class CustomersInfoComponent extends TableBasicComponent
   }
 
   /** antd table end **/
-
-  onJumpToMointor(lngLatStr: string): void {
-    const lngLat: string[] = this.convertLngLatFormString(lngLatStr);
-    this.router.navigate([
-      '/manage/monitor',
-      {
-        lngLat: [+lngLat[0], +lngLat[1]],
-        isCollection: true
-      }
-    ]);
-  }
 
   hasLngLat(lngLatStr: string): boolean {
     const lngLat: string[] = this.convertLngLatFormString(lngLatStr);

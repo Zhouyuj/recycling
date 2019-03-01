@@ -166,7 +166,7 @@
                 type="environment"
                 theme="outline"
                 class="location"
-                (click)="onJumpToMointor(item.lngLat)"
+                (click)="onShowMap($event, item.plateNumber, item.lngLat, tplMapModalContent)"
                 *ngIf="hasLngLat(item.lngLat)"
               >
               </i>
@@ -188,3 +188,17 @@
     </nz-spin>
   </div>
 </div>
+
+<ng-template #tplMapModalContent>
+  <app-amap *ngIf="marker"
+    [longitude]="marker.position.lng"
+    [latitude]="marker.position.lat"
+    [zoom]="15">
+    <app-amarker *ngIf="marker"
+      [longitude]="marker.position.lng"
+      [latitude]="marker.position.lat"
+      [type]="vehicleMarkerType"
+      [text]="marker.plateNumber">
+    </app-amarker>  
+  </app-amap>  
+</ng-template>
