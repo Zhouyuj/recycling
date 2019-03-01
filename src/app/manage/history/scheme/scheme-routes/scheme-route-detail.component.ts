@@ -17,13 +17,13 @@ import { DateUtil } from 'src/app/shared/utils/date-utils';
 import { repeat } from 'rxjs/operators';
 
 interface ILngLat {
-  lng: number;
-  lat: number;
+    lng: number;
+    lat: number;
 }
 @Component({
-  selector: 'app-history-scheme-route-detail',
-  templateUrl: './scheme-route-detail.component.html',
-  styleUrls: ['./scheme-route-detail.component.scss']
+    selector: 'app-history-scheme-route-detail',
+    templateUrl: './scheme-route-detail.component.html',
+    styleUrls: [ './scheme-route-detail.component.scss' ]
 })
 export class SchemeRouteDetailComponent extends TableBasicComponent implements OnInit {
 
@@ -266,97 +266,6 @@ export class SchemeRouteDetailComponent extends TableBasicComponent implements O
         if (item.lng && item.lat) {
             this.setCenter(item);
         }
-      });
-    return subject;
-  }
-
-  calcTaskPaneHeight(): void {
-    this.taskPaneHeight = +this.tableScrollY.replace('px', '') - 60 + 'px';
-  }
-
-  searchTaskListWithRender(): void {
-    this.isSpinning = true;
-    this.historyService
-      .getTaskList(this.currentRoute.id)
-      .subscribe((result: Result<TaskModel[]>) => {
-        this.isSpinning = false;
-        this.listCache = result.data;
-        this.createVehicleMarkers(this.listCache);
-      });
-  }
-
-  assembleRouteByParams(): void {
-    this.route.paramMap.subscribe(params => {
-      this.currentRoute = {
-        id: +params.get('id'),
-        name: params.get('name'),
-        driver: params.get('driver'),
-        vehicle: {
-          id: +params.get('vehicleId'),
-          plateNumber: params.get('plateNumber'),
-          lat: +params.get('lat'),
-          lng: +params.get('lng')
-        },
-        startTime: +params.get('startTime'),
-        endTime: +params.get('endTime'),
-        collectionQuantity: +params.get('collectionQuantity'),
-        weighedQuantity: +params.get('weighedQuantity'),
-        date: params.get('date').substr(0, 10)
-      };
-    });
-  }
-
-  setCenter(lngLat: number[]): void {
-    this.mapService.setCenter(lngLat);
-  }
-
-  createDrivingService(): void {
-    const drivingRunPlanModel = new Driving({
-      map: this.map,
-      hideMarkers: true
-    });
-    this.drivingRunPlanService = this.mapService.createDriving(
-      drivingRunPlanModel
-    );
-    const drivingPlanRouteModel = new Driving({
-      map: this.map,
-      hideMarkers: true,
-      outlineColor: 'blue'
-    });
-    this.drivingPlanRouteService = this.mapService.createDriving(
-      drivingPlanRouteModel
-    );
-  }
-
-  clearRunPlanWaypoints() {
-    this.drivingRunPlanService.clear();
-  }
-
-  clearPlanRouteWaypoints() {
-    this.drivingPlanRouteService.clear();
-  }
-
-  /**
-   * 根据任务列表数据直接在地图上画出行车路径
-   * 如果数据是有5个点，会由起点一直画到终点（包括起点终点之间的途经点）
-   */
-  drawRouteWaypoints(drivingService: any, lngLatList: ILngLat[]) {
-    const firstModel: ILngLat = lngLatList[0];
-    const lastLenght: number = lngLatList.length - 1;
-    const lastModel: ILngLat = lngLatList[lastLenght];
-    if (firstModel) {
-      const waypoints: number[] = [];
-      lngLatList.forEach((model: ILngLat, index: number) => {
-        if (index === lastLenght) {
-          return;
-        }
-        waypoints.push(this.mapService.lngLat([model.lng, model.lat]));
-      });
-      drivingService.search(
-        new AMap.LngLat(this.startLngLat[0], this.startLngLat[1]),
-        new AMap.LngLat(lastModel.lng, lastModel.lat),
-        { waypoints }
-      );
     }
 
     onToCenter() {
@@ -391,37 +300,20 @@ export class SchemeRouteDetailComponent extends TableBasicComponent implements O
         this.onRunPlanVehicleRemove$.next(true);
         this.onRunPlanVehicleCreate$.next(true);
     }
-    this.runPlanVechileMarker = this.createVehicleMarker(
-      center,
-      this.currentRoute.vehicle.plateNumber
-    );
-  }
 
-  onRunPlan() {
-    const lngLatList: ILngLat[] = this.locationList.map(
-      (model: LocationModel) => {
-        return {
-          lng: model.longitude,
-          lat: model.latitude
-        };
-      }
-    );
-    this.drawRouteWaypoints(this.drivingRunPlanService, lngLatList);
-  }
-
-  onPlay() {
-    if (this.isPlay) {
-      this.interval$.unsubscribe();
-    } else {
-      const timeDiff = 1 / (this.locationList.length / 100);
-      this.interval$ = timer(1000, 1000 / this.speed).subscribe(() => {
-        if (this.percent < 100) {
-          this.timeDiffIndex++;
-          this.percent += timeDiff;
-          this.excuteRunPlan();
+    onPlay() {
+        if (this.isPlay) {
+            this.interval$.unsubscribe();
+        } else {
+            const timeDiff = 1 / (this.locationList.length / 100);
+            this.interval$ = timer(1000, 1000 / this.speed).subscribe(() => {
+                if (this.percent < 100) {
+                    this.timeDiffIndex++;
+                    this.percent += timeDiff;
+                    this.excuteRunPlan();
+                }
+            });
         }
-      });
+        this.isPlay = !this.isPlay;
     }
-    this.isPlay = !this.isPlay;
-  }
 }
