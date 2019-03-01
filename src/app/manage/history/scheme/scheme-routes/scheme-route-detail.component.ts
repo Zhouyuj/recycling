@@ -5,7 +5,7 @@ import { Map } from 'src/app/shared/services/map/map.model';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { RouteModel } from 'src/app/manage/plan/models/route.model';
-import { Marker } from 'src/app/shared/services/map/marker.model';
+import { Marker, MarkerType } from 'src/app/shared/services/map/marker.model';
 import { TableBasicComponent } from 'src/app/manage/table-basic.component';
 import { HistoryService } from '../../history.service';
 import { TaskModel, TaskState } from 'src/app/manage/plan/models/task.model';
@@ -20,7 +20,6 @@ interface ILngLat {
     lng: number;
     lat: number;
 }
-
 @Component({
     selector: 'app-history-scheme-route-detail',
     templateUrl: './scheme-route-detail.component.html',
@@ -28,6 +27,17 @@ interface ILngLat {
 })
 export class SchemeRouteDetailComponent extends TableBasicComponent implements OnInit {
 
+    /**
+     * Map component
+     */
+    vehicleMarkerType: MarkerType = MarkerType.VEHICLE;
+    stationMarkerType: MarkerType = MarkerType.STATION;
+    currentRoute: RouteModel | any;
+    startLngLat: ILngLat;
+    runPlanVehiclePosition: ILngLat;
+    /**
+     * Monitor component
+     */
     percent = 0;
     speed = 1;
     isPlay = false;
@@ -35,10 +45,9 @@ export class SchemeRouteDetailComponent extends TableBasicComponent implements O
     hasRunPlan = false;
     isSpinning = false;
     interval$: any;
-    currentRoute: RouteModel | any;
-    listCache: TaskModel[];
+
+    taskList: TaskModel[];
     locationList: LocationModel[];
-    startLngLat: number[];
     map: Map;
 
     taskPaneHeight: string;
@@ -50,6 +59,11 @@ export class SchemeRouteDetailComponent extends TableBasicComponent implements O
 
     private drivingRunPlanService: any;
     private drivingPlanRouteService: any;
+    private onPlanRoute$ = new Subject<boolean>();
+    private onRunPlan$ = new Subject<boolean>();
+    private onRunPlanVehicleRemove$ = new Subject<boolean>();
+    private onRunPlanVehicleCreate$ = new Subject<boolean>();
+    private onSetCenter$ = new Subject<ILngLat>();
 
     constructor(
         private mapService: MapService,
@@ -63,82 +77,89 @@ export class SchemeRouteDetailComponent extends TableBasicComponent implements O
         this.calcTableScrollY(-50);
         this.calcTaskPaneHeight();
 
-        this.initMap().subscribe(() => {
-            this.startTime = DateUtil.dateFormat(new Date(this.currentRoute.startTime), 'h:m:s');
-            this.endTime = DateUtil.dateFormat(new Date(this.currentRoute.endTime), 'h:m:s');
+        this.assembleRouteByParams();
+        this.getTaskList();
 
+        this.startTime = DateUtil.dateFormat(new Date(this.currentRoute.startTime), 'h:m:s');
+        this.endTime = DateUtil.dateFormat(new Date(this.currentRoute.endTime), 'h:m:s');
+
+        if (this.currentRoute.vehicle.id &&
+            this.startTime !== 'NaN:NaN:NaN' &&
+            this.endTime !== 'NaN:NaN:NaN') {
+            // this.historyService.getLocations(100, 1551075913000, 1551091519000)
             this.historyService.getLocations(this.currentRoute.vehicle.id, this.currentRoute.startTime, this.currentRoute.endTime)
                 .subscribe((result: Result<LocationModel[]>) => {
                     this.locationList = result.data;
                     if (this.locationList) {
                         this.hasRunPlan = true;
-                        this.startLngLat = [
+                        this.setStartLngLat(
                             this.locationList[0].longitude,
                             this.locationList[1].latitude
-                        ];
-
+                        );
                         this.setCenter(this.startLngLat);
-                        this.createVehicleMarker(this.startLngLat, this.currentRoute.vehicle.plateNumber);
                     }
-                });
-
-            this.createDrivingService();
-            this.searchTaskListWithRender();
-        });
-        this.assembleRouteByParams();
-    }
-
-    initMap() {
-        const subject = new Subject();
-        const subscription = this.mapService.initMap().subscribe((hasLoaded: boolean) => {
-            if (hasLoaded) {
-                this.map = this.mapService.createMap(new Map('map', [ 113.18691, 23.031716 ], 15));
-                if (subscription) {
-                    subscription.unsubscribe(); // 取消定时器
-                    subject.next(true);
-                }
-            }
-        });
-        return subject;
+            });
+        }
     }
 
     calcTaskPaneHeight(): void {
         this.taskPaneHeight = (+this.tableScrollY.replace('px', '') - 60) + 'px';
     }
 
-    searchTaskListWithRender(): void {
+    getTaskList(): void {
         this.isSpinning = true;
         this.historyService.getTaskList(this.currentRoute.id)
-        .subscribe((result: Result<TaskModel[]>) => {
-            this.isSpinning = false;
-            this.listCache = result.data;
-            this.createVehicleMarkers(this.listCache);
-        });
+            .subscribe((result: Result<TaskModel[]>) => {
+                this.isSpinning = false;
+                this.taskList = result.data;
+            });
+    }
+
+    onDragEvent(event) {
+        console.log(event);
     }
 
     assembleRouteByParams(): void {
         this.route.paramMap.subscribe((params) => {
+            let date: any = this.transformParamValue(params.get('date'));
+            if (date.length > 0) {
+                date = date.substr(0, 10);
+            }
             this.currentRoute = {
-                id: +params.get('id'),
-                name: params.get('name'),
-                driver: params.get('driver'),
+                id: this.transformParamValue(+params.get('id')),
+                name: this.transformParamValue(params.get('name')),
+                driver: this.transformParamValue(params.get('driver')),
                 vehicle: {
-                    id: +params.get('vehicleId'),
-                    plateNumber: params.get('plateNumber'),
-                    lat: +params.get('lat'),
-                    lng: +params.get('lng'),
+                    id: this.transformParamValue(+params.get('vehicleId')),
+                    plateNumber: this.transformParamValue(params.get('plateNumber')),
+                    lat: this.transformParamValue(+params.get('lat')),
+                    lng: this.transformParamValue(+params.get('lng')),
                 },
-                startTime: +params.get('startTime'),
-                endTime: +params.get('endTime'),
-                collectionQuantity: +params.get('collectionQuantity'),
-                weighedQuantity: +params.get('weighedQuantity'),
-                date: params.get('date').substr(0, 10),
+                startTime: this.transformParamValue(+params.get('startTime')),
+                endTime: this.transformParamValue(+params.get('endTime')),
+                collectionQuantity: this.transformParamValue(+params.get('collectionQuantity')),
+                weighedQuantity: this.transformParamValue(+params.get('weighedQuantity')),
+                date
             };
         });
     }
 
-    setCenter(lngLat: number[]): void {
-        this.mapService.setCenter(lngLat);
+    transformParamValue(value: string | number): string | number {
+        if (isNaN(<number>value) && typeof value === 'number') {
+            return '';
+        }
+        if (value === 'null' || value === 'undefined') {
+            return '';
+        }
+        return value;
+    }
+
+    setStartLngLat(lng: number, lat: number) {
+        this.startLngLat = { lng, lat };
+    }
+
+    setCenter(lngLat: ILngLat): void {
+        this.onSetCenter$.next(lngLat);
     }
 
     createDrivingService(): void {
@@ -163,28 +184,50 @@ export class SchemeRouteDetailComponent extends TableBasicComponent implements O
         this.drivingPlanRouteService.clear();
     }
 
-    /**
-     * 根据任务列表数据直接在地图上画出行车路径
-     * 如果数据是有5个点，会由起点一直画到终点（包括起点终点之间的途经点）
-     */
-    drawRouteWaypoints(drivingService: any, lngLatList: ILngLat[]) {
-        const firstModel: ILngLat = lngLatList[0];
-        const lastLenght: number = lngLatList.length - 1;
-        const lastModel: ILngLat = lngLatList[lastLenght];
-        if (firstModel) {
-            const waypoints: number[] = [];
-            lngLatList.forEach((model: ILngLat, index: number) => {
-                if (index === lastLenght) {
-                    return;
-                }
-                waypoints.push(this.mapService.lngLat([model.lng, model.lat]));
-            });
-            drivingService.search(
-                new AMap.LngLat(this.startLngLat[0], this.startLngLat[1]),
-                new AMap.LngLat(lastModel.lng, lastModel.lat),
-                {waypoints}
-            );
-        }
+    drawPlanRouteWaypoints(event: Function) {
+        this.onPlanRoute$.subscribe(() => {
+            if (this.taskList && this.taskList.length) {
+                const lngLatList: ILngLat[] = this.taskList.map((model: TaskModel) => {
+                    return {
+                        lng: model.lng,
+                        lat: model.lat
+                    };
+                });
+                event(this.startLngLat, lngLatList);
+            }
+        });
+    }
+
+    drawRunPlanWaypoints(event: Function) {
+        this.onRunPlan$.subscribe(() => {
+            if (this.locationList && this.locationList.length) {
+                const lngLatList: ILngLat[] = this.locationList.map((model: LocationModel) => {
+                    return {
+                        lng: model.longitude,
+                        lat: model.latitude
+                    };
+                });
+                event(this.startLngLat, lngLatList);
+            }
+        });
+    }
+
+    runPlanVehicleRemove(event: Function) {
+        this.onRunPlanVehicleRemove$.subscribe(() => {
+            event();
+        });
+    }
+
+    runPlanVehicleCreate(event: Function) {
+        this.onRunPlanVehicleCreate$.subscribe(() => {
+            event();
+        });
+    }
+
+    setCenterFunction(event: Function) {
+        this.onSetCenter$.subscribe((lngLat: ILngLat) => {
+            event([lngLat.lng, lngLat.lat]);
+        });
     }
 
     convertTaskStateToColor(state: string): string {
@@ -210,54 +253,6 @@ export class SchemeRouteDetailComponent extends TableBasicComponent implements O
         return color;
     }
 
-    createMarkerContentForNumber(num = 1, color: string): string {
-        return '' +
-            '<div class="map-marker-content-station">' +
-            '    <img src="assets/images/map-icon/marker_bg.svg">' +
-            '    <div class="map-marker-text" style="background-color:' + color + '">' + num + '</div>' +
-            '</div>';
-    }
-
-    createStationMarker(lngLat: number[], text = 1, state: string) {
-        const marker = new Marker({
-            map     : this.map,
-            position: lngLat,
-            content: this.createMarkerContentForNumber(text, this.convertTaskStateToColor(state)),
-            offset: [-24, -50]
-        });
-        const amapMarker = this.mapService.createMarker(marker);
-        return amapMarker;
-    }
-
-    createMarkerContentForCar(plateNumber: string): string {
-        return '' +
-            '<div class="map-marker-content-vehicle">' +
-            '    <img src="assets/images/map-icon/vehicle.png">' +
-            '    <div class="map-marker-label-vehicle">' + plateNumber + '</div>' +
-            '</div>';
-    }
-
-    createVehicleMarker(lngLat: number[], text: string) {
-        const marker = new Marker({
-            map     : this.map,
-            position: lngLat,
-            content: this.createMarkerContentForCar(text),
-            offset: [-24, -50]
-        });
-        const amapMarker = this.mapService.createMarker(marker);
-        return amapMarker;
-    }
-
-    createVehicleMarkers(taskList: TaskModel[]) {
-        taskList.forEach((task: TaskModel) => {
-            if (VerifyUtil.isNotEmpty(task.lng) &&
-                VerifyUtil.isNotEmpty(task.lat) &&
-                VerifyUtil.isNotEmpty(task.priority)) {
-                this.createStationMarker([task.lng, task.lat], task.priority, task.state);
-            }
-        });
-    }
-
     onBack() {
         this.location.back();
     }
@@ -269,7 +264,7 @@ export class SchemeRouteDetailComponent extends TableBasicComponent implements O
     onClickTask($event: Event, item: TaskModel) {
         this.onStopPro($event);
         if (item.lng && item.lat) {
-            this.setCenter([item.lng, item.lat]);
+            this.setCenter(item);
         }
     }
 
@@ -278,13 +273,11 @@ export class SchemeRouteDetailComponent extends TableBasicComponent implements O
     }
 
     onPlanRoute() {
-        const lngLatList: ILngLat[] = this.listCache.map((model: TaskModel) => {
-            return {
-                lng: model.lng,
-                lat: model.lat
-            };
-        });
-        this.drawRouteWaypoints(this.drivingPlanRouteService, lngLatList);
+        this.onPlanRoute$.next(true);
+    }
+
+    onRunPlan() {
+        this.onRunPlan$.next(true);
     }
 
     onToggle() {
@@ -297,22 +290,15 @@ export class SchemeRouteDetailComponent extends TableBasicComponent implements O
     }
 
     excuteRunPlan() {
-        const vehicle = this.locationList[this.timeDiffIndex];
-        const center = [vehicle.longitude, vehicle.latitude];
-        if (this.runPlanVechileMarker) {
-            this.mapService.removeAllMarkers([this.runPlanVechileMarker]);
-        }
-        this.runPlanVechileMarker = this.createVehicleMarker(center, this.currentRoute.vehicle.plateNumber);
-    }
-
-    onRunPlan() {
-        const lngLatList: ILngLat[] = this.locationList.map((model: LocationModel) => {
-            return {
-                lng: model.longitude,
-                lat: model.latitude
+        if (this.locationList && this.locationList.length) {
+            const vehicle = this.locationList[this.timeDiffIndex];
+            this.runPlanVehiclePosition = {
+                lng: vehicle.longitude,
+                lat: vehicle.latitude
             };
-        });
-        this.drawRouteWaypoints(this.drivingRunPlanService, lngLatList);
+        }
+        this.onRunPlanVehicleRemove$.next(true);
+        this.onRunPlanVehicleCreate$.next(true);
     }
 
     onPlay() {

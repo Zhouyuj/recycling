@@ -128,3 +128,9 @@ export class Animation {
     public static AMAP_ANIMATION_DROP = 'AMAP_ANIMATION_DROP'; // 点标掉落效果
     public static AMAP_ANIMATION_BOUNCE = 'AMAP_ANIMATION_BOUNCE'; // 点标弹跳效果
 }
+
+
+export enum MarkerType {
+    VEHICLE = 'vehicle',
+    STATION = 'station'
+}

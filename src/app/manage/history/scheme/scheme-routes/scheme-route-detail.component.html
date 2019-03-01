@@ -19,8 +19,42 @@
         </div>
     </div>
     <div class="border-layout">
-        <div class="map-layout">
-            <div id="map" [ngStyle]="{ width: 'calc(100vw - 18px)', height: tableScrollY }"></div>
+        <div class="map-layout" [ngStyle]="{ width: 'calc(100vw - 18px)', height: tableScrollY }">
+            <app-amap 
+                [longitude]="startLngLat.lng"
+                [latitude]="startLngLat.lat"
+                [zoom]="15"
+                (center)="setCenterFunction($event)">
+                <app-amarker *ngIf="startLngLat"
+                    [longitude]="startLngLat.lng"
+                    [latitude]="startLngLat.lat"
+                    [type]="vehicleMarkerType"
+                    [text]="currentRoute.vehicle.plateNumber">
+                </app-amarker>
+                <app-amarker *ngFor="let station of taskList"
+                    [longitude]="station.lng"
+                    [latitude]="station.lat"
+                    [type]="stationMarkerType"
+                    [text]="station.priority"
+                    [color]="convertTaskStateToColor(station.state)"
+                    [onDragEvent]="onDragEvent">
+                </app-amarker>
+                <app-amarker *ngIf="runPlanVehiclePosition" 
+                    [longitude]="runPlanVehiclePosition.lng"
+                    [latitude]="runPlanVehiclePosition.lat"
+                    [type]="vehicleMarkerType"
+                    [text]="currentRoute.vehicle.plateNumber"
+                    (remove)="runPlanVehicleRemove($event)"
+                    (create)="runPlanVehicleCreate($event)">
+                </app-amarker>
+                <app-adriving
+                    (drawWaypointsEvent)="drawPlanRouteWaypoints($event)">
+                </app-adriving>
+                <app-adriving
+                    [outlineColor]="'blue'"
+                    (drawWaypointsEvent)="drawRunPlanWaypoints($event)">
+                </app-adriving>
+            </app-amap>
             <div class="task-list">
                 <div class="toggle-layout" [ngStyle]="{ right: isOpen ? '313px' : '0' }">
                     <button *ngIf="!isOpen"
@@ -41,7 +75,7 @@
                 <div class="task-pane" *ngIf="isOpen" [ngStyle]="{height: tableScrollY}">
                     <nz-spin [nzSize]="'large'" [nzSpinning]="isSpinning">
                         <nz-table #taskTable
-                              [nzData]="listCache"
+                              [nzData]="taskList"
                               [nzScroll]="{y: taskPaneHeight}"
                               [nzShowPagination]="false">
                             <thead>
@@ -52,7 +86,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <ng-template ngFor let-item let-i="index" [ngForOf]="listCache">
+                            <ng-template ngFor let-item let-i="index" [ngForOf]="taskList">
                                 <tr (click)="onClickTask($event, item)">
                                     <td [nzShowExpand]="item.taskList && item.taskList.length > 0"
                                         [(nzExpand)]="item.expand"></td>
@@ -89,7 +123,7 @@
                 </div>
             </div>
         </div>
-        <div class="monitor-info" *ngIf="hasRunPlan">
+        <div class="monitor-info">
             <div nz-row>
                 <div nz-col nzSpan="2">
                     <div class="monitor-title">监控信息</div>

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { Observable } from 'rxjs/index';
+import { Observable, Subject } from 'rxjs/index';
 import { interval } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -22,6 +22,7 @@ export class MapService {
 
     private _map: any;
     private _driving: any;
+    private _mapListener$: Subject<boolean> = new Subject<boolean>();
 
     constructor() {
     }
@@ -29,6 +30,24 @@ export class MapService {
     public createDriving(opt: Driving): any {
         this.driving = new AMap.Driving(opt);
         return this.driving;
+    }
+
+    public loadMap(mapModel: Map): Observable<boolean> {
+        const subscription = this.initMap()
+            .subscribe((hasLoaded: boolean) => {
+                if (hasLoaded) {
+                    this.map = this.createMap(mapModel);
+                    this._mapListener$.next(true);
+                    if (subscription) {
+                        subscription.unsubscribe(); // 取消定时器
+                    }
+                }
+            });
+        return this._mapListener$;
+    }
+
+    public get mapListener$() {
+        return this._mapListener$;
     }
 
     /*****
