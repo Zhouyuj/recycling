@@ -44,7 +44,8 @@ export class MonitorComponent extends TableBasicComponent implements OnInit, OnD
 
     private onStationMarkerRemove$ = new Subject<boolean>();
     private onVehicleMarkerRemove$ = new Subject<boolean>();
-    private onClearRunRouteLines$ = new Subject<boolean>();
+    private onDrawPlanRoute$ = new Subject<boolean>();
+    private onClearPlanRoute$ = new Subject<boolean>();
     private onSetCenter$ = new Subject<ILngLat>();
 
     constructor(
@@ -161,19 +162,25 @@ export class MonitorComponent extends TableBasicComponent implements OnInit, OnD
             this.taskListCache = res.data.map((t: TaskModel) => ModelConverter.taskResToListModel(t, routeId));
 
             this.onStationMarkerRemove$.next(true);
-            this.onClearRunRouteLines$.next(true);
-            this.drawRoute();
+            this.onClearPlanRoute$.next(true);
+            this.onDrawPlanRoute$.next(true);
         });
     }
 
-    drawRoute() {
-        const lines = [];
-        if (this.taskListCache && this.taskListCache.length) {
-            this.taskListCache.forEach(task => {
-                lines.push([task.lng, task.lat]);
-            });
-            this.runRouteLines.push(lines);
-        }
+    drawPlanRouteWaypoints(event: Function) {
+        this.onDrawPlanRoute$.subscribe(() => {
+            if (this.taskListCache && this.taskListCache.length) {
+                const lngLatList: ILngLat[] = this.taskListCache.map((model: TaskModel) => {
+                    return {
+                        lng: model.lng,
+                        lat: model.lat
+                    };
+                });
+                const firstTaskModel = this.taskListCache[0];
+                const matchRoute = this.routeListCache.find((route: RouteModel) => route.id === firstTaskModel.routeId);
+                event({lng: matchRoute.vehicle.lng, lat: matchRoute.vehicle.lat}, lngLatList);
+            }
+        });
     }
 
     /**
@@ -209,8 +216,8 @@ export class MonitorComponent extends TableBasicComponent implements OnInit, OnD
         });
     }
 
-    clearRunRouteLines(event: Function) {
-        this.onClearRunRouteLines$.subscribe(() => {
+    clearPlanRouteWaypoints(event: Function) {
+        this.onClearPlanRoute$.subscribe(() => {
             event();
         });
     }

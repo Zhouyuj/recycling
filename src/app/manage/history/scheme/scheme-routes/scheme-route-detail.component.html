@@ -59,11 +59,11 @@
                     [strokeColor]="'#ccffcc'"
                     (clear)="clearRunPlanLines($event)">
                 </app-apolyline>
-                <app-apolyline *ngFor="let line of planRouteLines"
-                    [lines]="line"
-                    [strokeColor]="'#55ccff'"
-                    (clear)="clearPlanRouteLines($event)">
-                </app-apolyline>
+                <app-adriving
+                    [outlineColor]="'#55ccff'"
+                    (clearEvent)="clearPlanRouteWaypoints($event)"
+                    (drawWaypointsEvent)="drawPlanRouteWaypoints($event)">
+                </app-adriving>
             </app-amap>
             <div class="task-list">
                 <div class="toggle-layout" [ngStyle]="{ right: isOpen ? '313px' : '0' }">

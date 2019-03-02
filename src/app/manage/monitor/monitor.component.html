@@ -180,11 +180,11 @@
             [color]="convertTaskStateToColor(station.state)"
             (remove)="stationMarkerRemove($event)">
         </app-amarker>
-        <app-apolyline *ngFor="let line of runRouteLines"
-            [lines]="line"
-            [strokeColor]="'#ccffcc'"
-            (clear)="clearRunRouteLines($event)">
-        </app-apolyline>
+        <app-adriving
+          [outlineColor]="'#55ccff'"
+          (clearEvent)="clearPlanRouteWaypoints($event)"
+          (drawWaypointsEvent)="drawPlanRouteWaypoints($event)">
+        </app-adriving>
     </app-amap>
     </div>
   </div>

@@ -33,7 +33,6 @@ export class SchemeRouteDetailComponent extends TableBasicComponent implements O
     startLngLat: ILngLat;
     runPlanVehiclePosition: ILngLat;
     runPlanLines = [];
-    planRouteLines = [];
     /**
      * Monitor component
      */
@@ -61,9 +60,10 @@ export class SchemeRouteDetailComponent extends TableBasicComponent implements O
     private onRunPlanVehicleRemove$ = new Subject<boolean>();
     private onRunPlanVehicleCreate$ = new Subject<boolean>();
     private onStartVehicleRemove$ = new Subject<boolean>();
-    private onClearPlanRouteLine$ = new Subject<boolean>();
     private onClearRunPlanLine$ = new Subject<boolean>();
     private onSetCenter$ = new Subject<ILngLat>();
+    private onDrawPlanRoute$ = new Subject<boolean>();
+    private onClearPlanRoute$ = new Subject<boolean>();
 
     constructor(
         private historyService: HistoryService,
@@ -170,12 +170,6 @@ export class SchemeRouteDetailComponent extends TableBasicComponent implements O
         });
     }
 
-    clearPlanRouteLines(event: Function) {
-        this.onClearPlanRouteLine$.subscribe(() => {
-            event();
-        });
-    }
-
     clearRunPlanLines(event: Function) {
         this.onClearRunPlanLine$.subscribe(() => {
             event();
@@ -215,6 +209,26 @@ export class SchemeRouteDetailComponent extends TableBasicComponent implements O
             break;
         }
         return color;
+    }
+
+    drawPlanRouteWaypoints(event: Function) {
+        this.onDrawPlanRoute$.subscribe(() => {
+            if (this.taskList && this.taskList.length) {
+                const lngLatList: ILngLat[] = this.taskList.map((model: TaskModel) => {
+                    return {
+                        lng: model.lng,
+                        lat: model.lat
+                    };
+                });
+                event(this.startLngLat, lngLatList);
+            }
+        });
+    }
+
+    clearPlanRouteWaypoints(event: Function) {
+        this.onClearPlanRoute$.subscribe(() => {
+            event();
+        });
     }
 
     onDragEvent(event, property: TaskModel) {
@@ -270,15 +284,9 @@ export class SchemeRouteDetailComponent extends TableBasicComponent implements O
 
     onPlanRoute() {
         if (this.isClickedPlanRoute) {
-            this.onClearPlanRouteLine$.next(true);
+            this.onClearPlanRoute$.next(true);
         } else {
-            const lines = [];
-            if (this.taskList && this.taskList.length) {
-                this.taskList.forEach(task => {
-                    lines.push([task.lng, task.lat]);
-                });
-                this.planRouteLines.push(lines);
-            }
+            this.onDrawPlanRoute$.next(true);
         }
         this.isClickedPlanRoute = !this.isClickedPlanRoute;
     }
