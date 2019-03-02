@@ -14,6 +14,7 @@ import { Driving } from 'src/app/shared/services/map/driving.model';
 import { VerifyUtil } from 'src/app/shared/utils/verify-utils';
 import { LocationModel } from '../../models/location.model';
 import { DateUtil } from 'src/app/shared/utils/date-utils';
+import { NotificationService } from 'src/app/shared/services/notification/notification.service';
 
 @Component({
     selector: 'app-history-scheme-route-detail',
@@ -65,6 +66,7 @@ export class SchemeRouteDetailComponent extends TableBasicComponent implements O
     constructor(
         private mapService: MapService,
         private historyService: HistoryService,
+        private notificationService: NotificationService,
         private location: Location,
         private route: ActivatedRoute) {
         super();
@@ -261,7 +263,14 @@ export class SchemeRouteDetailComponent extends TableBasicComponent implements O
         this.historyService.updateCustomerLocation(this.movedInfo.customerId, {
             lng: this.movedInfo.position.lng,
             lat: this.movedInfo.position.lat
-        }).subscribe(console.log);
+        }).subscribe(() => {
+            this.movedInfo = null;
+            this.notificationService.create({
+                type: 'success',
+                title: '恭喜,更新成功',
+                content: '该提醒将自动消失'
+            });
+        });
     }
 
     onBack() {
