@@ -95,7 +95,17 @@
                     <td nzShowCheckbox [(nzChecked)]="item.checked"
                         (nzCheckedChange)="onSelected($event, item)"></td>
                     <td>{{i + 1 + 12 * (pageRes.page - 1)}}</td>
-                    <td (dblclick)="onNavigateToEditForRow($event, item)">{{item.name}}</td>
+                    <!-- <td (dblclick)="onNavigateToEditForRow($event, item)">
+                        <div>
+                            <ng-container *ngIf="!item.edit">
+                                {{item.name}}
+                            </ng-container>
+                            <ng-container *ngIf="item.edit">
+                                <input type="text" nz-input [(ngModel)]="item.name">
+                            </ng-container>
+                        </div>
+                    </td> -->
+                    <td>{{item.name}}</td>
                     <td>{{item.numberOfRoutes}}</td>
                     <td>{{item.numberOfTasks}}</td>
                     <td>{{item.state | planStateToChinese}}</td>

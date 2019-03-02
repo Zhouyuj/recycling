@@ -8,7 +8,7 @@
                     返回
                 </button>
                 &nbsp;
-                <button nz-button [disabled]="!movedInfo" (click)="onSaveMovedMarker()">
+                <button nz-button [disabled]="!dragList.length" (click)="onSaveMovedMarker()">
                     <i nz-icon type="save"></i>
                     保存移动后的收运点位置
                 </button>
@@ -35,7 +35,8 @@
                     [longitude]="startLngLat.lng"
                     [latitude]="startLngLat.lat"
                     [type]="vehicleMarkerType"
-                    [text]="currentRoute.vehicle.plateNumber">
+                    [text]="currentRoute.vehicle.plateNumber"
+                    (remove)="startVehicleRemove($event)">
                 </app-amarker>
                 <app-amarker *ngFor="let station of taskList"
                     [longitude]="station.lng"
@@ -53,13 +54,16 @@
                     (remove)="runPlanVehicleRemove($event)"
                     (create)="runPlanVehicleCreate($event)">
                 </app-amarker>
-                <app-adriving
-                    (drawWaypointsEvent)="drawPlanRouteWaypoints($event)">
-                </app-adriving>
-                <app-adriving
-                    [outlineColor]="'blue'"
-                    (drawWaypointsEvent)="drawRunPlanWaypoints($event)">
-                </app-adriving>
+                <app-apolyline *ngFor="let line of runPlanLines"
+                    [lines]="line"
+                    [strokeColor]="'#ccffcc'"
+                    (clear)="clearRunPlanLines($event)">
+                </app-apolyline>
+                <app-apolyline *ngFor="let line of planRouteLines"
+                    [lines]="line"
+                    [strokeColor]="'#55ccff'"
+                    (clear)="clearPlanRouteLines($event)">
+                </app-apolyline>
             </app-amap>
             <div class="task-list">
                 <div class="toggle-layout" [ngStyle]="{ right: isOpen ? '313px' : '0' }">
@@ -118,7 +122,7 @@
                                             <span class="tag-text" [title]="child.name">{{child.name}}</span>
                                         </td>
                                         <td class="amount-of-garbage">
-                                            {{item.amountOfGarbage}}
+                                            {{child.amountOfGarbage}}
                                         </td>
                                     </tr>
                                 </ng-template>
@@ -162,10 +166,10 @@
                     <button nz-button [disabled]="!hasRunPlan" (click)="onToCenter()" [nzSize]="'small'">车辆居中</button>
                 </div>
                 <div nz-col nzSpan="2">
-                    <button nz-button [disabled]="!hasRunPlan" (click)="onRunPlan()" [nzSize]="'small'">行车轨迹</button>
+                    <button nz-button [disabled]="!hasRunPlan" (click)="onRunPlan()" [nzType]="isClickedRunPlan ? 'primary' : 'default'" [nzSize]="'small'">行车轨迹</button>
                 </div>
                 <div nz-col nzSpan="2">
-                    <button nz-button [disabled]="!hasRunPlan" (click)="onPlanRoute()" [nzSize]="'small'">计划路线</button>
+                    <button nz-button [disabled]="!hasRunPlan" (click)="onPlanRoute()" [nzType]="isClickedPlanRoute ? 'primary' : 'default'" [nzSize]="'small'">计划路线</button>
                 </div>
                 <div nz-col nzSpan="9"></div>
             </div>

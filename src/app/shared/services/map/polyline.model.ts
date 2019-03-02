@@ -21,12 +21,13 @@ export class Polyline {
 
     constructor(opts: {
         map: any,
-        path: number[][],
+        path: any,
         id?: string,
         isTransform?: boolean,
         strokeColor?: string,
         strokeWeight?: number,
         strokeStyle?: string,
+        isOutline?: boolean,
         borderWeight?: number,
         outlineColor?: string,
         lineJoin?: string,
@@ -62,6 +63,14 @@ export class Polyline {
         if (!polyline.showDir) {
             polyline.showDir = true;
         }
+
+    }
+
+    public hide(): void {
+
+    }
+
+    public show(): void {
 
     }
 

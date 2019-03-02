@@ -12,4 +12,5 @@ export class PlanListModel {
     editUser: string;   // 编辑人员
     checked: boolean;   // 可选   -- 非接口数据
     createdDate: number;
+    edit: boolean; // 可选 -- 非接口数据
 }

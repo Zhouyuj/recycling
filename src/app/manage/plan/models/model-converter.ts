@@ -23,6 +23,7 @@ export class ModelConverter {
         l.editUser = r.editUser;
         l.createdDate = r.createdDate;
         l.checked = false;
+        l.edit = false;
         return l;
     }
 

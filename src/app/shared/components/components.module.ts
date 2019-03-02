@@ -13,6 +13,7 @@ import { TimePickerComponent } from './time-picker/time-picker.component';
 import { AmapComponent } from './amap/amap.component';
 import { AmarkerComponent } from './amap/amarker.component';
 import { AdrivingComponent } from './amap/adriving.component';
+import { ApolylineComponent } from './amap/apolyline.component';
 
 @NgModule({
     imports     : [
@@ -29,7 +30,8 @@ import { AdrivingComponent } from './amap/adriving.component';
         TimePickerComponent,
         AmapComponent,
         AmarkerComponent,
-        AdrivingComponent
+        AdrivingComponent,
+        ApolylineComponent,
     ],
     declarations: [
         BreadcrumbsComponent,
@@ -39,7 +41,8 @@ import { AdrivingComponent } from './amap/adriving.component';
         TimePickerComponent,
         AmapComponent,
         AmarkerComponent,
-        AdrivingComponent
+        AdrivingComponent,
+        ApolylineComponent,
     ],
 })
 export class ComponentsModule {

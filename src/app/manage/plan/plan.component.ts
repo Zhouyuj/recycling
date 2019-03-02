@@ -163,10 +163,10 @@ export class PlanComponent extends TableBasicComponent implements OnInit {
     }
 
     onNavigateToEditForRow(event: Event, item: PlanListModel) {
-        // if (!this.selectedItem) {
-        //     this.onSelected(true, item);
-        // }
-        // this.onNavigateToEdit();
+        this.listCache.forEach((plan: PlanListModel) => {
+            plan.edit = false;
+        });
+        item.edit = true;
     }
 
     onNavigateToEdit() {

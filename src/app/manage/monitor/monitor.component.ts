@@ -1,10 +1,7 @@
 import { Component, OnInit, ElementRef, OnDestroy } from '@angular/core';
-import { Observable, interval, Subject, of, Subscribable, Subscription } from 'rxjs/index';
+import { Observable, interval, Subject, of, Subscribable, Subscription, timer } from 'rxjs/index';
 import { map } from 'rxjs/internal/operators/map';
-
-import { MapService } from '../../shared/services/map/map.service';
 import { MonitorService } from './monitor.service';
-
 import { ModelConverter } from './models/model-converter';
 import { PageReq } from '../../shared/models/page/page-req.model';
 import { PageRes } from '../../shared/models/page/page-res.model';
@@ -13,13 +10,9 @@ import { Result } from '../../shared/models/response/result.model';
 import { RouteModel } from '../plan/models/route.model';
 import { RouteListModel } from '../plan/models/route.model';
 import { TaskModel, TaskState } from '../plan/models/task.model';
-import { Marker } from '../../shared/services/map/marker.model';
-import { VerifyUtil } from '../../shared/utils/verify-utils';
+import { Marker, MarkerType } from '../../shared/services/map/marker.model';
 import { TableBasicComponent } from '../table-basic.component';
-import { Driving } from 'src/app/shared/services/map/driving.model';
-import { ActivatedRoute, ParamMap, Params } from '@angular/router';
-import { switchMap, combineAll, merge, concatAll, concat } from 'rxjs/operators';
-import { Map } from 'src/app/shared/services/map/map.model';
+import { Map, ILngLat } from 'src/app/shared/services/map/map.model';
 
 @Component({
     selector   : 'app-monitor',
@@ -40,125 +33,49 @@ export class MonitorComponent extends TableBasicComponent implements OnInit, OnD
     isShowGasStation = false;
     isShowTaskTable = false;
 
-    map: Map;   // 高德地图对象
-    stationMarkers: Marker[] = [];
-    vehicleMarkers: Marker[] = [];
-    recyclingMarkers: Marker[] = [];
-
     routeListCache: RouteListModel[];
     taskListCache: TaskModel[];
-    routeListSubject$: Subject<RouteListModel[]> = new Subject<RouteListModel[]>();
-    taskListSubject$: Subject<TaskModel[]> = new Subject<TaskModel[]>();
-    paramMap$: Subject<any> = new Subject<any>();
     interval$: Subscription;
+    runRouteLines = [];
+    mapHeight: string;
 
-    private drivingService: any;
+    vehicleMarkerType: MarkerType = MarkerType.VEHICLE;
+    stationMarkerType: MarkerType = MarkerType.STATION;
+
+    private onStationMarkerRemove$ = new Subject<boolean>();
+    private onVehicleMarkerRemove$ = new Subject<boolean>();
+    private onClearRunRouteLines$ = new Subject<boolean>();
+    private onSetCenter$ = new Subject<ILngLat>();
 
     constructor(
-        private mapService: MapService,
-        private monitorService: MonitorService,
-        private route: ActivatedRoute) {
+        private monitorService: MonitorService) {
         super();
     }
 
     ngOnInit() {
         this.calcTableScrollY(-60);
+        this.calcMapHeight();
 
-        this.initMap().subscribe(() => {
-            this.createDrivingService();
-            this.executePlanWithRoute();
-            this.jumpToCenterByParam();
-        });
-
-        this.routeListSubject$.subscribe((routeList: RouteListModel[]) => {
-            this.removeVehicleMarkers();
-            this.createVehicleMarkers(routeList);
-            this.autoUpdateVehicleMarkers(routeList);
-            this.refreshByParam();
-        });
-
-        this.taskListSubject$.subscribe((taskModelList: TaskModel[]) => {
-            this.removeStationMarkers();
-            this.createStationMarkers(taskModelList);
-            this.drawRouteWaypoints(taskModelList);
-        });
+        this.autoUpdateVehicleMarkers();
     }
 
     ngOnDestroy() {
         this.interval$.unsubscribe();
     }
 
-    initMap() {
-        const subject = new Subject();
-        const subscription = this.mapService.initMap().subscribe((hasLoaded: boolean) => {
-            if (hasLoaded) {
-                this.map = this.mapService.createMap(new Map('map', [ 113.18691, 23.031716 ], 15));
-                if (subscription) {
-                    subscription.unsubscribe(); // 取消定时器
-                    subject.next(true);
-                }
-            }
-        });
-        return subject;
+    calcMapHeight(): void {
+        this.mapHeight = (+this.tableScrollY.replace('px', '') + 75) + 'px';
     }
 
-    autoUpdateVehicleMarkers(routeList: RouteListModel[]) {
+    autoUpdateVehicleMarkers() {
         // 每10秒刷新车辆位置
-        this.interval$ = interval(1000 * 10).subscribe(() => {
-            this.removeVehicleMarkers();
-            this.createVehicleMarkers(routeList);
-        });
-    }
-
-    refreshByParam() {
-        this.paramMap$.subscribe(params => {
-            // 如果是收集点跳转到此，清空车辆标记
-            if (params.isCollection) {
-                this.isShowSideBarLabel = false;
-                this.removeVehicleMarkers();
-                this.clearRouteWaypoints();
-            } else {
-                this.removeRecyclingMarkers();
-            }
-            if (params.lngLat && params.isCollection) {
-                this.createRecyclingMarker(params.lngLat);
-                this.interval$.unsubscribe();
-            }
-        });
-        this.handleParamMap();
-    }
-
-    jumpToCenterByParam() {
-        this.paramMap$.subscribe((params) => {
-            if (params.lngLat) {
-                this.setCenter(params.lngLat);
-            }
-        });
-    }
-
-    handleParamMap(): void {
-        this.route.paramMap.pipe(
-            switchMap((params: ParamMap) => {
-                const lngLatStr: string = params.get('lngLat');
-                let lngLatForParam: number[];
-                if (lngLatStr) {
-                    lngLatForParam = lngLatStr
-                        .split(',')
-                        .map((lngLat: string) => +lngLat);
-                }
-                const isCollectionStr: string = params.get('isCollection');
-                let isCollectionForParam: boolean;
-                if (isCollectionStr) {
-                    isCollectionForParam = Boolean(isCollectionStr);
-                }
-
-                this.paramMap$.next({
-                    lngLat: lngLatForParam,
-                    isCollection: isCollectionForParam
-                });
-                return of(params);
+        this.interval$ = timer(1000, 1000 * 10).pipe(
+            map(() => {
+                this.executePlanWithRoute();
             })
-        ).subscribe(() => { /* noop */ });
+        ).subscribe(() => {
+            this.onVehicleMarkerRemove$.next(true);
+        });
     }
 
     onToggleSideBar(e: boolean) {
@@ -179,8 +96,6 @@ export class MonitorComponent extends TableBasicComponent implements OnInit, OnD
             item.checked = false;
             this.taskListCache = [];
             this.isShowTaskTable = false;
-            this.removeStationMarkers();
-            this.clearRouteWaypoints();
         } else {
             this.routeListCache.forEach((routeItem: RouteListModel) => {
                 routeItem.checked = false;
@@ -244,8 +159,21 @@ export class MonitorComponent extends TableBasicComponent implements OnInit, OnD
     getTaskList(routeId: number) {
         this.monitorService.getTaskList(routeId).subscribe((res: Result<TaskModel[]>) => {
             this.taskListCache = res.data.map((t: TaskModel) => ModelConverter.taskResToListModel(t, routeId));
-            this.taskListSubject$.next(this.taskListCache);
+
+            this.onStationMarkerRemove$.next(true);
+            this.onClearRunRouteLines$.next(true);
+            this.drawRoute();
         });
+    }
+
+    drawRoute() {
+        const lines = [];
+        if (this.taskListCache && this.taskListCache.length) {
+            this.taskListCache.forEach(task => {
+                lines.push([task.lng, task.lat]);
+            });
+            this.runRouteLines.push(lines);
+        }
     }
 
     /**
@@ -258,58 +186,37 @@ export class MonitorComponent extends TableBasicComponent implements OnInit, OnD
             routeList.subscribe((routeRes: Result<RouteModel[]>) => {
                 if (routeRes.data) {
                     this.routeListCache = routeRes.data.map((r: RouteModel) => ModelConverter.routeResToListModel(r));
-                    this.routeListSubject$.next(this.routeListCache);
                 }
             });
         });
     }
 
-    /** start of map **/
+    stationMarkerRemove(event: Function) {
+        this.onStationMarkerRemove$.subscribe(() => {
+            event();
+        });
+    }
 
-    /**
-     * @param lngLat [经度, 维度]
-     */
+    vehicleMarkerRemove(event: Function) {
+        this.onVehicleMarkerRemove$.subscribe(() => {
+            event();
+        });
+    }
+
+    setCenterFunction(event: Function) {
+        this.onSetCenter$.subscribe((lngLat: ILngLat) => {
+            event([lngLat.lng, lngLat.lat]);
+        });
+    }
+
+    clearRunRouteLines(event: Function) {
+        this.onClearRunRouteLines$.subscribe(() => {
+            event();
+        });
+    }
+
     setCenter(lngLat: number[]): void {
-        this.mapService.setCenter(lngLat);
-    }
-
-    createDrivingService(): void {
-        const drivingModel = new Driving({
-            map: this.map,
-            hideMarkers: true
-        });
-        this.drivingService = this.mapService.createDriving(drivingModel);
-    }
-
-    clearRouteWaypoints() {
-        this.drivingService.clear();
-    }
-
-    /**
-     * 根据任务列表数据直接在地图上画出行车路径
-     * 如果数据是有5个点，会由起点一直画到终点（包括起点终点之间的途经点）
-     *
-     * @param taskModelList
-     */
-    drawRouteWaypoints(taskModelList: TaskModel[]) {
-        const firstTaskModel: TaskModel = taskModelList[0];
-        const lastLenght: number = taskModelList.length - 1;
-        const lastTaskModel: TaskModel = taskModelList[lastLenght];
-        if (firstTaskModel) {
-            const matchRoute = this.routeListCache.find((route: RouteModel) => route.id === firstTaskModel.routeId);
-            const waypoints: number[] = [];
-            taskModelList.forEach((taskModel: TaskModel, index: number) => {
-                if (index === lastLenght) {
-                    return;
-                }
-                waypoints.push(this.mapService.lngLat([taskModel.lng, taskModel.lat]));
-            });
-            this.drivingService.search(
-                this.mapService.lngLat([matchRoute.vehicle.lng, matchRoute.vehicle.lat]),
-                this.mapService.lngLat([lastTaskModel.lng, lastTaskModel.lat]),
-                {waypoints}
-            );
-        }
+        this.onSetCenter$.next({ lng: lngLat[0], lat: lngLat[1] });
     }
 
     convertTaskStateToColor(state: string): string {
@@ -334,106 +241,4 @@ export class MonitorComponent extends TableBasicComponent implements OnInit, OnD
         }
         return color;
     }
-
-    createMarkerContentForNumber(num = 1, color: string): string {
-        return '' +
-            '<div class="map-marker-content-station">' +
-            '    <img src="assets/images/map-icon/marker_bg.svg">' +
-            '    <div class="map-marker-text" style="background-color:' + color + '">' + num + '</div>' +
-            '</div>';
-    }
-
-    createMarkerContentForCar(plateNumber: string): string {
-        return '' +
-            '<div class="map-marker-content-vehicle">' +
-            '    <img src="assets/images/map-icon/vehicle.png">' +
-            '    <div class="map-marker-label-vehicle">' + plateNumber + '</div>' +
-            '</div>';
-    }
-
-    createMarkerContentForRecycling(): string {
-        return '' +
-            '<div class="map-marker-content-station">' +
-            '    <img src="assets/images/map-icon/marker_bg.svg">' +
-            '    <div class="map-marker-recycling-icon">' +
-            '        <img src="assets/images/map-icon/recycling.svg">' +
-            '    </div>' +
-            '</div>';
-    }
-
-    createRecyclingMarker(lngLat: number[]): void {
-        const marker = new Marker({
-            map     : this.map,
-            position: lngLat,
-            content: this.createMarkerContentForRecycling(),
-            offset: [-24, -50]
-        });
-        const amapMarker = this.mapService.createMarker(marker);
-        this.recyclingMarkers.push(amapMarker);
-    }
-
-    createStationMarker(lngLat: number[], text = 1, state: string): void {
-        const marker = new Marker({
-            map     : this.map,
-            position: lngLat,
-            content: this.createMarkerContentForNumber(text, this.convertTaskStateToColor(state)),
-            offset: [-24, -50]
-        });
-        const amapMarker = this.mapService.createMarker(marker);
-        this.stationMarkers.push(amapMarker);
-    }
-
-    createVehicleMarker(lngLat: number[], text: string): void {
-        const marker = new Marker({
-            map     : this.map,
-            position: lngLat,
-            content: this.createMarkerContentForCar(text),
-            offset: [-24, -50]
-        });
-        const amapMarker = this.mapService.createMarker(marker);
-        this.vehicleMarkers.push(amapMarker);
-    }
-
-    createVehicleMarkers(routeList: RouteModel[]): void {
-        routeList.forEach((item: RouteListModel) => {
-            if (VerifyUtil.isNotEmpty(item.vehicle.lng) &&
-                VerifyUtil.isNotEmpty(item.vehicle.lat) &&
-                VerifyUtil.isNotEmpty(item.vehicle.plateNumber)) {
-                this.createVehicleMarker([item.vehicle.lng, item.vehicle.lat], item.vehicle.plateNumber);
-            }
-        });
-    }
-
-    createStationMarkers(taskModelList: TaskModel[]): void {
-        taskModelList.forEach((item: TaskModel) => {
-            if (VerifyUtil.isNotEmpty(item.lng) &&
-                VerifyUtil.isNotEmpty(item.lat) &&
-                VerifyUtil.isNotEmpty(item.priority)) {
-                this.createStationMarker([item.lng, item.lat], item.priority, item.state);
-            }
-        });
-    }
-
-    removeRecyclingMarkers(): void {
-        this.removeMarkers(this.recyclingMarkers);
-        this.recyclingMarkers = [];
-    }
-
-    removeVehicleMarkers(): void {
-        this.removeMarkers(this.vehicleMarkers);
-        this.vehicleMarkers = [];
-    }
-
-    removeStationMarkers(): void {
-        this.removeMarkers(this.stationMarkers);
-        this.stationMarkers = [];
-    }
-
-    removeMarkers(markers: Marker[]): void {
-        if (markers) {
-            this.mapService.removeAllMarkers(markers);
-        }
-    }
-
-    /** end of map **/
 }

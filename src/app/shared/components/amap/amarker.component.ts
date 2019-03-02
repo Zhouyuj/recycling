@@ -135,7 +135,7 @@ export class AmarkerComponent implements OnInit, OnDestroy {
             content: this.createMarkerContentForNumber(text, color),
             offset: [-24, -50],
         };
-        if (this.drag) {
+        if (this.drag.observers.length) {
             markerOptions.draggable = true;
         }
         const marker = new Marker(markerOptions);

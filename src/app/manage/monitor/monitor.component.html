@@ -159,8 +159,33 @@
         </div>
       </div>
     </div>
-    <div class="map-cell" nz-col nzSpan="{{ isShowSideBar ? 18 : 24 }}">
-      <div id="map"></div>
+    <div class="map-cell" [ngStyle]="{ height: mapHeight }" nz-col nzSpan="{{ isShowSideBar ? 18 : 24 }}">
+      <app-amap 
+        [longitude]="113.18691"
+        [latitude]="23.031716"
+        [zoom]="15"
+        (center)="setCenterFunction($event)">
+        <app-amarker *ngFor="let route of routeListCache"
+            [longitude]="route.vehicle.lng"
+            [latitude]="route.vehicle.lat"
+            [type]="vehicleMarkerType"
+            [text]="route.vehicle.plateNumber"
+            (remove)="vehicleMarkerRemove($event)">
+        </app-amarker>
+        <app-amarker *ngFor="let station of taskListCache"
+            [longitude]="station.lng"
+            [latitude]="station.lat"
+            [type]="stationMarkerType"
+            [text]="station.priority"
+            [color]="convertTaskStateToColor(station.state)"
+            (remove)="stationMarkerRemove($event)">
+        </app-amarker>
+        <app-apolyline *ngFor="let line of runRouteLines"
+            [lines]="line"
+            [strokeColor]="'#ccffcc'"
+            (clear)="clearRunRouteLines($event)">
+        </app-apolyline>
+    </app-amap>
     </div>
   </div>
 </div>

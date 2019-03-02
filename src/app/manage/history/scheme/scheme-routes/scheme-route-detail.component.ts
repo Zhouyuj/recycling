@@ -1,5 +1,5 @@
 import { OnInit, Component } from '@angular/core';
-import { Subject, timer } from 'rxjs';
+import { Subject, timer, merge } from 'rxjs';
 import { MapService } from 'src/app/shared/services/map/map.service';
 import { Map, ILngLat } from 'src/app/shared/services/map/map.model';
 import { ActivatedRoute } from '@angular/router';
@@ -15,6 +15,7 @@ import { VerifyUtil } from 'src/app/shared/utils/verify-utils';
 import { LocationModel } from '../../models/location.model';
 import { DateUtil } from 'src/app/shared/utils/date-utils';
 import { NotificationService } from 'src/app/shared/services/notification/notification.service';
+import { switchMap, switchAll, combineAll, mergeAll } from 'rxjs/operators';
 
 @Component({
     selector: 'app-history-scheme-route-detail',
@@ -31,6 +32,8 @@ export class SchemeRouteDetailComponent extends TableBasicComponent implements O
     currentRoute: RouteModel | any;
     startLngLat: ILngLat;
     runPlanVehiclePosition: ILngLat;
+    runPlanLines = [];
+    planRouteLines = [];
     /**
      * Monitor component
      */
@@ -38,33 +41,31 @@ export class SchemeRouteDetailComponent extends TableBasicComponent implements O
     speed = 1;
     isPlay = false;
     isOpen = false;
+    isClickedRunPlan = false;
+    isClickedPlanRoute = false;
     hasRunPlan = false;
     isSpinning = false;
     interval$: any;
 
     taskList: TaskModel[];
     locationList: LocationModel[];
-    map: Map;
 
     taskPaneHeight: string;
     startTime: string;
     endTime: string;
     timeDiffIndex = 0;
 
-    movedInfo: { customerId: number, position: ILngLat };
+    dragList = [];
+    dragInfo: { customerId: number, position: ILngLat };
 
-    runPlanVechileMarker: any;
-
-    private drivingRunPlanService: any;
-    private drivingPlanRouteService: any;
-    private onPlanRoute$ = new Subject<boolean>();
-    private onRunPlan$ = new Subject<boolean>();
     private onRunPlanVehicleRemove$ = new Subject<boolean>();
     private onRunPlanVehicleCreate$ = new Subject<boolean>();
+    private onStartVehicleRemove$ = new Subject<boolean>();
+    private onClearPlanRouteLine$ = new Subject<boolean>();
+    private onClearRunPlanLine$ = new Subject<boolean>();
     private onSetCenter$ = new Subject<ILngLat>();
 
     constructor(
-        private mapService: MapService,
         private historyService: HistoryService,
         private notificationService: NotificationService,
         private location: Location,
@@ -157,56 +158,6 @@ export class SchemeRouteDetailComponent extends TableBasicComponent implements O
         this.onSetCenter$.next(lngLat);
     }
 
-    createDrivingService(): void {
-        const drivingRunPlanModel = new Driving({
-            map: this.map,
-            hideMarkers: true
-        });
-        this.drivingRunPlanService = this.mapService.createDriving(drivingRunPlanModel);
-        const drivingPlanRouteModel = new Driving({
-            map: this.map,
-            hideMarkers: true,
-            outlineColor: 'blue'
-        });
-        this.drivingPlanRouteService = this.mapService.createDriving(drivingPlanRouteModel);
-    }
-
-    clearRunPlanWaypoints() {
-        this.drivingRunPlanService.clear();
-    }
-
-    clearPlanRouteWaypoints() {
-        this.drivingPlanRouteService.clear();
-    }
-
-    drawPlanRouteWaypoints(event: Function) {
-        this.onPlanRoute$.subscribe(() => {
-            if (this.taskList && this.taskList.length) {
-                const lngLatList: ILngLat[] = this.taskList.map((model: TaskModel) => {
-                    return {
-                        lng: model.lng,
-                        lat: model.lat
-                    };
-                });
-                event(this.startLngLat, lngLatList);
-            }
-        });
-    }
-
-    drawRunPlanWaypoints(event: Function) {
-        this.onRunPlan$.subscribe(() => {
-            if (this.locationList && this.locationList.length) {
-                const lngLatList: ILngLat[] = this.locationList.map((model: LocationModel) => {
-                    return {
-                        lng: model.longitude,
-                        lat: model.latitude
-                    };
-                });
-                event(this.startLngLat, lngLatList);
-            }
-        });
-    }
-
     runPlanVehicleRemove(event: Function) {
         this.onRunPlanVehicleRemove$.subscribe(() => {
             event();
@@ -215,6 +166,24 @@ export class SchemeRouteDetailComponent extends TableBasicComponent implements O
 
     runPlanVehicleCreate(event: Function) {
         this.onRunPlanVehicleCreate$.subscribe(() => {
+            event();
+        });
+    }
+
+    clearPlanRouteLines(event: Function) {
+        this.onClearPlanRouteLine$.subscribe(() => {
+            event();
+        });
+    }
+
+    clearRunPlanLines(event: Function) {
+        this.onClearRunPlanLine$.subscribe(() => {
+            event();
+        });
+    }
+
+    startVehicleRemove(event: Function) {
+        this.onStartVehicleRemove$.subscribe(() => {
             event();
         });
     }
@@ -249,21 +218,29 @@ export class SchemeRouteDetailComponent extends TableBasicComponent implements O
     }
 
     onDragEvent(event, property: TaskModel) {
-        this.movedInfo = {
+        this.dragInfo = {
             customerId: property.customerId,
             position: {
                 lng: event.lnglat.O,
                 lat: event.lnglat.P
             }
         };
+        const isExist = this.dragList.find(drag => drag.customerId === this.dragInfo.customerId);
+        if (!isExist) {
+            this.dragList.push(this.dragInfo);
+        }
     }
 
     onSaveMovedMarker() {
-        this.historyService.updateCustomerLocation(this.movedInfo.customerId, {
-            lng: this.movedInfo.position.lng,
-            lat: this.movedInfo.position.lat
-        }).subscribe(() => {
-            this.movedInfo = null;
+        Promise.all(
+            this.dragList.map(dragInfo => this.historyService
+                .updateCustomerLocation(dragInfo.customerId, {
+                    lng: dragInfo.position.lng,
+                    lat: dragInfo.position.lat
+                }).toPromise()
+            )
+        ).then(() => {
+            this.dragList = [];
             this.notificationService.create({
                 type: 'success',
                 title: '恭喜,更新成功',
@@ -292,11 +269,33 @@ export class SchemeRouteDetailComponent extends TableBasicComponent implements O
     }
 
     onPlanRoute() {
-        this.onPlanRoute$.next(true);
+        if (this.isClickedPlanRoute) {
+            this.onClearPlanRouteLine$.next(true);
+        } else {
+            const lines = [];
+            if (this.taskList && this.taskList.length) {
+                this.taskList.forEach(task => {
+                    lines.push([task.lng, task.lat]);
+                });
+                this.planRouteLines.push(lines);
+            }
+        }
+        this.isClickedPlanRoute = !this.isClickedPlanRoute;
     }
 
     onRunPlan() {
-        this.onRunPlan$.next(true);
+        if (this.isClickedRunPlan) {
+            this.onClearRunPlanLine$.next(true);
+        } else {
+            const lines = [];
+            if (this.locationList && this.locationList.length) {
+                this.locationList.forEach(location => {
+                    lines.push([location.longitude, location.latitude]);
+                });
+                this.runPlanLines.push(lines);
+            }
+        }
+        this.isClickedRunPlan = !this.isClickedRunPlan;
     }
 
     onToggle() {
@@ -311,11 +310,14 @@ export class SchemeRouteDetailComponent extends TableBasicComponent implements O
     excuteRunPlan() {
         if (this.locationList && this.locationList.length) {
             const vehicle = this.locationList[this.timeDiffIndex];
-            this.runPlanVehiclePosition = {
-                lng: vehicle.longitude,
-                lat: vehicle.latitude
-            };
+            if (vehicle) {
+                this.runPlanVehiclePosition = {
+                    lng: vehicle.longitude,
+                    lat: vehicle.latitude
+                };
+            }
         }
+        this.onStartVehicleRemove$.next(true);
         this.onRunPlanVehicleRemove$.next(true);
         this.onRunPlanVehicleCreate$.next(true);
     }
