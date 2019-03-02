@@ -27,8 +27,8 @@
     <div class="border-layout">
         <div class="map-layout" [ngStyle]="{ width: 'calc(100vw - 18px)', height: tableScrollY }">
             <app-amap 
-                [longitude]="startLngLat.lng"
-                [latitude]="startLngLat.lat"
+                [longitude]="113.18691"
+                [latitude]="23.031716"
                 [zoom]="15"
                 (center)="setCenterFunction($event)">
                 <app-amarker *ngIf="startLngLat"

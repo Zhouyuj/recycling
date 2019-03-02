@@ -136,7 +136,6 @@ export class SchemeRouteDetailComponent extends TableBasicComponent implements O
                 weighedQuantity: this.transformParamValue(+params.get('weighedQuantity')),
                 date
             };
-            this.setStartLngLat(this.currentRoute.vehicle.lng, this.currentRoute.vehicle.lat);
         });
     }
 
