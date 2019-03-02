@@ -21,15 +21,24 @@ export class AdrivingComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        if (this.mapService.map) {
+            this.init();
+        }
         this._complete$ = this.mapService.mapListener$.subscribe(() => {
-            this.create();
-            this.drawWaypointsEvent.emit(this.drawWaypoints.bind(this));
-            this.clearEvent.emit(this.clear.bind(this));
+            this.init();
         });
     }
 
     ngOnDestroy() {
-        this._complete$.unsubscribe();
+        if (this._complete$) {
+            this._complete$.unsubscribe();
+        }
+    }
+
+    init() {
+        this.create();
+        this.drawWaypointsEvent.emit(this.drawWaypoints.bind(this));
+        this.clearEvent.emit(this.clear.bind(this));
     }
 
     create() {

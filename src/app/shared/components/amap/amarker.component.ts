@@ -25,15 +25,24 @@ export class AmarkerComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        if (this.mapService.map) {
+            this.init();
+        }
         this._complete$ = this.mapService.mapListener$.subscribe(() => {
-            this.createMarkerByType();
-            this.remove.emit(this.removeMarkers.bind(this));
-            this.create.emit(this.createMarkerByType.bind(this));
+            this.init();
         });
     }
 
     ngOnDestroy() {
-        this._complete$.unsubscribe();
+        if (this._complete$) {
+            this._complete$.unsubscribe();
+        }
+    }
+
+    init() {
+        this.createMarkerByType();
+        this.remove.emit(this.removeMarkers.bind(this));
+        this.create.emit(this.createMarkerByType.bind(this));
     }
 
     removeMarkers() {
@@ -66,6 +75,7 @@ export class AmarkerComponent implements OnInit, OnDestroy {
                     throw new Error('can not missing `color` input');
                 }
                 this._markers.push(this.createStationMarker(center, this.text, this.color));
+                break;
             }
         }
     }

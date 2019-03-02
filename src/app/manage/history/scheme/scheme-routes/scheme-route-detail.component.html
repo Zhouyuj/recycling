@@ -171,11 +171,11 @@
             </div>
             <div nz-row>
                 <div nz-col nzSpan="1">
-                    <button class="has-icon-button" nz-button *ngIf="!isPlay" [disabled]="!hasRunPlan">
-                        <i nz-icon type="caret-right" (click)="onPlay()"></i>
+                    <button class="has-icon-button" nz-button *ngIf="!isPlay" [disabled]="!hasRunPlan" (click)="onPlay()">
+                        <i nz-icon type="caret-right"></i>
                     </button>
-                    <button class="has-icon-button" nz-button *ngIf="isPlay" [disabled]="!hasRunPlan">
-                        <i nz-icon type="pause" (click)="onPlay()"></i>
+                    <button class="has-icon-button" nz-button *ngIf="isPlay" [disabled]="!hasRunPlan" (click)="onPlay()">
+                        <i nz-icon type="pause"></i>
                     </button>
                 </div>
                 <div nz-col nzSpan="2">
