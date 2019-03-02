@@ -7,6 +7,12 @@
                     <i nz-icon type="left"></i>
                     返回
                 </button>
+                &nbsp;
+                <button nz-button [disabled]="!movedInfo" (click)="onSaveMovedMarker()">
+                    <i nz-icon type="save"></i>
+                    保存移动后的收运点位置
+                </button>
+                
             </div>
         </div>
         <div class="route-info" nz-row nzGutter="16">

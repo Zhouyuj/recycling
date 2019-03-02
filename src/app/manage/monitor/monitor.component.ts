@@ -305,8 +305,8 @@ export class MonitorComponent extends TableBasicComponent implements OnInit, OnD
                 waypoints.push(this.mapService.lngLat([taskModel.lng, taskModel.lat]));
             });
             this.drivingService.search(
-                new AMap.LngLat(matchRoute.vehicle.lng, matchRoute.vehicle.lat),
-                new AMap.LngLat(lastTaskModel.lng, lastTaskModel.lat),
+                this.mapService.lngLat([matchRoute.vehicle.lng, matchRoute.vehicle.lat]),
+                this.mapService.lngLat([lastTaskModel.lng, lastTaskModel.lat]),
                 {waypoints}
             );
         }

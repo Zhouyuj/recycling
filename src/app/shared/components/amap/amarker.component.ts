@@ -41,7 +41,8 @@ export class AmarkerComponent implements OnInit, OnDestroy {
     }
 
     createMarkerByType(): void {
-        const center: number[] = [this.longitude, this.latitude];
+        const lngLat = this.mapService.lngLat([this.longitude, this.latitude]);
+        const center: number[] = [lngLat.lng, lngLat.lat];
         if (!this.type) {
             throw new Error('can not missing `type` input');
         }

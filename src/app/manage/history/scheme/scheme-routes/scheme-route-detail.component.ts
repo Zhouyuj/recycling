@@ -50,6 +50,8 @@ export class SchemeRouteDetailComponent extends TableBasicComponent implements O
     endTime: string;
     timeDiffIndex = 0;
 
+    movedInfo: { customerId: number, position: ILngLat };
+
     runPlanVechileMarker: any;
 
     private drivingRunPlanService: any;
@@ -108,13 +110,6 @@ export class SchemeRouteDetailComponent extends TableBasicComponent implements O
                 this.isSpinning = false;
                 this.taskList = result.data;
             });
-    }
-
-    onDragEvent(event, property: TaskModel) {
-        this.historyService.updateCustomerLocation(property.customerId, {
-            lng: event.lnglat.O,
-            lat: event.lnglat.P
-        }).subscribe(console.log);
     }
 
     assembleRouteByParams(): void {
@@ -250,6 +245,23 @@ export class SchemeRouteDetailComponent extends TableBasicComponent implements O
             break;
         }
         return color;
+    }
+
+    onDragEvent(event, property: TaskModel) {
+        this.movedInfo = {
+            customerId: property.customerId,
+            position: {
+                lng: event.lnglat.O,
+                lat: event.lnglat.P
+            }
+        };
+    }
+
+    onSaveMovedMarker() {
+        this.historyService.updateCustomerLocation(this.movedInfo.customerId, {
+            lng: this.movedInfo.position.lng,
+            lat: this.movedInfo.position.lat
+        }).subscribe(console.log);
     }
 
     onBack() {
