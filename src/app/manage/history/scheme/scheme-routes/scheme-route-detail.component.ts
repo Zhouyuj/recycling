@@ -1,21 +1,17 @@
 import { OnInit, Component } from '@angular/core';
-import { Subject, timer, merge } from 'rxjs';
-import { MapService } from 'src/app/shared/services/map/map.service';
-import { Map, ILngLat } from 'src/app/shared/services/map/map.model';
+import { Subject, timer, merge, Subscription } from 'rxjs';
+import { ILngLat } from 'src/app/shared/services/map/map.model';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { RouteModel } from 'src/app/manage/plan/models/route.model';
-import { Marker, MarkerType } from 'src/app/shared/services/map/marker.model';
+import { MarkerType } from 'src/app/shared/services/map/marker.model';
 import { TableBasicComponent } from 'src/app/manage/table-basic.component';
 import { HistoryService } from '../../history.service';
 import { TaskModel, TaskState } from 'src/app/manage/plan/models/task.model';
 import { Result } from 'src/app/shared/models/response/result.model';
-import { Driving } from 'src/app/shared/services/map/driving.model';
-import { VerifyUtil } from 'src/app/shared/utils/verify-utils';
 import { LocationModel } from '../../models/location.model';
 import { DateUtil } from 'src/app/shared/utils/date-utils';
 import { NotificationService } from 'src/app/shared/services/notification/notification.service';
-import { switchMap, switchAll, combineAll, mergeAll } from 'rxjs/operators';
 
 @Component({
     selector: 'app-history-scheme-route-detail',
@@ -29,7 +25,6 @@ export class SchemeRouteDetailComponent extends TableBasicComponent implements O
      */
     vehicleMarkerType: MarkerType = MarkerType.VEHICLE;
     stationMarkerType: MarkerType = MarkerType.STATION;
-    recyclingMarkerType: MarkerType = MarkerType.RECYCLING;
     currentRoute: RouteModel | any;
     startLngLat: ILngLat;
     runPlanVehiclePosition: ILngLat;
@@ -37,7 +32,9 @@ export class SchemeRouteDetailComponent extends TableBasicComponent implements O
     /**
      * Monitor component
      */
-    percent = 0;
+    max = 100;
+    min = 0;
+    total = 0;
     speed = 1;
     isPlay = false;
     isOpen = false;
@@ -45,7 +42,7 @@ export class SchemeRouteDetailComponent extends TableBasicComponent implements O
     isClickedPlanRoute = false;
     hasRunPlan = false;
     isSpinning = false;
-    interval$: any;
+    interval$: Subscription;
 
     taskList: TaskModel[];
     locationList: LocationModel[];
@@ -93,6 +90,7 @@ export class SchemeRouteDetailComponent extends TableBasicComponent implements O
                     this.locationList = result.data;
                     if (this.locationList) {
                         this.hasRunPlan = true;
+                        this.max = this.locationList.length;
                         this.setStartLngLat(
                             this.locationList[0].longitude,
                             this.locationList[1].latitude
@@ -316,9 +314,9 @@ export class SchemeRouteDetailComponent extends TableBasicComponent implements O
         this.onPlay();  // 再开始
     }
 
-    excuteRunPlan() {
+    onExcuteRunPlan() {
         if (this.locationList && this.locationList.length) {
-            const vehicle = this.locationList[this.timeDiffIndex];
+            const vehicle = this.locationList[this.total];
             if (vehicle) {
                 this.runPlanVehiclePosition = {
                     lng: vehicle.longitude,
@@ -335,13 +333,9 @@ export class SchemeRouteDetailComponent extends TableBasicComponent implements O
         if (this.isPlay) {
             this.interval$.unsubscribe();
         } else {
-            const timeDiff = 1 / (this.locationList.length / 100);
             this.interval$ = timer(1000, 1000 / this.speed).subscribe(() => {
-                if (this.percent < 100) {
-                    this.timeDiffIndex++;
-                    this.percent += timeDiff;
-                    this.excuteRunPlan();
-                }
+                this.total += 1;
+                this.onExcuteRunPlan();
             });
         }
         this.isPlay = !this.isPlay;
