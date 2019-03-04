@@ -1,12 +1,12 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { MapService } from 'src/app/shared/services/map/map.service';
 import { Map } from '../../services/map/map.model';
-import { Subject, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 @Component({
-    selector   : 'app-amap',
-    templateUrl: './amap.component.html',
-    styleUrls  : [ './amap.component.scss' ]
+    selector: 'app-amap',
+    template: '<div id="amap" class="map"></div>',
+    styles: ['.map { height: 100%; width: 100%; }']
 })
 export class AmapComponent implements OnInit, OnDestroy {
 

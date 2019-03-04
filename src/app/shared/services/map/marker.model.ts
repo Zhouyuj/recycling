@@ -99,6 +99,14 @@ export class Marker {
         }
     }
 
+    public hide() {
+
+    }
+
+    public show() {
+
+    }
+
     // 坐标转换
     private lngLatTransformer(position: number[]): number[] {
         return null;

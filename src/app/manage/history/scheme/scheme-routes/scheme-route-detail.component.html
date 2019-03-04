@@ -34,7 +34,7 @@
                 <app-amarker *ngIf="startLngLat"
                     [longitude]="startLngLat.lng"
                     [latitude]="startLngLat.lat"
-                    [type]="vehicleMarkerType"
+                    [type]="recyclingMarkerType"
                     [text]="currentRoute.vehicle.plateNumber"
                     (remove)="startVehicleRemove($event)">
                 </app-amarker>

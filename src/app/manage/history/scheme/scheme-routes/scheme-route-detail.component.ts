@@ -29,6 +29,7 @@ export class SchemeRouteDetailComponent extends TableBasicComponent implements O
      */
     vehicleMarkerType: MarkerType = MarkerType.VEHICLE;
     stationMarkerType: MarkerType = MarkerType.STATION;
+    recyclingMarkerType: MarkerType = MarkerType.RECYCLING;
     currentRoute: RouteModel | any;
     startLngLat: ILngLat;
     runPlanVehiclePosition: ILngLat;
