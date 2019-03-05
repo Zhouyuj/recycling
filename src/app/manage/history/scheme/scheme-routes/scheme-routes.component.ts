@@ -9,7 +9,7 @@ import { ModalService } from 'src/app/shared/services/modal/modal.service';
 import { TableBasicComponent } from 'src/app/manage/table-basic.component';
 import { PlanRes } from 'src/app/manage/plan/models/plan-res.model';
 import { PlanListModel } from 'src/app/manage/plan/models/plan-list.model';
-import { HistoryService } from '../../history.service';
+import { PlanService } from '../../../plan/plan.service';
 import { ModelConverter } from 'src/app/manage/plan/models/model-converter';
 import { Route, ActivatedRoute, Router } from '@angular/router';
 import {
@@ -46,7 +46,7 @@ export class SchemeRoutesComponent extends TableBasicComponent
   planDate: string;
 
   constructor(
-    private historyService: HistoryService,
+    private planService: PlanService,
     private modalService: ModalService,
     private notificationService: NotificationService,
     private route: ActivatedRoute,
@@ -135,6 +135,6 @@ export class SchemeRoutesComponent extends TableBasicComponent
    * 根据planId获取routes列表
    */
   getRoutesListByPlanId(planId: number): Observable<Result<RouteModel[]>> {
-    return this.historyService.getRouteList({ planId });
+    return this.planService.getRouteList(null, null, [planId], null);
   }
 }

@@ -1,5 +1,5 @@
 import { OnInit, Component } from '@angular/core';
-import { HistoryService } from '../history.service';
+import { PlanService } from '../../plan/plan.service';
 import { PageReq } from 'src/app/shared/models/page/page-req.model';
 import { PageRes } from 'src/app/shared/models/page/page-res.model';
 import { PlanRes } from '../../plan/models/plan-res.model';
@@ -41,7 +41,7 @@ export class SchemeComponent extends TableBasicComponent implements OnInit {
   selectedItem: PlanListModel;
 
   constructor(
-    private historyService: HistoryService,
+    private planService: PlanService,
     private modalService: ModalService,
     private notificationService: NotificationService,
     private router: Router,
@@ -65,7 +65,7 @@ export class SchemeComponent extends TableBasicComponent implements OnInit {
     }
     this.modalService.createDeleteConfirm({
       onOk: () => {
-        this.historyService.delPlan(this.selectedItem.id).subscribe(
+        this.planService.delPlan(this.selectedItem.id).subscribe(
           (res: Result<any>) => {
             this.notificationService.create({
               type: 'success',
@@ -89,7 +89,7 @@ export class SchemeComponent extends TableBasicComponent implements OnInit {
       });
       return;
     }
-    this.historyService.getPlanReport(this.selectedItem.id).subscribe(
+    this.planService.getPlanReport(this.selectedItem.id).subscribe(
       res => {
         this.downloadReportsService.download(res, this.selectedItem.name);
       },
@@ -175,6 +175,6 @@ export class SchemeComponent extends TableBasicComponent implements OnInit {
    */
   getPlanList(pageReq: PageReq): Observable<Result<PageRes<PlanRes[]>>> {
     const status: string[] = ['Completed', 'Stopped'];
-    return this.historyService.getPlanList(pageReq, { status });
+    return this.planService.getPlanList(pageReq, { status });
   }
 }

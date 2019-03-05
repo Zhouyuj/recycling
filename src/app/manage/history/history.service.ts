@@ -41,44 +41,13 @@ export class HistoryService extends RebirthHttp {
   @PUT('/customers/:id/location')
   updateCustomerLocation(
     @Path('id') id: number,
-    @Body location: { lng: number, lat: number }): Observable<Result<any>> {
-    return null;
-  }
-
-  @GET('/routes')
-  getRouteList(@Query('params')
-  params: {
-    name?: string;
-    planId?: number;
-    planIds?: number[];
-    plateNumber?: string;
-  }): Observable<Result<RouteModel[]>> {
+    @Body location: { lng: number; lat: number }
+  ): Observable<Result<any>> {
     return null;
   }
 
   @GET('/routes/:id/tasks')
   getTaskList(@Path('id') id: number): Observable<Result<TaskModel[]>> {
-    return null;
-  }
-
-  @GET('/plans')
-  getPlanList(
-    @Query('page') page: PageReq,
-    @Query('params') params: any
-  ): Observable<Result<PageRes<PlanRes[]>>> {
-    return null;
-  }
-
-  @DELETE('/plans/:id')
-  delPlan(@Path('id') id: number): Observable<Result<any>> {
-    return null;
-  }
-
-  @GET('/reports/plans/:id')
-  @RequestOptions({
-    responseType: 'blob'
-  })
-  getPlanReport(@Path('id') id: number): Observable<any> {
     return null;
   }
 }
