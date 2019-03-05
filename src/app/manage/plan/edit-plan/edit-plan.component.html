@@ -1,514 +1,667 @@
 <div class="wrap">
-    <!-- -------- 表格操作 -------- -->
-    <div class="table-operations">
-        <div nz-row nzGutter="16">
-            <div nz-col nzSpan="10">
-                <!-- 面包屑导航 -->
-                <app-breadcrumbs [options]="breadcrumbs"></app-breadcrumbs>
-            </div>
-            <div nz-col nzSpan="6" nzOffset="8">
-                <div class="table-CUDE">
-                    <button nz-button
-                            (click)="onSavePlan()"
-                            nzType="primary">
-                        保存方案
-                    </button>
-                    &nbsp;
-                    <!--<button nz-button
+  <!-- -------- 表格操作 -------- -->
+  <div class="table-operations">
+    <div nz-row nzGutter="16">
+      <div nz-col nzSpan="10">
+        <!-- 面包屑导航 -->
+        <app-breadcrumbs [options]="breadcrumbs"></app-breadcrumbs>
+      </div>
+      <div nz-col nzSpan="6" nzOffset="8">
+        <div class="table-CUDE">
+          <button nz-button (click)="onSavePlan()" nzType="primary">
+            保存方案
+          </button>
+          &nbsp;
+          <!--<button nz-button
                             (click)="onPredictPlan()"
                             nzType="default">
                         方案预测
                     </button>
                     &nbsp;-->
-                </div>
-            </div>
         </div>
+      </div>
     </div>
-    <!-- -------- 表格内容 -------- -->
-    <div class="table-content">
-        <div nz-row nzGutter="16">
-
-
-            <!-- ******** 路线 start ******** -->
-            <div nz-col nzSpan="7">
-                <div class="inner-table-opt">
-                    <div nz-row>
-                        <div nz-col nzSpan="4" class="inner-table-title">
-                            <i nz-icon type="environment" theme="outline" class="location"></i>
-                            路线
-                        </div>
-                        <div nz-col nzSpan="19" nzOffset="1" class="inner-table-btns">
-                            <button nz-button
-                                    nzType="default"
-                                    (click)="isAddRouteFormVisible = true">
-                                新增
-                            </button>
-                            &nbsp;
-                            <button nz-button
-                                    nzType="default"
-                                    [disabled]="!selectedRoutesCache"
-                                    (click)="onSelectVehicle()">
-                                选择车辆
-                            </button>
-                            &nbsp;
-                            <button nz-button
-                                    nzType="default"
-                                    [disabled]="!selectedRoutesCache"
-                                    (click)="onDelRoute()">
-                                删除
-                            </button>
-                            &nbsp;
-                        </div>
-                    </div>
-                </div>
-                <nz-spin [nzSize]="'large'" [nzSpinning]="isRoutesSpinning">
-                    <nz-table #routesTable style="height: 100%;"
-                              [nzSize]="'middle'"
-                              [nzData]="routeListCache"
-                              [nzScroll]="{ x: '450px', y: tableScrollY }"
-                              [nzFrontPagination]="false"
-                              [nzShowPagination]="false">
-                        <thead>
-                        <tr>
-                            <th nzWidth="64px">
-                                锁定
-                            </th>
-                            <th nzWidth="120px">
-                                路线
-                                <br/>
-                                <input type="text" nz-input placeholder=""
-                                       nzSize="small" style="width: 60%;"
-                                       [(ngModel)]="params.route.name"
-                                       (keyup)="$event.which === 13 && getRouteList()">
-                            </th>
-                            <th nzWidth="120px">
-                                车牌号
-                                <br/>
-                                <input type="text" nz-input placeholder=""
-                                       nzSize="small" style="width: 60%;"
-                                       [(ngModel)]="params.route.plateNumber"
-                                       (keyup)="$event.which === 13 && getRouteList()">
-                            </th>
-                            <th nzWidth="100px">
-                                优先级
-                            </th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr *ngFor="let item of routeListCache; index as i"
-                            [ngClass]="{ 'table-row-selected': item.checked }"
-                            (click)="onSelectRoute($event, item)">
-                            <td>
-                                <div class="status-cell" *ngIf="item.state === 'Executing'">
-                                    <i nz-icon type="lock" theme="outline"
-                                       style="cursor: pointer;"
-                                       nz-tooltip
-                                       nzTitle="已锁定"
-                                       nzPlacement="topCenter"
-                                       *ngIf="item.lock"
-                                       (click)="onChangeRouteStatus($event, item)">
-                                    </i>
-                                    <i nz-icon type="unlock" theme="outline"
-                                       style="cursor: pointer;"
-                                       nz-tooltip
-                                       nzTitle="已解锁"
-                                       nzPlacement="topCenter"
-                                       *ngIf="!item.lock"
-                                       (click)="onChangeRouteStatus($event, item)">
-                                    </i>
-                                </div>
-                            </td>
-                            <td (dblclick)="onSelectVehicleForRow($event, item)">{{item.name}}</td>
-                            <td>{{item.vehicle.plateNumber}}</td>
-                            <td>
-                                <nz-select *ngIf="item.vehicle.plateNumber && sameVehicleRoutes[item.vehicle.plateNumber].length > 1"
-                                           style="width: 100%"
-                                           [(ngModel)]="item.priority"
-                                           [nzSize]="'small'"
-                                           (click)="onStopPro($event)"
-                                           (ngModelChange)="onChangeRoutePriority($event, item)">
-                                    <ng-container *ngFor="let o of sameVehicleRoutes[item.vehicle.plateNumber]; index as i">
-                                        <nz-option [nzValue]="i + 1" [nzLabel]="i + 1"></nz-option>
-                                    </ng-container>
-                                </nz-select>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </nz-table>
-                </nz-spin>
+  </div>
+  <!-- -------- 表格内容 -------- -->
+  <div class="table-content">
+    <div nz-row nzGutter="16">
+      <!-- ******** 路线 start ******** -->
+      <div nz-col nzSpan="7">
+        <div class="inner-table-opt">
+          <div nz-row>
+            <div nz-col nzSpan="4" class="inner-table-title">
+              <i
+                nz-icon
+                type="environment"
+                theme="outline"
+                class="location"
+              ></i>
+              路线
             </div>
-            <!--    新增路线    -->
-            <nz-drawer
-                    [nzPlacement]="'left'"
-                    [nzWidth]="400"
-                    [nzClosable]="true"
-                    [nzVisible]="isAddRouteFormVisible"
-                    nzTitle="新建路线"
-                    (nzOnClose)="onCloseAddRouteForm()">
-                <form nz-form #routeForm="ngForm">
-                    <nz-form-item>
-                        <nz-form-label [nzSpan]="7" nzFor="route-name-new">路线名称</nz-form-label>
-                        <nz-form-control [nzSpan]="17">
-                            <input nz-input
-                                   name="route-name-new"
-                                   required
-                                   type="text"
-                                   id="route-name-new"
-                                   [(ngModel)]="formDataRoute.name">
-                        </nz-form-control>
-                    </nz-form-item>
-                    <nz-form-item>
-                        <nz-form-control [nzSpan]="8" [nzOffset]="7">
-                            <button nz-button
-                                    nzType="primary"
-                                    [disabled]="!routeForm.valid"
-                                    (click)="onAddRoute()">确认
-                            </button>
-                        </nz-form-control>
-                    </nz-form-item>
-                </form>
-            </nz-drawer>
-            <!-- ******** 路线 end ******** -->
+            <div nz-col nzSpan="19" nzOffset="1" class="inner-table-btns">
+              <button
+                nz-button
+                nzType="default"
+                (click)="isAddRouteFormVisible = true"
+              >
+                新增
+              </button>
+              &nbsp;
+              <button
+                nz-button
+                nzType="default"
+                [disabled]="!selectedRoutesCache"
+                (click)="onSelectVehicle()"
+              >
+                选择车辆
+              </button>
+              &nbsp;
+              <button
+                nz-button
+                nzType="default"
+                [disabled]="!selectedRoutesCache"
+                (click)="onDelRoute()"
+              >
+                删除
+              </button>
+              &nbsp;
+            </div>
+          </div>
+        </div>
+        <nz-spin [nzSize]="'large'" [nzSpinning]="isRoutesSpinning">
+          <nz-table
+            #routesTable
+            style="height: 100%;"
+            [nzSize]="'middle'"
+            [nzData]="routeListCache"
+            [nzScroll]="{ x: '450px', y: tableScrollY }"
+            [nzFrontPagination]="false"
+            [nzShowPagination]="false"
+          >
+            <thead>
+              <tr>
+                <th nzWidth="64px">
+                  锁定
+                </th>
+                <th nzWidth="120px">
+                  路线
+                  <br />
+                  <input
+                    type="text"
+                    nz-input
+                    placeholder=""
+                    nzSize="small"
+                    style="width: 60%;"
+                    [(ngModel)]="params.route.name"
+                    (keyup)="$event.which === 13 && getRouteList()"
+                  />
+                </th>
+                <th nzWidth="120px">
+                  车牌号
+                  <br />
+                  <input
+                    type="text"
+                    nz-input
+                    placeholder=""
+                    nzSize="small"
+                    style="width: 60%;"
+                    [(ngModel)]="params.route.plateNumber"
+                    (keyup)="$event.which === 13 && getRouteList()"
+                  />
+                </th>
+                <th nzWidth="100px">
+                  优先级
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                *ngFor="let item of routeListCache; index as i"
+                [ngClass]="{ 'table-row-selected': item.checked }"
+                (click)="onSelectRoute($event, item)"
+              >
+                <td>
+                  <div class="status-cell" *ngIf="item.state === 'Executing'">
+                    <i
+                      nz-icon
+                      type="lock"
+                      theme="outline"
+                      style="cursor: pointer;"
+                      nz-tooltip
+                      nzTitle="已锁定"
+                      nzPlacement="topCenter"
+                      *ngIf="item.lock"
+                      (click)="onChangeRouteStatus($event, item)"
+                    >
+                    </i>
+                    <i
+                      nz-icon
+                      type="unlock"
+                      theme="outline"
+                      style="cursor: pointer;"
+                      nz-tooltip
+                      nzTitle="已解锁"
+                      nzPlacement="topCenter"
+                      *ngIf="!item.lock"
+                      (click)="onChangeRouteStatus($event, item)"
+                    >
+                    </i>
+                  </div>
+                </td>
+                <td (dblclick)="onSelectVehicleForRow($event, item)">
+                  {{ item.name }}
+                </td>
+                <td>{{ item.vehicle.plateNumber }}</td>
+                <td>
+                  <nz-select
+                    *ngIf="
+                      item.vehicle.plateNumber &&
+                      sameVehicleRoutes[item.vehicle.plateNumber].length > 1
+                    "
+                    style="width: 100%"
+                    [(ngModel)]="item.priority"
+                    [nzSize]="'small'"
+                    (click)="onStopPro($event)"
+                    (ngModelChange)="onChangeRoutePriority($event, item)"
+                  >
+                    <ng-container
+                      *ngFor="
+                        let o of sameVehicleRoutes[item.vehicle.plateNumber];
+                        index as i
+                      "
+                    >
+                      <nz-option
+                        [nzValue]="i + 1"
+                        [nzLabel]="i + 1"
+                      ></nz-option>
+                    </ng-container>
+                  </nz-select>
+                </td>
+              </tr>
+            </tbody>
+          </nz-table>
+        </nz-spin>
+      </div>
+      <!--    新增路线    -->
+      <nz-drawer
+        [nzPlacement]="'left'"
+        [nzWidth]="400"
+        [nzClosable]="true"
+        [nzVisible]="isAddRouteFormVisible"
+        nzTitle="新建路线"
+        (nzOnClose)="onCloseAddRouteForm()"
+      >
+        <form nz-form #routeForm="ngForm">
+          <nz-form-item>
+            <nz-form-label [nzSpan]="7" nzFor="route-name-new"
+              >路线名称</nz-form-label
+            >
+            <nz-form-control [nzSpan]="17">
+              <input
+                nz-input
+                name="route-name-new"
+                required
+                type="text"
+                id="route-name-new"
+                [(ngModel)]="formDataRoute.name"
+              />
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-control [nzSpan]="8" [nzOffset]="7">
+              <button
+                nz-button
+                nzType="primary"
+                [disabled]="!routeForm.valid"
+                (click)="onAddRoute()"
+              >
+                确认
+              </button>
+            </nz-form-control>
+          </nz-form-item>
+        </form>
+      </nz-drawer>
+      <!-- ******** 路线 end ******** -->
 
-
-            <!-- ******** 已派发 start ******** -->
-            <div nz-col nzSpan="7">
-                <div class="inner-table-opt">
-                    <div nz-row>
-                        <div nz-col nzSpan="7" class="inner-table-title">
-                            <i nz-icon type="check" theme="outline" class="location"></i>
-                            已派发
-                        </div>
-                        <div nz-col nzSpan="16" nzOffset="1" class="inner-table-btns">
-                            <button nz-button
-                                    (click)="onCancelDistribute()"
-                                    nzType="default"
-                                    [disabled]="!distributedListCache || distributedListCache.length === 0">
-                                取消派发
-                            </button>
-                            &nbsp;
-                        </div>
-                    </div>
-                </div>
-                <nz-spin [nzSize]="'large'" [nzSpinning]="isDistributeSpinning">
-                    <nz-table #distributeTable
-                              [nzSize]="'middle'"
-                              [nzData]="distributedListCache"
-                              [nzScroll]="{ x: '600px', y: tableScrollY }"
-                              [nzFrontPagination]="false"
-                              [nzShowPagination]="false">
-                        <thead>
-                        <tr style="height: 69px;">
-                            <th nzWidth="64px">
-                            </th>
-                            <th nzWidth="160px">
-                                名称
-                                <!--<br/>
+      <!-- ******** 已派发 start ******** -->
+      <div nz-col nzSpan="7">
+        <div class="inner-table-opt">
+          <div nz-row>
+            <div nz-col nzSpan="7" class="inner-table-title">
+              <i nz-icon type="check" theme="outline" class="location"></i>
+              已派发
+            </div>
+            <div nz-col nzSpan="16" nzOffset="1" class="inner-table-btns">
+              <button
+                nz-button
+                (click)="onCancelDistribute()"
+                nzType="default"
+                [disabled]="
+                  !distributedListCache || distributedListCache.length === 0
+                "
+              >
+                取消派发
+              </button>
+              &nbsp;
+            </div>
+          </div>
+        </div>
+        <nz-spin [nzSize]="'large'" [nzSpinning]="isDistributeSpinning">
+          <nz-table
+            #distributeTable
+            [nzSize]="'middle'"
+            [nzData]="distributedListCache"
+            [nzScroll]="{ x: '600px', y: tableScrollY }"
+            [nzFrontPagination]="false"
+            [nzShowPagination]="false"
+          >
+            <thead>
+              <tr style="height: 69px;">
+                <th nzWidth="64px"></th>
+                <th nzWidth="160px">
+                  名称
+                  <!--<br/>
                                 <input type="text"
                                        nz-input
                                        nzSize="small"
                                        style="width: 60%;"
                                        [(ngModel)]="params.distribute.name"
                                        (keyup)="$event.which === 13 && getDistributeList()">-->
-                            </th>
-                            <th nzWidth="180px">
-                                收运时间
-                            </th>
-                            <th nzWidth="110px">
-                                预计收运量（桶）
-                            </th>
-                            <th nzWidth="80px">
-                                状态
-                            </th>
-                        </tr>
-                        </thead>
-                        <tbody cdkDropList (cdkDropListDropped)="onDrop($event)">
-                        <ng-template ngFor let-item [ngForOf]="distributedListCache">
-                            <tr [ngClass]="{ 'table-row-selected': item.checked }"
-                                cdkDrag
-                                cdkDragDisabled="{{selectedRoutesCache.lock || item.state !== 'ToDo'}}"
-                                (click)="onSelectDistribute($event, item)">
-                                <td [nzShowExpand]="item.taskList && item.taskList.length > 0"
-                                    [(nzExpand)]="item.expand"
-                                    (nzExpandChange)="onCollapseTask(item, $event)" (click)="onStopPro($event)"></td>
-                                <td>{{item.name}}</td>
-                                <td>
-                                    <p>
-                                        【{{item.collectionPeriod.dateType | collectionDateType}}-{{item.collectionPeriod.garbageCategory | collectionPeriodTypeToChinese}}】
-                                    </p>
-                                    <p>
-                                        {{item.collectionPeriod.startTime | secondToHourMinute}}
-                                        ~
-                                        {{item.collectionPeriod.endTime | secondToHourMinute}}
-                                    </p>
-                                </td>
-                                <td>{{item.amountOfGarbage}}</td>
-                                <td>{{item.state | taskStateToChinese}}</td>
-                            </tr>
-                            <ng-template *ngIf="item.expand" ngFor let-child [ngForOf]="item.taskList">
-                                <tr [ngClass]="{ 'table-row-selected': child.checked }"
-                                    (click)="onSelectDistribute($event, child, item)">
-                                    <td></td>
-                                    <td>{{child.name}}</td>
-                                    <td>
-                                        <p>
-                                            【{{child.collectionPeriod.dateType | collectionDateType}}-{{child.collectionPeriod.garbageCategory | collectionPeriodTypeToChinese}}】
-                                        </p>
-                                        <p>
-                                            {{child.collectionPeriod.startTime | secondToHourMinute}}
-                                            ~
-                                            {{child.collectionPeriod.endTime | secondToHourMinute}}
-                                        </p>
-                                    </td>
-                                    <td>{{child.amountOfGarbage}}</td>
-                                    <td>{{child.state | taskStateToChinese}}</td>
-                                </tr>
-                            </ng-template>
-                        </ng-template>
-                        </tbody>
-                    </nz-table>
-                </nz-spin>
+                </th>
+                <th nzWidth="180px">
+                  收运时间
+                </th>
+                <th nzWidth="110px">
+                  预计收运量（桶）
+                </th>
+                <th nzWidth="80px">
+                  状态
+                </th>
+              </tr>
+            </thead>
+            <tbody cdkDropList (cdkDropListDropped)="onDrop($event)">
+              <ng-template ngFor let-item [ngForOf]="distributedListCache">
+                <tr
+                  [ngClass]="{ 'table-row-selected': item.checked }"
+                  cdkDrag
+                  cdkDragDisabled="{{
+                    selectedRoutesCache.lock && item.state !== 'ToDo'
+                  }}"
+                  (click)="onSelectDistribute($event, item)"
+                >
+                  <td
+                    [nzShowExpand]="item.taskList && item.taskList.length > 0"
+                    [(nzExpand)]="item.expand"
+                    (nzExpandChange)="onCollapseTask(item, $event)"
+                    (click)="onStopPro($event)"
+                  ></td>
+                  <td>{{ item.name }}</td>
+                  <td>
+                    <p>
+                      【{{
+                        item.collectionPeriod.dateType | collectionDateType
+                      }}-{{
+                        item.collectionPeriod.garbageCategory
+                          | collectionPeriodTypeToChinese
+                      }}】
+                    </p>
+                    <p>
+                      {{ item.collectionPeriod.startTime | secondToHourMinute }}
+                      ~
+                      {{ item.collectionPeriod.endTime | secondToHourMinute }}
+                    </p>
+                  </td>
+                  <td>{{ item.amountOfGarbage }}</td>
+                  <td>{{ item.state | taskStateToChinese }}</td>
+                </tr>
+                <ng-template
+                  *ngIf="item.expand"
+                  ngFor
+                  let-child
+                  [ngForOf]="item.taskList"
+                >
+                  <tr
+                    [ngClass]="{ 'table-row-selected': child.checked }"
+                    (click)="onSelectDistribute($event, child, item)"
+                  >
+                    <td></td>
+                    <td>{{ child.name }}</td>
+                    <td>
+                      <p>
+                        【{{
+                          child.collectionPeriod.dateType | collectionDateType
+                        }}-{{
+                          child.collectionPeriod.garbageCategory
+                            | collectionPeriodTypeToChinese
+                        }}】
+                      </p>
+                      <p>
+                        {{
+                          child.collectionPeriod.startTime | secondToHourMinute
+                        }}
+                        ~
+                        {{
+                          child.collectionPeriod.endTime | secondToHourMinute
+                        }}
+                      </p>
+                    </td>
+                    <td>{{ child.amountOfGarbage }}</td>
+                    <td>{{ child.state | taskStateToChinese }}</td>
+                  </tr>
+                </ng-template>
+              </ng-template>
+            </tbody>
+          </nz-table>
+        </nz-spin>
+      </div>
+      <!-- ******** 已派发 end ******** -->
+
+      <!-- ******** 请求 start ******** -->
+      <div nz-col nzSpan="10">
+        <div class="inner-table-opt">
+          <div nz-row>
+            <div nz-col nzSpan="4" class="inner-table-title">
+              <i nz-icon type="to-top" theme="outline" class="location"></i>
+              收运请求
             </div>
-            <!-- ******** 已派发 end ******** -->
-
-
-            <!-- ******** 请求 start ******** -->
-            <div nz-col nzSpan="10">
-                <div class="inner-table-opt">
-                    <div nz-row>
-                        <div nz-col nzSpan="4" class="inner-table-title">
-                            <i nz-icon type="to-top" theme="outline" class="location"></i>
-                            收运请求
-                        </div>
-                        <div nz-col nzSpan="19" nzOffset="1" class="inner-table-btns">
-                            <button nz-button
-                                    nzType="default"
-                                    (click)="onAddDemand()">
-                                新增
-                            </button>
-                            &nbsp;
-                            <button nz-button
-                                    nzType="default"
-                                    [disabled]="!indeterminateDemands && !allSelectedDemands"
-                                    (click)="onDelDemand()">
-                                删除
-                            </button>
-                            &nbsp;
-                            <!--<button nz-button
+            <div nz-col nzSpan="19" nzOffset="1" class="inner-table-btns">
+              <button nz-button nzType="default" (click)="onAddDemand()">
+                新增
+              </button>
+              &nbsp;
+              <button
+                nz-button
+                nzType="default"
+                [disabled]="!indeterminateDemands && !allSelectedDemands"
+                (click)="onDelDemand()"
+              >
+                删除
+              </button>
+              &nbsp;
+              <!--<button nz-button
                                     nzType="default"
                                     (click)="onPlanning()">
                                 规划
                             </button>
                             &nbsp;-->
-                            <button nz-button
-                                    nzType="default"
-                                    (click)="onDistribute()">
-                                派发
-                            </button>
-                            &nbsp;
-                        </div>
-                    </div>
-                </div>
-                <nz-spin [nzSize]="'large'" [nzSpinning]="isDemandSpinning">
-                    <nz-table #demandTable
-                              [nzSize]="'middle'"
-                              [nzData]="demandListCache"
-                              [nzScroll]="{ x: '900px', y: tableScrollY }"
-                              [nzFrontPagination]="false"
-                              [nzTotal]="pageRes.total"
-                              [nzPageIndex]="pageRes.page"
-                              [nzPageSize]="pageRes.size"
-                              (nzPageIndexChange)="onPage($event)"
-                              (nzPageSizeChange)="onPage($event)">
-                        <thead>
-                        <tr>
-                            <!-- 该列是否展示子列表按钮 -->
-                            <th nzWidth="64px"
-                                nzShowCheckbox
-                                [(nzChecked)]="allSelectedDemands"
-                                [nzIndeterminate]="indeterminateDemands"
-                                (nzCheckedChange)="onSelectAllDemands($event)">
-                            </th>
-                            <th nzWidth="200px" nzCustomFilter style="padding-right: 40px;">
-                                名称
-                                <br/>
-                                <input type="text" nz-input placeholder=""
-                                       nzSize="small" style="width: 60%;"
-                                       [(ngModel)]="params.demand.name"
-                                       (keyup)="$event.which === 13 && getDemandList()">
-                            </th>
-                            <th nzWidth="230px">
-                                收运时间
-                            </th>
-                            <th nzWidth="120px">
-                                收运量（桶）
-                            </th>
-                            <th nzWidth="120px">
-                                超时等级
-                            </th>
-                            <th>
-                                指定车辆
-                            </th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <ng-template ngFor let-item [ngForOf]="demandListCache">
-                            <tr [ngClass]="{ 'table-row-selected': item.checked, 'editable-tr': true }"
-                                (click)="onSelectDemand($event, item)">
-                                <td [nzShowExpand]="item.taskList && item.taskList.length > 0"
-                                    [(nzExpand)]="item.expand"
-                                    (nzExpandChange)="onCollapse(item, $event)" (click)="onStopPro($event)"></td>
-                                <td>
-                                    <div class="editable-cell">
-                                        <div class="editable-cell-text-wrapper">
-                                            {{item.name}}
-                                            <ng-container *ngIf="!item.editable">
-                                                <i nz-icon type="edit"
-                                                   class="editable-cell-icon"
-                                                   title="编辑"
-                                                   (click)="onStartEditDemand($event, item)">
-                                                </i>
-                                            </ng-container>
-                                            <ng-container *ngIf="item.editable">
-                                                <i nz-icon type="close"
-                                                   class="editable-cell-icon-close"
-                                                   theme="outline"
-                                                   title="取消"
-                                                   (click)="onCancelEditDemand($event, item)">
-                                                </i>
-                                                <i nz-icon type="check"
-                                                   class="editable-cell-icon-check"
-                                                   title="保存"
-                                                   (click)="onFinishEditDemand($event, item)">
-                                                </i>
-                                            </ng-container>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <ng-container *ngIf="item.editable">
-                                        <!-- 可编辑 -->
-                                        <nz-select style="width: 100%;"
-                                                   nzSize="small"
-                                                   [(ngModel)]="item.collectionPeriodId"
-                                                   (ngModelChange)="onChangeDuration($event, item)"
-                                                   (click)="onStopPro($event)">
-                                            <nz-option
-                                                    *ngFor="let op of item.collectionPeriods"
-                                                    [nzValue]="op.id"
-                                                    nzLabel="{{op.dateType | collectionDateType}}-{{op.garbageCategory | collectionPeriodTypeToChinese}} {{op.startTime | secondToHourMinute}} ~ {{op.endTime | secondToHourMinute}}">
-                                            </nz-option>
-                                        </nz-select>
-                                    </ng-container>
-                                    <ng-container *ngIf="!item.editable">
-                                        <!-- 展示-不可编辑 -->
-                                        <p>
-                                            【{{item.selectedPeriod.dateType | collectionDateType}}-{{item.selectedPeriod.garbageCategory | collectionPeriodTypeToChinese}}】
-                                        </p>
-                                        <p>
-                                            {{item.selectedPeriod.startTime | secondToHourMinute}}
-                                            ~
-                                            {{item.selectedPeriod.endTime | secondToHourMinute}}
-                                        </p>
-                                    </ng-container>
-                                </td>
-                                <td>
-                                    <ng-container *ngIf="item.editable">
-                                        <!-- 可编辑 -->
-                                        <nz-input-number style="width: 100%;"
-                                                         [(ngModel)]="item.amountOfGarbage"
-                                                         [nzSize]="'small'"
-                                                         [nzMin]="0"
-                                                         [nzStep]="0.1"
-                                                         [nzDisabled]="item.taskList !== null"
-                                                         (click)="onStopPro($event)">
-                                        </nz-input-number>
-                                    </ng-container>
-                                    <ng-container *ngIf="!item.editable">
-                                        <!-- 展示-不可编辑 -->
-                                        {{item.amountOfGarbage}}
-                                    </ng-container>
-                                </td>
-                                <td>{{item.selectedPeriod.priority | collectionPeriodPriority}}</td>
-                                <td>{{item.selectedPeriod.vehicle}}</td>
-                            </tr>
-                            <ng-template *ngIf="item.expand" ngFor let-child [ngForOf]="item.taskList">
-                                <tr [ngClass]="{ 'table-row-selected': child.checked, 'editable-tr': true }"
-                                    (click)="onSelectDemand($event, child, item)">
-                                    <td></td>
-                                    <td>
-                                        <div class="editable-cell">
-                                            <div class="editable-cell-text-wrapper">
-                                                {{child.name}}
-                                                <ng-container *ngIf="!child.editable">
-                                                    <i nz-icon type="edit"
-                                                       class="editable-cell-icon"
-                                                       title="编辑"
-                                                       (click)="onStartEditDemand($event, child)">
-                                                    </i>
-                                                </ng-container>
-                                                <ng-container *ngIf="child.editable">
-                                                    <i nz-icon type="close"
-                                                       class="editable-cell-icon-close"
-                                                       theme="outline"
-                                                       title="取消"
-                                                       (click)="onCancelEditDemand($event, child)">
-                                                    </i>
-                                                    <i nz-icon type="check"
-                                                       class="editable-cell-icon-check"
-                                                       title="保存"
-                                                       (click)="onFinishEditDemand($event, child)">
-                                                    </i>
-                                                </ng-container>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <p>
-                                            【{{item.selectedPeriod.dateType | collectionDateType}}-{{item.selectedPeriod.garbageCategory | collectionPeriodTypeToChinese}}】
-                                        </p>
-                                        <p>
-                                            {{item.selectedPeriod.startTime | secondToHourMinute}}
-                                            ~
-                                            {{item.selectedPeriod.endTime | secondToHourMinute}}
-                                        </p>
-                                    </td>
-                                    <td>
-                                        <ng-container *ngIf="child.editable">
-                                            <!-- 可编辑 -->
-                                            <nz-input-number style="width: 100%;"
-                                                             [(ngModel)]="child.amountOfGarbage"
-                                                             [nzSize]="'small'"
-                                                             [nzMin]="0"
-                                                             [nzStep]="0.1"
-                                                             (ngModelChange)="onGarbageAmountChange($event, item)"
-                                                             (click)="onStopPro($event)">
-                                            </nz-input-number>
-                                        </ng-container>
-                                        <ng-container *ngIf="!child.editable">
-                                            <!-- 展示-不可编辑 -->
-                                            {{child.amountOfGarbage}}
-                                        </ng-container>
-                                    </td>
-                                    <td>{{item.selectedPeriod.priority | collectionPeriodPriority}}</td>
-                                    <td>{{item.selectedPeriod.vehicle}}</td>
-                                </tr>
-                            </ng-template>
-                        </ng-template>
-                        </tbody>
-                    </nz-table>
-                </nz-spin>
+              <button nz-button nzType="default" (click)="onDistribute()">
+                派发
+              </button>
+              &nbsp;
             </div>
-            <!-- ******** 请求 start ******** -->
+          </div>
         </div>
+        <nz-spin [nzSize]="'large'" [nzSpinning]="isDemandSpinning">
+          <nz-table
+            #demandTable
+            [nzSize]="'middle'"
+            [nzData]="demandListCache"
+            [nzScroll]="{ x: '900px', y: tableScrollY }"
+            [nzFrontPagination]="false"
+            [nzTotal]="pageRes.total"
+            [nzPageIndex]="pageRes.page"
+            [nzPageSize]="pageRes.size"
+            (nzPageIndexChange)="onPage($event)"
+            (nzPageSizeChange)="onPage($event)"
+          >
+            <thead>
+              <tr>
+                <!-- 该列是否展示子列表按钮 -->
+                <th
+                  nzWidth="64px"
+                  nzShowCheckbox
+                  [(nzChecked)]="allSelectedDemands"
+                  [nzIndeterminate]="indeterminateDemands"
+                  (nzCheckedChange)="onSelectAllDemands($event)"
+                ></th>
+                <th nzWidth="200px" nzCustomFilter style="padding-right: 40px;">
+                  名称
+                  <br />
+                  <input
+                    type="text"
+                    nz-input
+                    placeholder=""
+                    nzSize="small"
+                    style="width: 60%;"
+                    [(ngModel)]="params.demand.name"
+                    (keyup)="$event.which === 13 && getDemandList()"
+                  />
+                </th>
+                <th nzWidth="230px">
+                  收运时间
+                </th>
+                <th nzWidth="120px">
+                  收运量（桶）
+                </th>
+                <th nzWidth="120px">
+                  超时等级
+                </th>
+                <th>
+                  指定车辆
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <ng-template ngFor let-item [ngForOf]="demandListCache">
+                <tr
+                  [ngClass]="{
+                    'table-row-selected': item.checked,
+                    'editable-tr': true
+                  }"
+                  (click)="onSelectDemand($event, item)"
+                >
+                  <td
+                    [nzShowExpand]="item.taskList && item.taskList.length > 0"
+                    [(nzExpand)]="item.expand"
+                    (nzExpandChange)="onCollapse(item, $event)"
+                    (click)="onStopPro($event)"
+                  ></td>
+                  <td>
+                    <div class="editable-cell">
+                      <div class="editable-cell-text-wrapper">
+                        {{ item.name }}
+                        <ng-container *ngIf="!item.editable">
+                          <i
+                            nz-icon
+                            type="edit"
+                            class="editable-cell-icon"
+                            title="编辑"
+                            (click)="onStartEditDemand($event, item)"
+                          >
+                          </i>
+                        </ng-container>
+                        <ng-container *ngIf="item.editable">
+                          <i
+                            nz-icon
+                            type="close"
+                            class="editable-cell-icon-close"
+                            theme="outline"
+                            title="取消"
+                            (click)="onCancelEditDemand($event, item)"
+                          >
+                          </i>
+                          <i
+                            nz-icon
+                            type="check"
+                            class="editable-cell-icon-check"
+                            title="保存"
+                            (click)="onFinishEditDemand($event, item)"
+                          >
+                          </i>
+                        </ng-container>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <ng-container *ngIf="item.editable">
+                      <!-- 可编辑 -->
+                      <nz-select
+                        style="width: 100%;"
+                        nzSize="small"
+                        [(ngModel)]="item.collectionPeriodId"
+                        (ngModelChange)="onChangeDuration($event, item)"
+                        (click)="onStopPro($event)"
+                      >
+                        <nz-option
+                          *ngFor="let op of item.collectionPeriods"
+                          [nzValue]="op.id"
+                          nzLabel="{{ op.dateType | collectionDateType }}-{{
+                            op.garbageCategory | collectionPeriodTypeToChinese
+                          }} {{ op.startTime | secondToHourMinute }} ~ {{
+                            op.endTime | secondToHourMinute
+                          }}"
+                        >
+                        </nz-option>
+                      </nz-select>
+                    </ng-container>
+                    <ng-container *ngIf="!item.editable">
+                      <!-- 展示-不可编辑 -->
+                      <p>
+                        【{{
+                          item.selectedPeriod.dateType | collectionDateType
+                        }}-{{
+                          item.selectedPeriod.garbageCategory
+                            | collectionPeriodTypeToChinese
+                        }}】
+                      </p>
+                      <p>
+                        {{ item.selectedPeriod.startTime | secondToHourMinute }}
+                        ~
+                        {{ item.selectedPeriod.endTime | secondToHourMinute }}
+                      </p>
+                    </ng-container>
+                  </td>
+                  <td>
+                    <ng-container *ngIf="item.editable">
+                      <!-- 可编辑 -->
+                      <nz-input-number
+                        style="width: 100%;"
+                        [(ngModel)]="item.amountOfGarbage"
+                        [nzSize]="'small'"
+                        [nzMin]="0"
+                        [nzStep]="0.1"
+                        [nzDisabled]="item.taskList !== null"
+                        (click)="onStopPro($event)"
+                      >
+                      </nz-input-number>
+                    </ng-container>
+                    <ng-container *ngIf="!item.editable">
+                      <!-- 展示-不可编辑 -->
+                      {{ item.amountOfGarbage }}
+                    </ng-container>
+                  </td>
+                  <td>
+                    {{
+                      item.selectedPeriod.priority | collectionPeriodPriority
+                    }}
+                  </td>
+                  <td>{{ item.selectedPeriod.vehicle }}</td>
+                </tr>
+                <ng-template
+                  *ngIf="item.expand"
+                  ngFor
+                  let-child
+                  [ngForOf]="item.taskList"
+                >
+                  <tr
+                    [ngClass]="{
+                      'table-row-selected': child.checked,
+                      'editable-tr': true
+                    }"
+                    (click)="onSelectDemand($event, child, item)"
+                  >
+                    <td></td>
+                    <td>
+                      <div class="editable-cell">
+                        <div class="editable-cell-text-wrapper">
+                          {{ child.name }}
+                          <ng-container *ngIf="!child.editable">
+                            <i
+                              nz-icon
+                              type="edit"
+                              class="editable-cell-icon"
+                              title="编辑"
+                              (click)="onStartEditDemand($event, child)"
+                            >
+                            </i>
+                          </ng-container>
+                          <ng-container *ngIf="child.editable">
+                            <i
+                              nz-icon
+                              type="close"
+                              class="editable-cell-icon-close"
+                              theme="outline"
+                              title="取消"
+                              (click)="onCancelEditDemand($event, child)"
+                            >
+                            </i>
+                            <i
+                              nz-icon
+                              type="check"
+                              class="editable-cell-icon-check"
+                              title="保存"
+                              (click)="onFinishEditDemand($event, child)"
+                            >
+                            </i>
+                          </ng-container>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <p>
+                        【{{
+                          item.selectedPeriod.dateType | collectionDateType
+                        }}-{{
+                          item.selectedPeriod.garbageCategory
+                            | collectionPeriodTypeToChinese
+                        }}】
+                      </p>
+                      <p>
+                        {{ item.selectedPeriod.startTime | secondToHourMinute }}
+                        ~
+                        {{ item.selectedPeriod.endTime | secondToHourMinute }}
+                      </p>
+                    </td>
+                    <td>
+                      <ng-container *ngIf="child.editable">
+                        <!-- 可编辑 -->
+                        <nz-input-number
+                          style="width: 100%;"
+                          [(ngModel)]="child.amountOfGarbage"
+                          [nzSize]="'small'"
+                          [nzMin]="0"
+                          [nzStep]="0.1"
+                          (ngModelChange)="onGarbageAmountChange($event, item)"
+                          (click)="onStopPro($event)"
+                        >
+                        </nz-input-number>
+                      </ng-container>
+                      <ng-container *ngIf="!child.editable">
+                        <!-- 展示-不可编辑 -->
+                        {{ child.amountOfGarbage }}
+                      </ng-container>
+                    </td>
+                    <td>
+                      {{
+                        item.selectedPeriod.priority | collectionPeriodPriority
+                      }}
+                    </td>
+                    <td>{{ item.selectedPeriod.vehicle }}</td>
+                  </tr>
+                </ng-template>
+              </ng-template>
+            </tbody>
+          </nz-table>
+        </nz-spin>
+      </div>
+      <!-- ******** 请求 start ******** -->
     </div>
+  </div>
 </div>
 
 <ng-template #skeleton>
-    <p style="text-align: center;">
-        抱歉,暂无数据
-    </p>
-    <nz-skeleton [nzParagraph]="{ rows: 15 }"
-                 [nzTitle]="false">
-    </nz-skeleton>
+  <p style="text-align: center;">
+    抱歉,暂无数据
+  </p>
+  <nz-skeleton [nzParagraph]="{ rows: 15 }" [nzTitle]="false"> </nz-skeleton>
 </ng-template>

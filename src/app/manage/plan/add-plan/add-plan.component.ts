@@ -45,7 +45,6 @@ export class AddPlanComponent extends TableBasicComponent implements OnInit {
   resCache: PlanRes[];
   listCache: PlanListModel[];
   selectedItem: PlanRes;
-  tableScrollY = '500px';
 
   constructor(
     private drawerRef: NzDrawerRef<boolean>,
@@ -58,26 +57,6 @@ export class AddPlanComponent extends TableBasicComponent implements OnInit {
   ngOnInit() {
     this.calcTableScrollY();
     this.getListByPage();
-  }
-
-  calcTableScrollY() {
-    const layoutPadding = 24;
-    const addButtonHeight = 32;
-    const dividerHeight = 24;
-    const dividerMargin = 16;
-    const searchHeight = 32;
-    const tableHeadHeight = 67;
-    const tablePaginationHeight = 32;
-    const tablePaginationMargin = 16;
-    this.tableScrollY = `${window.innerHeight -
-      layoutPadding * 3 -
-      addButtonHeight -
-      dividerHeight -
-      dividerMargin * 2 -
-      searchHeight -
-      tableHeadHeight -
-      tablePaginationHeight -
-      tablePaginationMargin * 2}px`;
   }
 
   getListByPage() {
