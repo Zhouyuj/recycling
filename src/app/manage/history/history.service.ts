@@ -8,7 +8,6 @@ import {
   DELETE,
   Path,
   POST,
-  RequestOptions,
   PUT,
   Body
 } from 'rebirth-http';
