@@ -39,10 +39,6 @@ export class SchemeComponent extends TableBasicComponent implements OnInit {
   resCache: PlanRes[];
   listCache: PlanListModel[];
   selectedItem: PlanListModel;
-  isSpinning = false;
-
-  pageReq = new PageReq();
-  pageRes = new PageRes();
 
   constructor(
     private historyService: HistoryService,

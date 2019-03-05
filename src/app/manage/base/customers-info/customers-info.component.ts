@@ -54,7 +54,6 @@ export class CustomersInfoComponent extends TableBasicComponent
 
   // antd-table
   public drawerRef: any;
-  public isSpinning = false;
   public isDelModalVisible = false;
   public isDelOkLoading = false;
   public sortMap = {
@@ -70,9 +69,6 @@ export class CustomersInfoComponent extends TableBasicComponent
     // TODO 添加所属区域字段
   };
   public districtsFilterList;
-
-  public pageReq = new PageReq(1, 12);
-  public pageRes = new PageRes(1, 12);
 
   /* 表格的缓存 */
   public listResCache: CustomerRes[];

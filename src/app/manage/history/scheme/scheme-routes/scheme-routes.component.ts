@@ -12,114 +12,129 @@ import { PlanListModel } from 'src/app/manage/plan/models/plan-list.model';
 import { HistoryService } from '../../history.service';
 import { ModelConverter } from 'src/app/manage/plan/models/model-converter';
 import { Route, ActivatedRoute, Router } from '@angular/router';
-import { RouteListModel, RouteModel } from 'src/app/manage/plan/models/route.model';
+import {
+  RouteListModel,
+  RouteModel
+} from 'src/app/manage/plan/models/route.model';
 
 @Component({
-    selector   : 'app-history-scheme-routes',
-    templateUrl: './scheme-routes.component.html',
-    styleUrls  : [ './scheme-routes.component.scss' ]
+  selector: 'app-history-scheme-routes',
+  templateUrl: './scheme-routes.component.html',
+  styleUrls: ['./scheme-routes.component.scss']
 })
-export class SchemeRoutesComponent extends TableBasicComponent implements OnInit {
-    /* 面包屑导航 */
-    breadcrumbs = [
-        {
-            link : '/',
-            title: '首页',
-        },
-        {
-            link : '',
-            title: '历史记录',
-        },
-        {
-            link : '/manage/history/scheme',
-            title: '历史方案',
+export class SchemeRoutesComponent extends TableBasicComponent
+  implements OnInit {
+  /* 面包屑导航 */
+  breadcrumbs = [
+    {
+      link: '/',
+      title: '首页'
+    },
+    {
+      link: '',
+      title: '历史记录'
+    },
+    {
+      link: '/manage/history/scheme',
+      title: '历史方案'
+    }
+  ];
+  listCache: RouteModel[];
+  selectedItem: RouteListModel;
+  planId: number;
+  planName: string;
+  planDate: string;
+
+  constructor(
+    private historyService: HistoryService,
+    private modalService: ModalService,
+    private notificationService: NotificationService,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {
+    super();
+  }
+
+  ngOnInit() {
+    this.calcTableScrollY();
+
+    this.planId = +this.route.snapshot.paramMap.get('id');
+    this.planName = this.route.snapshot.paramMap.get('name');
+    this.planDate = this.route.snapshot.paramMap.get('date');
+
+    this.getList();
+  }
+
+  onDetail() {
+    const {
+      id,
+      name,
+      driver,
+      collectionQuantity,
+      weighedQuantity,
+      startTime,
+      endTime
+    } = this.selectedItem;
+    const { plateNumber, lat, lng } = this.selectedItem.vehicle;
+    const url = `/manage/history/scheme/${this.planId}/routes/${id}/route`;
+    this.router.navigate([
+      url,
+      {
+        id,
+        name,
+        plateNumber,
+        driver,
+        collectionQuantity,
+        weighedQuantity,
+        lat,
+        lng,
+        startTime,
+        endTime,
+        vehicleId: this.selectedItem.vehicle.id,
+        date: this.planDate
+      }
+    ]);
+  }
+
+  onSelected(event: Event, item: RouteListModel) {
+    this.listCache.forEach((r: RouteListModel) => {
+      if (r.id === item.id) {
+        r.checked = !item.checked;
+        this.selectedItem = r;
+        this.selectedItem = r.checked ? r : null;
+      } else {
+        r.checked = false;
+      }
+    });
+  }
+
+  onClickListItem(event: Event, item: RouteListModel) {
+    this.onSelected(event, item);
+  }
+
+  getList() {
+    this.isSpinning = true;
+    this.getRoutesListByPlanId(this.planId).subscribe(
+      (res: Result<RouteModel[]>) => {
+        if (res.data) {
+          this.isSpinning = false;
+          this.listCache = res.data;
+          this.breadcrumbs.push({
+            link: '',
+            title: this.planName
+          });
+          this.selectedItem = null;
         }
-    ];
-    listCache: RouteModel[];
-    selectedItem: RouteListModel;
-    isSpinning = false;
-    planId: number;
-    planName: string;
-    planDate: string;
+      },
+      () => (this.isSpinning = false),
+      () => (this.isSpinning = false)
+    );
+  }
 
-    pageReq = new PageReq();
-    pageRes = new PageRes();
-
-    constructor(
-        private historyService: HistoryService,
-        private modalService: ModalService,
-        private notificationService: NotificationService,
-        private route: ActivatedRoute,
-        private router: Router
-    ) {
-        super();
-    }
-
-    ngOnInit() {
-        this.calcTableScrollY();
-
-        this.planId = +this.route.snapshot.paramMap.get('id');
-        this.planName = this.route.snapshot.paramMap.get('name');
-        this.planDate = this.route.snapshot.paramMap.get('date');
-
-        this.getList();
-    }
-
-    onDetail() {
-        const { id, name, driver, collectionQuantity, weighedQuantity, startTime, endTime } = this.selectedItem;
-        const { plateNumber, lat, lng } = this.selectedItem.vehicle;
-        const url = `/manage/history/scheme/${this.planId}/routes/${id}/route`;
-        this.router.navigate([url, {
-            id, name, plateNumber,
-            driver, collectionQuantity,
-            weighedQuantity, lat, lng,
-            startTime, endTime,
-            vehicleId: this.selectedItem.vehicle.id,
-            date: this.planDate
-        }]);
-    }
-
-    onSelected(event: Event, item: RouteListModel) {
-        this.listCache.forEach((r: RouteListModel) => {
-            if (r.id === item.id) {
-                r.checked = !item.checked;
-                this.selectedItem = r;
-                this.selectedItem = r.checked ? r : null;
-            } else {
-                r.checked = false;
-            }
-        });
-    }
-
-    onClickListItem(event: Event, item: RouteListModel) {
-        this.onSelected(event, item);
-    }
-
-    getList() {
-        this.isSpinning = true;
-        this.getRoutesListByPlanId(this.planId).subscribe(
-            (res: Result<RouteModel[]>) => {
-                if (res.data) {
-                    this.isSpinning = false;
-                    this.listCache = res.data;
-                    this.breadcrumbs.push(
-                        {
-                            link : '',
-                            title: this.planName,
-                        }
-                    );
-                    this.selectedItem = null;
-                }
-            },
-            () => this.isSpinning = false,
-            () => this.isSpinning = false
-        );
-    }
-
-    /**
-     * 根据planId获取routes列表
-     */
-    getRoutesListByPlanId(planId: number): Observable<Result<RouteModel[]>> {
-        return this.historyService.getRouteList({ planId });
-    }
+  /**
+   * 根据planId获取routes列表
+   */
+  getRoutesListByPlanId(planId: number): Observable<Result<RouteModel[]>> {
+    return this.historyService.getRouteList({ planId });
+  }
 }

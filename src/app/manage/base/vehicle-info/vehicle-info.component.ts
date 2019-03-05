@@ -48,11 +48,8 @@ export class VehicleInfoComponent extends TableBasicComponent
     }
   ];
 
-  public isSpinning = false;
   public isDelModalVisible = false;
 
-  public pageReq = new PageReq();
-  public pageRes = new PageRes();
   public params = {
     area: '',
     typeId: '',
@@ -72,7 +69,7 @@ export class VehicleInfoComponent extends TableBasicComponent
   public formCache: VehicleFormModel;
   public marker: {
     plateNumber: string;
-    position: ILngLat
+    position: ILngLat;
   };
   public vehicleMarkerType: MarkerType = MarkerType.VEHICLE;
 
@@ -284,7 +281,12 @@ export class VehicleInfoComponent extends TableBasicComponent
     e.stopPropagation();
   }
 
-  onShowMap($e, plateNumber: string, lngLatStr: string, tplMapModalContent?: TemplateRef<{}>) {
+  onShowMap(
+    $e,
+    plateNumber: string,
+    lngLatStr: string,
+    tplMapModalContent?: TemplateRef<{}>
+  ) {
     this.onStopPropagation($e);
     this.marker = null;
     const lngLat = this.convertLngLatFormString(lngLatStr);
@@ -299,7 +301,7 @@ export class VehicleInfoComponent extends TableBasicComponent
     modal.afterOpen.subscribe(() => {
       this.marker = {
         plateNumber,
-        position: {lng: +lngLat[0], lat: +lngLat[1] }
+        position: { lng: +lngLat[0], lat: +lngLat[1] }
       };
     });
     modal.afterClose.subscribe(() => {

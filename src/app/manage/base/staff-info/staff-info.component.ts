@@ -42,7 +42,6 @@ export class StaffInfoComponent extends TableBasicComponent implements OnInit {
     }
   ];
 
-  public isSpinning = false;
   public isDelModalVisible = false;
   public isDelOkLoading = false;
 
@@ -85,9 +84,7 @@ export class StaffInfoComponent extends TableBasicComponent implements OnInit {
   public sortMap = {
     entryTime: '',
     createTime: ''
-  }; // 操作表格的排序参数
-  public pageReq = new PageReq();
-  public pageRes = new PageRes();
+  };
 
   constructor(
     private staffInfoService: StaffInfoService,

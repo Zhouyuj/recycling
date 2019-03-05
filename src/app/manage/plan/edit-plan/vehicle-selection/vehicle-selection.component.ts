@@ -9,186 +9,201 @@ import { Result } from '../../../../shared/models/response/result.model';
 import { VehicleRes } from '../../../base/vehicle-info/vehicle-res.model';
 import { ModelConverter } from './model-converter';
 import { NotificationService } from '../../../../shared/services/notification/notification.service';
-import {EditPlanService} from '../edit-plan.service';
+import { EditPlanService } from '../edit-plan.service';
 import { TableBasicComponent } from 'src/app/manage/table-basic.component';
 
 @Component({
-    selector   : 'app-vehicle-selection',
-    templateUrl: './vehicle-selection.component.html',
-    styleUrls  : [ './vehicle-selection.component.scss' ]
+  selector: 'app-vehicle-selection',
+  templateUrl: './vehicle-selection.component.html',
+  styleUrls: ['./vehicle-selection.component.scss']
 })
-export class VehicleSelectionComponent extends TableBasicComponent implements OnInit {
+export class VehicleSelectionComponent extends TableBasicComponent
+  implements OnInit {
+  @Input() success: boolean;
+  @Input() planId: number;
+  @Input() routeId: number;
+  params = {
+    area: '',
+    typeId: '',
+    plateNumber: ''
+  }; // 分页查询参数
+  public sortMap = {
+    buyDate: ''
+  }; // 操作表格的排序参数
+  vehicleCategoryFilterList; // 表格中筛选项
+  listCache: VehicleSelectionModel[];
+  selectedItemCache: VehicleSelectionModel;
 
-    @Input() success: boolean;
-    @Input() planId: number;
-    @Input() routeId: number;
-    isSpinning = false;
-    pageReq = new PageReq();
-    pageRes = new PageRes();
-    params = {
-        area       : '',
-        typeId     : '',
-        plateNumber: '',
-    }; // 分页查询参数
-    public sortMap = {
-        buyDate: '',
-    };   // 操作表格的排序参数
-    vehicleCategoryFilterList;   // 表格中筛选项
-    listCache: VehicleSelectionModel[];
-    selectedItemCache: VehicleSelectionModel;
+  constructor(
+    private drawerRef: NzDrawerRef<any>,
+    private vehicleInfoService: VehicleInfoService,
+    private editPlanService: EditPlanService,
+    private notificationService: NotificationService
+  ) {
+    super();
+  }
 
-    constructor(private drawerRef: NzDrawerRef<any>,
-                private vehicleInfoService: VehicleInfoService,
-                private editPlanService: EditPlanService,
-                private notificationService: NotificationService) {
-        super();
+  ngOnInit() {
+    this.calcTableScrollY(30);
+    this.initFilterOptions();
+    this.initVehicles();
+  }
+
+  initFilterOptions() {
+    this.vehicleCategoryFilterList = [
+      {
+        text: VehicleCategoryEnum.food5,
+        value: VehicleCategoryEnum.food5Index
+      },
+      {
+        text: VehicleCategoryEnum.food8,
+        value: VehicleCategoryEnum.food8Index
+      },
+      { text: VehicleCategoryEnum.oil1, value: VehicleCategoryEnum.oil1Index }
+    ];
+  }
+
+  initVehicles() {
+    this.getListByPage({ isResetReq: true });
+  }
+
+  onClose(b: boolean) {
+    this.drawerRef.close(b);
+  }
+
+  onFilter(e, type: string) {
+    if ((!e && !this.params[type]) || this.params[type] === e) {
+      return;
     }
+    this.params[type] = e;
+    console.log(this.params);
+    this.getListByPage({ isResetReq: true });
+  }
 
-    ngOnInit() {
-        this.calcTableScrollY(30);
-        this.initFilterOptions();
-        this.initVehicles();
+  onSelect(e: boolean, item: VehicleSelectionModel) {
+    if (!e) {
+      this.selectedItemCache = null;
+      return;
     }
+    this.listCache.forEach((l: VehicleSelectionModel) => {
+      if (l.id === item.id) {
+        l.checked = e;
+      } else {
+        l.checked = false;
+      }
+    });
+    this.selectedItemCache = this.listCache.find(
+      (o: VehicleSelectionModel) => o.id === item.id
+    );
+  }
 
-    initFilterOptions() {
-        this.vehicleCategoryFilterList = [
-            { text: VehicleCategoryEnum.food5, value: VehicleCategoryEnum.food5Index },
-            { text: VehicleCategoryEnum.food8, value: VehicleCategoryEnum.food8Index },
-            { text: VehicleCategoryEnum.oil1, value: VehicleCategoryEnum.oil1Index },
-        ];
+  onSelectTr($e, item: VehicleSelectionModel) {
+    this.listCache.forEach((l: VehicleSelectionModel) => {
+      if (l.id === item.id) {
+        l.checked = !item.checked;
+        this.selectedItemCache = l.checked ? l : null;
+      } else {
+        l.checked = false;
+      }
+    });
+    console.log(this.selectedItemCache);
+  }
+
+  /**
+   * 关键字搜索
+   * 双向绑定 params
+   * @param type
+   */
+  onKeywordSearch() {
+    this.getListByPage({ isResetReq: true });
+  }
+
+  onPage(e) {
+    this.pageReq.page = e;
+    this.getListByPage();
+  }
+
+  onSubmit() {
+    if (!this.selectedItemCache) {
+      this.notificationService.create({
+        type: 'warning',
+        title: '抱歉,请至少选择一辆车'
+      });
+      return;
     }
-
-    initVehicles() {
-        this.getListByPage({ isResetReq: true });
+    if (this.planId && this.routeId) {
+      this.editPlanService
+        .updateRoute(
+          { vehicle: this.selectedItemCache.plateNumber },
+          this.planId,
+          this.routeId
+        )
+        .subscribe(
+          (res: Result<number>) => {
+            this.onClose(true);
+          },
+          err => {}
+        );
     }
+  }
 
-    onClose(b: boolean) {
-        this.drawerRef.close(b);
+  getListByPage(option?: { isResetReq: boolean }) {
+    if (option && option.isResetReq) {
+      this.resetPageReq();
     }
-
-    onFilter(e, type: string) {
-        if (!e && !this.params[ type ] || this.params[ type ] === e) {
-            return;
+    this.isSpinning = true;
+    // 分页接口
+    const paramsTemp = this.updateParams();
+    this.vehicleInfoService.getVehicleList(this.pageReq, paramsTemp).subscribe(
+      (res: Result<PageRes<VehicleRes[]>>) => {
+        if (res.data.content) {
+          /* 组装（列表类型的）列表数据 */
+          this.listCache = this.dataToTableRows(res.data.content);
+          /* 更新列表的信息（分页/排序） */
+          this.updatePageRes(res.data);
         }
-        this.params[ type ] = e;
-        console.log(this.params);
-        this.getListByPage({ isResetReq: true });
-    }
+      },
+      err => {
+        this.listCache = [];
+        this.isSpinning = false;
+      },
+      () => (this.isSpinning = false)
+    );
+  }
 
-    onSelect(e: boolean, item: VehicleSelectionModel) {
-        if (!e) {
-            this.selectedItemCache = null;
-            return;
-        }
-        this.listCache.forEach((l: VehicleSelectionModel) => {
-            if (l.id === item.id) {
-                l.checked = e;
-            } else {
-                l.checked = false;
-            }
-        });
-        this.selectedItemCache = this.listCache.find((o: VehicleSelectionModel) => o.id === item.id);
+  dataToTableRows(data: VehicleRes[]): VehicleSelectionModel[] {
+    if (!data.length) {
+      return [];
     }
+    return data.map((o: VehicleRes) => ModelConverter.vehicleResToListModel(o));
+  }
 
-    onSelectTr($e, item: VehicleSelectionModel) {
-        this.listCache.forEach((l: VehicleSelectionModel) => {
-            if (l.id === item.id) {
-                l.checked = !item.checked;
-                this.selectedItemCache = l.checked ? l : null;
-            } else {
-                l.checked = false;
-            }
-        });
-        console.log(this.selectedItemCache);
-    }
+  resetPageReq(): void {
+    this.pageReq.page = 1;
+    this.pageReq.size = this.pageRes.size;
+    this.pageReq.sort = 'buyDate.desc';
+  }
 
-    /**
-     * 关键字搜索
-     * 双向绑定 params
-     * @param type
-     */
-    onKeywordSearch() {
-        this.getListByPage({ isResetReq: true });
+  updateParams() {
+    const paramsTemp = {};
+    for (const k in this.params) {
+      if (!this.params[k]) {
+        this.params[k] = null;
+      } else {
+        paramsTemp[k] = this.params[k];
+      }
     }
+    return paramsTemp;
+  }
 
-    onPage(e) {
-        this.pageReq.page = e;
-        this.getListByPage();
-    }
-
-    onSubmit() {
-        if (!this.selectedItemCache) {
-            this.notificationService.create({ type: 'warning', 'title': '抱歉,请至少选择一辆车' });
-            return;
-        }
-        if (this.planId && this.routeId) {
-            this.editPlanService.updateRoute(
-                { vehicle: this.selectedItemCache.plateNumber },
-                this.planId,
-                this.routeId
-            ).subscribe(
-                (res: Result<number>) => {
-                    this.onClose(true);
-                },
-                err => {
-                }
-            );
-        }
-    }
-
-    getListByPage(option?: { isResetReq: boolean }) {
-        if (option && option.isResetReq) {
-            this.resetPageReq();
-        }
-        this.isSpinning = true;
-        // 分页接口
-        const paramsTemp = this.updateParams();
-        this.vehicleInfoService
-            .getVehicleList(this.pageReq, paramsTemp)
-            .subscribe(
-                (res: Result<PageRes<VehicleRes[]>>) => {
-                    if (res.data.content) {
-                        /* 组装（列表类型的）列表数据 */
-                        this.listCache = this.dataToTableRows(res.data.content);
-                        /* 更新列表的信息（分页/排序） */
-                        this.updatePageRes(res.data);
-                    }
-                },
-                err => {
-                    this.listCache = [];
-                    this.isSpinning = false;
-                },
-                () => this.isSpinning = false
-            );
-    }
-
-    dataToTableRows(data: VehicleRes[]): VehicleSelectionModel[] {
-        if (!data.length) {
-            return [];
-        }
-        return data.map((o: VehicleRes) => ModelConverter.vehicleResToListModel(o));
-    }
-
-    resetPageReq(): void {
-        this.pageReq.page = 1;
-        this.pageReq.size = this.pageRes.size;
-        this.pageReq.sort = 'buyDate.desc';
-    }
-
-    updateParams() {
-        const paramsTemp = {};
-        for (const k in this.params) {
-            if (!this.params[ k ]) {
-                this.params[ k ] = null;
-            } else {
-                paramsTemp[ k ] = this.params[ k ];
-            }
-        }
-        return paramsTemp;
-    }
-
-    // 只存储分页信息,不包括数据
-    updatePageRes(data: PageRes<VehicleRes[]>): void {
-        this.pageRes = new PageRes(data.page, data.size, data.pages, data.total, data.last);
-    }
+  // 只存储分页信息,不包括数据
+  updatePageRes(data: PageRes<VehicleRes[]>): void {
+    this.pageRes = new PageRes(
+      data.page,
+      data.size,
+      data.pages,
+      data.total,
+      data.last
+    );
+  }
 }
