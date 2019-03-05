@@ -59,6 +59,14 @@ export class AddDemandComponent extends TableBasicComponent implements OnInit {
    * 关键字搜索 TODO
    */
   onSearch() {
+    const hasKeywordValue: boolean = Boolean(
+      Object.values(this.params).find(param => !!param)
+    );
+    if (hasKeywordValue) {
+      this.pageRes.size = 500;
+    } else {
+      this.pageRes.size = 12;
+    }
     this.getCustomerList({ isResetReq: true });
   }
 

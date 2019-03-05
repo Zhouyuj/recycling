@@ -110,3 +110,28 @@ body {
     }
 }
 /* ---- AMap marker content end ---- */
+
+/* ---- Play slider start ---- */
+.play-slider {
+
+    .ant-slider-handle {
+        border-radius: 0;
+        width: 10px;
+        border-color: rgb(130, 191, 69);
+        background-color: rgb(130, 191, 69);
+    }
+
+    .ant-slider-track {
+        border-radius: 0;
+        background-color: rgb(177, 215, 77);
+    }
+
+    .ant-slider:hover .ant-slider-handle {
+        border-color: rgb(130, 191, 69);
+    }
+
+    .ant-slider:hover .ant-slider-track {
+        background-color: rgb(177, 215, 77);
+    }
+}
+/* ---- Play slider end ---- */

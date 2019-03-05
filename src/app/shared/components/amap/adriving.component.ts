@@ -1,14 +1,14 @@
-import { Component, OnInit, Output, EventEmitter, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input, OnDestroy, OnChanges } from '@angular/core';
 import { MapService } from 'src/app/shared/services/map/map.service';
 import { Driving } from '../../services/map/driving.model';
 import { Subscription } from 'rxjs';
 import { ILngLat } from '../../services/map/map.model';
 
 @Component({
-    selector   : 'app-adriving',
-    templateUrl: './adriving.component.html',
+    selector: 'app-adriving',
+    template: '<div class="driving"></div>',
 })
-export class AdrivingComponent implements OnInit, OnDestroy {
+export class AdrivingComponent implements OnInit, OnDestroy, OnChanges {
 
     @Input() outlineColor: string;
     @Output() drawWaypointsEvent = new EventEmitter<any>();
@@ -21,12 +21,15 @@ export class AdrivingComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        if (this.mapService.map) {
-            this.init();
-        }
         this._complete$ = this.mapService.mapListener$.subscribe(() => {
             this.init();
         });
+    }
+
+    ngOnChanges() {
+        if (this.mapService.map) {
+            this.init();
+        }
     }
 
     ngOnDestroy() {

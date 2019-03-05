@@ -185,13 +185,13 @@
                 <div nz-col nzSpan="2">
                     <div class="time-text">{{startTime}}</div>
                 </div>
-                <div nz-col nzSpan="18" [ngStyle]="{ paddingTop: '2px' }">
-                    <nz-progress 
-                        [nzStrokeColor]="'#aad645'"
-                        [nzPercent]="percent"
-                        [nzStrokeLinecap]="'square'"
-                        [nzShowInfo]="false">
-                    </nz-progress>
+                <div nz-col nzSpan="18" [ngStyle]="{ marginTop: '-6px' }">
+                    <nz-slider class="play-slider"
+                        [(ngModel)]="total"
+                        (nzOnAfterChange)="onExcuteRunPlan()"
+                        [nzMin]="min"
+                        [nzMax]="max">
+                    </nz-slider>
                 </div>
                 <div nz-col nzSpan="1"></div>
                 <div nz-col nzSpan="2">

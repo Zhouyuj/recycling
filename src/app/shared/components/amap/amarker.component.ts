@@ -1,13 +1,13 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnDestroy, OnChanges } from '@angular/core';
 import { MapService } from 'src/app/shared/services/map/map.service';
 import { Marker, MarkerType } from '../../services/map/marker.model';
 import { Subscription } from 'rxjs';
 
 @Component({
-    selector   : 'app-amarker',
-    templateUrl: './amarker.component.html',
+    selector: 'app-amarker',
+    template: '<div class="marker"></div>',
 })
-export class AmarkerComponent implements OnInit, OnDestroy {
+export class AmarkerComponent implements OnInit, OnDestroy, OnChanges {
 
     @Input() longitude: number;
     @Input() latitude: number;
@@ -18,19 +18,22 @@ export class AmarkerComponent implements OnInit, OnDestroy {
     @Output() remove = new EventEmitter<Function>();
     @Output() create = new EventEmitter<Function>();
 
-    private _markers = [];
+    private _marker: Marker;
     private _complete$: Subscription;
 
     constructor(private mapService: MapService) {
     }
 
     ngOnInit() {
-        if (this.mapService.map) {
-            this.init();
-        }
         this._complete$ = this.mapService.mapListener$.subscribe(() => {
             this.init();
         });
+    }
+
+    ngOnChanges() {
+        if (this.mapService.map && !this._marker) {
+            this.init();
+        }
     }
 
     ngOnDestroy() {
@@ -46,7 +49,7 @@ export class AmarkerComponent implements OnInit, OnDestroy {
     }
 
     removeMarkers() {
-        this.mapService.removeAllMarkers(this._markers);
+        this.mapService.removeAllMarkers([this._marker]);
     }
 
     createMarkerByType(): void {
@@ -57,14 +60,14 @@ export class AmarkerComponent implements OnInit, OnDestroy {
         }
         switch (this.type) {
             case MarkerType.RECYCLING: {
-                this._markers.push(this.createRecyclingMarker(center));
+                this._marker = this.createRecyclingMarker(center);
                 break;
             }
             case MarkerType.VEHICLE: {
                 if (!this.text) {
                     throw new Error('can not missing `text` input');
                 }
-                this._markers.push(this.createVehicleMarker(center, this.text));
+                this._marker = this.createVehicleMarker(center, this.text);
                 break;
             }
             case MarkerType.STATION: {
@@ -74,7 +77,7 @@ export class AmarkerComponent implements OnInit, OnDestroy {
                 if (!this.color) {
                     throw new Error('can not missing `color` input');
                 }
-                this._markers.push(this.createStationMarker(center, this.text, this.color));
+                this._marker = this.createStationMarker(center, this.text, this.color);
                 break;
             }
         }
@@ -90,7 +93,7 @@ export class AmarkerComponent implements OnInit, OnDestroy {
             '</div>';
     }
 
-    createRecyclingMarker(lngLat: number[]): void {
+    createRecyclingMarker(lngLat: number[]) {
         const marker = new Marker({
             map     : this.mapService.map,
             position: lngLat,

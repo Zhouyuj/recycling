@@ -1,13 +1,13 @@
-import { Component, OnInit, Input, OnDestroy, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, EventEmitter, Output, OnChanges } from '@angular/core';
 import { MapService } from 'src/app/shared/services/map/map.service';
 import { Subscription } from 'rxjs';
 import { Polyline } from '../../services/map/polyline.model';
 
 @Component({
-    selector   : 'app-apolyline',
-    templateUrl: './apolyline.component.html',
+    selector: 'app-apolyline',
+    template: '<div class="polyline"></div>',
 })
-export class ApolylineComponent implements OnInit, OnDestroy {
+export class ApolylineComponent implements OnInit, OnDestroy, OnChanges {
 
     @Input() strokeColor: string;
     @Input() lines: number[][];
@@ -20,12 +20,15 @@ export class ApolylineComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        if (this.mapService.map) {
-            this.init();
-        }
         this._complete$ = this.mapService.mapListener$.subscribe(() => {
             this.init();
         });
+    }
+
+    ngOnChanges() {
+        if (this.mapService.map) {
+            this.init();
+        }
     }
 
     ngOnDestroy() {

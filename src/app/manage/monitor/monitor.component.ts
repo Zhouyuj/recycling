@@ -121,6 +121,10 @@ export class MonitorComponent extends TableBasicComponent
     }
   }
 
+  onStopPro($event: Event): void {
+    $event.stopPropagation();
+  }
+
   onClickTask($event: Event, item: TaskModel) {
     this.onStopPro($event);
     if (item.lng && item.lat) {
@@ -135,10 +139,6 @@ export class MonitorComponent extends TableBasicComponent
         return;
       }
     });
-  }
-
-  onStopPro($event: Event): void {
-    $event.stopPropagation();
   }
 
   /**
