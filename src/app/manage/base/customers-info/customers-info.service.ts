@@ -85,6 +85,16 @@ export class CustomersInfoService extends RebirthHttp {
   }
 
   /**
+   * 根据ID查询收运单位信息
+   */
+  @GET('/customers/:id')
+  public getCustomerById(
+    @Path('id') id: number
+  ): Observable<Result<CustomerRes>> {
+    return null;
+  }
+
+  /**
    * 删除收集点
    * @returns {null}
    */
