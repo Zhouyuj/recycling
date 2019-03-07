@@ -1,5 +1,5 @@
 import { OnInit, Component } from '@angular/core';
-import { Subject, timer, merge } from 'rxjs';
+import { Subject, timer, merge, Subscription } from 'rxjs';
 import { MapService } from 'src/app/shared/services/map/map.service';
 import { Map, ILngLat } from 'src/app/shared/services/map/map.model';
 import { ActivatedRoute } from '@angular/router';
@@ -36,6 +36,9 @@ export class SchemeRouteDetailComponent extends TableBasicComponent
   /**
    * Monitor component
    */
+  max = 100;
+  min = 0;
+  total = 0;
   percent = 0;
   speed = 1;
   isPlay = false;
@@ -43,7 +46,7 @@ export class SchemeRouteDetailComponent extends TableBasicComponent
   isClickedRunPlan = false;
   isClickedPlanRoute = false;
   hasRunPlan = false;
-  interval$: any;
+  interval$: Subscription;
 
   taskList: TaskModel[];
   locationList: LocationModel[];
@@ -105,6 +108,7 @@ export class SchemeRouteDetailComponent extends TableBasicComponent
           this.locationList = result.data;
           if (this.locationList) {
             this.hasRunPlan = true;
+            this.max = this.locationList.length;
             this.setStartLngLat(
               this.locationList[0].longitude,
               this.locationList[1].latitude
@@ -337,9 +341,9 @@ export class SchemeRouteDetailComponent extends TableBasicComponent
     this.onPlay(); // 再开始
   }
 
-  excuteRunPlan() {
+  onExcuteRunPlan() {
     if (this.locationList && this.locationList.length) {
-      const vehicle = this.locationList[this.timeDiffIndex];
+      const vehicle = this.locationList[this.total];
       if (vehicle) {
         this.runPlanVehiclePosition = {
           lng: vehicle.longitude,
@@ -356,13 +360,9 @@ export class SchemeRouteDetailComponent extends TableBasicComponent
     if (this.isPlay) {
       this.interval$.unsubscribe();
     } else {
-      const timeDiff = 1 / (this.locationList.length / 100);
       this.interval$ = timer(1000, 1000 / this.speed).subscribe(() => {
-        if (this.percent < 100) {
-          this.timeDiffIndex++;
-          this.percent += timeDiff;
-          this.excuteRunPlan();
-        }
+        this.total += 1;
+        this.onExcuteRunPlan();
       });
     }
     this.isPlay = !this.isPlay;
