@@ -1,0 +1,59 @@
+<div class="wrap">
+  <!-- -------- 表格操作 -------- -->
+  <div class="table-operations">
+    <div nz-row nzGutter="16">
+      <div nz-col class="gutter-row" nzSpan="6">
+        <!-- 面包屑导航 -->
+        <app-breadcrumbs [options]="breadcrumbs"></app-breadcrumbs>
+      </div>
+      <div nz-col class="gutter-row" nzSpan="12">
+        <!-- 关键字搜索 -->
+        <div class="table-search">
+          <span>收运单位</span>
+          <nz-input-group nzSize="small" [nzSuffix]="suffixIcon">
+            <input
+              id="search"
+              placeholder="input here"
+              nz-input
+              [(ngModel)]="inputValue"
+              (ngModelChange)="onChangeSearch($event)"
+              [nzAutocomplete]="auto"
+            />
+          </nz-input-group>
+          <ng-template #suffixIcon>
+            <i nz-icon type="search"></i>
+          </ng-template>
+          <nz-autocomplete #auto>
+            <nz-auto-option
+              *ngFor="let option of optionGroups"
+              [nzLabel]="option.title"
+              [nzValue]="option"
+            >
+              {{ option.title }}
+            </nz-auto-option>
+          </nz-autocomplete>
+          <span>月份</span>
+          <nz-month-picker
+            [(ngModel)]="date"
+            (ngModelChange)="onChangeDate($event)"
+            nzPlaceHolder="Select month"
+          ></nz-month-picker>
+          <button nz-button nzType="default" (click)="onSearch()">
+            查询
+          </button>
+        </div>
+      </div>
+      <div nz-col class="gutter-row" nzSpan="6">
+        <!-- CUDE: create,update,delete,export -->
+        <div class="table-CUDE">
+          <button nz-button nzType="default" (click)="onExport()">
+            导出PDF
+          </button>
+          &nbsp;
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- -------- 表格内容 -------- -->
+  <!-- -->
+</div>

@@ -1,43 +1,65 @@
 <div id="header-comp">
-    <div nz-row>
-        <!--<div nz-col nzSpan="3">&lt;!&ndash; logo &ndash;&gt;
+  <div nz-row>
+    <!--<div nz-col nzSpan="3">&lt;!&ndash; logo &ndash;&gt;
             <div class="logo">
                 &lt;!&ndash;<img src="../../../../assets/images/newlogo_small.png" alt="LOGO">&ndash;&gt;
             </div>
         </div>-->
 
-        <div nz-col nzSpan="20" nzXl="18" nzLg="20" id="nav-menu"><!-- nav-menu -->
-            <ul nz-menu [nzMode]="'horizontal'">
-                <li nz-menu-item routerLinkActive="ant-menu-item-selected">
-                    <div class="icon-box">
-                        <i nz-icon type="desktop" theme="outline"></i>
-                    </div>
-                    <a class="menu-title" routerLink="/manage/monitor">实时监控</a>
-                </li>
-                <li nz-menu-item routerLinkActive="ant-menu-item-selected">
-                    <div class="icon-box">
-                        <i nz-icon type="file-ppt" theme="outline"></i>
-                    </div>
-                    <a class="menu-title" routerLink="/manage/plan">方案管理</a>
-                </li>
-                <li nz-submenu routerLinkActive="ant-menu-item-selected ant-submenu-selected ant-menu-submenu-selected">
-                    <div class="icon-box" title>
-                        <i nz-icon type="idcard" theme="outline"></i>
-                    </div>
-                    <p class="menu-title" title>基础信息</p>
-                    <ul>
-                        <li nz-menu-group>
-                            <a routerLink="/manage/baseInfo/staffs" routerLinkActive="ant-menu-item-selected" nz-menu-item title>人员信息</a>
-                        </li>
-                        <li nz-menu-group>
-                            <a routerLink="/manage/baseInfo/vehicles" routerLinkActive="ant-menu-item-selected" nz-menu-item title>车辆信息</a>
-                        </li>
-                        <li nz-menu-group>
-                            <a routerLink="/manage/baseInfo/customers" routerLinkActive="ant-menu-item-selected" nz-menu-item title>收运单位管理</a>
-                        </li>
-                    </ul>
-                </li>
-                <!-- <li nz-submenu>
+    <div nz-col nzSpan="20" nzXl="18" nzLg="20" id="nav-menu">
+      <!-- nav-menu -->
+      <ul nz-menu [nzMode]="'horizontal'">
+        <li nz-menu-item routerLinkActive="ant-menu-item-selected">
+          <div class="icon-box">
+            <i nz-icon type="desktop" theme="outline"></i>
+          </div>
+          <a class="menu-title" routerLink="/manage/monitor">实时监控</a>
+        </li>
+        <li nz-menu-item routerLinkActive="ant-menu-item-selected">
+          <div class="icon-box">
+            <i nz-icon type="file-ppt" theme="outline"></i>
+          </div>
+          <a class="menu-title" routerLink="/manage/plan">方案管理</a>
+        </li>
+        <li
+          nz-submenu
+          routerLinkActive="ant-menu-item-selected ant-submenu-selected ant-menu-submenu-selected"
+        >
+          <div class="icon-box" title>
+            <i nz-icon type="idcard" theme="outline"></i>
+          </div>
+          <p class="menu-title" title>基础信息</p>
+          <ul>
+            <li nz-menu-group>
+              <a
+                routerLink="/manage/baseInfo/staffs"
+                routerLinkActive="ant-menu-item-selected"
+                nz-menu-item
+                title
+                >人员信息</a
+              >
+            </li>
+            <li nz-menu-group>
+              <a
+                routerLink="/manage/baseInfo/vehicles"
+                routerLinkActive="ant-menu-item-selected"
+                nz-menu-item
+                title
+                >车辆信息</a
+              >
+            </li>
+            <li nz-menu-group>
+              <a
+                routerLink="/manage/baseInfo/customers"
+                routerLinkActive="ant-menu-item-selected"
+                nz-menu-item
+                title
+                >收运单位管理</a
+              >
+            </li>
+          </ul>
+        </li>
+        <!-- <li nz-submenu>
                     <div class="icon-box" title>
                         <i nz-icon type="car" theme="outline"></i>
                     </div>
@@ -48,18 +70,36 @@
                         </li>
                     </ul>
                 </li> -->
-                <li nz-submenu routerLinkActive="ant-menu-item-selected ant-submenu-selected ant-menu-submenu-selected">
-                    <div class="icon-box" title>
-                        <i nz-icon type="profile" theme="outline"></i>
-                    </div>
-                    <p class="menu-title" title>历史记录</p>
-                    <ul>
-                        <li nz-menu-group>
-                            <a routerLink="/manage/history/scheme" routerLinkActive="ant-menu-item-selected" nz-menu-item title>历史方案</a>
-                        </li>
-                    </ul>
-                </li>
-                <!-- <li nz-submenu>
+        <li
+          nz-submenu
+          routerLinkActive="ant-menu-item-selected ant-submenu-selected ant-menu-submenu-selected"
+        >
+          <div class="icon-box" title>
+            <i nz-icon type="profile" theme="outline"></i>
+          </div>
+          <p class="menu-title" title>历史记录</p>
+          <ul>
+            <li nz-menu-group>
+              <a
+                routerLink="/manage/history/scheme"
+                routerLinkActive="ant-menu-item-selected"
+                nz-menu-item
+                title
+                >历史方案</a
+              >
+            </li>
+            <li nz-menu-group>
+              <a
+                routerLink="/manage/history/collection"
+                routerLinkActive="ant-menu-item-selected"
+                nz-menu-item
+                title
+                >收运台账</a
+              >
+            </li>
+          </ul>
+        </li>
+        <!-- <li nz-submenu>
                     <div class="icon-box" title>
                         <i nz-icon type="table" theme="outline"></i>
                     </div>
@@ -103,46 +143,50 @@
                         </li>
                     </ul>
                 </li> -->
-                <li nz-submenu routerLinkActive="ant-menu-item-selected">
-                    <div class="icon-box" title>
-                        <i nz-icon type="setting" theme="outline"></i>
-                    </div>
-                    <p class="menu-title" title>系统设置</p>
-                    <ul>
-                        <li nz-menu-group>
-                            <a routerLink="/manage/system/apkManagement" nz-menu-item title>应用更新</a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
-
-        <div nz-col nzSpan="4" nzXl="6" nzLg="4" id="personal-menu" nz-row ><!-- personal-menu -->
-            <!-- 小铃铛 -->
-            <div nz-col nzSpan="6">
-                <div class="personal-menu-item" *ngIf="!!bellCounts">
-                    <div class="bell">
-                        <i nz-icon type="bell" theme="outline"></i>
-                        <nz-tag [nzColor]="'red'" class="bell-total">12</nz-tag>
-                    </div>
-                </div>
-            </div>
-            <!-- welcome -->
-            <div nz-col nzSpan="12">
-                <div class="personal-menu-item">
-                    <i nz-icon type="smile" theme="outline"></i> 欢迎{{name ? ', ' + name : ''}}
-                </div>
-            </div>
-            <!-- logout -->
-            <div nz-col nzSpan="6">
-                <div class="personal-menu-item">
-                    <a routerLink="/login" (click)="onLogout($event)">
-                        <i nz-icon type="logout" theme="outline"></i> 退出
-                    </a>
-                    &nbsp;
-                </div>
-            </div>
-        </div>
+        <li nz-submenu routerLinkActive="ant-menu-item-selected">
+          <div class="icon-box" title>
+            <i nz-icon type="setting" theme="outline"></i>
+          </div>
+          <p class="menu-title" title>系统设置</p>
+          <ul>
+            <li nz-menu-group>
+              <a routerLink="/manage/system/apkManagement" nz-menu-item title
+                >应用更新</a
+              >
+            </li>
+          </ul>
+        </li>
+      </ul>
     </div>
 
+    <div nz-col nzSpan="4" nzXl="6" nzLg="4" id="personal-menu" nz-row>
+      <!-- personal-menu -->
+      <!-- 小铃铛 -->
+      <div nz-col nzSpan="6">
+        <div class="personal-menu-item" *ngIf="!!bellCounts">
+          <div class="bell">
+            <i nz-icon type="bell" theme="outline"></i>
+            <nz-tag [nzColor]="'red'" class="bell-total">12</nz-tag>
+          </div>
+        </div>
+      </div>
+      <!-- welcome -->
+      <div nz-col nzSpan="12">
+        <div class="personal-menu-item">
+          <i nz-icon type="smile" theme="outline"></i> 欢迎{{
+            name ? ', ' + name : ''
+          }}
+        </div>
+      </div>
+      <!-- logout -->
+      <div nz-col nzSpan="6">
+        <div class="personal-menu-item">
+          <a routerLink="/login" (click)="onLogout($event)">
+            <i nz-icon type="logout" theme="outline"></i> 退出
+          </a>
+          &nbsp;
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
