@@ -1,0 +1,65 @@
+.calendar-wrap {
+  width: 100vw;
+
+  .logout {
+    text-align: right;
+    margin: 5px;
+  }
+
+  .tabs {
+    position: absolute;
+    bottom: 20px;
+    width: 100vw;
+    text-align: center;
+
+    .selected {
+      background: #1890ff;
+    }
+    .unselected {
+      background: white;
+    }
+
+    button:first-child {
+      border-radius: 3px 0 0 3px;
+    }
+    button:nth-child(2) {
+      border-radius: 0 3px 3px 0;
+    }
+  }
+
+  .department_info {
+    margin: 5px;
+
+    .name {
+      margin: 5px;
+    }
+    .address {
+      margin: 5px;
+    }
+  }
+
+  .month-picker {
+    text-align: center;
+    margin-top: 10px;
+  }
+
+  .table-header {
+    margin-top: 10px;
+    margin-bottom: 5px;
+    text-align: center;
+
+    button {
+      margin-right: 5px;
+    }
+  }
+
+  // .calendar {
+  //   nz-calendar-header.ant-fullcalendar-header {
+  //     text-align: center !important;
+
+  //     nz-radio-group.ant-radio-group {
+  //       display: none !important;
+  //     }
+  //   }
+  // }
+}
