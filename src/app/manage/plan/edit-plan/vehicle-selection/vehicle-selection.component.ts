@@ -7,10 +7,13 @@ import { VehicleInfoService } from '../../../base/vehicle-info/vehicle-info.serv
 import { VehicleSelectionModel } from './vehicle-selection.model';
 import { Result } from '../../../../shared/models/response/result.model';
 import { VehicleRes } from '../../../base/vehicle-info/vehicle-res.model';
+import { StaffRes } from '../../../../manage/base/staff-info/staff-res.model';
 import { ModelConverter } from './model-converter';
 import { NotificationService } from '../../../../shared/services/notification/notification.service';
 import { EditPlanService } from '../edit-plan.service';
+import { StaffInfoService } from '../../../../manage/base/staff-info/staff-info.service';
 import { TableBasicComponent } from 'src/app/manage/table-basic.component';
+import { StaffSelectionModel } from '../../../../manage/base/staff-info/staff-selection.model';
 
 @Component({
   selector: 'app-vehicle-selection',
@@ -31,14 +34,15 @@ export class VehicleSelectionComponent extends TableBasicComponent
     buyDate: ''
   }; // 操作表格的排序参数
   vehicleCategoryFilterList; // 表格中筛选项
-  listCache: VehicleSelectionModel[];
-  selectedItemCache: VehicleSelectionModel;
+  listCache: StaffSelectionModel[];
+  selectedItemCache: StaffSelectionModel;
 
   constructor(
     private drawerRef: NzDrawerRef<any>,
     private vehicleInfoService: VehicleInfoService,
     private editPlanService: EditPlanService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private staffInfoService: StaffInfoService
   ) {
     super();
   }
@@ -80,12 +84,12 @@ export class VehicleSelectionComponent extends TableBasicComponent
     this.getListByPage({ isResetReq: true });
   }
 
-  onSelect(e: boolean, item: VehicleSelectionModel) {
+  onSelect(e: boolean, item: StaffSelectionModel) {
     if (!e) {
       this.selectedItemCache = null;
       return;
     }
-    this.listCache.forEach((l: VehicleSelectionModel) => {
+    this.listCache.forEach((l: StaffSelectionModel) => {
       if (l.id === item.id) {
         l.checked = e;
       } else {
@@ -93,12 +97,12 @@ export class VehicleSelectionComponent extends TableBasicComponent
       }
     });
     this.selectedItemCache = this.listCache.find(
-      (o: VehicleSelectionModel) => o.id === item.id
+      (o: StaffSelectionModel) => o.id === item.id
     );
   }
 
-  onSelectTr($e, item: VehicleSelectionModel) {
-    this.listCache.forEach((l: VehicleSelectionModel) => {
+  onSelectTr($e, item: StaffSelectionModel) {
+    this.listCache.forEach((l: StaffSelectionModel) => {
       if (l.id === item.id) {
         l.checked = !item.checked;
         this.selectedItemCache = l.checked ? l : null;
@@ -134,7 +138,7 @@ export class VehicleSelectionComponent extends TableBasicComponent
     if (this.planId && this.routeId) {
       this.editPlanService
         .updateRoute(
-          { vehicle: this.selectedItemCache.plateNumber },
+          { driver: this.selectedItemCache.driver },
           this.planId,
           this.routeId
         )
@@ -154,11 +158,13 @@ export class VehicleSelectionComponent extends TableBasicComponent
     this.isSpinning = true;
     // 分页接口
     const paramsTemp = this.updateParams();
-    this.vehicleInfoService.getVehicleList(this.pageReq, paramsTemp).subscribe(
-      (res: Result<PageRes<VehicleRes[]>>) => {
+    this.staffInfoService.getStaffList(this.pageReq, paramsTemp).subscribe(
+      (res: Result<PageRes<StaffRes[]>>) => {
         if (res.data.content) {
           /* 组装（列表类型的）列表数据 */
-          this.listCache = this.dataToTableRows(res.data.content);
+          this.listCache = this.dataToTableRows(
+            res.data.content.filter(d => d.post.id === 1)
+          );
           /* 更新列表的信息（分页/排序） */
           this.updatePageRes(res.data);
         }
@@ -171,11 +177,11 @@ export class VehicleSelectionComponent extends TableBasicComponent
     );
   }
 
-  dataToTableRows(data: VehicleRes[]): VehicleSelectionModel[] {
+  dataToTableRows(data: StaffRes[]): StaffSelectionModel[] {
     if (!data.length) {
       return [];
     }
-    return data.map((o: VehicleRes) => ModelConverter.vehicleResToListModel(o));
+    return data.map((o: StaffRes) => ModelConverter.driverResToListModel(o));
   }
 
   resetPageReq(): void {
@@ -197,12 +203,12 @@ export class VehicleSelectionComponent extends TableBasicComponent
   }
 
   // 只存储分页信息,不包括数据
-  updatePageRes(data: PageRes<VehicleRes[]>): void {
+  updatePageRes(data: PageRes<StaffRes[]>): void {
     this.pageRes = new PageRes(
       data.page,
       data.size,
-      data.pages,
-      data.total,
+      Math.floor(data.content.length / 12),
+      data.content.length,
       data.last
     );
   }

@@ -51,9 +51,9 @@
                 nz-button
                 nzType="default"
                 [disabled]="!selectedRoutesCache"
-                (click)="onSelectVehicle()"
+                (click)="onSelectDriver()"
               >
-                选择车辆
+                选择司机
               </button>
               &nbsp;
               <button
@@ -97,7 +97,7 @@
                   />
                 </th>
                 <th nzWidth="120px">
-                  车牌号
+                  司机
                   <br />
                   <input
                     type="text"
@@ -105,7 +105,7 @@
                     placeholder=""
                     nzSize="small"
                     style="width: 60%;"
-                    [(ngModel)]="params.route.plateNumber"
+                    [(ngModel)]="params.driver"
                     (keyup)="$event.which === 13 && getRouteList()"
                   />
                 </th>
@@ -151,7 +151,7 @@
                 <td (dblclick)="onSelectVehicleForRow($event, item)">
                   {{ item.name }}
                 </td>
-                <td>{{ item.vehicle.plateNumber }}</td>
+                <td>{{ item.driver }}</td>
                 <td>
                   <nz-select
                     *ngIf="
