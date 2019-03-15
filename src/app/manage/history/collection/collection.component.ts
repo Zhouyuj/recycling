@@ -24,6 +24,7 @@ export class CollectionComponent implements OnInit {
   date: null;
   optionGroups: any[];
   searchVal$: any;
+  inputValue: any;
 
   onSearch() {
     console.log(this.searchVal);

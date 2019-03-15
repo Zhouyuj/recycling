@@ -52,6 +52,7 @@ export class EditPlanComponent extends TableBasicComponent implements OnInit {
       name: '',
       plateNumber: ''
     },
+    driver: '',
     distribute: {
       name: ''
     },

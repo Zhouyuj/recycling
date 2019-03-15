@@ -28,7 +28,8 @@ export class VehicleSelectionComponent extends TableBasicComponent
   params = {
     area: '',
     typeId: '',
-    plateNumber: ''
+    plateNumber: '',
+    driver: ''
   }; // 分页查询参数
   public sortMap = {
     buyDate: ''
