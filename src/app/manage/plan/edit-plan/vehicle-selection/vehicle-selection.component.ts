@@ -26,7 +26,7 @@ export class VehicleSelectionComponent extends TableBasicComponent
   @Input() planId: number;
   @Input() routeId: number;
   params = {
-    postId: 1,
+    roleId: [3],
     name: ''
   }; // 分页查询参数
   public sortMap = {
@@ -161,9 +161,7 @@ export class VehicleSelectionComponent extends TableBasicComponent
       (res: Result<PageRes<StaffRes[]>>) => {
         if (res.data.content) {
           /* 组装（列表类型的）列表数据 */
-          this.listCache = this.dataToTableRows(
-            res.data.content.filter(d => d.post.id === 1)
-          );
+          this.listCache = this.dataToTableRows(res.data.content);
           /* 更新列表的信息（分页/排序） */
           this.updatePageRes(res.data);
         }
