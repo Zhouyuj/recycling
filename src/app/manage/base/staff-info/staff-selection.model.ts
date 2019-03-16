@@ -1,5 +1,6 @@
 export interface StaffSelectionModel {
   id: number;
-  driver: string;
+  username: string;
+  name: string;
   checked?: boolean;
 }

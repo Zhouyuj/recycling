@@ -24,7 +24,8 @@ export class ModelConverter {
     let v: StaffSelectionModel;
     v = {
       id: r.id,
-      driver: r.name,
+      username: r.username,
+      name: r.name,
       checked: false
     };
     return v;

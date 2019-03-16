@@ -23,7 +23,7 @@
               placeholder=""
               nzSize="small"
               style="width: 60%;"
-              [(ngModel)]="params.driver"
+              [(ngModel)]="params.name"
               (keyup)="$event.which === 13 && onKeywordSearch()"
             />
           </th>
@@ -46,7 +46,7 @@
           [ngClass]="{ 'table-row-selected': item.checked }"
         >
           <td>{{ i + 1 + 12 * (pageRes.page - 1) }}</td>
-          <td>{{ item.driver }}</td>
+          <td>{{ item.name }}</td>
           <!--<td>{{item.district}}</td>-->
           <!-- <td>{{item.vehicleType}}</td> -->
         </tr>

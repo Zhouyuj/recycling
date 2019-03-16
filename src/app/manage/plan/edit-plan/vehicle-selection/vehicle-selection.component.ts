@@ -26,10 +26,8 @@ export class VehicleSelectionComponent extends TableBasicComponent
   @Input() planId: number;
   @Input() routeId: number;
   params = {
-    area: '',
-    typeId: '',
-    plateNumber: '',
-    driver: ''
+    postId: 1,
+    name: ''
   }; // 分页查询参数
   public sortMap = {
     buyDate: ''
@@ -139,7 +137,7 @@ export class VehicleSelectionComponent extends TableBasicComponent
     if (this.planId && this.routeId) {
       this.editPlanService
         .updateRoute(
-          { driver: this.selectedItemCache.driver },
+          { driver: this.selectedItemCache.username },
           this.planId,
           this.routeId
         )
@@ -208,8 +206,8 @@ export class VehicleSelectionComponent extends TableBasicComponent
     this.pageRes = new PageRes(
       data.page,
       data.size,
-      Math.floor(data.content.length / 12),
-      data.content.length,
+      data.pages,
+      data.total,
       data.last
     );
   }
