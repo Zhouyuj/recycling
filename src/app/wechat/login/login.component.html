@@ -1,0 +1,14 @@
+<div class="username">
+  <input nz-input placeholder="账号" [(ngModel)]="form.username" />
+</div>
+<div class="password">
+  <input
+    type="password"
+    nz-input
+    placeholder="密码"
+    [(ngModel)]="form.password"
+  />
+</div>
+<div class="submit">
+  <button nz-button nzType="default" (click)="login()">登录</button>
+</div>

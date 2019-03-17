@@ -8,23 +8,23 @@ import { InterceptorServices } from './core/services/interceptors/interceptors.s
 import { TitleService } from './core/services/title/title.service';
 
 @Component({
-    selector: 'app-root',
-    templateUrl: './app.component.html',
-    styleUrls: [ './app.component.scss' ],
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-
-    constructor(/*private rebirthNGConfig: RebirthNGConfig,
+  constructor(
+    /*private rebirthNGConfig: RebirthNGConfig,
                 private viewContainerRef: ViewContainerRef,*/
-                private interceptorServices: InterceptorServices,
-                private titleService: TitleService) {
+    private interceptorServices: InterceptorServices,
+    private titleService: TitleService
+  ) {
+    // this.rebirthNGConfig.rootContainer = this.viewContainerRef;
 
-        // this.rebirthNGConfig.rootContainer = this.viewContainerRef;
+    /* http 拦截器 */
+    this.interceptorServices.registInterceptors('web');
 
-        /* http 拦截器 */
-        this.interceptorServices.registInterceptors();
-
-        /* 监听路由变化以修改title */
-        this.titleService.updateTitleAfterNavigated();
-    }
+    /* 监听路由变化以修改title */
+    this.titleService.updateTitleAfterNavigated();
+  }
 }

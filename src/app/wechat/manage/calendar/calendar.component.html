@@ -1,0 +1,52 @@
+<div class="calendar-wrap">
+  <div class="logout">
+    <button nz-button nzType="default" (click)="logout()">退出登录</button>
+  </div>
+  <div class="department_info">
+    <div class="name">
+      <span> {{ name }}</span>
+    </div>
+    <div class="address">
+      <span> {{ addr }} </span>
+    </div>
+  </div>
+  <div class="calendar">
+    <nz-calendar [nzFullscreen]="false">
+      <ul *nzDateCell="let date" class="events">
+        <ng-container
+          [ngSwitch]="date.getDate()"
+          *ngFor="let item of calendarData"
+        >
+          <ng-container *ngSwitchCase="item.date">
+            <!-- <li> -->
+            <span>{{ item.totalQuantity }}</span>
+            <!-- <nz-badge
+                [nzShowDot]="false"
+                [nzStatus]="item.type"
+                [nzText]="item.totalQuantity"
+              ></nz-badge> -->
+            <!-- </li> -->
+          </ng-container>
+        </ng-container>
+      </ul>
+    </nz-calendar>
+  </div>
+  <div class="tabs">
+    <button
+      nz-button
+      nzType="default"
+      (click)="onCalendar()"
+      [ngClass]="selectedCal ? 'selected' : 'unselected'"
+    >
+      日历
+    </button>
+    <button
+      nz-button
+      nzType="default"
+      (click)="onTable()"
+      [ngClass]="selectedCal ? 'unselected' : 'selected'"
+    >
+      表格
+    </button>
+  </div>
+</div>
