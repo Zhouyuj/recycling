@@ -53,13 +53,17 @@
     }
   }
 
-  // .calendar {
-  //   nz-calendar-header.ant-fullcalendar-header {
-  //     text-align: center !important;
+  .calendar {
+    .ant-fullcalendar-content {
+      position: initial;
+    }
 
-  //     nz-radio-group.ant-radio-group {
-  //       display: none !important;
-  //     }
-  //   }
-  // }
+    nz-calendar-header.ant-fullcalendar-header {
+      text-align: center !important;
+
+      nz-radio-group.ant-radio-group {
+        display: none !important;
+      }
+    }
+  }
 }

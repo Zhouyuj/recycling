@@ -4,23 +4,28 @@
   </div>
   <div class="department_info">
     <div class="name">
-      <span> department_name</span>
+      <span> {{ name }}</span>
     </div>
     <div class="address">
-      <span> department_addr </span>
+      <span> {{ addr }} </span>
     </div>
   </div>
   <div class="calendar">
     <nz-calendar [nzFullscreen]="false">
       <ul *nzDateCell="let date" class="events">
-        <ng-container [ngSwitch]="date.getDate()">
-          <ng-container *ngSwitchCase="8">
-            <li *ngFor="let item of listDataMap.eight">
-              <nz-badge
+        <ng-container
+          [ngSwitch]="date.getDate()"
+          *ngFor="let item of calendarData"
+        >
+          <ng-container *ngSwitchCase="item.date">
+            <!-- <li> -->
+            <span>{{ item.totalQuantity }}</span>
+            <!-- <nz-badge
+                [nzShowDot]="false"
                 [nzStatus]="item.type"
-                [nzText]="item.content"
-              ></nz-badge>
-            </li>
+                [nzText]="item.totalQuantity"
+              ></nz-badge> -->
+            <!-- </li> -->
           </ng-container>
         </ng-container>
       </ul>

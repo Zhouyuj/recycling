@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { InterceptorServices } from './core/services/interceptors/interceptors.service';
-import { TitleService } from './core/services/title/title.service';
+import { InterceptorServices } from '../core/services/interceptors/interceptors.service';
+import { TitleService } from '../core/services/title/title.service';
 
 @Component({
   selector: 'wechat',

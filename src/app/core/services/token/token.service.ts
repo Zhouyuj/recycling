@@ -88,6 +88,13 @@ export class TokenService extends RebirthHttp {
     );
   }
 
+  public clearLoginInfo(): void {
+    this.storageService.remove({
+      pool: TokenService.STORAGE_POOL_KEY,
+      key: TokenService.STORAGE_LOGIN_INFO
+    });
+  }
+
   public getLoginInfo(): any {
     return this.storageService.get({
       pool: TokenService.STORAGE_POOL_KEY,
