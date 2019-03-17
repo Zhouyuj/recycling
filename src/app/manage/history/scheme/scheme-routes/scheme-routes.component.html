@@ -1,72 +1,82 @@
 <div class="wrap">
-    <!-- -------- 表格操作 -------- -->
-    <div class="table-operations">
-        <div nz-row nzGutter="16">
-            <div nz-col class="gutter-row" nzSpan="10">
-                <!-- 面包屑导航 -->
-                <app-breadcrumbs [options]="breadcrumbs"></app-breadcrumbs>
-            </div>
-            <div nz-col class="gutter-row" nzSpan="4" nzOffset="2">
-                <!-- 关键字搜索 -->
-            </div>
-            <div nz-col class="gutter-row" nzSpan="8">
-                <!-- CUDE: create,update,delete,export -->
-                <div class="table-CUDE">
-                    <button nz-button
-                            nzType="default"
-                            (click)="onDetail()"
-                            [disabled]="!selectedItem">
-                        明细
-                    </button>
-                    &nbsp;
-                </div>
-            </div>
+  <!-- -------- 表格操作 -------- -->
+  <div class="table-operations">
+    <div nz-row nzGutter="16">
+      <div nz-col class="gutter-row" nzSpan="10">
+        <!-- 面包屑导航 -->
+        <app-breadcrumbs [options]="breadcrumbs"></app-breadcrumbs>
+      </div>
+      <div nz-col class="gutter-row" nzSpan="4" nzOffset="2">
+        <!-- 关键字搜索 -->
+      </div>
+      <div nz-col class="gutter-row" nzSpan="8">
+        <!-- CUDE: create,update,delete,export -->
+        <div class="table-CUDE">
+          <button
+            nz-button
+            nzType="default"
+            (click)="onDetail()"
+            [disabled]="!selectedItem"
+          >
+            明细
+          </button>
+          &nbsp;
         </div>
+      </div>
     </div>
-    <!-- -------- 表格内容 -------- -->
-    <div class="table-content">
-        <nz-spin [nzSize]="'large'" [nzSpinning]="isSpinning">
-            <nz-table #tableData
-                      [nzData]="listCache"
-                      [nzScroll]="{ y: tableScrollY}">
-                <thead>
-                <tr>
-                    <th nzWidth="5%"></th><!-- 此表头为checkbox -->
-                    <th nzWidth="10%">
-                        序号
-                    </th>
-                    <th nzWidth="25%">
-                        路线名称
-                    </th>
-                    <th nzWidth="15%">
-                        车牌号
-                    </th>
-                    <th nzWidth="15%">
-                        司机
-                    </th>
-                    <th nzWidth="15%">
-                        手持报量(吨)
-                    </th>
-                    <th nzWidth="15%">
-                        地磅称重量(吨)
-                    </th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr *ngFor="let item of tableData.data; index as i"
-                    [ngClass]="{ 'table-row-selected': item.checked }"
-                    (click)="onClickListItem($event, item)">
-                    <td nzShowCheckbox [(nzChecked)]="item.checked"
-                        (nzCheckedChange)="onSelected($event, item)"></td>
-                    <td>{{i + 1}}</td>
-                    <td>{{item.name}}</td>
-                    <td>{{item.vehicle.plateNumber}}</td>
-                    <td>{{item.driver}}</td>
-                    <td>{{item.collectionQuantity}}</td>
-                    <td>{{item.weighedQuantity }}</td>
-                </tr>
-                </tbody>
-            </nz-table>
-        </nz-spin>
-    </div>
+  </div>
+  <!-- -------- 表格内容 -------- -->
+  <div class="table-content">
+    <nz-spin [nzSize]="'large'" [nzSpinning]="isSpinning">
+      <nz-table
+        #tableData
+        [nzData]="listCache"
+        [nzScroll]="{ y: tableScrollY }"
+      >
+        <thead>
+          <tr>
+            <th nzWidth="5%"></th>
+            <!-- 此表头为checkbox -->
+            <th nzWidth="10%">
+              序号
+            </th>
+            <th nzWidth="25%">
+              路线名称
+            </th>
+            <th nzWidth="15%">
+              车牌号
+            </th>
+            <th nzWidth="15%">
+              司机
+            </th>
+            <th nzWidth="15%">
+              手持报量(吨)
+            </th>
+            <th nzWidth="15%">
+              行驶里程
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let item of tableData.data; index as i"
+            [ngClass]="{ 'table-row-selected': item.checked }"
+            (click)="onClickListItem($event, item)"
+          >
+            <td
+              nzShowCheckbox
+              [(nzChecked)]="item.checked"
+              (nzCheckedChange)="onSelected($event, item)"
+            ></td>
+            <td>{{ i + 1 }}</td>
+            <td>{{ item.name }}</td>
+            <td>{{ item.vehicle.plateNumber }}</td>
+            <td>{{ item.driver }}</td>
+            <td>{{ item.collectionQuantity }}</td>
+            <td>{{ item.endMileage - item.startMileage }}</td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </nz-spin>
+  </div>
 </div>

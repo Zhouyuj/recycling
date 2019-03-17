@@ -21,6 +21,7 @@ import { Duration, FormModel } from './form.model';
 import { PageReq } from '../../../shared/models/page/page-req.model';
 import { PageRes } from '../../../shared/models/page/page-res.model';
 import { VehicleRes } from '../vehicle-info/vehicle-res.model';
+import { CustomerCountModel } from '../../history/models/customer-count.model';
 
 @Injectable({
   providedIn: 'root'
@@ -110,6 +111,22 @@ export class CustomersInfoService extends RebirthHttp {
     responseType: 'blob'
   })
   getCustomersReport(@Path('id') id: number): Observable<any> {
+    return null;
+  }
+
+  @GET('/customerCounts/:username/:month')
+  getCustomerCountsByUsernameAndMonth(
+    username: any,
+    month: string
+  ): Observable<Result<CustomerCountModel>> {
+    return null;
+  }
+
+  @GET('/customerCounts/export/:username/:month')
+  @RequestOptions({
+    responseType: 'blob'
+  })
+  getCustomerCountReport(username: any, month: string): Observable<any> {
     return null;
   }
 }

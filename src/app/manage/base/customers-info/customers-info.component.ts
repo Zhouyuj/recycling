@@ -346,7 +346,9 @@ export class CustomersInfoComponent extends TableBasicComponent
   }
 
   onKeywordSearchTh(keywordType: string) {
-    const hasKeywordValue: boolean = Boolean(Object.values(this.params).find(param => !!param));
+    const hasKeywordValue: boolean = Boolean(
+      Object.values(this.params).find(param => !!param)
+    );
     if (keywordType && hasKeywordValue) {
       this.pageRes.size = 500;
     } else {

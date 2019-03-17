@@ -10,13 +10,13 @@
         <!-- 关键字搜索 -->
         <div class="table-search">
           <span>收运单位</span>
-          <nz-input-group nzSize="small" [nzSuffix]="suffixIcon">
+          <nz-input-group [nzSuffix]="suffixIcon">
             <input
-              id="search"
+              id="customer"
               placeholder="input here"
               nz-input
-              [(ngModel)]="inputValue"
-              (ngModelChange)="onChangeSearch($event)"
+              [(ngModel)]="customer"
+              (ngModelChange)="onSearchCustomer($event)"
               [nzAutocomplete]="auto"
             />
           </nz-input-group>
@@ -55,5 +55,44 @@
     </div>
   </div>
   <!-- -------- 表格内容 -------- -->
-  <!-- -->
+  <nz-table #basicTable [nzData]="dataSet">
+    <thead>
+      <tr>
+        <th>时间</th>
+        <th>收运量(桶)</th>
+        <th>收运车辆</th>
+        <th>收运人员</th>
+        <th>收运时间</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of basicTable">
+        <td>{{ data.date }}</td>
+        <td>{{ data.totalQuantity }}</td>
+        <td>{{ data.plateNumber }}</td>
+        <td>{{ data.driver }}</td>
+        <td>{{ data.date }}</td>
+      </tr>
+      <!-- <ng-template
+        *ngIf="data && data.detailList.length > 1"
+        ngFor
+        let-child
+        [ngForOf]="data.detailList"
+      >
+        <tr>
+          <td></td>
+          <td></td>
+          <td class="amount-of-garbage">
+            {{ child.plateNumber }}
+          </td>
+          <td class="amount-of-garbage">
+            {{ child.driver }}
+          </td>
+          <td class="amount-of-garbage">
+            {{ child.collectionTime }}
+          </td>
+        </tr>
+      </ng-template> -->
+    </tbody>
+  </nz-table>
 </div>

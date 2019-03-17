@@ -146,7 +146,7 @@ export class EditPlanComponent extends TableBasicComponent implements OnInit {
           if (uniqueArr.length < priorityArr.length) {
             this.notificationService.create({
               type: 'warning',
-              title: '抱歉,选择相同车辆的线路优先级不可相同',
+              title: '抱歉,选择相同人员的线路优先级不可相同',
               content: '请先调整优先级再保存'
             });
             return;
@@ -316,7 +316,7 @@ export class EditPlanComponent extends TableBasicComponent implements OnInit {
         {
           name: item.name,
           priority: item.priority,
-          vehicle: item.vehicle.plateNumber
+          driver: item.username
         },
         this.planId,
         item.id
@@ -357,11 +357,11 @@ export class EditPlanComponent extends TableBasicComponent implements OnInit {
   classifySameVehicleRoutes(routes: RouteListModel[]) {
     this.sameVehicleRoutes = {};
     routes.forEach((r: RouteListModel) => {
-      if (r.vehicle && r.vehicle.plateNumber) {
-        if (this.sameVehicleRoutes[r.vehicle.plateNumber]) {
-          this.sameVehicleRoutes[r.vehicle.plateNumber].push(r);
+      if (r.driver) {
+        if (this.sameVehicleRoutes[r.driver]) {
+          this.sameVehicleRoutes[r.driver].push(r);
         } else {
-          this.sameVehicleRoutes[r.vehicle.plateNumber] = [r];
+          this.sameVehicleRoutes[r.driver] = [r];
         }
       }
     });

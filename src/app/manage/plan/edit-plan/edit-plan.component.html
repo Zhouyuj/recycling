@@ -155,8 +155,8 @@
                 <td>
                   <nz-select
                     *ngIf="
-                      item.vehicle.plateNumber &&
-                      sameVehicleRoutes[item.vehicle.plateNumber].length > 1
+                      item.driver &&
+                      sameVehicleRoutes[item.driver].length > 1
                     "
                     style="width: 100%"
                     [(ngModel)]="item.priority"
@@ -166,7 +166,7 @@
                   >
                     <ng-container
                       *ngFor="
-                        let o of sameVehicleRoutes[item.vehicle.plateNumber];
+                        let o of sameVehicleRoutes[item.driver];
                         index as i
                       "
                     >

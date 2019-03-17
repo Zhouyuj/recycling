@@ -1,203 +1,293 @@
 <div class="wrap">
-    <!-- -------- 表格操作 -------- -->
-    <div class="table-operations">
-        <div nz-row nzGutter="16">
-            <div nz-col class="gutter-row" nzSpan="10">
-                <button nz-button (click)="onBack()">
-                    <i nz-icon type="left"></i>
-                    返回
-                </button>
-                &nbsp;
-                <button nz-button [disabled]="!dragList.length" (click)="onSaveMovedMarker()">
-                    <i nz-icon type="save"></i>
-                    保存移动后的收运点位置
-                </button>
-                
-            </div>
-        </div>
-        <div class="route-info" nz-row nzGutter="16">
-            <div nz-col nzSpan="4">线路名称：{{currentRoute.name}}</div>
-            <div nz-col nzSpan="3">车辆：{{currentRoute.vehicle.plateNumber}}</div>
-            <div nz-col nzSpan="3">驾驶员：{{currentRoute.driver}}</div>
-            <div nz-col nzSpan="3">手持报量(吨)：{{currentRoute.collectionQuantity}}</div>
-            <div nz-col nzSpan="3">地磅称重量(吨)：{{currentRoute.weighedQuantity}}</div>
-            <div nz-col nzSpan="4">执行日期：{{currentRoute.date}}</div>
-        </div>
+  <!-- -------- 表格操作 -------- -->
+  <div class="table-operations">
+    <div nz-row nzGutter="16">
+      <div nz-col class="gutter-row" nzSpan="10">
+        <button nz-button (click)="onBack()">
+          <i nz-icon type="left"></i>
+          返回
+        </button>
+        &nbsp;
+        <button
+          nz-button
+          [disabled]="!dragList.length"
+          (click)="onSaveMovedMarker()"
+        >
+          <i nz-icon type="save"></i>
+          保存移动后的收运点位置
+        </button>
+      </div>
     </div>
-    <div class="border-layout">
-        <div class="map-layout" [ngStyle]="{ width: 'calc(100vw - 18px)', height: tableScrollY }">
-            <app-amap 
-                [longitude]="113.18691"
-                [latitude]="23.031716"
-                [zoom]="15"
-                (center)="setCenterFunction($event)">
-                <app-amarker *ngIf="startLngLat"
-                    [longitude]="startLngLat.lng"
-                    [latitude]="startLngLat.lat"
-                    [type]="vehicleMarkerType"
-                    [text]="currentRoute.vehicle.plateNumber"
-                    (remove)="startVehicleRemove($event)">
-                </app-amarker>
-                <app-amarker *ngFor="let station of taskList"
-                    [longitude]="station.lng"
-                    [latitude]="station.lat"
-                    [type]="stationMarkerType"
-                    [text]="station.priority"
-                    [color]="convertTaskStateToColor(station.state)"
-                    (drag)="onDragEvent($event, station)">
-                </app-amarker>
-                <app-amarker *ngIf="runPlanVehiclePosition" 
-                    [longitude]="runPlanVehiclePosition.lng"
-                    [latitude]="runPlanVehiclePosition.lat"
-                    [type]="vehicleMarkerType"
-                    [text]="currentRoute.vehicle.plateNumber"
-                    (remove)="runPlanVehicleRemove($event)"
-                    (create)="runPlanVehicleCreate($event)">
-                </app-amarker>
-                <app-apolyline *ngFor="let line of runPlanLines"
-                    [lines]="line"
-                    [strokeColor]="'#ccffcc'"
-                    (clear)="clearRunPlanLines($event)">
-                </app-apolyline>
-                <app-adriving
-                    [outlineColor]="'#55ccff'"
-                    (clearEvent)="clearPlanRouteWaypoints($event)"
-                    (drawWaypointsEvent)="drawPlanRouteWaypoints($event)">
-                </app-adriving>
-            </app-amap>
-            <div class="task-list">
-                <div class="toggle-layout" [ngStyle]="{ right: isOpen ? '313px' : '0' }">
-                    <button *ngIf="!isOpen"
-                        nz-button
-                        [nzSize]="'small'"
-                        [ngStyle]="{ height: tableScrollY }"
-                        (click)="onToggle()">
-                        <i nz-icon type="left" theme="outline"></i>
-                    </button>
-                    <button *ngIf="isOpen"
-                        nz-button
-                        [nzSize]="'small'"
-                        [ngStyle]="{ height: tableScrollY }"
-                        (click)="onToggle()">
-                        <i nz-icon type="right" theme="outline"></i>
-                    </button>
-                </div>
-                <div class="task-pane" *ngIf="isOpen" [ngStyle]="{height: tableScrollY}">
-                    <nz-spin [nzSize]="'large'" [nzSpinning]="isSpinning">
-                        <nz-table #taskTable
-                              [nzData]="taskList"
-                              [nzScroll]="{y: taskPaneHeight}"
-                              [nzShowPagination]="false">
-                            <thead>
-                            <tr>
-                                <th nzWidth="5%"></th>
-                                <th nzWidth="55%">收运单位</th>
-                                <th nzWidth="40%" class="amount-of-garbage">手持报量(吨)</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <ng-template ngFor let-item let-i="index" [ngForOf]="taskList">
-                                <tr (click)="onClickTask($event, item)">
-                                    <td [nzShowExpand]="item.taskList && item.taskList.length > 0"
-                                        [(nzExpand)]="item.expand"></td>
-                                    <td>
-                                        <nz-tag [nzColor]="convertTaskStateToColor(item.state)">{{i + 1}}</nz-tag>
-                                        <span class="tag-text" [title]="item.name">{{item.name}}</span>
-                                    </td>
-                                    <td class="amount-of-garbage">
-                                        {{item.amountOfGarbage}}
-                                    </td>
-                                </tr>
-                                <ng-template *ngIf="item.expand"
-                                            ngFor let-child [ngForOf]="item.taskList">
-                                    <tr (click)="onClickTask($event, child)">
-                                        <td></td>
-                                        <td>
-                                            <nz-badge nzDot [nzStyle]="{
-                                                top: '-8px',
-                                                marginRight: '5px',
-                                                marginLeft: '5px',
-                                                backgroundColor: convertTaskStateToColor(child.state)
-                                            }">&nbsp;</nz-badge>
-                                            <span class="tag-text" [title]="child.name">{{child.name}}</span>
-                                        </td>
-                                        <td class="amount-of-garbage">
-                                            {{child.amountOfGarbage}}
-                                        </td>
-                                    </tr>
-                                </ng-template>
-                            </ng-template>
-                            </tbody>
-                        </nz-table>
-                    </nz-spin>
-                </div>
-            </div>
-        </div>
-        <div class="monitor-info">
-            <div nz-row>
-                <div nz-col nzSpan="2">
-                    <div class="monitor-title">监控信息</div>
-                </div>
-                <div nz-col nzSpan="4"></div>
-                <div nz-col nzSpan="2">
-                    <button 
-                        nz-button
-                        nz-popover
-                        nzTrigger="click"
-                        [nzContent]="speedHandle"
-                        [disabled]="!hasRunPlan"
-                        [nzSize]="'small'">
-                        倍速
-                    </button>
-                    <ng-template #speedHandle>
-                        <div [ngStyle]="{ height: '100px' }">
-                            <nz-slider 
-                                nzVertical
-                                [nzMin]="1"
-                                [nzMax]="20"
-                                (nzOnAfterChange)="updateInterval()"
-                                [(ngModel)]="speed">
-                            </nz-slider>
-                        </div>
-                    </ng-template>
-                </div>
-                <div nz-col nzSpan="1"></div>
-                <div nz-col nzSpan="2">
-                    <button nz-button [disabled]="!hasRunPlan" (click)="onToCenter()" [nzSize]="'small'">车辆居中</button>
-                </div>
-                <div nz-col nzSpan="2">
-                    <button nz-button [disabled]="!hasRunPlan" (click)="onRunPlan()" [nzType]="isClickedRunPlan ? 'primary' : 'default'" [nzSize]="'small'">行车轨迹</button>
-                </div>
-                <div nz-col nzSpan="2">
-                    <button nz-button [disabled]="!hasRunPlan" (click)="onPlanRoute()" [nzType]="isClickedPlanRoute ? 'primary' : 'default'" [nzSize]="'small'">计划路线</button>
-                </div>
-                <div nz-col nzSpan="9"></div>
-            </div>
-            <div nz-row>
-                <div nz-col nzSpan="1">
-                    <button class="has-icon-button" nz-button *ngIf="!isPlay" [disabled]="!hasRunPlan" (click)="onPlay()">
-                        <i nz-icon type="caret-right"></i>
-                    </button>
-                    <button class="has-icon-button" nz-button *ngIf="isPlay" [disabled]="!hasRunPlan" (click)="onPlay()">
-                        <i nz-icon type="pause"></i>
-                    </button>
-                </div>
-                <div nz-col nzSpan="2">
-                    <div class="time-text">{{startTime}}</div>
-                </div>
-                <div nz-col nzSpan="18" [ngStyle]="{ marginTop: '-6px' }">
-                    <nz-slider class="play-slider"
-                        [(ngModel)]="total"
-                        (nzOnAfterChange)="onExcuteRunPlan()"
-                        [nzMin]="min"
-                        [nzMax]="max">
-                    </nz-slider>
-                </div>
-                <div nz-col nzSpan="1"></div>
-                <div nz-col nzSpan="2">
-                    <div class="time-text">{{endTime}}</div>
-                </div>
-            </div>
-        </div>
+    <div class="route-info" nz-row nzGutter="16">
+      <div nz-col nzSpan="4">线路名称：{{ currentRoute.name }}</div>
+      <div nz-col nzSpan="3">车辆：{{ currentRoute.vehicle.plateNumber }}</div>
+      <div nz-col nzSpan="3">驾驶员：{{ currentRoute.driver }}</div>
+      <div nz-col nzSpan="3">
+        手持报量(吨)：{{ currentRoute.collectionQuantity }}
+      </div>
+      <div nz-col nzSpan="3">
+        行驶里程：{{ currentRoute.endMileage - currentRoute.startMileage }}
+      </div>
+      <div nz-col nzSpan="4">执行日期：{{ currentRoute.date }}</div>
     </div>
+  </div>
+  <div class="border-layout">
+    <div
+      class="map-layout"
+      [ngStyle]="{ width: 'calc(100vw - 18px)', height: tableScrollY }"
+    >
+      <app-amap
+        [longitude]="113.18691"
+        [latitude]="23.031716"
+        [zoom]="15"
+        (center)="setCenterFunction($event)"
+      >
+        <app-amarker
+          *ngIf="startLngLat"
+          [longitude]="startLngLat.lng"
+          [latitude]="startLngLat.lat"
+          [type]="vehicleMarkerType"
+          [text]="currentRoute.vehicle.plateNumber"
+          (remove)="startVehicleRemove($event)"
+        >
+        </app-amarker>
+        <app-amarker
+          *ngFor="let station of taskList"
+          [longitude]="station.lng"
+          [latitude]="station.lat"
+          [type]="stationMarkerType"
+          [text]="station.priority"
+          [color]="convertTaskStateToColor(station.state)"
+          (drag)="onDragEvent($event, station)"
+        >
+        </app-amarker>
+        <app-amarker
+          *ngIf="runPlanVehiclePosition"
+          [longitude]="runPlanVehiclePosition.lng"
+          [latitude]="runPlanVehiclePosition.lat"
+          [type]="vehicleMarkerType"
+          [text]="currentRoute.vehicle.plateNumber"
+          (remove)="runPlanVehicleRemove($event)"
+          (create)="runPlanVehicleCreate($event)"
+        >
+        </app-amarker>
+        <app-apolyline
+          *ngFor="let line of runPlanLines"
+          [lines]="line"
+          [strokeColor]="'#ccffcc'"
+          (clear)="clearRunPlanLines($event)"
+        >
+        </app-apolyline>
+        <app-adriving
+          [outlineColor]="'#55ccff'"
+          (clearEvent)="clearPlanRouteWaypoints($event)"
+          (drawWaypointsEvent)="drawPlanRouteWaypoints($event)"
+        >
+        </app-adriving>
+      </app-amap>
+      <div class="task-list">
+        <div
+          class="toggle-layout"
+          [ngStyle]="{ right: isOpen ? '313px' : '0' }"
+        >
+          <button
+            *ngIf="!isOpen"
+            nz-button
+            [nzSize]="'small'"
+            [ngStyle]="{ height: tableScrollY }"
+            (click)="onToggle()"
+          >
+            <i nz-icon type="left" theme="outline"></i>
+          </button>
+          <button
+            *ngIf="isOpen"
+            nz-button
+            [nzSize]="'small'"
+            [ngStyle]="{ height: tableScrollY }"
+            (click)="onToggle()"
+          >
+            <i nz-icon type="right" theme="outline"></i>
+          </button>
+        </div>
+        <div
+          class="task-pane"
+          *ngIf="isOpen"
+          [ngStyle]="{ height: tableScrollY }"
+        >
+          <nz-spin [nzSize]="'large'" [nzSpinning]="isSpinning">
+            <nz-table
+              #taskTable
+              [nzData]="taskList"
+              [nzScroll]="{ y: taskPaneHeight }"
+              [nzShowPagination]="false"
+            >
+              <thead>
+                <tr>
+                  <th nzWidth="5%"></th>
+                  <th nzWidth="55%">收运单位</th>
+                  <th nzWidth="40%" class="amount-of-garbage">手持报量(吨)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-template ngFor let-item let-i="index" [ngForOf]="taskList">
+                  <tr (click)="onClickTask($event, item)">
+                    <td
+                      [nzShowExpand]="item.taskList && item.taskList.length > 0"
+                      [(nzExpand)]="item.expand"
+                    ></td>
+                    <td>
+                      <nz-tag [nzColor]="convertTaskStateToColor(item.state)">{{
+                        i + 1
+                      }}</nz-tag>
+                      <span class="tag-text" [title]="item.name">{{
+                        item.name
+                      }}</span>
+                    </td>
+                    <td class="amount-of-garbage">
+                      {{ item.amountOfGarbage }}
+                    </td>
+                  </tr>
+                  <ng-template
+                    *ngIf="item.expand"
+                    ngFor
+                    let-child
+                    [ngForOf]="item.taskList"
+                  >
+                    <tr (click)="onClickTask($event, child)">
+                      <td></td>
+                      <td>
+                        <nz-badge
+                          nzDot
+                          [nzStyle]="{
+                            top: '-8px',
+                            marginRight: '5px',
+                            marginLeft: '5px',
+                            backgroundColor: convertTaskStateToColor(
+                              child.state
+                            )
+                          }"
+                          >&nbsp;</nz-badge
+                        >
+                        <span class="tag-text" [title]="child.name">{{
+                          child.name
+                        }}</span>
+                      </td>
+                      <td class="amount-of-garbage">
+                        {{ child.amountOfGarbage }}
+                      </td>
+                    </tr>
+                  </ng-template>
+                </ng-template>
+              </tbody>
+            </nz-table>
+          </nz-spin>
+        </div>
+      </div>
+    </div>
+    <div class="monitor-info">
+      <div nz-row>
+        <div nz-col nzSpan="2">
+          <div class="monitor-title">监控信息</div>
+        </div>
+        <div nz-col nzSpan="4"></div>
+        <div nz-col nzSpan="2">
+          <button
+            nz-button
+            nz-popover
+            nzTrigger="click"
+            [nzContent]="speedHandle"
+            [disabled]="!hasRunPlan"
+            [nzSize]="'small'"
+          >
+            倍速
+          </button>
+          <ng-template #speedHandle>
+            <div [ngStyle]="{ height: '100px' }">
+              <nz-slider
+                nzVertical
+                [nzMin]="1"
+                [nzMax]="20"
+                (nzOnAfterChange)="updateInterval()"
+                [(ngModel)]="speed"
+              >
+              </nz-slider>
+            </div>
+          </ng-template>
+        </div>
+        <div nz-col nzSpan="1"></div>
+        <div nz-col nzSpan="2">
+          <button
+            nz-button
+            [disabled]="!hasRunPlan"
+            (click)="onToCenter()"
+            [nzSize]="'small'"
+          >
+            车辆居中
+          </button>
+        </div>
+        <div nz-col nzSpan="2">
+          <button
+            nz-button
+            [disabled]="!hasRunPlan"
+            (click)="onRunPlan()"
+            [nzType]="isClickedRunPlan ? 'primary' : 'default'"
+            [nzSize]="'small'"
+          >
+            行车轨迹
+          </button>
+        </div>
+        <div nz-col nzSpan="2">
+          <button
+            nz-button
+            [disabled]="!hasRunPlan"
+            (click)="onPlanRoute()"
+            [nzType]="isClickedPlanRoute ? 'primary' : 'default'"
+            [nzSize]="'small'"
+          >
+            计划路线
+          </button>
+        </div>
+        <div nz-col nzSpan="9"></div>
+      </div>
+      <div nz-row>
+        <div nz-col nzSpan="1">
+          <button
+            class="has-icon-button"
+            nz-button
+            *ngIf="!isPlay"
+            [disabled]="!hasRunPlan"
+            (click)="onPlay()"
+          >
+            <i nz-icon type="caret-right"></i>
+          </button>
+          <button
+            class="has-icon-button"
+            nz-button
+            *ngIf="isPlay"
+            [disabled]="!hasRunPlan"
+            (click)="onPlay()"
+          >
+            <i nz-icon type="pause"></i>
+          </button>
+        </div>
+        <div nz-col nzSpan="2">
+          <div class="time-text">{{ startTime }}</div>
+        </div>
+        <div nz-col nzSpan="18" [ngStyle]="{ marginTop: '-6px' }">
+          <nz-slider
+            class="play-slider"
+            [(ngModel)]="total"
+            (nzOnAfterChange)="onExcuteRunPlan()"
+            [nzMin]="min"
+            [nzMax]="max"
+          >
+          </nz-slider>
+        </div>
+        <div nz-col nzSpan="1"></div>
+        <div nz-col nzSpan="2">
+          <div class="time-text">{{ endTime }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

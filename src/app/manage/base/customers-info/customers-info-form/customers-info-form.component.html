@@ -201,6 +201,31 @@
                     </nz-form-control>
                 </nz-form-item>
 
+                <nz-form-item>
+                        <nz-form-label [nzSm]="3" [nzXs]="24" nzFor="username" nzRequired>账号</nz-form-label>
+                        <nz-form-control [nzSm]="7" [nzXs]="24" nzHasFeedback>
+                            <input nz-input
+                                [(ngModel)]="formModelSeparate.username"
+                                id="username"
+                                name="username"
+                                placeHolder="请输入您的账号"
+                                #username="ngModel">
+                            <nz-form-explain [hidden]="username.valid || username.pristine">请输入您的账号</nz-form-explain>
+                        </nz-form-control>
+
+                    <nz-form-label [nzSm]="3" [nzXs]="24" nzFor="password" nzRequired>密码</nz-form-label>
+                    <nz-form-control [nzSm]="7" [nzXs]="24" nzHasFeedback>
+                        <input nz-input
+                            [(ngModel)]="formModelSeparate.password"
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeHolder="请输入您的密码"
+                            #password="ngModel">
+                        <nz-form-explain [hidden]="password.valid || password.pristine">请输入您的密码</nz-form-explain>
+                    </nz-form-control>
+                </nz-form-item>
+
                 <nz-divider [nzText]="planTemplate">
                     <ng-template #planTemplate>
                         <span style="color: #83bf46;">规划信息</span>
@@ -545,6 +570,31 @@
                                (click)="onShowMap()">
                             </i>
                         </ng-template>
+                    </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item>
+                        <nz-form-label [nzSm]="3" [nzXs]="24" nzRequired nzFor="username">账号</nz-form-label>
+                        <nz-form-control [nzSm]="7" [nzXs]="24" nzHasFeedback>
+                            <input nz-input
+                                [(ngModel)]="formModelCluster.username"
+                                id="username"
+                                name="username"
+                                placeHolder="请输入您的账号"
+                                #username="ngModel">
+                            <nz-form-explain [hidden]="username.valid || username.pristine">请输入您的账号</nz-form-explain>
+                        </nz-form-control>
+
+                    <nz-form-label [nzSm]="3" [nzXs]="24" nzRequired nzFor="password">密码</nz-form-label>
+                    <nz-form-control [nzSm]="7" [nzXs]="24" nzHasFeedback>
+                        <input nz-input
+                            [(ngModel)]="formModelCluster.password"
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeHolder="请输入您的密码"
+                            #password="ngModel">
+                        <nz-form-explain [hidden]="password.valid || password.pristine">请输入您的密码</nz-form-explain>
                     </nz-form-control>
                 </nz-form-item>
 
