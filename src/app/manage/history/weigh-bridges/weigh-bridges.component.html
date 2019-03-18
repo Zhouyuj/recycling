@@ -1,0 +1,59 @@
+<div class="wrap">
+  <!-- -------- 表格操作 -------- -->
+  <div class="table-operations">
+    <div nz-row nzGutter="16">
+      <div nz-col class="gutter-row" nzSpan="10">
+        <!-- 面包屑导航 -->
+        <app-breadcrumbs [options]="breadcrumbs"></app-breadcrumbs>
+      </div>
+      <div nz-col class="gutter-row" nzSpan="6">
+        <!-- 关键字搜索 -->
+        <div class="table-search">
+          <span>月份</span>
+          <nz-month-picker
+            [(ngModel)]="date"
+            (ngModelChange)="onChangeDate($event)"
+            nzPlaceHolder="请选择日期"
+          ></nz-month-picker>
+          <button nz-button nzType="default" (click)="onSearch()">
+            筛选
+          </button>
+        </div>
+      </div>
+      <div nz-col class="gutter-row" nzSpan="8">
+        <!-- CUDE: create,update,delete,export -->
+        <div class="table-CUDE">
+          <button nz-button nzType="default" (click)="onExport()">
+            导出
+          </button>
+          &nbsp;
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- -------- 表格内容 -------- -->
+  <nz-table #basicTable [nzData]="dataSet">
+    <thead>
+      <tr>
+        <th>车牌号</th>
+        <th>毛重时间</th>
+        <th>皮重时间</th>
+        <th>毛重</th>
+        <th>皮重</th>
+        <th>净重</th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-template ngFor let-data let-i="index" [ngForOf]="dataSet">
+        <tr>
+          <td>{{ data.plateNumber }}</td>
+          <td>{{ data.totalQuantity }}</td>
+          <td>{{ data.plateNumber }}</td>
+          <td>{{ data.driver }}</td>
+          <td>{{ data.date }}</td>
+          <td>{{ data.date }}</td>
+        </tr>
+      </ng-template>
+    </tbody>
+  </nz-table>
+</div>

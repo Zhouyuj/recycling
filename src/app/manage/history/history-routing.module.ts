@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { SchemeComponent } from './scheme/scheme.component';
 import { CollectionComponent } from './collection/collection.component';
+import { WeighBridgesComponent } from './weigh-bridges/weigh-bridges.component';
 
 export const ROUTER_CONFIG: Routes = [
   {
@@ -17,6 +18,11 @@ export const ROUTER_CONFIG: Routes = [
         path: 'collection',
         component: CollectionComponent,
         data: { title: '收运台账' }
+      },
+      {
+        path: 'weighbridges',
+        component: WeighBridgesComponent,
+        data: { title: '地磅明细' }
       }
     ]
   }

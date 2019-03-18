@@ -202,13 +202,21 @@ body {
 
 /*  wechat module */
 .calendar {
+  .ant-fullcalendar-date {
+    width: 40px;
+    margin: 0 auto;
+
+    div:first-child {
+      color: blue;
+    }
+  }
+
   .ant-fullcalendar-content {
     position: initial;
     background: rgb(130, 191, 69);
     margin: 0 auto;
     border-radius: 2px;
     width: 40px;
-    line-height: 24px;
   }
 
   nz-calendar-header.ant-fullcalendar-header {

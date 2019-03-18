@@ -39,7 +39,6 @@ export class CalendarComponent implements OnInit {
       { totalQuantity: 0.12, date: 16, type: 'success' },
       { totalQuantity: 0.01, date: 18, type: 'success' }
     ];
-    // this.addr = this.loginService.addr;
     this.manageService
       .getCustomerCountsByUsernameAndMonth(
         this.username,
@@ -48,6 +47,8 @@ export class CalendarComponent implements OnInit {
       .subscribe(
         (res: Result<CustomerCountModel>) => {
           console.log(res);
+          // this.addr = res.data.content.address;
+          // this.loginService.addr = this.addr;
           // this.calendarData = [];
         },
         err => {

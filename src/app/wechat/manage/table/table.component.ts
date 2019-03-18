@@ -60,7 +60,6 @@ export class TableComponent implements OnInit {
 
   onMonthChange(date: Date) {
     this.selectedMonth = DateUtil.dateFormat(date, 'yyyy-MM');
-    console.log(date, this.selectedMonth);
   }
 
   onExport() {
