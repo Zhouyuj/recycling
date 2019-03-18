@@ -462,6 +462,17 @@ export class CustomersInfoFormComponent implements OnInit {
           }
         }
         if (
+          this.formModelSeparate.username &&
+          !/^(([a-zA-Z]|\d){3,17})$/.test(this.formModelSeparate.username)
+        ) {
+          this.notificationService.create({
+            type: 'error',
+            title: '抱歉,请检查输入内容',
+            content: '账户长度在3-18之间，只能包含字母、数字'
+          });
+          return false;
+        }
+        if (
           this.formModelSeparate.password &&
           !/^(([a-zA-Z]|\d){3,17})$/.test(this.formModelSeparate.password)
         ) {
@@ -570,17 +581,6 @@ export class CustomersInfoFormComponent implements OnInit {
           if (!result) {
             return; // 停止验证
           }
-        }
-        if (
-          this.formModelCluster.password &&
-          !/^(([a-zA-Z]|\d){3,17})$/.test(this.formModelCluster.password)
-        ) {
-          this.notificationService.create({
-            type: 'error',
-            title: '抱歉,请检查输入内容',
-            content: '密码长度在3-18之间，只能包含字母、数字'
-          });
-          return false;
         }
         break;
     }

@@ -16,7 +16,7 @@ import { TokenService } from '../../../core/services/token/token.service';
 export class TableComponent implements OnInit {
   selectedCal: boolean;
   selectedMonth: any;
-  dataSet: any[];
+  dataSet: any[] = [];
   username: string;
   name: string;
   addr: string;
@@ -24,7 +24,6 @@ export class TableComponent implements OnInit {
     private router: Router,
     private loginService: LoginService,
     private manageService: ManageService,
-    private downloadReportsService: DownloadReportsService,
     private tokenService: TokenService
   ) {}
   ngOnInit() {
@@ -68,7 +67,7 @@ export class TableComponent implements OnInit {
     this.manageService
       .export(this.username, this.selectedMonth)
       .subscribe(res => {
-        this.downloadReportsService.download(res, this.username);
+        DownloadReportsService.download(res, this.username);
       });
   }
 

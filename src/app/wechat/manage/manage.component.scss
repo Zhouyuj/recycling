@@ -52,18 +52,4 @@
       margin-right: 5px;
     }
   }
-
-  .calendar {
-    .ant-fullcalendar-content {
-      position: initial;
-    }
-
-    nz-calendar-header.ant-fullcalendar-header {
-      text-align: center !important;
-
-      nz-radio-group.ant-radio-group {
-        display: none !important;
-      }
-    }
-  }
 }

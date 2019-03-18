@@ -118,7 +118,7 @@ export class CustomersInfoService extends RebirthHttp {
   getCustomerCountsByUsernameAndMonth(
     username: any,
     month: string
-  ): Observable<Result<CustomerCountModel>> {
+  ): Observable<Result<PageRes<CustomerCountModel[]>>> {
     return null;
   }
 

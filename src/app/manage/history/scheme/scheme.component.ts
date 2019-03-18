@@ -44,8 +44,7 @@ export class SchemeComponent extends TableBasicComponent implements OnInit {
     private planService: PlanService,
     private modalService: ModalService,
     private notificationService: NotificationService,
-    private router: Router,
-    private downloadReportsService: DownloadReportsService
+    private router: Router
   ) {
     super();
   }
@@ -91,7 +90,7 @@ export class SchemeComponent extends TableBasicComponent implements OnInit {
     }
     this.planService.getPlanReport(this.selectedItem.id).subscribe(
       res => {
-        this.downloadReportsService.download(res, this.selectedItem.name);
+        DownloadReportsService.download(res, this.selectedItem.name);
       },
       err => {
         this.getListByPage();

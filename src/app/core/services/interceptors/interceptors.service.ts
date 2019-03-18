@@ -62,7 +62,12 @@ export class InterceptorServices extends RebirthHttp {
             content: '请重新登录'
           });
           this.tokenService.clearToken();
-          this.tokenService.clearLoginInfo();
+          if (this.tokenService.getLoginInfo()) {
+            console.log('getLoginInfo111');
+            this.router.navigateByUrl('/wechat/login');
+            this.tokenService.clearLoginInfo();
+          }
+          console.log('getLoginInfo222');
           this.router.navigateByUrl('/login');
         } else if (err.status === 404) {
           this.notificationService.create({

@@ -3,135 +3,219 @@
 /* ---- base start ---- */
 @charset "UTF-8";
 /*css 初始化 */
-html, body, ul, li, ol, dl, dd, dt, p, h1, h2, h3, h4, h5, h6, form, fieldset, legend, img { margin:0; padding:0; }
-fieldset, img,input,button { border:none; padding:0;margin:0;outline-style:none; }   /*去掉input等聚焦时的蓝色边框*/
-ul, ol { list-style:none; }
-input { padding-top:0; padding-bottom:0; font-family: "SimSun","宋体";}
-select, input { vertical-align:middle;}
-select, input, textarea { font-size:12px; margin:0; }
-textarea { resize:none; } /*防止拖动*/
-img {border:0; vertical-align:middle; }  /*  去掉图片低测默认的3像素空白缝隙，或者用display：block也可以*/
-table { border-collapse:collapse; }
+html,
+body,
+ul,
+li,
+ol,
+dl,
+dd,
+dt,
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+form,
+fieldset,
+legend,
+img {
+  margin: 0;
+  padding: 0;
+}
+fieldset,
+img,
+input,
+button {
+  border: none;
+  padding: 0;
+  margin: 0;
+  outline-style: none;
+} /*去掉input等聚焦时的蓝色边框*/
+ul,
+ol {
+  list-style: none;
+}
+input {
+  padding-top: 0;
+  padding-bottom: 0;
+  font-family: 'SimSun', '宋体';
+}
+select,
+input {
+  vertical-align: middle;
+}
+select,
+input,
+textarea {
+  font-size: 12px;
+  margin: 0;
+}
+textarea {
+  resize: none;
+} /*防止拖动*/
+img {
+  border: 0;
+  vertical-align: middle;
+} /*  去掉图片低测默认的3像素空白缝隙，或者用display：block也可以*/
+table {
+  border-collapse: collapse;
+}
 body {
-    //font:12px/150% Arial,Verdana,"\5b8b\4f53";
-    font-size:12px/150%;
-    //color:#666;
-    background:#fff
+  //font:12px/150% Arial,Verdana,"\5b8b\4f53";
+  font-size: 12px/150%;
+  //color:#666;
+  background: #fff;
 }
-.clearfix:before,.clearfix:after {  /*清楚浮动*/
-    content:"";
-    display:table;
+.clearfix:before,
+.clearfix:after {
+  /*清楚浮动*/
+  content: '';
+  display: table;
 }
-.clearfix:after{clear:both;}
-.clearfix{
-    *zoom:1;/*IE/7/6*/
+.clearfix:after {
+  clear: both;
 }
-a {color:#666; text-decoration:none; }
-a:hover{color:#C81623;}
+.clearfix {
+  *zoom: 1; /*IE/7/6*/
+}
+a {
+  color: #666;
+  text-decoration: none;
+}
+a:hover {
+  color: #c81623;
+}
 //h1,h2,h3,h4,h5,h6 {text-decoration:none;font-weight:normal;font-size:100%;}  /*设置h标签的大小，设置跟父亲一样大的字体font-size:100%;*/
-s,i,em{font-style:normal;text-decoration:none;}
+s,
+i,
+em {
+  font-style: normal;
+  text-decoration: none;
+}
 
 /* ---- base end ---- */
 
 /* ---- body start ---- */
 body {
-    width: 100%;
-    height: calc(100vh);
-    min-width: 1200px;
-    // min-height: 768px;
-    //background-color: #f8f8f8;
-    position: relative;
-    overflow-y: scroll;
+  width: 100%;
+  height: calc(100vh);
+  min-width: 1200px;
+  // min-height: 768px;
+  //background-color: #f8f8f8;
+  position: relative;
+  overflow-y: scroll;
 }
 /* ---- body end ---- */
 
 /* ---- AMap marker content start ---- */
 .map-marker-content-station {
-    position: relative;
-    width: 48px;
-    height: 50px;
-    
-    img {
-        height: 100%;
-        width: 100%;
-    }
+  position: relative;
+  width: 48px;
+  height: 50px;
 
-    .map-marker-text {
-        position: absolute;
-        width: 20px;
-        height: 20px;
-        top: 7px;
-        left: 0;
-        right: 0;
-        margin: 0 auto;
-        text-align: center;
-        color: #fff;
-        font-size: 12px;
-        border-radius: 50%;
-    }
+  img {
+    height: 100%;
+    width: 100%;
+  }
 
-    .map-marker-recycling-icon {
-        width: 24px;
-        height: 24px;
-        top: 5px;
-        left: 12px;
-        position: absolute;
-        border-radius: 50%;
-    }
+  .map-marker-text {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 7px;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    text-align: center;
+    color: #fff;
+    font-size: 12px;
+    border-radius: 50%;
+  }
+
+  .map-marker-recycling-icon {
+    width: 24px;
+    height: 24px;
+    top: 5px;
+    left: 12px;
+    position: absolute;
+    border-radius: 50%;
+  }
 }
 
 .map-marker-content-vehicle {
-    position: relative;
-    width: 37px;
-    height: 56px;
-    
-    img {
-        height: 100%;
-        width: 100%;
-    }
+  position: relative;
+  width: 37px;
+  height: 56px;
 
-    .map-marker-label-vehicle {
-        width: 90px;
-        height: 25px;
-        position: relative;
-        top: -30px;
-        left: 40px;
-        border: 1px solid #00a9ff;
-        background-color: rgba(255, 255, 255, 0.85);
-        border-radius: 5px;
-        padding-top: 1px;
-        color: #0075ff;
-        font-weight: bold;
-        text-align: center;
-        font-size: 14px;
-        white-space: nowrap;
-        font-family: 宋体, sans-serif;
-        cursor: default;
-    }
+  img {
+    height: 100%;
+    width: 100%;
+  }
+
+  .map-marker-label-vehicle {
+    width: 90px;
+    height: 25px;
+    position: relative;
+    top: -30px;
+    left: 40px;
+    border: 1px solid #00a9ff;
+    background-color: rgba(255, 255, 255, 0.85);
+    border-radius: 5px;
+    padding-top: 1px;
+    color: #0075ff;
+    font-weight: bold;
+    text-align: center;
+    font-size: 14px;
+    white-space: nowrap;
+    font-family: 宋体, sans-serif;
+    cursor: default;
+  }
 }
 /* ---- AMap marker content end ---- */
 
 /* ---- Play slider start ---- */
 .play-slider {
+  .ant-slider-handle {
+    border-radius: 0;
+    width: 10px;
+    border-color: rgb(130, 191, 69);
+    background-color: rgb(130, 191, 69);
+  }
 
-    .ant-slider-handle {
-        border-radius: 0;
-        width: 10px;
-        border-color: rgb(130, 191, 69);
-        background-color: rgb(130, 191, 69);
-    }
+  .ant-slider-track {
+    border-radius: 0;
+    background-color: rgb(177, 215, 77);
+  }
 
-    .ant-slider-track {
-        border-radius: 0;
-        background-color: rgb(177, 215, 77);
-    }
+  .ant-slider:hover .ant-slider-handle {
+    border-color: rgb(130, 191, 69);
+  }
 
-    .ant-slider:hover .ant-slider-handle {
-        border-color: rgb(130, 191, 69);
-    }
-
-    .ant-slider:hover .ant-slider-track {
-        background-color: rgb(177, 215, 77);
-    }
+  .ant-slider:hover .ant-slider-track {
+    background-color: rgb(177, 215, 77);
+  }
 }
 /* ---- Play slider end ---- */
+
+/*  wechat module */
+.calendar {
+  .ant-fullcalendar-content {
+    position: initial;
+    background: rgb(130, 191, 69);
+    margin: 0 auto;
+    border-radius: 2px;
+    width: 40px;
+    line-height: 24px;
+  }
+
+  nz-calendar-header.ant-fullcalendar-header {
+    text-align: center !important;
+
+    nz-radio-group.ant-radio-group {
+      display: none !important;
+    }
+  }
+}

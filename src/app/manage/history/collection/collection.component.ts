@@ -1,9 +1,17 @@
 import { OnInit, Component } from '@angular/core';
 import { Observable, fromEvent } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  map,
+  mergeMap
+} from 'rxjs/operators';
 import { DateUtil } from '../../../shared/utils/date-utils';
 import { CustomersInfoService } from '../../base/customers-info/customers-info.service';
 import { TableBasicComponent } from '../../../manage/table-basic.component';
+import { CustomerRes } from '../../../manage/base/customers-info/customer-res.model';
+import { NotificationService } from '../../../shared/services/notification/notification.service';
+import { DownloadReportsService } from '../../../core/services/reports/downloadReports.service';
 
 @Component({
   selector: 'app-history-collection',
@@ -27,76 +35,97 @@ export class CollectionComponent extends TableBasicComponent implements OnInit {
   dataSet: any[];
   searchVal: any;
   date: string;
-  optionGroups: any[];
+  optionGroups: CustomerRes[];
   searchVal$: any;
-  customer: string;
+  customer: CustomerRes;
 
-  constructor(private customersInfoService: CustomersInfoService) {
+  constructor(
+    private customersInfoService: CustomersInfoService,
+    private notificationService: NotificationService
+  ) {
     super();
+  }
+
+  showWarning() {
+    if (!this.customer || !this.customer.id) {
+      this.notificationService.create({
+        type: 'warning',
+        content: '请输入收运单位'
+      });
+      return true;
+    }
+    if (!this.date) {
+      this.notificationService.create({
+        type: 'warning',
+        content: '请输入日期'
+      });
+      return true;
+    }
   }
 
   onSearch() {
     console.log(this.customer);
+    this.dataSet = [
+      {
+        date: '1',
+        totalQuantity: 0.1,
+        detailList: [
+          {
+            driver: 'aaa'
+          }
+        ]
+      },
+      {
+        date: '2',
+        totalQuantity: 0.13,
+        detailList: [
+          {
+            driver: 'bbb'
+          },
+          {
+            driver: 'ccc'
+          }
+        ]
+      }
+    ];
+    // if (this.showWarning()) return;
+    // this.customersInfoService
+    //   .getCustomerCountsByUsernameAndMonth(this.customer.username, this.date)
+    //   .subscribe(res => {
+    //     this.dataSet = res.data.content;
+    //   });
   }
 
-  onExport() {}
+  onExport() {
+    if (this.showWarning()) return;
+    this.customersInfoService
+      .getCustomerCountReport(this.customer.username, this.date)
+      .subscribe(res => {
+        DownloadReportsService.download(res);
+        // this.dataSet = res.data.content;
+      });
+  }
 
   onChangeDate(result: Date): void {
     this.date = DateUtil.dateFormat(result, 'yyyy-MM');
-    console.log('ondate: ', this.date);
   }
 
   onSearchCustomer(value: string): void {
     fromEvent(document.getElementById('customer'), 'change')
       .pipe(
+        map(event => (<HTMLInputElement>event.target).value),
         debounceTime(500),
-        // distinctUntilChanged(),
-        map(event => (<HTMLInputElement>event.target).value)
-        // map(v => this.customersInfoService.getCustomerList(this.pageReq, v))
+        mergeMap(v =>
+          this.customersInfoService.getCustomerList(this.pageReq, {
+            username: v
+          })
+        )
       )
-      .subscribe(data => {
-        console.log(data);
+      .subscribe(res => {
+        console.log(res);
+        this.optionGroups = res.data.content;
       });
   }
 
-  ngOnInit(): void {
-    // setTimeout(() => {
-    //   var a = fromEvent(document.getElementById('customer'), 'input');
-    //   console.log(a, document.getElementById('customer'));
-    //   a.pipe(
-    //     map(event => (<HTMLInputElement>event.target).value),
-    //     debounceTime(500),
-    //     distinctUntilChanged()
-    //   ).subscribe(
-    //     data => {
-    //       console.log(data);
-    //       this.optionGroups = [
-    //         {
-    //           title: '话题1'
-    //         },
-    //         {
-    //           title: '问题1'
-    //         },
-    //         {
-    //           title: '文章1'
-    //         }
-    //       ];
-    //     },
-    //     err => {
-    //       console.log(err);
-    //     }
-    //   );
-    //   this.optionGroups = [
-    //     {
-    //       title: '话题'
-    //     },
-    //     {
-    //       title: '问题'
-    //     },
-    //     {
-    //       title: '文章'
-    //     }
-    //   ];
-    // }, 1000);
-  }
+  ngOnInit(): void {}
 }
