@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CustomerCountModel } from './model/customer-count.model';
-import { GET, RebirthHttp, BaseUrl, RequestOptions } from 'rebirth-http';
+import { GET, RebirthHttp, BaseUrl, RequestOptions, Path } from 'rebirth-http';
 import { Observable } from 'rxjs/index';
 import { Result } from '../../shared/models/response/result.model';
 import { HttpClient } from '@angular/common/http';
@@ -16,8 +16,8 @@ export class ManageService extends RebirthHttp {
   }
   @GET('/customerCounts/:username/:month')
   getCustomerCountsByUsernameAndMonth(
-    username: any,
-    month: string
+    @Path('username') username: any,
+    @Path('month') month: string
   ): Observable<Result<CustomerCountModel>> {
     return null;
   }
@@ -26,7 +26,10 @@ export class ManageService extends RebirthHttp {
   @RequestOptions({
     responseType: 'blob'
   })
-  export(username: any, month: string): Observable<any> {
+  export(
+    @Path('username') username: any,
+    @Path('month') month: string
+  ): Observable<any> {
     return null;
   }
 }

@@ -40,7 +40,7 @@
             <th nzWidth="10%">
               序号
             </th>
-            <th nzWidth="25%">
+            <th nzWidth="20%">
               路线名称
             </th>
             <th nzWidth="15%">
@@ -49,8 +49,11 @@
             <th nzWidth="15%">
               司机
             </th>
-            <th nzWidth="15%">
+            <th nzWidth="10%">
               手持报量(吨)
+            </th>
+            <th nzWidth="10%">
+              地磅称重量(吨)
             </th>
             <th nzWidth="15%">
               行驶里程
@@ -73,7 +76,8 @@
             <td>{{ item.vehicle.plateNumber }}</td>
             <td>{{ item.driver }}</td>
             <td>{{ item.collectionQuantity }}</td>
-            <td>{{ item.endMileage - item.startMileage }}</td>
+            <td>{{ item.weighedQuantity }}</td>
+            <td>{{ item.mileage }}</td>
           </tr>
         </tbody>
       </nz-table>

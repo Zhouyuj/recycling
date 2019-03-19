@@ -21,6 +21,7 @@ export interface RouteModel {
   username: string;
   endMileage: any;
   startMileage: any;
+  mileage: any;
 }
 
 export interface RouteListModel extends RouteModel {

@@ -91,7 +91,8 @@ export class SchemeRoutesComponent extends TableBasicComponent
         startTime,
         endTime,
         vehicleId: this.selectedItem.vehicle.id,
-        date: this.planDate
+        date: this.planDate,
+        mileage: this.selectedItem.mileage
       }
     ]);
   }

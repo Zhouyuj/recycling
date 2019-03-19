@@ -14,10 +14,12 @@ import { CustomerCountModel } from '../model/customer-count.model';
 })
 export class CalendarComponent implements OnInit {
   selectedCal: boolean;
+  selectedDate: string;
   name: string;
   addr: string;
   username: string;
   calendarData: any[];
+  isSpinning: boolean = true;
   constructor(
     private router: Router,
     private loginService: LoginService,
@@ -26,19 +28,11 @@ export class CalendarComponent implements OnInit {
   ) {}
   ngOnInit() {
     this.selectedCal = true;
-    this.name = this.loginService.name;
-    this.username = this.loginService.username;
-    this.calendarData = [
-      { totalQuantity: 0.11, date: 1, type: 'success' },
-      { totalQuantity: 0.11, date: 4, type: 'success' },
-      { totalQuantity: 0.19, date: 6, type: 'success' },
-      { totalQuantity: 0.01, date: 8, type: 'success' },
-      { totalQuantity: 0.11, date: 10, type: 'success' },
-      { totalQuantity: 0.21, date: 12, type: 'success' },
-      { totalQuantity: 0.15, date: 13, type: 'success' },
-      { totalQuantity: 0.12, date: 16, type: 'success' },
-      { totalQuantity: 0.01, date: 18, type: 'success' }
-    ];
+    const loginInfo = this.tokenService.getLoginInfo();
+    if (loginInfo) {
+      this.name = loginInfo.name;
+      this.username = loginInfo.username;
+    }
     this.manageService
       .getCustomerCountsByUsernameAndMonth(
         this.username,
@@ -46,15 +40,19 @@ export class CalendarComponent implements OnInit {
       )
       .subscribe(
         (res: Result<CustomerCountModel>) => {
-          console.log(res);
-          // this.addr = res.data.content.address;
-          // this.loginService.addr = this.addr;
-          // this.calendarData = [];
+          this.isSpinning = false;
+          this.addr = res.data.address;
+          this.loginService.addr = this.addr;
+          this.calendarData = res.data.dateList;
         },
         err => {
-          console.log(err);
+          this.isSpinning = false;
         }
       );
+  }
+
+  onChangeDate(date: Date): void {
+    console.log(date);
   }
 
   onCalendar() {

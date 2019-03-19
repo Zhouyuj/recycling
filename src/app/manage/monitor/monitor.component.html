@@ -73,7 +73,7 @@
               >
                 <td>{{ i + 1 }}</td>
                 <td>{{ item.name }}</td>
-                <td>{{ item.vehicle.plateNumber }}</td>
+                <td>{{ item.vehicle && item.vehicle.plateNumber }}</td>
                 <td>{{ item.driver }}</td>
               </tr>
             </tbody>
@@ -159,33 +159,44 @@
         </div>
       </div>
     </div>
-    <div class="map-cell" [ngStyle]="{ height: mapHeight }" nz-col nzSpan="{{ isShowSideBar ? 18 : 24 }}">
-      <app-amap 
+    <div
+      class="map-cell"
+      [ngStyle]="{ height: mapHeight }"
+      nz-col
+      nzSpan="{{ isShowSideBar ? 18 : 24 }}"
+    >
+      <app-amap
         [longitude]="113.18691"
         [latitude]="23.031716"
         [zoom]="15"
-        (center)="setCenterFunction($event)">
-        <app-amarker *ngFor="let route of routeListCache"
-            [longitude]="route.vehicle.lng"
-            [latitude]="route.vehicle.lat"
-            [type]="vehicleMarkerType"
-            [text]="route.vehicle.plateNumber"
-            (remove)="vehicleMarkerRemove($event)">
+        (center)="setCenterFunction($event)"
+      >
+        <app-amarker
+          *ngFor="let route of routeListCache"
+          [longitude]="route.vehicle && route.vehicle.lng"
+          [latitude]="route.vehicle && route.vehicle.lat"
+          [type]="vehicleMarkerType"
+          [text]="route.vehicle && route.vehicle.plateNumber"
+          (remove)="vehicleMarkerRemove($event)"
+        >
         </app-amarker>
-        <app-amarker *ngFor="let station of taskListCache"
-            [longitude]="station.lng"
-            [latitude]="station.lat"
-            [type]="stationMarkerType"
-            [text]="station.priority"
-            [color]="convertTaskStateToColor(station.state)"
-            (remove)="stationMarkerRemove($event)">
+        <app-amarker
+          *ngFor="let station of taskListCache"
+          [longitude]="station.lng"
+          [latitude]="station.lat"
+          [type]="stationMarkerType"
+          [text]="station.priority"
+          [color]="convertTaskStateToColor(station.state)"
+          (remove)="stationMarkerRemove($event)"
+        >
         </app-amarker>
         <app-adriving
           [outlineColor]="'#55ccff'"
           (clearEvent)="clearPlanRouteWaypoints($event)"
-          (drawWaypointsEvent)="drawPlanRouteWaypoints($event)">
+          (drawWaypointsEvent)="drawPlanRouteWaypoints($event)"
+        >
         </app-adriving>
-    </app-amap>
+      </app-amap>
     </div>
   </div>
 </div>

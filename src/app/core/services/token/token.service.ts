@@ -78,13 +78,13 @@ export class TokenService extends RebirthHttp {
     });
   }
 
-  public setLoginInfo(loginInfo: LoginModel): void {
+  public setLoginInfo(loginInfo: LoginModel, name?: string): void {
     this.storageService.put(
       {
         pool: TokenService.STORAGE_POOL_KEY,
         key: TokenService.STORAGE_LOGIN_INFO
       },
-      { username: loginInfo.username, password: loginInfo.password }
+      { username: loginInfo.username, password: loginInfo.password, name: name }
     );
   }
 

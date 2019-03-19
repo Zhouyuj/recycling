@@ -22,6 +22,7 @@ export class LoginComponent implements OnInit {
   form: LoginModel;
 
   ngOnInit() {
+    document.body.style['min-width'] = 'auto';
     this.form = new LoginModel();
     this.loginInfo = this.tokenService.getLoginInfo();
     console.log(this.loginInfo);
@@ -29,12 +30,13 @@ export class LoginComponent implements OnInit {
       this.loginService.auth(this.loginInfo).subscribe(
         (res: Result<{ token: string }>) => {
           const token = res.data.token;
-          this.tokenService.setLoginInfo(this.loginInfo);
+          const decodeToken = JwtUtils.decode(token);
+          this.tokenService.setLoginInfo(this.loginInfo, decodeToken.name);
           this.tokenService.setToken(token);
           this.router.navigateByUrl('/wechat/manage/calendar');
-          console.log(JwtUtils.decode(token));
-          this.loginService.name = JwtUtils.decode(token).name;
-          this.loginService.username = JwtUtils.decode(token).username;
+          console.log(decodeToken);
+          this.loginService.name = decodeToken.name;
+          this.loginService.username = decodeToken.username;
           // this.loginService.addr = JwtUtils.decode(token).addr;
         },
         err => {
@@ -49,10 +51,14 @@ export class LoginComponent implements OnInit {
     this.loginService
       .auth(this.form)
       .subscribe((res: Result<{ token: string }>) => {
-        this.tokenService.setLoginInfo(this.form);
+        const token = res.data.token;
+        const decodeToken = JwtUtils.decode(token);
+        this.tokenService.setLoginInfo(this.form, decodeToken.name);
         this.router.navigateByUrl('/wechat/manage/calendar');
-        this.tokenService.setToken(res.data.token);
+        this.tokenService.setToken(token);
         console.log(this.tokenService.getLoginInfo());
+        this.loginService.name = decodeToken.name;
+        this.loginService.username = decodeToken.username;
       });
   }
 }

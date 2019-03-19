@@ -11,25 +11,24 @@
     </div>
   </div>
   <div class="calendar">
-    <nz-calendar [nzFullscreen]="false">
-      <ul *nzDateCell="let date" class="events">
-        <ng-container
-          [ngSwitch]="date.getDate()"
-          *ngFor="let item of calendarData"
-        >
-          <ng-container *ngSwitchCase="item.date">
-            <!-- <li> -->
-            <span>{{ item.totalQuantity }}</span>
-            <!-- <nz-badge
-                [nzShowDot]="false"
-                [nzStatus]="item.type"
-                [nzText]="item.totalQuantity"
-              ></nz-badge> -->
-            <!-- </li> -->
+    <nz-spin [nzSize]="'large'" [nzSpinning]="isSpinning">
+      <nz-calendar
+        (onDateSelect)="onChangeDate($event)"
+        [nzFullscreen]="false"
+        [(ngModel)]="selectedDate"
+      >
+        <ul *nzDateCell="let date" class="events">
+          <ng-container
+            [ngSwitch]="date.getDate()"
+            *ngFor="let item of calendarData; index as i"
+          >
+            <ng-container *ngSwitchCase="i + 1">
+              <span>{{ item.totalQuantity || 0 }}</span>
+            </ng-container>
           </ng-container>
-        </ng-container>
-      </ul>
-    </nz-calendar>
+        </ul>
+      </nz-calendar>
+    </nz-spin>
   </div>
   <div class="tabs">
     <button

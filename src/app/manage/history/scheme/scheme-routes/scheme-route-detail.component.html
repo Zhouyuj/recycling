@@ -26,8 +26,9 @@
         手持报量(吨)：{{ currentRoute.collectionQuantity }}
       </div>
       <div nz-col nzSpan="3">
-        行驶里程：{{ currentRoute.endMileage - currentRoute.startMileage }}
+        地磅称重量(吨)：{{ currentRoute.weighedQuantity }}
       </div>
+      <div nz-col nzSpan="3">行驶里程：{{ currentRoute.mileage }}</div>
       <div nz-col nzSpan="4">执行日期：{{ currentRoute.date }}</div>
     </div>
   </div>

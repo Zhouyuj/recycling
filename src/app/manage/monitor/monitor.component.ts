@@ -214,14 +214,18 @@ export class MonitorComponent extends TableBasicComponent
   executePlanWithRoute(): void {
     const planList = this.getPlanList();
     planList.subscribe((planRes: number[]) => {
-      const routeList = this.getRouteList(planRes);
-      routeList.subscribe((routeRes: Result<RouteModel[]>) => {
-        if (routeRes.data) {
-          this.routeListCache = routeRes.data.map((r: RouteModel) =>
-            ModelConverter.routeResToListModel(r)
-          );
-        }
-      });
+      if (planRes.length) {
+        const routeList = this.getRouteList(planRes);
+        routeList.subscribe((routeRes: Result<RouteModel[]>) => {
+          if (routeRes.data) {
+            this.routeListCache = routeRes.data.map((r: RouteModel) =>
+              ModelConverter.routeResToListModel(r)
+            );
+          }
+        });
+      } else {
+        this.routeListCache = [];
+      }
     });
   }
 

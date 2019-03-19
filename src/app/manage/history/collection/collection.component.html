@@ -55,46 +55,48 @@
     </div>
   </div>
   <!-- -------- 表格内容 -------- -->
-  <nz-table #basicTable [nzData]="dataSet">
-    <thead>
-      <tr>
-        <th>时间</th>
-        <th>收运量(桶)</th>
-        <th>收运车辆</th>
-        <th>收运人员</th>
-        <th>收运时间</th>
-      </tr>
-    </thead>
-    <tbody>
-      <ng-template ngFor let-data let-i="index" [ngForOf]="dataSet">
+  <nz-spin [nzSize]="'large'" [nzSpinning]="isSpinning">
+    <nz-table #basicTable [nzData]="dataSet" [nzShowPagination]="false">
+      <thead>
         <tr>
-          <td>{{ data.date }}</td>
-          <td>{{ data.totalQuantity }}</td>
-          <td>{{ data.plateNumber }}</td>
-          <td>{{ data.driver }}</td>
-          <td>{{ data.date }}</td>
+          <th>时间</th>
+          <th>收运量(桶)</th>
+          <th>收运车辆</th>
+          <th>收运人员</th>
+          <th>收运时间</th>
         </tr>
-        <ng-template
-          *ngIf="data.detailList.length > 1"
-          ngFor
-          let-child
-          [ngForOf]="data.detailList"
-        >
+      </thead>
+      <tbody>
+        <ng-template ngFor let-data let-i="index" [ngForOf]="dataSet">
           <tr>
-            <td></td>
-            <td></td>
-            <td class="amount-of-garbage">
-              {{ child.plateNumber }}
-            </td>
-            <td class="amount-of-garbage">
-              {{ child.driver }}
-            </td>
-            <td class="amount-of-garbage">
-              {{ child.collectionTime }}
-            </td>
+            <td>{{ data.date }}</td>
+            <td>{{ data.totalQuantity }}</td>
+            <!-- <td>{{ data.plateNumber }}</td>
+          <td>{{ data.driver }}</td>
+          <td>{{ data.date }}</td> -->
           </tr>
+          <ng-template
+            *ngIf="data.detailList && data.detailList.length > 0"
+            ngFor
+            let-child
+            [ngForOf]="data.detailList"
+          >
+            <tr>
+              <td></td>
+              <td></td>
+              <td class="amount-of-garbage">
+                {{ child.plateNumber }}
+              </td>
+              <td class="amount-of-garbage">
+                {{ child.driver }}
+              </td>
+              <td class="amount-of-garbage">
+                {{ child.collectionTime }}
+              </td>
+            </tr>
+          </ng-template>
         </ng-template>
-      </ng-template>
-    </tbody>
-  </nz-table>
+      </tbody>
+    </nz-table>
+  </nz-spin>
 </div>

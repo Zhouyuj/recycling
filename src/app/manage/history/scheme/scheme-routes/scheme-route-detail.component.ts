@@ -139,6 +139,7 @@ export class SchemeRouteDetailComponent extends TableBasicComponent
       if (date.length > 0) {
         date = date.substr(0, 10);
       }
+      console.log(params);
       this.currentRoute = {
         id: this.transformParamValue(+params.get('id')),
         name: this.transformParamValue(params.get('name')),
@@ -157,7 +158,8 @@ export class SchemeRouteDetailComponent extends TableBasicComponent
         weighedQuantity: this.transformParamValue(
           +params.get('weighedQuantity')
         ),
-        date
+        date,
+        mileage: this.transformParamValue(+params.get('mileage'))
       };
     });
   }

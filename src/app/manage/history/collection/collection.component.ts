@@ -1,4 +1,4 @@
-import { OnInit, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { Observable, fromEvent } from 'rxjs';
 import {
   debounceTime,
@@ -18,7 +18,7 @@ import { DownloadReportsService } from '../../../core/services/reports/downloadR
   templateUrl: './collection.component.html',
   styleUrls: ['./collection.component.scss']
 })
-export class CollectionComponent extends TableBasicComponent implements OnInit {
+export class CollectionComponent extends TableBasicComponent {
   /* 面包屑导航 */
   breadcrumbs = [
     {
@@ -26,8 +26,12 @@ export class CollectionComponent extends TableBasicComponent implements OnInit {
       title: '首页'
     },
     {
-      link: '/manage/history/scheme',
+      link: '',
       title: '历史记录'
+    },
+    {
+      link: '/manage/history/collection',
+      title: '收运台账'
     }
   ];
 
@@ -38,6 +42,7 @@ export class CollectionComponent extends TableBasicComponent implements OnInit {
   optionGroups: CustomerRes[];
   searchVal$: any;
   customer: CustomerRes;
+  isSpinning: boolean;
 
   constructor(
     private customersInfoService: CustomersInfoService,
@@ -64,45 +69,39 @@ export class CollectionComponent extends TableBasicComponent implements OnInit {
   }
 
   onSearch() {
-    console.log(this.customer);
-    this.dataSet = [
-      {
-        date: '1',
-        totalQuantity: 0.1,
-        detailList: [
-          {
-            driver: 'aaa'
+    if (this.showWarning()) return;
+    this.isSpinning = true;
+    this.customersInfoService
+      .getCustomerCountsByUsernameAndMonth(
+        (this.customer && this.customer.name) || 'test',
+        this.date
+      )
+      .subscribe(
+        res => {
+          this.isSpinning = false;
+          if (res.data) {
+            console.log(res);
+            this.dataSet = res.data.dateList;
           }
-        ]
-      },
-      {
-        date: '2',
-        totalQuantity: 0.13,
-        detailList: [
-          {
-            driver: 'bbb'
-          },
-          {
-            driver: 'ccc'
-          }
-        ]
-      }
-    ];
-    // if (this.showWarning()) return;
-    // this.customersInfoService
-    //   .getCustomerCountsByUsernameAndMonth(this.customer.username, this.date)
-    //   .subscribe(res => {
-    //     this.dataSet = res.data.content;
-    //   });
+        },
+        err => {
+          this.isSpinning = false;
+        }
+      );
   }
 
   onExport() {
     if (this.showWarning()) return;
     this.customersInfoService
-      .getCustomerCountReport(this.customer.username, this.date)
+      .getCustomerCountReport(
+        (this.customer && this.customer.username) || 'test',
+        this.date
+      )
       .subscribe(res => {
-        DownloadReportsService.download(res);
-        // this.dataSet = res.data.content;
+        DownloadReportsService.download(
+          res,
+          `漳州市餐饮单位餐厨垃圾台账联单记录表.pdf`
+        );
       });
   }
 
@@ -111,21 +110,18 @@ export class CollectionComponent extends TableBasicComponent implements OnInit {
   }
 
   onSearchCustomer(value: string): void {
-    fromEvent(document.getElementById('customer'), 'change')
+    fromEvent(document.getElementById('customer'), 'input')
       .pipe(
         map(event => (<HTMLInputElement>event.target).value),
         debounceTime(500),
         mergeMap(v =>
           this.customersInfoService.getCustomerList(this.pageReq, {
-            username: v
+            name: v
           })
         )
       )
       .subscribe(res => {
-        console.log(res);
         this.optionGroups = res.data.content;
       });
   }
-
-  ngOnInit(): void {}
 }

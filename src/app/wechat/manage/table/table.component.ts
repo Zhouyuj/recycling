@@ -20,6 +20,8 @@ export class TableComponent implements OnInit {
   username: string;
   name: string;
   addr: string;
+  isSpinning: boolean = true;
+
   constructor(
     private router: Router,
     private loginService: LoginService,
@@ -28,25 +30,26 @@ export class TableComponent implements OnInit {
   ) {}
   ngOnInit() {
     this.selectedCal = false;
-    this.name = this.loginService.name;
-    this.username = this.loginService.username;
     this.selectedMonth = DateUtil.dateFormat(new Date(), 'yyyy-MM');
-    // this.addr = this.loginService.addr;
+    const loginInfo = this.tokenService.getLoginInfo();
+    if (loginInfo) {
+      this.name = loginInfo.name;
+      this.username = loginInfo.username;
+    }
     console.log(this.username, this.selectedMonth);
     this.manageService
       .getCustomerCountsByUsernameAndMonth(this.username, this.selectedMonth)
-      .subscribe((res: Result<CustomerCountModel>) => {
-        console.log(res);
-        let detailList;
-        this.dataSet = res.data.dateList.map(d => {
-          if (d.detailList.length === 1) {
-            detailList = d.detailList;
-            d.driver = detailList.driver;
-            d.plateNumber = detailList.plateNumber;
-          }
-          return d;
-        });
-      });
+      .subscribe(
+        (res: Result<CustomerCountModel>) => {
+          this.isSpinning = false;
+          this.addr = res.data.address;
+          this.dataSet = res.data.dateList;
+          console.log(this.dataSet);
+        },
+        err => {
+          this.isSpinning = false;
+        }
+      );
   }
 
   onCalendar() {
@@ -59,7 +62,21 @@ export class TableComponent implements OnInit {
   }
 
   onMonthChange(date: Date) {
+    this.isSpinning = true;
+
     this.selectedMonth = DateUtil.dateFormat(date, 'yyyy-MM');
+    this.manageService
+      .getCustomerCountsByUsernameAndMonth(this.username, this.selectedMonth)
+      .subscribe(
+        (res: Result<CustomerCountModel>) => {
+          this.isSpinning = false;
+          this.dataSet = res.data.dateList;
+          console.log(this.dataSet);
+        },
+        err => {
+          this.isSpinning = false;
+        }
+      );
   }
 
   onExport() {

@@ -9,7 +9,8 @@ import {
   Path,
   POST,
   PUT,
-  Body
+  Body,
+  RequestOptions
 } from 'rebirth-http';
 
 import { PlanRes } from '../plan/models/plan-res.model';
@@ -19,6 +20,7 @@ import { Result } from '../../shared/models/response/result.model';
 import { RouteModel, RouteListModel } from '../plan/models/route.model';
 import { TaskModel } from '../plan/models/task.model';
 import { LocationModel } from './models/location.model';
+import { WeighBridgesModel } from './weigh-bridges/weigh-bridges.model';
 
 @Injectable({
   providedIn: 'root'
@@ -47,6 +49,22 @@ export class HistoryService extends RebirthHttp {
 
   @GET('/routes/:id/tasks')
   getTaskList(@Path('id') id: number): Observable<Result<TaskModel[]>> {
+    return null;
+  }
+
+  @GET('/weighBridges')
+  getWeighBridgesList(
+    @Query('page') page: PageReq,
+    @Query('params') params?: any
+  ): Observable<Result<PageRes<WeighBridgesModel[]>>> {
+    return null;
+  }
+
+  @GET('/weighBridges/export/:month')
+  @RequestOptions({
+    responseType: 'blob'
+  })
+  getWeighBridgesReport(@Path('month') month: string): Observable<any> {
     return null;
   }
 }
