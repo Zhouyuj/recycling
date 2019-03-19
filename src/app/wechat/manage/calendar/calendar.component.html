@@ -13,7 +13,7 @@
   <div class="calendar">
     <nz-spin [nzSize]="'large'" [nzSpinning]="isSpinning">
       <nz-calendar
-        (onDateSelect)="onChangeDate($event)"
+        (nzSelectChange)="onChangeDate($event)"
         [nzFullscreen]="false"
         [(ngModel)]="selectedDate"
       >

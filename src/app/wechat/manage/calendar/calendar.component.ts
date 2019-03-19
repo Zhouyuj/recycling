@@ -14,7 +14,7 @@ import { CustomerCountModel } from '../model/customer-count.model';
 })
 export class CalendarComponent implements OnInit {
   selectedCal: boolean;
-  selectedDate: string;
+  selectedDate: Date;
   name: string;
   addr: string;
   username: string;
@@ -52,7 +52,21 @@ export class CalendarComponent implements OnInit {
   }
 
   onChangeDate(date: Date): void {
-    console.log(date);
+    const filterDate = DateUtil.dateFormat(new Date(date), 'yyyy-MM');
+    this.isSpinning = true;
+    this.manageService
+      .getCustomerCountsByUsernameAndMonth(this.username, filterDate)
+      .subscribe(
+        (res: Result<CustomerCountModel>) => {
+          this.isSpinning = false;
+          this.addr = res.data.address;
+          this.loginService.addr = this.addr;
+          this.calendarData = res.data.dateList;
+        },
+        err => {
+          this.isSpinning = false;
+        }
+      );
   }
 
   onCalendar() {
