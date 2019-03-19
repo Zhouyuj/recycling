@@ -41,12 +41,15 @@ export class WeighBridgesComponent extends TableBasicComponent
   }
 
   ngOnInit() {
+    this.calcTableScrollY(30);
     this.date = DateUtil.dateFormat(new Date(), 'yyyy-MM');
     this.historyService
       .getWeighBridgesList(this.pageReq, { month: this.date })
       .subscribe(
         res => {
           this.isSpinning = false;
+          /* 更新列表的信息（分页/排序） */
+          this.updatePageRes(res.data);
           if (res.data.content) {
             this.dataSet = res.data.content.map(d => {
               d.grossDateTime = DateUtil.dateFormat(
@@ -75,6 +78,8 @@ export class WeighBridgesComponent extends TableBasicComponent
       .subscribe(
         res => {
           this.isSpinning = false;
+          /* 更新列表的信息（分页/排序） */
+          this.updatePageRes(res.data);
           if (res.data.content) {
             this.dataSet = res.data.content.map(d => {
               d.grossDateTime = DateUtil.dateFormat(

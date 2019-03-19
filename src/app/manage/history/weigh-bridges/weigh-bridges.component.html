@@ -32,39 +32,42 @@
     </div>
   </div>
   <!-- -------- 表格内容 -------- -->
-  <nz-spin [nzSize]="'large'" [nzSpinning]="isSpinning">
-    <nz-table
-      #basicTable
-      [nzData]="dataSet"
-      [nzFrontPagination]="false"
-      [nzTotal]="pageRes.total"
-      [nzPageIndex]="pageRes.page"
-      [nzPageSize]="pageRes.size"
-      (nzPageIndexChange)="onPageV2($event)"
-      (nzPageSizeChange)="onPageV2($event)"
-    >
-      <thead>
-        <tr>
-          <th>车牌号</th>
-          <th>毛重时间</th>
-          <th>皮重时间</th>
-          <th>毛重</th>
-          <th>皮重</th>
-          <th>净重</th>
-        </tr>
-      </thead>
-      <tbody>
-        <ng-template ngFor let-data let-i="index" [ngForOf]="dataSet">
+  <div class="table-content">
+    <nz-spin [nzSize]="'large'" [nzSpinning]="isSpinning">
+      <nz-table
+        #basicTable
+        [nzData]="dataSet"
+        [nzScroll]="{ y: tableScrollY }"
+        [nzFrontPagination]="false"
+        [nzTotal]="pageRes.total"
+        [nzPageIndex]="pageRes.page"
+        [nzPageSize]="pageRes.size"
+        (nzPageIndexChange)="onPageV2($event)"
+        (nzPageSizeChange)="onPageV2($event)"
+      >
+        <thead>
           <tr>
-            <td>{{ data.plateNumber }}</td>
-            <td>{{ data.grossDateTime }}</td>
-            <td>{{ data.tareDateTime }}</td>
-            <td>{{ data.gross }}</td>
-            <td>{{ data.tare }}</td>
-            <td>{{ data.net }}</td>
+            <th nzWidth="150px">车牌号</th>
+            <th nzWidth="150px">毛重时间</th>
+            <th nzWidth="150px">皮重时间</th>
+            <th nzWidth="100px">毛重</th>
+            <th nzWidth="100px">皮重</th>
+            <th nzWidth="100px">净重</th>
           </tr>
-        </ng-template>
-      </tbody>
-    </nz-table>
-  </nz-spin>
+        </thead>
+        <tbody>
+          <ng-template ngFor let-data let-i="index" [ngForOf]="dataSet">
+            <tr>
+              <td>{{ data.plateNumber }}</td>
+              <td>{{ data.grossDateTime }}</td>
+              <td>{{ data.tareDateTime }}</td>
+              <td>{{ data.gross }}</td>
+              <td>{{ data.tare }}</td>
+              <td>{{ data.net }}</td>
+            </tr>
+          </ng-template>
+        </tbody>
+      </nz-table>
+    </nz-spin>
+  </div>
 </div>

@@ -114,20 +114,20 @@ export class CustomersInfoService extends RebirthHttp {
     return null;
   }
 
-  @GET('/customerCounts/:username/:month')
-  getCustomerCountsByUsernameAndMonth(
-    @Path('username') username: string,
+  @GET('/customerCounts/:id/:month')
+  getCustomerCountsByIdAndMonth(
+    @Path('id') id: number,
     @Path('month') month: string
   ): Observable<Result<CustomerCountModel>> {
     return null;
   }
 
-  @GET('/customerCounts/export/:username/:month')
+  @GET('/customerCounts/export/:id/:month')
   @RequestOptions({
     responseType: 'blob'
   })
   getCustomerCountReport(
-    @Path('username') username: string,
+    @Path('id') id: number,
     @Path('month') month: string
   ): Observable<any> {
     return null;

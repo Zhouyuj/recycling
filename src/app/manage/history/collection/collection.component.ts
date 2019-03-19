@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Observable, fromEvent } from 'rxjs';
+import { DatePipe } from '@angular/common';
 import {
   debounceTime,
   distinctUntilChanged,
@@ -72,8 +73,8 @@ export class CollectionComponent extends TableBasicComponent {
     if (this.showWarning()) return;
     this.isSpinning = true;
     this.customersInfoService
-      .getCustomerCountsByUsernameAndMonth(
-        (this.customer && this.customer.name) || 'test',
+      .getCustomerCountsByIdAndMonth(
+        this.customer && this.customer.id,
         this.date
       )
       .subscribe(
@@ -93,10 +94,7 @@ export class CollectionComponent extends TableBasicComponent {
   onExport() {
     if (this.showWarning()) return;
     this.customersInfoService
-      .getCustomerCountReport(
-        (this.customer && this.customer.username) || 'test',
-        this.date
-      )
+      .getCustomerCountReport(this.customer && this.customer.id, this.date)
       .subscribe(res => {
         DownloadReportsService.download(
           res,
@@ -110,6 +108,7 @@ export class CollectionComponent extends TableBasicComponent {
   }
 
   onSearchCustomer(value: string): void {
+    this.pageReq.size = 30;
     fromEvent(document.getElementById('customer'), 'input')
       .pipe(
         map(event => (<HTMLInputElement>event.target).value),
@@ -121,7 +120,16 @@ export class CollectionComponent extends TableBasicComponent {
         )
       )
       .subscribe(res => {
-        this.optionGroups = res.data.content;
+        let subList = [];
+        if (res.data.content) {
+          res.data.content.forEach(d => {
+            if (d.customerList && d.customerList.length > 0) {
+              subList = subList.concat(d.customerList);
+            }
+          });
+        }
+        this.optionGroups = res.data.content.concat(subList);
+        console.log(this.optionGroups);
       });
   }
 }
