@@ -202,7 +202,6 @@ export class StorageService {
     this.storages = new Map<string, IStorage>();
     this.memoryStorage = new MemoryStorage();
     if (window) {
-      console.log('window:', window);
       this.localStorage = window.localStorage;
       this.sessionStorage = window.sessionStorage;
       this.storages

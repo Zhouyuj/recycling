@@ -23,7 +23,13 @@
       <span>{{ selectedMonth }}垃圾收运量表</span>
     </div>
     <nz-spin [nzSize]="'large'" [nzSpinning]="isSpinning">
-      <nz-table #basicTable [nzData]="dataSet" [nzShowPagination]="false">
+      <nz-table
+        #basicTable
+        [nzData]="dataSet"
+        [nzShowPagination]="false"
+        class="collection-table"
+        [nzBordered]="true"
+      >
         <thead>
           <tr>
             <th>时间</th>
@@ -35,10 +41,36 @@
         <tbody>
           <ng-template ngFor let-data let-i="index" [ngForOf]="dataSet">
             <tr>
-              <td>{{ data.date }}</td>
-              <td>{{ data.totalQuantity }}</td>
-              <!-- <td>{{ data.plateNumber }}</td>
-            <td>{{ data.driver }}</td> -->
+              <td
+                [attr.rowspan]="
+                  data && data.detailList && data.detailList.length > 0
+                    ? data.detailList.length + 1
+                    : 1
+                "
+              >
+                {{ data.date }}
+              </td>
+              <td
+                [attr.rowspan]="
+                  data && data.detailList && data.detailList.length > 0
+                    ? data.detailList.length + 1
+                    : 1
+                "
+              >
+                {{ data.totalQuantity }}
+              </td>
+              <td
+                [ngClass]="{
+                  'td-not-show':
+                    data && data.detailList && data.detailList.length > 0
+                }"
+              ></td>
+              <td
+                [ngClass]="{
+                  'td-not-show':
+                    data && data.detailList && data.detailList.length > 0
+                }"
+              ></td>
             </tr>
             <ng-template
               *ngIf="data.detailList && data.detailList.length > 0"
@@ -47,8 +79,6 @@
               [ngForOf]="data.detailList"
             >
               <tr>
-                <td></td>
-                <td></td>
                 <td class="amount-of-garbage">
                   {{ child.plateNumber }}
                 </td>

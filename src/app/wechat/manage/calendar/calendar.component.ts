@@ -18,6 +18,7 @@ export class CalendarComponent implements OnInit {
   name: string;
   addr: string;
   username: string;
+  selectedDateStr: string = '';
   calendarData: any[];
   isSpinning: boolean = true;
   constructor(
@@ -53,17 +54,20 @@ export class CalendarComponent implements OnInit {
 
   onChangeDate(date: Date): void {
     const filterDate = DateUtil.dateFormat(new Date(date), 'yyyy-MM');
+    if (filterDate === this.selectedDateStr) return;
     this.isSpinning = true;
     this.manageService
       .getCustomerCountsByUsernameAndMonth(this.username, filterDate)
       .subscribe(
         (res: Result<CustomerCountModel>) => {
+          this.selectedDateStr = filterDate;
           this.isSpinning = false;
           this.addr = res.data.address;
           this.loginService.addr = this.addr;
           this.calendarData = res.data.dateList;
         },
         err => {
+          this.selectedDateStr = filterDate;
           this.isSpinning = false;
         }
       );

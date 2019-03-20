@@ -108,7 +108,6 @@ export class AddDemandComponent extends TableBasicComponent implements OnInit {
     this.refreshSelectStatus(2);
     this.selectedCluster = null;
     // this.getCustomerList();
-    console.log(this.demandListCache);
   }
 
   /**

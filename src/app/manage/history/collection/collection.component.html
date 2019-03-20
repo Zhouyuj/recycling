@@ -56,24 +56,62 @@
   </div>
   <!-- -------- 表格内容 -------- -->
   <nz-spin [nzSize]="'large'" [nzSpinning]="isSpinning">
-    <nz-table #basicTable [nzData]="dataSet" [nzShowPagination]="false">
+    <nz-table
+      #basicTable
+      [nzData]="dataSet"
+      [nzShowPagination]="false"
+      [nzScroll]="{ y: tableScrollY }"
+      class="collection-table"
+      [nzBordered]="true"
+    >
       <thead>
         <tr>
-          <th>时间</th>
-          <th>收运量(桶)</th>
-          <th>收运车辆</th>
-          <th>收运人员</th>
-          <th>收运时间</th>
+          <th nzWidth="130px">时间</th>
+          <th nzWidth="80px">收运量(桶)</th>
+          <th nzWidth="130px">收运车辆</th>
+          <th nzWidth="130px">收运人员</th>
+          <th nzWidth="130px">收运时间</th>
         </tr>
       </thead>
       <tbody>
-        <ng-template ngFor let-data let-i="index" [ngForOf]="dataSet">
+        <ng-template ngFor let-data [ngForOf]="dataSet">
           <tr>
-            <td>{{ data.date }}</td>
-            <td>{{ data.totalQuantity }}</td>
-            <!-- <td>{{ data.plateNumber }}</td>
-          <td>{{ data.driver }}</td>
-          <td>{{ data.date }}</td> -->
+            <td
+              [attr.rowspan]="
+                data && data.detailList && data.detailList.length > 0
+                  ? data.detailList.length + 1
+                  : 1
+              "
+            >
+              {{ data.date }}
+            </td>
+            <td
+              [attr.rowspan]="
+                data && data.detailList && data.detailList.length > 0
+                  ? data.detailList.length + 1
+                  : 1
+              "
+            >
+              {{ data.totalQuantity }}
+            </td>
+            <td
+              [ngClass]="{
+                'td-not-show':
+                  data && data.detailList && data.detailList.length > 0
+              }"
+            ></td>
+            <td
+              [ngClass]="{
+                'td-not-show':
+                  data && data.detailList && data.detailList.length > 0
+              }"
+            ></td>
+            <td
+              [ngClass]="{
+                'td-not-show':
+                  data && data.detailList && data.detailList.length > 0
+              }"
+            ></td>
           </tr>
           <ng-template
             *ngIf="data.detailList && data.detailList.length > 0"
@@ -82,8 +120,6 @@
             [ngForOf]="data.detailList"
           >
             <tr>
-              <td></td>
-              <td></td>
               <td class="amount-of-garbage">
                 {{ child.plateNumber }}
               </td>

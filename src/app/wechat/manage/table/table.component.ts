@@ -7,6 +7,7 @@ import { Result } from '../../../shared/models/response/result.model';
 import { CustomerCountModel } from '../model/customer-count.model';
 import { DownloadReportsService } from '../../../core/services/reports/downloadReports.service';
 import { TokenService } from '../../../core/services/token/token.service';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'wechat-manage-table',
@@ -38,7 +39,6 @@ export class TableComponent implements OnInit {
       this.name = loginInfo.name;
       this.username = loginInfo.username;
     }
-    console.log(this.username, this.selectedMonth);
     this.manageService
       .getCustomerCountsByUsernameAndMonth(this.username, this.selectedMonth)
       .subscribe(
@@ -46,7 +46,6 @@ export class TableComponent implements OnInit {
           this.isSpinning = false;
           this.addr = res.data.address;
           this.dataSet = res.data.dateList;
-          console.log(this.dataSet);
         },
         err => {
           this.isSpinning = false;
@@ -73,7 +72,6 @@ export class TableComponent implements OnInit {
         (res: Result<CustomerCountModel>) => {
           this.isSpinning = false;
           this.dataSet = res.data.dateList;
-          console.log(this.dataSet);
         },
         err => {
           this.isSpinning = false;
@@ -82,11 +80,12 @@ export class TableComponent implements OnInit {
   }
 
   onExport() {
-    this.manageService
-      .export(this.username, this.selectedMonth)
-      .subscribe(res => {
-        DownloadReportsService.download(res, this.username);
-      });
+    let a = document.createElement('a');
+    a.href = `${environment.wechatApi}/customerCounts/export/${this.username}/${
+      this.selectedMonth
+    }`;
+    a.download = `漳州市餐饮单位餐厨垃圾台账联单记录表.pdf`;
+    a.click();
   }
 
   logout() {

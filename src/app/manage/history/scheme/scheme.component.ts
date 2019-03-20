@@ -91,7 +91,7 @@ export class SchemeComponent extends TableBasicComponent implements OnInit {
     }
     this.planService.getPlanReport(this.selectedItem.id).subscribe(
       res => {
-        DownloadReportsService.download(res, this.selectedItem.name);
+        DownloadReportsService.download(res, `${this.selectedItem.name}.xls`);
       },
       err => {
         this.getListByPage();

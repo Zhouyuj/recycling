@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Observable, fromEvent } from 'rxjs';
 import { DatePipe } from '@angular/common';
 import {
@@ -19,7 +19,7 @@ import { DownloadReportsService } from '../../../core/services/reports/downloadR
   templateUrl: './collection.component.html',
   styleUrls: ['./collection.component.scss']
 })
-export class CollectionComponent extends TableBasicComponent {
+export class CollectionComponent extends TableBasicComponent implements OnInit {
   /* 面包屑导航 */
   breadcrumbs = [
     {
@@ -53,6 +53,10 @@ export class CollectionComponent extends TableBasicComponent {
     this.dataSet = [];
   }
 
+  ngOnInit() {
+    this.calcTableScrollY(-80);
+  }
+
   showWarning() {
     if (!this.customer || !this.customer.id) {
       this.notificationService.create({
@@ -82,7 +86,6 @@ export class CollectionComponent extends TableBasicComponent {
         res => {
           this.isSpinning = false;
           if (res.data) {
-            console.log(res);
             this.dataSet = res.data.dateList;
           }
         },
@@ -130,7 +133,6 @@ export class CollectionComponent extends TableBasicComponent {
           });
         }
         this.optionGroups = res.data.content.concat(subList);
-        console.log(this.optionGroups);
       });
   }
 }
