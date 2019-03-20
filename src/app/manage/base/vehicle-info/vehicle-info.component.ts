@@ -83,6 +83,7 @@ export class VehicleInfoComponent extends TableBasicComponent
     private router: Router
   ) {
     super();
+    this.listCache = [];
   }
 
   ngOnInit() {

@@ -50,6 +50,7 @@ export class CollectionComponent extends TableBasicComponent {
     private notificationService: NotificationService
   ) {
     super();
+    this.dataSet = [];
   }
 
   showWarning() {

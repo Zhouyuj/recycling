@@ -53,6 +53,7 @@ export class SchemeRoutesComponent extends TableBasicComponent
     private router: Router
   ) {
     super();
+    this.listCache = [];
   }
 
   ngOnInit() {

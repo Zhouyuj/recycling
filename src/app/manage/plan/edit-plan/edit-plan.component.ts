@@ -88,6 +88,9 @@ export class EditPlanComponent extends TableBasicComponent implements OnInit {
     private drawerService: NzDrawerService
   ) {
     super();
+    this.routeListCache = [];
+    this.distributedListCache = [];
+    this.demandListCache = [];
   }
 
   ngOnInit() {

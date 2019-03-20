@@ -38,6 +38,7 @@ export class WeighBridgesComponent extends TableBasicComponent
     private historyService: HistoryService
   ) {
     super();
+    this.dataSet = [];
   }
 
   ngOnInit() {

@@ -63,6 +63,8 @@ export class MonitorComponent extends TableBasicComponent
     private planService: PlanService
   ) {
     super();
+    this.routeListCache = [];
+    this.taskListCache = [];
   }
 
   ngOnInit() {

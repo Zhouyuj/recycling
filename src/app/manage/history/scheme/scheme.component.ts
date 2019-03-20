@@ -47,6 +47,7 @@ export class SchemeComponent extends TableBasicComponent implements OnInit {
     private router: Router
   ) {
     super();
+    this.listCache = [];
   }
 
   ngOnInit() {

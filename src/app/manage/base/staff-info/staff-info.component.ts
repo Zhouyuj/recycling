@@ -94,6 +94,7 @@ export class StaffInfoComponent extends TableBasicComponent implements OnInit {
     private downloadReportsService: DownloadReportsService
   ) {
     super();
+    this.listCache = [];
   }
 
   ngOnInit() {

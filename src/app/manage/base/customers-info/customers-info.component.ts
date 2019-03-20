@@ -92,6 +92,7 @@ export class CustomersInfoComponent extends TableBasicComponent
     private router: Router
   ) {
     super();
+    this.listCache = [];
   }
 
   ngOnInit() {

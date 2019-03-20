@@ -44,6 +44,7 @@ export class VehicleSelectionComponent extends TableBasicComponent
     private staffInfoService: StaffInfoService
   ) {
     super();
+    this.listCache = [];
   }
 
   ngOnInit() {

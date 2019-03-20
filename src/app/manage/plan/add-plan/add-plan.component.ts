@@ -52,6 +52,7 @@ export class AddPlanComponent extends TableBasicComponent implements OnInit {
     private notificationService: NotificationService
   ) {
     super();
+    this.listCache = [];
   }
 
   ngOnInit() {

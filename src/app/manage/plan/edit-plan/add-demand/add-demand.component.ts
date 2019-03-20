@@ -48,6 +48,7 @@ export class AddDemandComponent extends TableBasicComponent implements OnInit {
     private notificationService: NotificationService
   ) {
     super();
+    this.demandListCache = [];
   }
 
   ngOnInit() {

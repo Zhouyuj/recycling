@@ -27,7 +27,9 @@ export class TableComponent implements OnInit {
     private loginService: LoginService,
     private manageService: ManageService,
     private tokenService: TokenService
-  ) {}
+  ) {
+    this.dataSet = [];
+  }
   ngOnInit() {
     this.selectedCal = false;
     this.selectedMonth = DateUtil.dateFormat(new Date(), 'yyyy-MM');
