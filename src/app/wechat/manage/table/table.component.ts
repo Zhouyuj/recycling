@@ -10,7 +10,7 @@ import { TokenService } from '../../../core/services/token/token.service';
 import { environment } from '../../../../environments/environment';
 
 @Component({
-  selector: 'wechat-manage-table',
+  selector: 'app-wechat-manage-table',
   templateUrl: './table.component.html',
   styleUrls: ['../manage.component.scss']
 })
@@ -21,7 +21,8 @@ export class TableComponent implements OnInit {
   username: string;
   name: string;
   addr: string;
-  isSpinning: boolean = true;
+  isSpinning = true;
+  isExport = false;
 
   constructor(
     private router: Router,
@@ -31,7 +32,10 @@ export class TableComponent implements OnInit {
   ) {
     this.dataSet = [];
   }
+
   ngOnInit() {
+    document.body.style.minWidth = 'unset';
+
     this.selectedCal = false;
     this.selectedMonth = DateUtil.dateFormat(new Date(), 'yyyy-MM');
     const loginInfo = this.tokenService.getLoginInfo();
@@ -46,6 +50,7 @@ export class TableComponent implements OnInit {
           this.isSpinning = false;
           this.addr = res.data.address;
           this.dataSet = res.data.dateList;
+
         },
         err => {
           this.isSpinning = false;
@@ -80,12 +85,13 @@ export class TableComponent implements OnInit {
   }
 
   onExport() {
-    let a = document.createElement('a');
-    a.href = `${environment.wechatApi}/customerCounts/export/${this.username}/${
-      this.selectedMonth
-    }`;
-    a.download = `漳州市餐饮单位餐厨垃圾台账联单记录表.pdf`;
-    a.click();
+    const a = document.createElement('a');
+    a.href = `${environment.wechatApi}/customerCounts/export/${this.username}/${this.selectedMonth}`;
+    a.download = '漳州市餐饮单位餐厨垃圾台账联单记录表.pdf';
+    const span = document.createElement('span');
+    a.appendChild(span);
+    document.body.appendChild(a);
+    span.click();
   }
 
   logout() {

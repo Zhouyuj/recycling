@@ -57,3 +57,20 @@
 .td-not-show {
   display: none;
 }
+
+.download-tips {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgb(136, 135, 134);
+
+  img {
+    width: 100%;
+  }
+
+  .close-btn {
+    margin: 20px;
+    position: absolute;
+    transform: scale(2);
+  }
+}

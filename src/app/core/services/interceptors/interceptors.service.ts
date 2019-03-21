@@ -28,7 +28,9 @@ export class InterceptorServices extends RebirthHttp {
 
   public registInterceptors(remark: string) {
     let url = environment.api;
-    if (remark === 'wechat') url = environment.wechatApi;
+    if (remark === 'wechat') {
+      url = environment.wechatApi;
+    }
 
     this.rebirthHttpProvider
       .baseUrl(url)
@@ -48,7 +50,12 @@ export class InterceptorServices extends RebirthHttp {
       .addResponseErrorInterceptor(err => {
         console.error('global interceptor err:::', err);
 
-        if (remark === 'wechat') return;
+        if (this.tokenService.isPublich) {
+          return;
+        }
+        if (remark === 'wechat') {
+          return;
+        }
         if (err.status === 400) {
           this.notificationService.create({
             type: 'error',

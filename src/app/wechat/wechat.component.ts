@@ -3,7 +3,7 @@ import { InterceptorServices } from '../core/services/interceptors/interceptors.
 import { TitleService } from '../core/services/title/title.service';
 
 @Component({
-  selector: 'wechat',
+  selector: 'app-wechat',
   templateUrl: './wechat.component.html',
   styleUrls: ['./wechat.component.scss']
 })
