@@ -8,7 +8,7 @@ import { Result } from '../../../shared/models/response/result.model';
 import { CustomerCountModel } from '../model/customer-count.model';
 
 @Component({
-  selector: 'wechat-manage-calendar',
+  selector: 'app-wechat-manage-calendar',
   templateUrl: './calendar.component.html',
   styleUrls: ['../manage.component.scss']
 })
@@ -18,16 +18,20 @@ export class CalendarComponent implements OnInit {
   name: string;
   addr: string;
   username: string;
-  selectedDateStr: string = '';
+  selectedDateStr = '';
   calendarData: any[];
-  isSpinning: boolean = true;
+  isSpinning = true;
+
   constructor(
     private router: Router,
     private loginService: LoginService,
     private manageService: ManageService,
     private tokenService: TokenService
   ) {}
+
   ngOnInit() {
+    document.body.style.minWidth = 'unset';
+
     this.selectedCal = true;
     const loginInfo = this.tokenService.getLoginInfo();
     if (loginInfo) {

@@ -7,7 +7,7 @@ import { LoginModel } from '../../login/login.model';
 import { JwtUtils } from '../../shared/utils/jwt-utils';
 
 @Component({
-  selector: 'wechat-login',
+  selector: 'app-wechat-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
@@ -22,7 +22,7 @@ export class LoginComponent implements OnInit {
   form: LoginModel;
 
   ngOnInit() {
-    document.body.style['min-width'] = 'auto';
+    document.body.style.minWidth = 'unset';
     this.form = new LoginModel();
     this.loginInfo = this.tokenService.getLoginInfo();
     if (this.loginInfo) {

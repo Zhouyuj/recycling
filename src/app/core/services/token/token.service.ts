@@ -27,6 +27,8 @@ export class TokenService extends RebirthHttp {
   private static STORAGE_POOL_KEY = 'fjzz-authorization';
   private static STORAGE_KEY = 'auth-token';
   private static STORAGE_LOGIN_INFO = 'login-info';
+  private static IS_PUBLISH = false;
+  private static LAST_URL: string;
   token: { Authorization: string };
 
   constructor(http: HttpClient, private storageService: StorageService) {
@@ -100,5 +102,21 @@ export class TokenService extends RebirthHttp {
       pool: TokenService.STORAGE_POOL_KEY,
       key: TokenService.STORAGE_LOGIN_INFO
     });
+  }
+
+  public set isPublich(isPublich) {
+    TokenService.IS_PUBLISH = isPublich;
+  }
+
+  public get isPublich(): boolean {
+    return TokenService.IS_PUBLISH;
+  }
+
+  public set lastUrl(lastUrl) {
+    TokenService.LAST_URL = lastUrl;
+  }
+
+  public get lastUrl(): string {
+    return TokenService.LAST_URL;
   }
 }
