@@ -8,7 +8,6 @@ import { Marker } from './marker.model';
 import { Map } from './map.model';
 import { Polyline } from './polyline.model';
 import { Driving } from './driving.model';
-import coordtransform from 'coordtransform';
 
 /**
  * 地图 service
@@ -182,8 +181,6 @@ export class MapService {
    * @param {number} lngLat[1] => lat
    */
   public lngLat(lngLat: number[]) {
-    console.log(lngLat, coordtransform.wgs84togcj02(lngLat[0], lngLat[1]));
-    const transformed = coordtransform.wgs84togcj02(lngLat[0], lngLat[1]);
-    return new AMap.LngLat(transformed[0], transformed[1]);
+    return new AMap.LngLat(lngLat[0], lngLat[1]);
   }
 }
