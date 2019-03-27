@@ -72,8 +72,10 @@ export class WeighBridgesComponent extends TableBasicComponent
   }
 
   onChangeDate(date: Date) {
+    if (!date) return;
     this.isSpinning = true;
     this.date = DateUtil.dateFormat(date, 'yyyy-MM');
+    this.pageReq.reset();
     this.historyService
       .getWeighBridgesList(this.pageReq, { month: this.date })
       .subscribe(
