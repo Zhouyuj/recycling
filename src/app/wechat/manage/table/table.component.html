@@ -1,4 +1,3 @@
-
 <div class="calendar-wrap" *ngIf="!isExport">
   <div class="logout">
     <button nz-button nzType="default" (click)="logout()">退出登录</button>
@@ -58,7 +57,7 @@
                     : 1
                 "
               >
-                {{ data.totalQuantity }}
+                {{ data.totalQuantity | number: '1.1-1' }}
               </td>
               <td
                 [ngClass]="{

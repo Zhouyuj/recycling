@@ -23,7 +23,7 @@
             *ngFor="let item of calendarData; index as i"
           >
             <ng-container *ngSwitchCase="i + 1">
-              <span>{{ item.totalQuantity || 0 }}</span>
+              <span>{{ item.totalQuantity | number: '1.1-1' || 0 }}</span>
             </ng-container>
           </ng-container>
         </ul>
