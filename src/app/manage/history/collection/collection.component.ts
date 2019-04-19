@@ -1,12 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable, fromEvent } from 'rxjs';
-import { DatePipe } from '@angular/common';
-import {
-  debounceTime,
-  distinctUntilChanged,
-  map,
-  mergeMap
-} from 'rxjs/operators';
+import { fromEvent } from 'rxjs';
+import { debounceTime, map, mergeMap } from 'rxjs/operators';
 import { DateUtil } from '../../../shared/utils/date-utils';
 import { CustomersInfoService } from '../../base/customers-info/customers-info.service';
 import { TableBasicComponent } from '../../../manage/table-basic.component';

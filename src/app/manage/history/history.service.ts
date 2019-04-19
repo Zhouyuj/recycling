@@ -5,22 +5,19 @@ import {
   RebirthHttp,
   Query,
   GET,
-  DELETE,
   Path,
-  POST,
   PUT,
   Body,
   RequestOptions
 } from 'rebirth-http';
 
-import { PlanRes } from '../plan/models/plan-res.model';
 import { PageReq } from '../../shared/models/page/page-req.model';
 import { PageRes } from '../../shared/models/page/page-res.model';
 import { Result } from '../../shared/models/response/result.model';
-import { RouteModel, RouteListModel } from '../plan/models/route.model';
 import { TaskModel } from '../plan/models/task.model';
 import { LocationModel } from './models/location.model';
 import { WeighBridgesModel } from './weigh-bridges/weigh-bridges.model';
+import { ExceptionCustomerRes } from '../base/customers-info/customer-res.model';
 
 @Injectable({
   providedIn: 'root'
@@ -65,6 +62,23 @@ export class HistoryService extends RebirthHttp {
     responseType: 'blob'
   })
   getWeighBridgesReport(@Path('month') month: string): Observable<any> {
+    return null;
+  }
+
+  @GET('/customers/exceptions')
+  getExceptionCustomers(
+    @Query('month') month: string,
+    @Query('page') page: PageReq,
+    @Query('street') street: number
+  ): Observable<Result<PageRes<ExceptionCustomerRes[]>>> {
+    return null;
+  }
+
+  @GET('/customers/exceptions/reports/:month')
+  @RequestOptions({
+    responseType: 'blob'
+  })
+  exportExceptionCustomerReport(@Path('month') month: string): Observable<any> {
     return null;
   }
 }

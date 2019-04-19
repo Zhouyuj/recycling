@@ -1,0 +1,76 @@
+<div class="wrap">
+  <!-- -------- 表格操作 -------- -->
+  <div class="table-operations">
+    <div nz-row nzGutter="16">
+      <div nz-col class="gutter-row" nzSpan="7">
+        <!-- 面包屑导航 -->
+        <app-breadcrumbs [options]="breadcrumbs"></app-breadcrumbs>
+      </div>
+      <div nz-col class="gutter-row" nzSpan="11">
+        <!-- 关键字搜索 -->
+        <div class="table-search">
+          <span>月份</span>
+          <nz-month-picker
+            [(ngModel)]="date"
+            (ngModelChange)="onChangeDate($event)"
+            nzPlaceHolder="请选择日期"
+          ></nz-month-picker>
+          <span>所属区域</span>
+          <app-cascader
+            [(values)]="address"
+            (changesEmitter)="onAddressChange($event)"
+          ></app-cascader>
+          <button nz-button nzType="default" (click)="onSearch()">
+            查询
+          </button>
+        </div>
+      </div>
+      <div nz-col class="gutter-row" nzSpan="6">
+        <!-- CUDE: create,update,delete,export -->
+        <div class="table-CUDE">
+          <button nz-button nzType="default" (click)="onExport()">
+            导出
+          </button>
+          &nbsp;
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- -------- 表格内容 -------- -->
+  <div class="table-content">
+    <nz-spin [nzSize]="'large'" [nzSpinning]="isSpinning">
+      <nz-table
+        #basicTable
+        [nzData]="dataSet"
+        [nzScroll]="{ y: tableScrollY }"
+        [nzFrontPagination]="false"
+        [nzTotal]="pageRes.total"
+        [nzPageIndex]="pageRes.page"
+        [nzPageSize]="pageRes.size"
+        (nzPageIndexChange)="onPageV2($event)"
+        (nzPageSizeChange)="onPageV2($event)"
+      >
+        <thead>
+          <tr>
+            <th nzWidth="150px">商户名称</th>
+            <th nzWidth="150px">账号</th>
+            <th nzWidth="150px">所属区域</th>
+            <th nzWidth="100px">地址</th>
+            <th nzWidth="100px">连续无收运数据天数</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-template ngFor let-data let-i="index" [ngForOf]="dataSet">
+            <tr>
+              <td>{{ data.plateNumber }}</td>
+              <td>{{ data.grossDateTime }}</td>
+              <td>{{ data.tareDateTime }}</td>
+              <td>{{ data.gross }}</td>
+              <td>{{ data.tare }}</td>
+            </tr>
+          </ng-template>
+        </tbody>
+      </nz-table>
+    </nz-spin>
+  </div>
+</div>

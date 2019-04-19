@@ -52,6 +52,15 @@
       margin-right: 5px;
     }
   }
+
+  .customer-search-wrap {
+    display: flex;
+
+    nz-input-group {
+      width: 60%;
+      margin-left: 10%;
+    }
+  }
 }
 
 .td-not-show {

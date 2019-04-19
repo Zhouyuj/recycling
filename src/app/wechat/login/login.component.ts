@@ -32,7 +32,7 @@ export class LoginComponent implements OnInit {
           const decodeToken = JwtUtils.decode(token);
           this.tokenService.setLoginInfo(this.loginInfo, decodeToken.name);
           this.tokenService.setToken(token);
-          this.router.navigateByUrl('/wechat/manage/calendar');
+          this.router.navigateByUrl('/wechat/manage/table');
           this.loginService.name = decodeToken.name;
           this.loginService.username = decodeToken.username;
           // this.loginService.addr = JwtUtils.decode(token).addr;
@@ -52,7 +52,7 @@ export class LoginComponent implements OnInit {
         const token = res.data.token;
         const decodeToken = JwtUtils.decode(token);
         this.tokenService.setLoginInfo(this.form, decodeToken.name);
-        this.router.navigateByUrl('/wechat/manage/calendar');
+        this.router.navigateByUrl('/wechat/manage/table');
         this.tokenService.setToken(token);
         this.loginService.name = decodeToken.name;
         this.loginService.username = decodeToken.username;

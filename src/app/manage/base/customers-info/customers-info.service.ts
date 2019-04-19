@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/index';
-import { HttpClient, HttpHeaders, HttpRequest } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
 import {
   GET,
@@ -17,7 +17,6 @@ import {
 import { Result } from '../../../shared/models/response/result.model';
 import { CustomerReq } from './customer-req.model';
 import { CustomerRes } from './customer-res.model';
-import { Duration, FormModel } from './form.model';
 import { PageReq } from '../../../shared/models/page/page-req.model';
 import { PageRes } from '../../../shared/models/page/page-res.model';
 import { VehicleRes } from '../vehicle-info/vehicle-res.model';

@@ -233,3 +233,13 @@ body {
     padding: 5px;
   }
 }
+
+.table-operations {
+  .table-search {
+    app-cascader {
+      nz-cascader {
+        width: 260px;
+      }
+    }
+  }
+}
