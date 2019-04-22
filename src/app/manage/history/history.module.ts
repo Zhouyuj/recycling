@@ -7,6 +7,7 @@ import { SchemeRoutingModule } from './scheme/scheme-routing.module';
 import { CollectionModule } from './collection/collection.module';
 import { WeighBridgesModule } from './weigh-bridges/weigh-bridges.module';
 import { ExceptionCustomerModule } from './exception-customer/exception-customer.module';
+import { StatisticModule } from "./statistic/statistic.module";
 
 @NgModule({
   imports: [
@@ -15,6 +16,7 @@ import { ExceptionCustomerModule } from './exception-customer/exception-customer
     HistoryRoutingModule,
     SchemeRoutingModule,
     SchemeModule,
+    StatisticModule,
     CollectionModule,
     WeighBridgesModule,
     ExceptionCustomerModule
