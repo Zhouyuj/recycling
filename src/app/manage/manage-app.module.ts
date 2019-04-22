@@ -14,16 +14,17 @@ import { TestMapDemoService } from './test-map/test-map-demo.service';
 import { TestMarkerDemoService } from './test-map/test-marker-demo.service';
 
 import { ManageAppComponent } from './manage-app.component';
+import { VehicleManageModule } from './vehicle-manage/vehicle-manage.module';
 
 @NgModule({
-    imports     : [
-        NgZorroAntdModule,
-        SharedModule,
-        ManageAppRoutingModule,
-        MonitorModule,
-    ],
-    declarations: [ ManageAppComponent, TestMapComponent ],
-    providers   : [ TestMapDemoService, TestMarkerDemoService ],
+  imports: [
+    NgZorroAntdModule,
+    SharedModule,
+    ManageAppRoutingModule,
+    MonitorModule,
+    VehicleManageModule
+  ],
+  declarations: [ManageAppComponent, TestMapComponent],
+  providers: [TestMapDemoService, TestMarkerDemoService]
 })
-export class ManageAppModule {
-}
+export class ManageAppModule {}

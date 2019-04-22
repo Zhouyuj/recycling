@@ -5,6 +5,7 @@ import { SchemeComponent } from './scheme/scheme.component';
 import { CollectionComponent } from './collection/collection.component';
 import { WeighBridgesComponent } from './weigh-bridges/weigh-bridges.component';
 import { ExceptionCustomerComponent } from './exception-customer/exception-customer.component';
+import { StatisticComponent } from './statistic/statistic.component';
 
 export const ROUTER_CONFIG: Routes = [
   {
@@ -29,6 +30,11 @@ export const ROUTER_CONFIG: Routes = [
         path: 'exceptioncustomer',
         component: ExceptionCustomerComponent,
         data: { title: '异常商户' }
+      },
+      {
+        path: 'statistic',
+        component: StatisticComponent,
+        data: { title: '业务统计' }
       }
     ]
   }

@@ -1,0 +1,148 @@
+<div class="wrap">
+  <!-- -------- 表格操作 -------- -->
+  <div class="table-operations">
+    <div nz-row nzGutter="16">
+      <div nz-col class="gutter-row" nzSpan="10">
+        <!-- 面包屑导航 -->
+        <app-breadcrumbs [options]="breadcrumbs"></app-breadcrumbs>
+      </div>
+      <div nz-col class="gutter-row" nzSpan="6">
+        <!-- 关键字搜索 -->
+        <div class="table-search">
+          <span>月份</span>
+          <nz-month-picker
+            [(ngModel)]="date"
+            (ngModelChange)="onChangeDate($event)"
+            nzPlaceHolder="请选择日期"
+          ></nz-month-picker>
+          <button nz-button nzType="default" (click)="onSearch()">
+            查询
+          </button>
+        </div>
+      </div>
+      <div nz-col class="gutter-row" nzSpan="8">
+        <!-- CUDE: create,update,delete,export -->
+        <div class="table-CUDE">
+          <button nz-button (click)="onAdd()" nzType="default">
+            添加
+          </button>
+          &nbsp;
+          <button
+            nz-button
+            [disabled]="!formCache"
+            (click)="onEdit()"
+            nzType="default"
+          >
+            编辑
+          </button>
+          &nbsp;
+          <button
+            nz-button
+            [disabled]="!formCache"
+            (click)="isDelModalVisible = true"
+          >
+            删除
+          </button>
+          &nbsp;
+          <button
+            nz-button
+            (click)="onExp()"
+            [disabled]="!formCache"
+            nzType="default"
+          >
+            导出
+          </button>
+          &nbsp;
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- -------- 表格内容 -------- -->
+  <div class="table-content">
+    <nz-spin [nzSize]="'large'" [nzSpinning]="isSpinning">
+      <nz-table
+        #basicTable
+        [nzData]="dataSet"
+        [nzScroll]="{ y: tableScrollY }"
+        [nzFrontPagination]="false"
+        [nzTotal]="pageRes.total"
+        [nzPageIndex]="pageRes.page"
+        [nzPageSize]="pageRes.size"
+        (nzPageIndexChange)="onPageV2($event)"
+        (nzPageSizeChange)="onPageV2($event)"
+      >
+        <thead>
+          <tr>
+            <th nzWidth="150px">送修日期</th>
+            <th nzWidth="150px">
+              车牌号
+              <br />
+              <input
+                type="text"
+                nz-input
+                placeholder=""
+                nzSize="small"
+                style="width: 60%;"
+                [(ngModel)]="params.plateNumber"
+                (keyup)="
+                  $event.which === 13 && onKeywordSearchTh('plateNumber')
+                "
+              />
+            </th>
+            <th nzWidth="150px">
+              维修原因
+              <br />
+              <input
+                type="text"
+                nz-input
+                placeholder=""
+                nzSize="small"
+                style="width: 60%;"
+                [(ngModel)]="params.reason"
+                (keyup)="$event.which === 13 && onKeywordSearchTh('reason')"
+              />
+            </th>
+            <th nzWidth="100px">
+              维修内容
+              <br />
+              <input
+                type="text"
+                nz-input
+                placeholder=""
+                nzSize="small"
+                style="width: 60%;"
+                [(ngModel)]="params.content"
+                (keyup)="$event.which === 13 && onKeywordSearchTh('content')"
+              />
+            </th>
+            <th nzWidth="100px">维修单位</th>
+            <th nzWidth="100px">维修公里数(公里)</th>
+            <th nzWidth="100px">维修费用</th>
+            <th nzWidth="100px">送修人</th>
+            <th nzWidth="100px">完成维修日期</th>
+            <th nzWidth="100px">验收人</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-template ngFor let-data let-i="index" [ngForOf]="dataSet">
+            <tr
+              [ngClass]="{ 'table-row-selected': data.checked }"
+              (click)="onSelectedTr($event, data)"
+            >
+              <td>{{ data.plateNumber }}</td>
+              <td>{{ data.grossDateTime }}</td>
+              <td>{{ data.tareDateTime }}</td>
+              <td>{{ data.gross }}</td>
+              <td>{{ data.tare }}</td>
+              <td>{{ data.net }}</td>
+              <td>{{ data.net }}</td>
+              <td>{{ data.net }}</td>
+              <td>{{ data.net }}</td>
+              <td>{{ data.net }}</td>
+            </tr>
+          </ng-template>
+        </tbody>
+      </nz-table>
+    </nz-spin>
+  </div>
+</div>

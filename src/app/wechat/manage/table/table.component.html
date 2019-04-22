@@ -2,7 +2,34 @@
   <div class="logout">
     <button nz-button nzType="default" (click)="logout()">退出登录</button>
   </div>
-  <div>
+  <div class="customer-search-wrap">
+    <nz-input-group [nzSuffix]="suffixIcon">
+      <input
+        id="customer"
+        placeholder="搜索商户"
+        nz-input
+        [(ngModel)]="customer"
+        (ngModelChange)="onSearchCustomer($event)"
+        [nzAutocomplete]="auto"
+      />
+    </nz-input-group>
+    <ng-template #suffixIcon>
+      <i nz-icon type="search"></i>
+    </ng-template>
+    <nz-autocomplete #auto>
+      <nz-auto-option
+        *ngFor="let option of optionGroups"
+        [nzLabel]="option.name"
+        [nzValue]="option"
+      >
+        {{ option.name }}
+      </nz-auto-option>
+    </nz-autocomplete>
+    <button nz-button nzType="default" (click)="onSearch()">
+      查询
+    </button>
+  </div>
+  <div *ngIf="!isAdmin || dataSet.length > 0">
     <div class="department_info">
       <div class="name">
         <span> {{ name }}</span>

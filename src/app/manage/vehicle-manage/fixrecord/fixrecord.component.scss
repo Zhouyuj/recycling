@@ -1,0 +1,56 @@
+@import '../../../../assets/styles/customer-global';
+
+.wrap {
+  width: 100%;
+  height: 100%;
+}
+
+.table-operations {
+  position: relative;
+  z-index: 13;
+  padding-bottom: 8px;
+
+  .table-search {
+    text-align: right;
+  }
+
+  .table-CUDE {
+    /* 增删改导出 */
+    text-align: right;
+  }
+}
+
+.table-content {
+  th,
+  td {
+    text-align: center;
+  }
+  th {
+    height: 70px;
+  }
+
+  .location {
+    cursor: pointer;
+  }
+
+  .show-image-cell {
+    cursor: pointer;
+  }
+  .show-image-cell:hover {
+    color: #108ee9;
+  }
+}
+
+.carousel-content {
+  text-align: center;
+  width: 700px;
+  height: 500px;
+  line-height: 500px;
+  background: #364d79;
+  color: #fff;
+  overflow: hidden;
+  img {
+    width: 100%;
+    height: 100%;
+  }
+}

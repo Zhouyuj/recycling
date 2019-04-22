@@ -1,0 +1,69 @@
+<div class="wrap">
+  <!-- -------- 表格操作 -------- -->
+  <div class="table-operations">
+    <div nz-row nzGutter="16">
+      <div nz-col class="gutter-row" nzSpan="10">
+        <!-- 面包屑导航 -->
+        <app-breadcrumbs [options]="breadcrumbs"></app-breadcrumbs>
+      </div>
+      <div nz-col class="gutter-row" nzSpan="4" nzOffset="2"></div>
+      <!-- 关键字搜索 -->
+      <div nz-col class="gutter-row" nzSpan="8">
+        <!-- CUDE: create,update,delete,export -->
+        <div class="table-CUDE">
+          <button nz-button nzType="default" (click)="onExport()">
+            导出
+          </button>
+          &nbsp;
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- -------- 表格内容 -------- -->
+  <div class="table-content">
+    <nz-spin [nzSize]="'large'" [nzSpinning]="isSpinning">
+      <nz-table
+        #basicTable
+        [nzData]="dataSet"
+        [nzScroll]="{ y: tableScrollY }"
+        [nzFrontPagination]="false"
+        [nzTotal]="pageRes.total"
+        [nzPageIndex]="pageRes.page"
+        [nzPageSize]="pageRes.size"
+        (nzPageIndexChange)="onPageV2($event)"
+        (nzPageSizeChange)="onPageV2($event)"
+      >
+        <thead>
+          <tr>
+            <th nzWidth="150px">日期</th>
+            <th nzWidth="150px">司机</th>
+            <th nzWidth="150px">车辆</th>
+            <th nzWidth="100px">收运量(吨)</th>
+            <th nzWidth="100px">行驶里程(公里)</th>
+            <th nzWidth="100px">加油量(升)</th>
+            <th nzWidth="100px">加油金额(元)</th>
+            <th nzWidth="100px">加油卡余额(元)</th>
+            <th nzWidth="100px">加油时里程(公里)</th>
+            <th nzWidth="100px">圈存金额(元)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-template ngFor let-data let-i="index" [ngForOf]="dataSet">
+            <tr>
+              <td>{{ data.plateNumber }}</td>
+              <td>{{ data.grossDateTime }}</td>
+              <td>{{ data.tareDateTime }}</td>
+              <td>{{ data.gross }}</td>
+              <td>{{ data.tare }}</td>
+              <td>{{ data.plateNumber }}</td>
+              <td>{{ data.grossDateTime }}</td>
+              <td>{{ data.tareDateTime }}</td>
+              <td>{{ data.gross }}</td>
+              <td>{{ data.tare }}</td>
+            </tr>
+          </ng-template>
+        </tbody>
+      </nz-table>
+    </nz-spin>
+  </div>
+</div>
