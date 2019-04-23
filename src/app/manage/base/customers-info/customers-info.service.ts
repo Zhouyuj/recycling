@@ -21,6 +21,7 @@ import { PageReq } from '../../../shared/models/page/page-req.model';
 import { PageRes } from '../../../shared/models/page/page-res.model';
 import { VehicleRes } from '../vehicle-info/vehicle-res.model';
 import { CustomerCountModel } from '../../history/models/customer-count.model';
+import { CollectionPatch } from '../../history/models/collection-patch.model';
 
 @Injectable({
   providedIn: 'root'
@@ -118,6 +119,16 @@ export class CustomersInfoService extends RebirthHttp {
     @Path('id') id: number,
     @Path('month') month: string
   ): Observable<Result<CustomerCountModel>> {
+    return null;
+  }
+  /**
+   * 更新客户手机记录
+   * @returns {null}
+   */
+  @PUT('/customers/updateTask')
+  public updateCollection(
+    @Body collectionPatch: CollectionPatch
+  ): Observable<Result<{}>> {
     return null;
   }
 
