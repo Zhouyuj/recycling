@@ -98,6 +98,8 @@ export class TableComponent extends TableBasicComponent implements OnInit {
           (res: Result<CustomerCountModel>) => {
             this.isSpinning = false;
             this.dataSet = res.data.dateList;
+            this.addr = res.data.address;
+            this.name = res.data.name;
           },
           err => {
             this.isSpinning = false;
