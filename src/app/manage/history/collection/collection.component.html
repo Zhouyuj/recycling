@@ -92,7 +92,12 @@
                   : 1
               "
             >
-              {{ data.totalQuantity | number: '1.1-1' }}
+              <ng-container *ngIf="!editCache[data.date].edit; else totalQuantityTpl">
+                <div (dblclick)="startEdit(data.date)">{{ data.totalQuantity | number: '1.1-1' }}</div>
+              </ng-container>
+              <ng-template #totalQuantityTpl>
+                  <nz-input-number [(ngModel)]="editCache[data.date].data.totalQuantity" [nzMin]="0" [nzStep]="0.1" [nzPrecision]="1" (keyup.enter)="enterEvent(data)"></nz-input-number>
+              </ng-template>
             </td>
             <td
               [ngClass]="{
@@ -117,14 +122,71 @@
             *ngIf="data.detailList && data.detailList.length > 0"
             ngFor
             let-child
+            let-i="index"
             [ngForOf]="data.detailList"
           >
             <tr>
               <td class="amount-of-garbage">
-                {{ child.plateNumber }}
+                <ng-container *ngIf="!editCache[data.date].edit; else plateNumberTpl">
+                  <div (dblclick)="startEdit(data.date)">
+                      {{ child.plateNumber }}
+                  </div>  
+                </ng-container>
+                <ng-template #plateNumberTpl>
+                  <nz-input-group [nzSuffix]="suffixIconOfPlateNumber">
+                      <input
+                        id="vehicleSelect"
+                        placeholder="请输入车牌号"
+                        nz-input
+                        [(ngModel)]="editCache[data.date].data.detailList[i].plateNumber"
+                        (ngModelChange)="onSearchPlateNumber($event)"
+                        [nzAutocomplete]="autoOfPlateNumber"
+                        (keyup.enter)="enterEvent(data)"
+                      />
+                    </nz-input-group>
+                    <ng-template #suffixIconOfPlateNumber>
+                    </ng-template>
+                    <nz-autocomplete #autoOfPlateNumber>
+                      <nz-auto-option
+                        *ngFor="let option of optionsOfVehicle"
+                        [nzLabel]="option.plateNumber"
+                        [nzValue]="option"
+                      >
+                        {{ option.plateNumber }}
+                      </nz-auto-option>
+                    </nz-autocomplete>
+                </ng-template>
               </td>
               <td class="amount-of-garbage">
-                {{ child.driver }}
+                <ng-container *ngIf="!editCache[data.date].edit; else driverTpl">
+                  <div (dblclick)="startEdit(data.date)">
+                      {{ child.driver }}
+                  </div>
+                </ng-container>
+                <ng-template #driverTpl>
+                  <nz-input-group [nzSuffix]="suffixIconOfDriver">
+                      <input
+                        id="driverSelect"
+                        placeholder="请输入司机名"
+                        nz-input
+                        [(ngModel)]="editCache[data.date].data.detailList[i].driver"
+                        (ngModelChange)="onSearchDriver($event)"
+                        [nzAutocomplete]="autoOfDriver"
+                        (keyup.enter)="enterEvent(data)"
+                      />
+                    </nz-input-group>
+                    <ng-template #suffixIconOfDriver>
+                    </ng-template>
+                    <nz-autocomplete #autoOfDriver>
+                      <nz-auto-option
+                        *ngFor="let option of optionsOfDriver"
+                        [nzLabel]="option.name"
+                        [nzValue]="option"
+                      >
+                        {{ option.name }}
+                      </nz-auto-option>
+                    </nz-autocomplete>
+                </ng-template>
               </td>
               <td class="amount-of-garbage">
                 {{ child.collectionTime | date: 'yyyy-MM-dd HH:mm:ss' }}
