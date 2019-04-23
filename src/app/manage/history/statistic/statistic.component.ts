@@ -37,4 +37,8 @@ export class StatisticComponent extends TableBasicComponent implements OnInit {
     // this.date = DateUtil.dateFormat(new Date(), 'yyyy-MM');
     // this.getListByPage();
   }
+
+  onExport() {}
+
+  onPageV2(data) {}
 }

@@ -2,7 +2,7 @@
   <div class="logout">
     <button nz-button nzType="default" (click)="logout()">退出登录</button>
   </div>
-  <div class="customer-search-wrap">
+  <div class="customer-search-wrap" *ngIf="isAdmin">
     <nz-input-group [nzSuffix]="suffixIcon">
       <input
         id="customer"

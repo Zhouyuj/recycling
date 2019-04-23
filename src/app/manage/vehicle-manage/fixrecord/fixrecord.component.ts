@@ -34,6 +34,7 @@ export class FixRecordComponent extends TableBasicComponent implements OnInit {
     content: ''
   };
   formCache: any;
+  dataSet: any[] = [];
 
   constructor(private vehicleManageService: VehicleManageService) {
     super();
@@ -147,4 +148,12 @@ export class FixRecordComponent extends TableBasicComponent implements OnInit {
   }
 
   onSearch() {}
+
+  onAdd() {}
+
+  onEdit() {}
+
+  onExp() {}
+
+  onPageV2(data) {}
 }

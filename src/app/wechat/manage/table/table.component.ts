@@ -22,7 +22,7 @@ export class TableComponent extends TableBasicComponent implements OnInit {
   username: string;
   name: string;
   addr: string;
-  isAdmin: boolean;
+  isAdmin: boolean = false;
   customer: CustomerRes;
   optionGroups: CustomerRes[];
   isSpinning = true;
@@ -68,12 +68,11 @@ export class TableComponent extends TableBasicComponent implements OnInit {
     fromEvent(document.getElementById('customer'), 'input')
       .pipe(
         map(event => (<HTMLInputElement>event.target).value),
-        debounceTime(500),
+        debounceTime(1500),
         mergeMap(v => this.manageService.getCustomerList(v))
       )
       .subscribe(res => {
         if (res.data) {
-          console.log(res);
           this.optionGroups = res.data;
         }
       });
@@ -92,7 +91,7 @@ export class TableComponent extends TableBasicComponent implements OnInit {
     if (this.customer)
       this.manageService
         .getCustomerCountsByUsernameAndMonth(
-          this.customer.name,
+          this.customer.username,
           this.selectedMonth
         )
         .subscribe(
@@ -128,9 +127,9 @@ export class TableComponent extends TableBasicComponent implements OnInit {
 
   onExport() {
     const a = document.createElement('a');
-    a.href = `${environment.wechatApi}/customerCounts/export/${this.username}/${
-      this.selectedMonth
-    }`;
+    a.href = `${environment.wechatApi}/customerCounts/export/${(this.customer &&
+      this.customer.username) ||
+      this.username}/${this.selectedMonth}`;
     a.download = '漳州市餐饮单位餐厨垃圾台账联单记录表.pdf';
     const span = document.createElement('span');
     a.appendChild(span);
