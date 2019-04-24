@@ -41,7 +41,6 @@ export class ExceptionCustomerComponent extends TableBasicComponent
   ngOnInit() {
     this.calcTableScrollY(30);
     this.date = DateUtil.dateFormat(new Date(), 'yyyy-MM');
-    this.getListByPage();
   }
 
   onAddressChange(event) {
@@ -69,6 +68,7 @@ export class ExceptionCustomerComponent extends TableBasicComponent
     //   this.resetPageReq();
     // }
     this.isSpinning = true;
+    this.dataSet = [];
     // 分页接口
     // const paramsTemp = this.updateParams();
 
@@ -92,9 +92,9 @@ export class ExceptionCustomerComponent extends TableBasicComponent
   }
 
   onExport() {
-    if (this.date)
+    if (this.date && this.street)
       this.historyService
-        .exportExceptionCustomerReport(this.date)
+        .exportExceptionCustomerReport(this.date, this.street)
         .subscribe(res => {
           DownloadReportsService.download(res, `异常商户信息.xls`);
         });

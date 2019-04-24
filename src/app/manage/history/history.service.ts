@@ -90,11 +90,13 @@ export class HistoryService extends RebirthHttp {
     return null;
   }
 
-  @GET('/customers/exceptions/reports/:month')
+  @GET('/customers/exceptions/reports/:month/:street')
   @RequestOptions({
     responseType: 'blob'
   })
-  exportExceptionCustomerReport(@Path('month') month: string): Observable<any> {
+  exportExceptionCustomerReport(
+    @Path('month') month: string, 
+    @Path('street') street: number): Observable<any> {
     return null;
   }
 }
