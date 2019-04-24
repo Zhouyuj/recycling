@@ -1,0 +1,93 @@
+<div class="wrap">
+    <!-- -------- 表格操作 -------- -->
+    <div class="table-operations">
+        <div nz-row nzGutter="16">
+            <div nz-col class="gutter-row" nzSpan="10">
+                <!-- 面包屑导航 -->
+                <app-breadcrumbs [options]="breadcrumbs"></app-breadcrumbs>
+            </div>
+            <div nz-col class="gutter-row" nzSpan="6">
+                <!-- 关键字搜索 -->
+                <div class="table-search">
+                    <span>月份</span>
+                    <nz-month-picker
+                        [(ngModel)]="date"
+                        (ngModelChange)="onChangeDate($event)"
+                        nzPlaceHolder="请选择日期"
+                    ></nz-month-picker>
+                    <!-- <button nz-button nzType="default" (click)="onSearch()">
+                        筛选
+                    </button> -->
+                </div>
+            </div>
+            <div nz-col class="gutter-row" nzSpan="8">
+                <!-- CUDE: create,update,delete,export -->
+                <div class="table-CUDE">
+                    <button nz-button nzType="default" (click)="onExport()">
+                        导出
+                    </button>
+                    &nbsp;
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- -------- 表格内容 -------- -->
+    <div class="table-content">
+        <nz-spin [nzSize]="'large'" [nzSpinning]="isSpinning">
+        <nz-table
+            #basicTable
+            [nzWidthConfig]="widthConfig"
+            [nzData]="dataSet2"
+            [nzScroll]="{ y: tableScrollY }"
+            [nzFrontPagination]="false"
+            [nzTotal]="pageRes.total"
+            [nzPageIndex]="pageRes.page"
+            [nzPageSize]="pageRes.size"
+            (nzPageIndexChange)="onPageV2($event)"
+            (nzPageSizeChange)="onPageV2($event)"
+        >
+            <thead>
+                <tr>
+                    <th rowspan="2">日期</th>
+                    <th rowspan="2">检查时间</th>
+                    <th rowspan="2">车牌号</th>
+                    <th rowspan="2">检查人</th>
+                    <th colspan="9">检查项</th>
+                </tr>
+                <tr>
+                    <th>车辆灯光系统完整有效</th>
+                    <th>车辆灯光亮度符合要求</th>
+                    <th>刹车是否正常</th>
+                    <th>转向是否正常</th>
+                    <th>轮胎是否过度磨损</th>
+                    <th>胎压是否正常</th>
+                    <th>尾门插销是否插到位</th>
+                    <th>提升架是否正常</th>
+                    <th>车辆有无明显伤痕</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- <ng-template ngFor let-data let-i="index" [ngForOf]="dataSet2"> -->
+                    <tr *ngFor="let data of dataSet2">
+                        <td>{{ data.date }}</td>
+                        <td>{{ data.dateCheck }}</td>
+                        <td>{{ data.plateNumber }}</td>
+                        <td>{{ data.name }}</td>
+
+                        <td>{{ data.ban1 }}</td>
+                        <td>{{ data.ban1 }}</td>
+                        <td>{{ data.ban1 }}</td>
+                        <td>{{ data.ban1 }}</td>
+                        <td>{{ data.ban1 }}</td>
+                        <td>{{ data.ban1 }}</td>
+                        <td>{{ data.ban1 }}</td>
+                        <td>{{ data.ban1 }}</td>
+                        <td>{{ data.ban1 }}</td>
+                    </tr>
+                <!-- </ng-template> -->
+            </tbody>
+        </nz-table>
+        </nz-spin>
+    </div>
+</div>
+      
