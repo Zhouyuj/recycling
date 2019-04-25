@@ -17,6 +17,7 @@ import { Result } from '../../shared/models/response/result.model';
 import { TaskModel } from '../plan/models/task.model';
 import { LocationModel } from './models/location.model';
 import { WeighBridgesModel } from './weigh-bridges/weigh-bridges.model';
+import { VehicleInspectRecordModel } from './vehicle-inspect-record/vehicle-inspect-record.model';
 import { ExceptionCustomerRes } from '../base/customers-info/customer-res.model';
 
 @Injectable({
@@ -57,11 +58,26 @@ export class HistoryService extends RebirthHttp {
     return null;
   }
 
+  @GET('/vehicleInspectRecord')
+  getVehicleInspectRecordList(
+    @Query('page') page: PageReq,
+    @Query('param') param? : any
+  ): Observable<Result<PageRes<VehicleInspectRecordModel[]>>>{
+    return null;
+  }
+
   @GET('/weighBridges/export/:month')
   @RequestOptions({
     responseType: 'blob'
   })
   getWeighBridgesReport(@Path('month') month: string): Observable<any> {
+    return null;
+  }
+  @GET('/vehicleInspectRecord/export/:month')
+  @RequestOptions({
+    responseType: 'blob'
+  })
+  getVehicleInspectRecordReport(@Path('month') month: string): Observable<any>{
     return null;
   }
 
@@ -74,11 +90,13 @@ export class HistoryService extends RebirthHttp {
     return null;
   }
 
-  @GET('/customers/exceptions/reports/:month')
+  @GET('/customers/exceptions/reports/:month/:street')
   @RequestOptions({
     responseType: 'blob'
   })
-  exportExceptionCustomerReport(@Path('month') month: string): Observable<any> {
+  exportExceptionCustomerReport(
+    @Path('month') month: string, 
+    @Path('street') street: number): Observable<any> {
     return null;
   }
 }

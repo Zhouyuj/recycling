@@ -6,6 +6,7 @@ import { CollectionComponent } from './collection/collection.component';
 import { WeighBridgesComponent } from './weigh-bridges/weigh-bridges.component';
 import { ExceptionCustomerComponent } from './exception-customer/exception-customer.component';
 import { StatisticComponent } from './statistic/statistic.component';
+import { VehicleInspectRecordComponent } from './vehicle-inspect-record/vehicle-inspect-record.component';
 
 export const ROUTER_CONFIG: Routes = [
   {
@@ -20,6 +21,11 @@ export const ROUTER_CONFIG: Routes = [
         path: 'collection',
         component: CollectionComponent,
         data: { title: '收运台账' }
+      },
+      {
+        path: 'vehicleinspectrecord',
+        component: VehicleInspectRecordComponent,
+        data: { title: '出车检查记录' }
       },
       {
         path: 'weighbridges',

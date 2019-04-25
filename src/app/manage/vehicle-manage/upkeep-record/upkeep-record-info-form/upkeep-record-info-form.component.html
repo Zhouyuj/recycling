@@ -1,0 +1,132 @@
+<div id="form">
+    <nz-spin [nzSize]="'large'" [nzSpinning]="isSpinning">
+        <!-- 模板驱动表单 -->
+        <form nz-form
+                (ngSubmit)="onSubmitForm()"
+                #myForm="ngForm">
+            <nz-form-item>
+                <nz-form-label [nzSm]="4" [nzXs]="24" nzRequired nzFor="upkeepDate">保养日期</nz-form-label>
+                <nz-form-control [nzSm]="7" [nzXs]="24">
+                    <nz-date-picker
+                            name="upkeepDate"
+                            required
+                            [(ngModel)]="formData.upkeepDate"
+                            [nzFormat]="'yyyy-MM-dd'"
+                            #upkeepDate="ngModel">
+                    </nz-date-picker>
+                    <nz-form-explain [hidden]="upkeepDate.valid || upkeepDate.pristine">请选择保养时间</nz-form-explain>
+                </nz-form-control>
+                <nz-form-label [nzSm]="4" [nzXs]="24" nzRequired nzFor="planUpkeepDate">计划保养日期</nz-form-label>
+                <nz-form-control [nzSm]="7" [nzXs]="24">
+                    <nz-date-picker
+                            name="planUpkeepDate"
+                            required
+                            [(ngModel)]="formData.planUpkeepDate"
+                            [nzFormat]="'yyyy-MM-dd'"
+                            #planUpkeepDate="ngModel">
+                    </nz-date-picker>
+                    <nz-form-explain [hidden]="planUpkeepDate.valid || planUpkeepDate.pristine">请选择计划保养时间</nz-form-explain>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label [nzSm]="4" [nzXs]="24" nzRequired nzFor="vehicle">车牌号</nz-form-label>
+                <nz-form-control [nzSm]="6">
+                    <nz-input-group [nzSuffix]="suffixIcon">
+                        <input name="vehicle"
+                        placeholder="输入搜索系统内已有的车"
+                        nz-input
+                        required
+                        [(ngModel)]="formData.vehicle"
+                        (ngModelChange)="onSearchVehicle($event)"
+                        [nzAutocomplete]="auto"
+                        />
+                    </nz-input-group>
+                    <ng-template #suffixIcon>
+                        <i nz-icon type="search"></i>
+                    </ng-template>
+                    <nz-autocomplete #auto>
+                        <nz-auto-option
+                        *ngFor="let option of optionsOfVehicle"
+                        [nzLabel]="option.plateNumber"
+                        [nzValue]="option"
+                        >
+                        {{ option.plateNumber }}
+                        </nz-auto-option>
+                    </nz-autocomplete>
+                </nz-form-control>
+                <nz-form-label [nzSm]="4" [nzXs]="24" nzOffset="1" nzRequired nzFor="upkeepMileage">行驶里程(公里)</nz-form-label>
+                <nz-form-control [nzSm]="8">
+                        <nz-input-number name="upkeepMileage" required [(ngModel)]="formData.upkeepMileage" [nzMin]="0" [nzStep]="0.1" [nzPrecision]="1"></nz-input-number>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label [nzSm]="4" [nzXs]="24" nzRequired nzFor="upkeepCompany">保养单位</nz-form-label>
+                <nz-form-control [nzSm]="7" [nzXs]="24">
+                    <input nz-input
+                    required
+                    name="upkeepCompany"
+                    [(ngModel)]="formData.upkeepCompany">
+                </nz-form-control>
+                <nz-form-label [nzSm]="4" [nzXs]="24" nzRequired nzFor="upkeepCost">保养费用(元)</nz-form-label>
+                <nz-form-control [nzSm]="7" [nzXs]="24">
+                    <nz-input-number name="upkeepCost" required [(ngModel)]="formData.upkeepCost" [nzMin]="0" [nzStep]="0.1" [nzPrecision]="1"></nz-input-number>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label [nzSm]="4" [nzXs]="24" nzRequired nzFor="upkeepPerson">保养人</nz-form-label>
+                <nz-form-control [nzSm]="7" [nzXs]="24">
+                    <input nz-input
+                    required
+                    name="upkeepPerson"
+                    [(ngModel)]="formData.upkeepPerson">
+                </nz-form-control>
+                <nz-form-label [nzSm]="4" [nzXs]="24" nzRequired nzFor="upkeepTimeCost">保养时长(时)</nz-form-label>
+                <nz-form-control [nzSm]="7" [nzXs]="24">
+                    <nz-input-number name="upkeepTimeCost" required [(ngModel)]="formData.upkeepTimeCost" [nzMin]="0" [nzStep]="0.1" [nzPrecision]="1"></nz-input-number>
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label [nzSm]="4" [nzXs]="24" nzRequired nzFor="chargePerson">负责人</nz-form-label>
+                <nz-form-control [nzSm]="7" [nzXs]="24">
+                    <input nz-input
+                    required
+                    name="chargePerson"
+                    [(ngModel)]="formData.chargePerson">
+                </nz-form-control>
+                <nz-form-label [nzSm]="4" [nzXs]="24" nzRequired nzFor="acceptancePerson">验收人</nz-form-label>
+                <nz-form-control [nzSm]="5" [nzXs]="24">
+                    <input nz-input
+                    required
+                    name="acceptancePerson"
+                    [(ngModel)]="formData.acceptancePerson">
+                </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+                <nz-form-label [nzSm]="4" [nzXs]="24" nzRequired nzFor="upkeepContent">保养内容</nz-form-label>
+                <nz-form-control [nzSm]="7" [nzXs]="24">
+                    <textarea name="upkeepContent" required rows="4" nz-input [(ngModel)]="formData.upkeepContent"></textarea>
+                </nz-form-control>
+            </nz-form-item>
+
+            <nz-divider></nz-divider>
+            <nz-form-item nz-row>
+                <nz-form-control [nzSpan]="3" nzOffset="17">
+                    <button nz-button
+                            nzType="primary"
+                            style="width: 100%;"
+                            type="submit">确认
+                    </button>
+                </nz-form-control>
+                <nz-form-control [nzSpan]="3" nzOffset="1">
+                    <button nz-button
+                            nzType="default"
+                            style="width: 100%;"
+                            type="button"
+                            (click)="onClose()">取消
+                    </button>
+                </nz-form-control>
+            </nz-form-item>
+        </form>
+    </nz-spin>
+</div>
+    

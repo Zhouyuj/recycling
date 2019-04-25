@@ -5,6 +5,7 @@ import { SchemeModule } from './scheme/scheme.module';
 import { HistoryRoutingModule } from './history-routing.module';
 import { SchemeRoutingModule } from './scheme/scheme-routing.module';
 import { CollectionModule } from './collection/collection.module';
+import { VehicleInspectRecordModule } from './vehicle-inspect-record/vehicle-inspect-record.module';
 import { WeighBridgesModule } from './weigh-bridges/weigh-bridges.module';
 import { ExceptionCustomerModule } from './exception-customer/exception-customer.module';
 import { StatisticModule } from "./statistic/statistic.module";
@@ -18,6 +19,7 @@ import { StatisticModule } from "./statistic/statistic.module";
     SchemeModule,
     StatisticModule,
     CollectionModule,
+    VehicleInspectRecordModule,
     WeighBridgesModule,
     ExceptionCustomerModule
   ],
