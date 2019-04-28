@@ -73,6 +73,7 @@ export class HistoryService extends RebirthHttp {
   getWeighBridgesReport(@Path('month') month: string): Observable<any> {
     return null;
   }
+
   @GET('/reports/vehicleInspection/export/:month')
   @RequestOptions({
     responseType: 'blob'
@@ -97,6 +98,24 @@ export class HistoryService extends RebirthHttp {
   exportExceptionCustomerReport(
     @Path('month') month: string, 
     @Path('street') street: number): Observable<any> {
+    return null;
+  }
+
+  @GET('/routes/count/fuel')
+  getRoutesCountFuel(
+    @Query('page') page: { pageNum:number, pageSize:number },
+    @Query('param') param?: any
+  ): Observable<any>{
+    return null;
+  }
+
+  @GET('/routes/count/fuel/export')
+  @RequestOptions({
+    responseType: 'blob'
+  })
+  exportRoutesCountFuelReport(
+    @Query('param') param?: any
+  ): Observable<any> {
     return null;
   }
 }

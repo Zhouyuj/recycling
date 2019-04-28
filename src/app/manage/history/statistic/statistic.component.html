@@ -2,20 +2,72 @@
   <!-- -------- 表格操作 -------- -->
   <div class="table-operations">
     <div nz-row nzGutter="16">
-      <div nz-col class="gutter-row" nzSpan="10">
+      <div nz-col class="gutter-row" nzSpan="6">
         <!-- 面包屑导航 -->
         <app-breadcrumbs [options]="breadcrumbs"></app-breadcrumbs>
       </div>
-      <div nz-col class="gutter-row" nzSpan="4" nzOffset="2"></div>
-      <!-- 关键字搜索 -->
-      <div nz-col class="gutter-row" nzSpan="8">
-        <!-- CUDE: create,update,delete,export -->
-        <div class="table-CUDE">
-          <button nz-button nzType="default" (click)="onExport()">
-            导出
-          </button>
-          &nbsp;
-        </div>
+      <div nz-col class="gutter-row" nzSpan="18">
+          <!-- 关键字搜索 -->
+        <div class="table-search">
+            <span>月份</span>
+            <nz-month-picker
+              [(ngModel)]="params.month"
+              (ngModelChange)="onChangeDate($event)"
+              nzPlaceHolder="请选择日期"
+            ></nz-month-picker>
+            <span>车辆</span>
+            <nz-input-group [nzSuffix]="suffixIconForVehicle">
+              <input
+                id="vehicle"
+                placeholder="请输入车牌号"
+                nz-input
+                [(ngModel)]="params.vehicleId"
+                (ngModelChange)="onSearchVehicle($event)"
+                [nzAutocomplete]="autoForVehicle"
+              />
+            </nz-input-group>
+            <ng-template #suffixIconForVehicle>
+              <i nz-icon type="search"></i>
+            </ng-template>
+            <nz-autocomplete #autoForVehicle>
+              <nz-auto-option
+                *ngFor="let option of vehicleOptions"
+                [nzLabel]="option.plateNumber"
+                [nzValue]="option.id"
+              >
+                {{ option.plateNumber }}
+              </nz-auto-option>
+            </nz-autocomplete>
+            <span>司机</span>
+            <nz-input-group [nzSuffix]="suffixIconForDriver">
+              <input
+                id="driver"
+                placeholder="请输入司机名称"
+                nz-input
+                [(ngModel)]="params.driverId"
+                (ngModelChange)="onSearchDriver($event)"
+                [nzAutocomplete]="autoForDriver"
+              />
+            </nz-input-group>
+            <ng-template #suffixIconForDriver>
+              <i nz-icon type="search"></i>
+            </ng-template>
+            <nz-autocomplete #autoForDriver>
+              <nz-auto-option
+                *ngFor="let option of driverOptions"
+                [nzLabel]="option.name"
+                [nzValue]="option.id"
+              >
+                {{ option.name }}
+              </nz-auto-option>
+            </nz-autocomplete>
+            <button nz-button nzType="default" (click)="onSearchData()">
+                查询
+            </button>
+            <button nz-button nzType="default" (click)="onExport()">
+                导出
+            </button>
+          </div>
       </div>
     </div>
   </div>
@@ -50,16 +102,16 @@
         <tbody>
           <ng-template ngFor let-data let-i="index" [ngForOf]="dataSet">
             <tr>
-              <td>{{ data.plateNumber }}</td>
-              <td>{{ data.grossDateTime }}</td>
-              <td>{{ data.tareDateTime }}</td>
-              <td>{{ data.gross }}</td>
+              <td>{{ data.date }}</td>
+              <td>{{ data.driver }}</td>
+              <td>{{ data.vehicle }}</td>
+              <td>{{ data.collectionQuantity }}</td>
               <td>{{ data.tare }}</td>
-              <td>{{ data.plateNumber }}</td>
-              <td>{{ data.grossDateTime }}</td>
-              <td>{{ data.tareDateTime }}</td>
-              <td>{{ data.gross }}</td>
-              <td>{{ data.tare }}</td>
+              <td>{{ data.capacity }}</td>
+              <td>{{ data.money }}</td>
+              <td>{{ data.cardBalance }}</td>
+              <td>{{ data.mileage }}</td>
+              <td>{{ data.fillMoney }}</td>
             </tr>
           </ng-template>
         </tbody>
