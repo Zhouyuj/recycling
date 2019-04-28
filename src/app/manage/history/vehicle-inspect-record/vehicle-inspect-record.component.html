@@ -11,7 +11,7 @@
                 <div class="table-search">
                     <span>月份</span>
                     <nz-month-picker
-                        [(ngModel)]="date"
+                        [(ngModel)]="month"
                         (ngModelChange)="onChangeDate($event)"
                         nzPlaceHolder="请选择日期"
                     ></nz-month-picker>
@@ -37,7 +37,7 @@
         <nz-table
             #basicTable
             [nzWidthConfig]="widthConfig"
-            [nzData]="dataSet2"
+            [nzData]="dataSet"
             [nzScroll]="{ y: tableScrollY }"
             [nzFrontPagination]="false"
             [nzTotal]="pageRes.total"
@@ -68,21 +68,21 @@
             </thead>
             <tbody>
                 <!-- <ng-template ngFor let-data let-i="index" [ngForOf]="dataSet2"> -->
-                    <tr *ngFor="let data of dataSet2">
-                        <td>{{ data.date }}</td>
-                        <td>{{ data.dateCheck }}</td>
-                        <td>{{ data.plateNumber }}</td>
-                        <td>{{ data.name }}</td>
+                    <tr *ngFor="let data of dataSet">
+                        <td>{{ data.createdDate | date: 'yyyy-MM-dd' }}</td>
+                        <td>{{ data.createdDate | date: 'hh:mm:ss' }}</td>
+                        <td>{{ data.vehiclePlate }}</td>
+                        <td>{{ data.checker }}</td>
 
-                        <td>{{ data.ban1 }}</td>
-                        <td>{{ data.ban1 }}</td>
-                        <td>{{ data.ban1 }}</td>
-                        <td>{{ data.ban1 }}</td>
-                        <td>{{ data.ban1 }}</td>
-                        <td>{{ data.ban1 }}</td>
-                        <td>{{ data.ban1 }}</td>
-                        <td>{{ data.ban1 }}</td>
-                        <td>{{ data.ban1 }}</td>
+                        <td>{{ data.checker }}</td>
+                        <td>{{ data.checker }}</td>
+                        <td>{{ data.checker }}</td>
+                        <td>{{ data.checker }}</td>
+                        <td>{{ data.checker }}</td>
+                        <td>{{ data.checker }}</td>
+                        <td>{{ data.checker }}</td>
+                        <td>{{ data.checker }}</td>
+                        <td>{{ data.checker }}</td>
                     </tr>
                 <!-- </ng-template> -->
             </tbody>

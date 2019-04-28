@@ -58,10 +58,10 @@ export class HistoryService extends RebirthHttp {
     return null;
   }
 
-  @GET('/vehicleInspectRecord')
+  @GET('/reports/vehicleInspection/:month')
   getVehicleInspectRecordList(
     @Query('page') page: PageReq,
-    @Query('param') param? : any
+    @Path('month') month : string
   ): Observable<Result<PageRes<VehicleInspectRecordModel[]>>>{
     return null;
   }
@@ -73,7 +73,7 @@ export class HistoryService extends RebirthHttp {
   getWeighBridgesReport(@Path('month') month: string): Observable<any> {
     return null;
   }
-  @GET('/vehicleInspectRecord/export/:month')
+  @GET('/reports/vehicleInspection/export/:month')
   @RequestOptions({
     responseType: 'blob'
   })

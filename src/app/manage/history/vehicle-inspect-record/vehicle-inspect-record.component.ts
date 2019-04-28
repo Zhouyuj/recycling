@@ -30,7 +30,7 @@ export class VehicleInspectRecordComponent extends TableBasicComponent implement
         }
     ];
     widthConfig = ['200px', '200px', '200px', '100px', '100px', '100px', '100px', '100px', '100px', '100px', '100px', '100px', '100px'];
-    date: string;
+    month: string;
     dataSet: any[];
     dataSet2: any[];
     isSpinning: boolean = true;
@@ -40,35 +40,18 @@ export class VehicleInspectRecordComponent extends TableBasicComponent implement
     ) {
         super();
         this.dataSet = [];
-        this.dataSet2 = [{
-            date: '2019.04.24 00:00:00',
-            dateCheck: '2019.04.24 00:12:00',
-            plateNumber: '粤J999Z8',
-            name: 'aaron',
-            ban1: '正常'
-        }];
     }
 
     ngOnInit() {
         this.calcTableScrollY(30);
-        this.date = DateUtil.dateFormat(new Date(), 'yyyy-MM');
-        this.historyService.getVehicleInspectRecordList(this.pageReq, { month: this.date})
+        this.month = DateUtil.dateFormat(new Date(), 'yyyy-MM');
+        this.historyService.getVehicleInspectRecordList(this.pageReq, this.month)
         .subscribe(
             res => {
                 /* 更新 table 分页信息 */
                 this.updatePageRes(res.data);
                 if (res.data.content) {
-                    this.dataSet = res.data.content.map(d => {
-                        d.grossDateTime = DateUtil.dateFormat(
-                            new Date(d.grossDateTime),
-                            'yyyy-MM-dd hh:mm:ss'
-                        );
-                        d.tareDateTime = DateUtil.dateFormat(
-                            new Date(d.tareDateTime),
-                            'yyyy-MM-dd hh:mm:ss'
-                        );
-                        return d;
-                    });
+                    this.dataSet = res.data.content;
                 }
                 this.isSpinning = false;
             },
@@ -78,30 +61,20 @@ export class VehicleInspectRecordComponent extends TableBasicComponent implement
         );
     }
     onPageV2(e) {
-        this.pageReq.page = 2;
+        this.pageReq.page = e;
         this.getListByPage();
     }
     onChangeDate(date: Date) {
         if (!date) return;
         this.isSpinning = true;
-        this.date = DateUtil.dateFormat(date, 'yyyy-MM');
+        this.month = DateUtil.dateFormat(date, 'yyyy-MM');
         this.pageReq.reset();
-        this.historyService.getVehicleInspectRecordList(this.pageReq, { month: this.date })
+        this.historyService.getVehicleInspectRecordList(this.pageReq, this.month)
         .subscribe(
             res => {
                 this.updatePageRes(res.data);
                 if (res.data.content) {
-                    this.dataSet = res.data.content.map(d => {
-                        d.grossDateTime = DateUtil.dateFormat(
-                            new Date(d.grossDateTime),
-                            'yyyy-MM-dd hh:mm:ss'
-                        );
-                        d.tareDateTime = DateUtil.dateFormat(
-                            new Date(d.tareDateTime),
-                            'yyyy-MM-dd hh:mm:ss'
-                        );
-                        return d;
-                    });
+                    this.dataSet = res.data.content;
                 }
                 this.isSpinning = false;
             },
@@ -113,22 +86,12 @@ export class VehicleInspectRecordComponent extends TableBasicComponent implement
     }
     getListByPage(option?: { isResetReq: boolean }) {
         this.isSpinning = true;
-        this.historyService.getVehicleInspectRecordList(this.pageReq, { month: this.date })
+        this.historyService.getVehicleInspectRecordList(this.pageReq, this.month)
         .subscribe(
             res => {
                 this.updatePageRes(res.data);
                 if (res.data.content) {
-                    this.dataSet = res.data.content.map(d => {
-                        d.grossDateTime = DateUtil.dateFormat(
-                            new Date(d.grossDateTime),
-                            'yyyy-MM-dd hh:mm:ss'
-                          );
-                        d.tareDateTime = DateUtil.dateFormat(
-                            new Date(d.tareDateTime),
-                            'yyyy-MM-dd hh:mm:ss'
-                        );
-                        return d;
-                    });
+                    this.dataSet = res.data.content;
                 }
                 this.isSpinning = false;
             },
@@ -140,7 +103,7 @@ export class VehicleInspectRecordComponent extends TableBasicComponent implement
         );
     }
     onSearch() {
-        if (!this.date) {
+        if (!this.month) {
             this.notificationService.create({
                 type: 'warning',
                 content: '请输入日期'
@@ -149,7 +112,7 @@ export class VehicleInspectRecordComponent extends TableBasicComponent implement
         }
     }
     onExport() {
-        this.historyService.getVehicleInspectRecordReport(this.date).subscribe(res => {
+        this.historyService.getVehicleInspectRecordReport(this.month).subscribe(res => {
             DownloadReportsService.download(res, '出车检查记录.xls');
         });
     }
