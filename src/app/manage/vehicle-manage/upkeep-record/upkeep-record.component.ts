@@ -38,9 +38,8 @@ export class UpkeepRecordComponent extends TableBasicComponent implements OnInit
     address = [];
     street: number;
     isSpinning = false;
-    date: string;
     params = {
-        date: '',
+        month: '',
         plateNumber: '',
         upkeepContent: ''
     }
@@ -59,12 +58,12 @@ export class UpkeepRecordComponent extends TableBasicComponent implements OnInit
     }
 
     ngOnInit() {
-        this.params.date = DateUtil.dateFormat(new Date(), 'yyyy-MM');
+        this.params.month = DateUtil.dateFormat(new Date(), 'yyyy-MM');
         this.getListByPage({isResetReq: true});
     }
 
     onChangeDate(date) {
-        this.params.date = DateUtil.dateFormat(date, 'yyyy-MM');
+        this.params.month = DateUtil.dateFormat(date, 'yyyy-MM');
     }
 
     onKeywordSearchTh(keywordType: string){
