@@ -33,7 +33,7 @@
     "echarts": "^4.2.0-rc.2",
     "express": "^4.17.1",
     "hammerjs": "^2.0.8",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.21",
     "ng-zorro-antd": "^7.0.3",
     "ngx-echarts": "^4.0.0",
     "rebirth-http": "^6.0.2",
